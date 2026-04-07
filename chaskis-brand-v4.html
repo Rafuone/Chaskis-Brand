@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chaskis — La livraison reinventee</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --teal:#3AAFA9;--teal-l:#5BC5C0;--teal-xl:#8EDED9;--teal-bg:#EFF9F8;--teal-d:#2A8A85;--teal-dd:#1A5C59;
+      --yellow:#F5B800;--yellow-l:#FFD54F;--yellow-bg:#FFFAED;
+      --purple:#6B4FA0;--purple-bg:#F3F0F8;
+      --white:#FFFFFF;--off:#F7F6F3;--sand:#EDE9E0;--warm:#D6CFC2;
+      --ink:#191C1A;--ink-m:#3B403D;--ink-l:#6B736E;--ink-xl:#9EA69F;
+      --sans:'Urbanist',sans-serif;--serif:'Instrument Serif',serif;
+      --ease:cubic-bezier(.19,1,.22,1);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+    body{font-family:var(--sans);color:var(--ink);background:var(--white);overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1320px;margin:0 auto;padding:0 clamp(20px,4vw,56px)}
+
+    /* ── NAV ── */
+    .nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:16px 0;transition:background .5s,box-shadow .5s}
+    .nav.solid{background:rgba(255,255,255,.92);backdrop-filter:blur(24px);box-shadow:0 1px 0 rgba(0,0,0,.04)}
+    .nav-in{display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{font-weight:900;font-size:1.05rem;letter-spacing:.18em;text-transform:uppercase}
+    .nav-logo span{color:var(--teal)}
+    .nav-links{display:flex;gap:28px;list-style:none}
+    .nav-links a{font-size:.76rem;font-weight:700;color:var(--ink-l);transition:color .2s}
+    .nav-links a:hover{color:var(--teal)}
+    .nav-cta{padding:10px 22px;background:var(--ink);color:white;border-radius:100px;font-size:.76rem;font-weight:700;border:none;cursor:pointer;transition:all .35s var(--ease)}
+    .nav-cta:hover{background:var(--teal);transform:translateY(-2px)}
+
+    /* ── BUTTONS ── */
+    .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:800;font-size:.82rem;padding:15px 30px;border-radius:100px;border:none;cursor:pointer;transition:all .4s var(--ease)}
+    .btn .arr{transition:transform .3s var(--ease)}
+    .btn:hover .arr{transform:translateX(5px)}
+    .btn-teal{background:var(--teal);color:white;box-shadow:0 6px 24px rgba(58,175,169,.25)}
+    .btn-teal:hover{box-shadow:0 12px 40px rgba(58,175,169,.35);transform:translateY(-3px)}
+    .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--warm)}
+    .btn-ghost:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-2px)}
+    .btn-white{background:white;color:var(--ink);box-shadow:0 4px 16px rgba(0,0,0,.08)}
+    .btn-white:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.1)}
+
+    /* ── OVERLINE ── */
+    .overline{font-size:.65rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--teal)}
+
+    /* ── PHOTO PLACEHOLDER ── */
+    .ph{position:relative;overflow:hidden;background:var(--off)}
+    .ph::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,transparent 40%,rgba(58,175,169,.05) 100%)}
+    .ph-lbl{position:absolute;z-index:2;bottom:14px;left:14px;font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-l);background:rgba(255,255,255,.82);backdrop-filter:blur(6px);padding:5px 12px;border-radius:100px}
+
+    /* ── SCROLL-LINKED TRANSFORMS ── */
+    [data-parallax]{will-change:transform;transition:transform .1s linear}
+
+    /* ── REVEAL ── */
+    .rv{opacity:0;transform:translateY(40px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+    .rv.vis{opacity:1;transform:none}
+    .rd1{transition-delay:.08s}.rd2{transition-delay:.16s}.rd3{transition-delay:.24s}.rd4{transition-delay:.32s}
+
+    /* ═══════════════════════════════════════════
+       1. HERO
+    ═══════════════════════════════════════════ */
+    .hero{min-height:100vh;display:flex;align-items:center;padding:140px 0 100px;position:relative;overflow:hidden}
+    .hero-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+
+    /* 3D floating cards in background */
+    .hero-card-3d{position:absolute;border-radius:20px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.07);will-change:transform;transition:transform .15s linear}
+    .hc1{width:280px;height:360px;top:8%;right:4%;background:var(--teal-bg);transform:perspective(800px) rotateY(-8deg) rotateX(4deg)}
+    .hc2{width:220px;height:280px;top:35%;right:28%;background:var(--yellow-bg);transform:perspective(800px) rotateY(6deg) rotateX(-3deg);z-index:2}
+    .hc3{width:160px;height:200px;bottom:12%;right:10%;background:var(--purple-bg);transform:perspective(800px) rotateY(-12deg) rotateX(8deg)}
+    .hc4{width:140px;height:140px;bottom:25%;right:38%;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:3;border:5px solid white;box-shadow:0 20px 60px rgba(58,175,169,.3)}
+    .hc4-inner{color:white;text-align:center;font-weight:900;font-size:2rem;letter-spacing:-.03em;line-height:1}
+    .hc4-inner small{display:block;font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.6;margin-top:3px}
+
+    /* Decorative blobs */
+    .hero-blob{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none}
+    .hb1{width:500px;height:500px;background:rgba(58,175,169,.08);top:-10%;right:-5%}
+    .hb2{width:350px;height:350px;background:rgba(245,184,0,.06);bottom:0;right:20%}
+
+    .hero-content{position:relative;z-index:5;max-width:600px}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px 6px 8px;background:var(--teal-bg);border-radius:100px;font-size:.7rem;font-weight:700;color:var(--teal-d);margin-bottom:28px}
+    .hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse 2s ease infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
+
+    .hero h1{font-weight:900;font-size:clamp(2.8rem,6.5vw,5.5rem);line-height:.92;letter-spacing:-.045em;margin-bottom:24px}
+    .hero h1 .it{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--teal);letter-spacing:-.01em}
+
+    .hero-sub{font-size:1rem;font-weight:500;color:var(--ink-l);line-height:1.75;margin-bottom:36px;max-width:460px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+    .hero-proof{display:flex;align-items:center;gap:16px;margin-top:48px}
+    .hero-avatars{display:flex}
+    .hero-av{width:40px;height:40px;border-radius:50%;border:3px solid white;margin-left:-10px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800}
+    .hero-av:first-child{margin-left:0}
+    .hero-av.t{background:var(--teal-bg);color:var(--teal-d)}
+    .hero-av.y{background:var(--yellow-bg);color:#8A6E00}
+    .hero-av.p{background:var(--purple-bg);color:var(--purple)}
+    .hero-av.more{background:var(--teal);color:white;font-size:.55rem}
+    .hero-proof-text{font-size:.82rem;color:var(--ink-l)}
+    .hero-proof-text strong{color:var(--ink);font-weight:800}
+
+    /* ═══════════════════════════════════════════
+       MARQUEE
+    ═══════════════════════════════════════════ */
+    .mq-wrap{overflow:hidden;padding:4px 0;position:relative;z-index:10}
+    .mq{padding:14px 0;overflow:hidden}
+    .mq-teal{background:var(--teal);transform:rotate(-1.2deg) scale(1.04)}
+    .mq-sand{background:var(--sand);transform:rotate(1.2deg) scale(1.04);margin-top:-6px}
+    .mq-track{display:flex;width:max-content;animation:mqS 30s linear infinite}
+    .mq-sand .mq-track{animation-direction:reverse}
+    @keyframes mqS{to{transform:translateX(-50%)}}
+    .mq-w{font-weight:900;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;padding:0 24px}
+    .mq-teal .mq-w{color:white}
+    .mq-sand .mq-w{color:var(--ink-m)}
+
+    /* ═══════════════════════════════════════════
+       2. SERVICES — ASYMMETRIC WITH 3D CARDS
+    ═══════════════════════════════════════════ */
+    .services{padding:clamp(80px,12vw,140px) 0}
+    .services-header{margin-bottom:56px}
+    .services-header h2{font-weight:900;font-size:clamp(2rem,4.5vw,3.5rem);line-height:1.05;letter-spacing:-.03em;margin-top:12px}
+    .services-header h2 .it{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--teal)}
+    .services-header p{font-size:.95rem;color:var(--ink-l);max-width:480px;line-height:1.75;margin-top:12px}
+
+    /* 3D tilt cards */
+    .srv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .srv-card{border-radius:22px;padding:40px 32px;position:relative;overflow:hidden;transition:transform .6s var(--ease),box-shadow .6s;transform-style:preserve-3d;perspective:600px}
+    .srv-card:hover{transform:translateY(-10px);box-shadow:0 30px 80px rgba(0,0,0,.06)}
+
+    .srv-card.tall{grid-row:span 2}
+
+    .sc-teal{background:var(--teal);color:white}
+    .sc-off{background:var(--off);color:var(--ink)}
+    .sc-ink{background:var(--ink);color:var(--off)}
+    .sc-ylw{background:var(--yellow);color:var(--ink)}
+    .sc-teal-bg{background:var(--teal-bg);color:var(--ink)}
+    .sc-photo{padding:0;background:var(--teal-bg)}
+
+    .srv-ico{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+    .sc-teal .srv-ico{background:rgba(255,255,255,.18)}
+    .sc-off .srv-ico{background:var(--teal-bg)}
+    .sc-ink .srv-ico{background:rgba(58,175,169,.12)}
+    .sc-ylw .srv-ico{background:rgba(0,0,0,.06)}
+    .sc-teal-bg .srv-ico{background:var(--teal);color:white}
+
+    .srv-ico svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+    .srv-t{font-family:var(--serif);font-size:1.4rem;line-height:1.2;margin-bottom:10px}
+    .srv-d{font-size:.84rem;line-height:1.7;opacity:.72;max-width:340px}
+    .srv-n{font-weight:900;font-size:clamp(2.8rem,5vw,4.5rem);letter-spacing:-.04em;line-height:1}
+    .srv-nl{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.45;margin-top:6px}
+
+    /* ═══════════════════════════════════════════
+       3. ABOUT — SPLIT WITH PARALLAX PHOTOS
+    ═══════════════════════════════════════════ */
+    .about{padding:clamp(80px,12vw,140px) 0;overflow:hidden}
+    .about-inner{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,100px);align-items:center}
+
+    .about-photos{position:relative;height:560px;perspective:800px}
+    .about-ph{position:absolute;border-radius:20px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.07)}
+    .ap1{width:70%;height:85%;top:0;left:0;background:var(--teal-bg);z-index:1}
+    .ap2{width:50%;height:55%;bottom:0;right:0;background:var(--yellow-bg);z-index:2;border:5px solid white}
+    .ap3{width:100px;height:100px;border-radius:50%;top:10%;right:15%;background:var(--teal);z-index:3;display:flex;align-items:center;justify-content:center;border:4px solid white;box-shadow:0 12px 36px rgba(58,175,169,.25)}
+    .ap3 svg{width:28px;height:28px;stroke:white;fill:none;stroke-width:2}
+
+    .about-text .overline{margin-bottom:14px}
+    .about-text h2{font-weight:900;font-size:clamp(2rem,4vw,3.2rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:20px}
+    .about-text h2 .it{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--teal)}
+    .about-text blockquote{font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--ink-m);line-height:1.45;padding-left:20px;border-left:3px solid var(--teal);margin-bottom:20px}
+    .about-text p{font-size:.92rem;color:var(--ink-l);line-height:1.8;margin-bottom:24px}
+
+    /* ═══════════════════════════════════════════
+       4. HOW IT WORKS — HORIZONTAL SCROLL CARDS
+    ═══════════════════════════════════════════ */
+    .how{padding:clamp(80px,12vw,120px) 0;background:var(--off);overflow:hidden}
+    .how-header{margin-bottom:48px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px}
+    .how-header h2{font-weight:900;font-size:clamp(2rem,4vw,3.2rem);line-height:1.05;letter-spacing:-.03em;margin-top:12px}
+    .how-header h2 .it{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--teal)}
+    .how-header p{font-size:.9rem;color:var(--ink-l);max-width:360px;text-align:right;line-height:1.7}
+
+    .how-scroll{display:flex;gap:16px;padding-bottom:16px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .how-scroll::-webkit-scrollbar{display:none}
+
+    .how-card{min-width:320px;max-width:340px;flex-shrink:0;border-radius:22px;padding:40px 32px;background:var(--white);scroll-snap-align:start;transition:transform .5s var(--ease),box-shadow .5s;position:relative;overflow:hidden}
+    .how-card:hover{transform:translateY(-8px) perspective(600px) rotateX(2deg);box-shadow:0 24px 64px rgba(0,0,0,.06)}
+
+    .how-num{width:48px;height:48px;border-radius:14px;background:var(--teal);color:white;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;margin-bottom:24px;box-shadow:0 6px 20px rgba(58,175,169,.2)}
+    .how-card h3{font-family:var(--serif);font-size:1.3rem;line-height:1.2;margin-bottom:10px}
+    .how-card p{font-size:.84rem;color:var(--ink-l);line-height:1.7}
+
+    /* connector line between cards */
+    .how-card::after{content:'';position:absolute;top:63px;right:-16px;width:16px;height:2px;background:var(--teal-xl)}
+    .how-card:last-child::after{display:none}
+
+    /* ═══════════════════════════════════════════
+       5. PRICING — 3D PERSPECTIVE TILT
+    ═══════════════════════════════════════════ */
+    .pricing{padding:clamp(80px,12vw,140px) 0}
+    .pricing-header{text-align:center;margin-bottom:56px}
+    .pricing-header h2{font-weight:900;font-size:clamp(2rem,4.5vw,3.5rem);line-height:1.05;letter-spacing:-.03em;margin-top:12px}
+    .pricing-header h2 .it{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--teal)}
+
+    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:1080px;margin:0 auto;perspective:1200px}
+
+    .pc{background:var(--white);border-radius:22px;padding:40px 32px;display:flex;flex-direction:column;transition:transform .6s var(--ease),box-shadow .6s;position:relative;border:1.5px solid var(--sand)}
+    .pc:hover{transform:translateY(-10px) perspective(800px) rotateX(3deg);box-shadow:0 30px 80px rgba(0,0,0,.06);border-color:var(--teal-xl)}
+
+    .pc.feat{background:var(--ink);color:var(--off);border-color:var(--ink)}
+    .pc.feat:hover{border-color:var(--teal)}
+    .pc.feat::before{content:'';position:absolute;top:0;left:15%;right:15%;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,var(--teal-d),var(--teal-l))}
+
+    .pc-badge{display:inline-flex;align-self:flex-start;padding:4px 12px;border-radius:100px;font-size:.57rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:var(--teal);color:white;margin-bottom:18px}
+    .pc-name{font-family:var(--serif);font-size:1.5rem;margin-bottom:4px}
+    .pc-tag{font-size:.78rem;color:var(--ink-l);margin-bottom:24px}
+    .pc.feat .pc-tag{color:var(--ink-xl)}
+
+    .pc-price{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}
+    .pc-price .c{font-weight:800;font-size:.85rem;color:var(--ink-xl)}
+    .pc-price .a{font-family:var(--serif);font-size:3.2rem;line-height:1}
+    .pc-price .u{font-size:.78rem;color:var(--ink-xl)}
+
+    .pc-note{font-size:.62rem;color:var(--ink-xl);margin-bottom:24px}
+    .pc-div{height:1px;background:var(--sand);margin-bottom:20px}
+    .pc.feat .pc-div{background:rgba(255,255,255,.07)}
+
+    .pc-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:28px;flex:1}
+    .pc-feats li{display:flex;align-items:center;gap:9px;font-size:.8rem;color:var(--ink-l)}
+    .pc.feat .pc-feats li{color:var(--ink-xl)}
+    .pc-feats li.st{color:var(--ink);font-weight:700}
+    .pc.feat .pc-feats li.st{color:var(--off)}
+    .ck{width:16px;height:16px;border-radius:50%;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .pc.feat .ck{background:rgba(58,175,169,.12)}
+    .ck svg{width:9px;height:9px;color:var(--teal)}
+
+    .pc-btn{display:block;width:100%;padding:14px;border:none;border-radius:14px;font-family:var(--sans);font-size:.8rem;font-weight:800;cursor:pointer;transition:all .35s var(--ease);text-align:center}
+    .pc-btn.fill{background:var(--teal);color:white}
+    .pc-btn.fill:hover{background:var(--teal-d);transform:translateY(-2px);box-shadow:0 8px 24px rgba(58,175,169,.25)}
+    .pc-btn.outline{background:var(--off);color:var(--ink);border:1.5px solid var(--sand)}
+    .pc-btn.outline:hover{border-color:var(--teal);color:var(--teal)}
+    .pc.feat .pc-btn.outline{background:rgba(255,255,255,.04);color:var(--off);border-color:rgba(255,255,255,.08)}
+    .pc.feat .pc-btn.outline:hover{border-color:var(--teal);color:var(--teal)}
+
+    /* ═══════════════════════════════════════════
+       6. TESTIMONIALS — ROTATING 3D CARDS
+    ═══════════════════════════════════════════ */
+    .testi{padding:clamp(80px,12vw,120px) 0;background:var(--off);overflow:hidden}
+    .testi-header{margin-bottom:48px}
+    .testi-header h2{font-weight:900;font-size:clamp(2rem,4vw,3rem);letter-spacing:-.03em;margin-top:12px}
+    .testi-header h2 .it{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--teal)}
+
+    .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .testi-card{background:var(--white);border-radius:22px;padding:36px 32px;transition:transform .6s var(--ease),box-shadow .6s}
+    .testi-card:hover{transform:translateY(-8px) perspective(600px) rotateY(-3deg);box-shadow:0 24px 64px rgba(0,0,0,.05)}
+
+    .tc-stars{display:flex;gap:3px;margin-bottom:16px}
+    .tc-stars svg{width:16px;height:16px;fill:var(--yellow);stroke:none}
+
+    .tc-quote{font-family:var(--serif);font-style:italic;font-size:1.05rem;line-height:1.5;color:var(--ink-m);margin-bottom:20px}
+    .tc-author{display:flex;align-items:center;gap:12px}
+    .tc-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800}
+    .tc-name{font-weight:700;font-size:.82rem}
+    .tc-role{font-size:.7rem;color:var(--ink-l)}
+
+    /* ═══════════════════════════════════════════
+       7. CTA
+    ═══════════════════════════════════════════ */
+    .cta{padding:clamp(80px,12vw,120px) 0}
+    .cta-card{border-radius:28px;overflow:hidden;display:grid;grid-template-columns:1.1fr .9fr;min-height:480px;position:relative}
+
+    .cta-text{background:var(--ink);padding:clamp(40px,5vw,72px);display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+    .cta-text .blob{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+    .cta-text .b1{width:400px;height:400px;background:rgba(58,175,169,.1);bottom:-100px;left:-100px}
+    .cta-text .b2{width:250px;height:250px;background:rgba(245,184,0,.06);top:-60px;right:-60px}
+    .cta-text>*{position:relative;z-index:1}
+    .cta-text .overline{color:var(--teal-l)}
+    .cta-text h2{font-weight:900;font-size:clamp(2rem,4vw,3rem);line-height:1.05;letter-spacing:-.03em;color:var(--off);margin:12px 0 16px}
+    .cta-text h2 .it{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--teal-l)}
+    .cta-text p{font-size:.92rem;color:var(--ink-xl);line-height:1.7;max-width:400px;margin-bottom:32px}
+    .cta-photo{background:var(--teal-bg);position:relative}
+    .cta-photo .ph-lbl{bottom:24px;left:24px}
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    .footer{background:var(--ink);padding:72px 0 36px;color:var(--off)}
+    .ft-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;margin-bottom:56px}
+    .ft-brand{font-weight:900;font-size:1.1rem;letter-spacing:.12em;margin-bottom:14px}
+    .ft-brand span{color:var(--teal)}
+    .ft-desc{font-size:.82rem;color:var(--ink-xl);line-height:1.8;max-width:300px}
+    .ft-ct{font-size:.57rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-xl);margin-bottom:14px}
+    .ft-col a{display:block;font-size:.82rem;color:rgba(255,255,255,.4);padding:4px 0;transition:color .2s}
+    .ft-col a:hover{color:var(--teal)}
+    .ft-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:28px;border-top:1px solid rgba(255,255,255,.05)}
+    .ft-copy{font-size:.68rem;color:rgba(255,255,255,.2)}
+    .ft-soc{display:flex;gap:8px}
+    .ft-soc a{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-size:.68rem;color:var(--ink-xl);transition:all .3s}
+    .ft-soc a:hover{background:var(--teal);color:white}
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media(max-width:1024px){
+      .hero-card-3d{display:none}
+      .hero-blob{display:none}
+      .hero{min-height:auto;padding:120px 0 80px}
+      .srv-grid{grid-template-columns:1fr;max-width:500px}
+      .srv-card.tall{grid-row:span 1}
+      .about-inner{grid-template-columns:1fr}
+      .about-photos{height:360px}
+      .pricing-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto}
+      .testi-grid{grid-template-columns:1fr}
+      .cta-card{grid-template-columns:1fr}
+      .cta-photo{min-height:260px}
+      .ft-top{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:640px){
+      .nav-links,.nav-cta{display:none}
+      .about-photos{height:300px}
+      .how-card{min-width:280px}
+      .ft-top{grid-template-columns:1fr;gap:36px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="container nav-in">
+      <div class="nav-logo"><span>C</span>HASKIS</div>
+      <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">A propos</a></li>
+        <li><a href="#how">Comment ca marche</a></li>
+        <li><a href="#pricing">Tarifs</a></li>
+        <li><a href="#testi">Temoignages</a></li>
+      </ul>
+      <button class="nav-cta">Demander une offre</button>
+    </div>
+  </nav>
+
+  <!-- 1. HERO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-blob hb1"></div>
+      <div class="hero-blob hb2"></div>
+      <!-- 3D floating cards -->
+      <div class="hero-card-3d hc1 ph" data-parallax="0.04" data-rotate-y="-8" data-rotate-x="4">
+        <span class="ph-lbl">Coursier &mdash; Geneve</span>
+        <svg style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);opacity:.05" viewBox="0 0 200 360" width="140"><ellipse cx="100" cy="55" rx="32" ry="38" fill="currentColor"/><path d="M58,108 Q58,92 100,92 Q142,92 142,108 L150,260 Q150,330 100,340 Q50,330 50,260Z" fill="currentColor"/></svg>
+      </div>
+      <div class="hero-card-3d hc2 ph" data-parallax="0.06" data-rotate-y="6" data-rotate-x="-3">
+        <span class="ph-lbl">Equipe terrain</span>
+      </div>
+      <div class="hero-card-3d hc3 ph" data-parallax="0.03" data-rotate-y="-12" data-rotate-x="8">
+        <span class="ph-lbl">Chauffeur</span>
+      </div>
+      <div class="hero-card-3d hc4" data-parallax="0.05">
+        <div class="hc4-inner">12<small>min moy.</small></div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge"><div class="dot"></div> Fleet Management &mdash; Suisse</div>
+        <h1>Vos colis,<br>nos <span class="it">coursiers.</span></h1>
+        <p class="hero-sub">Coursiers a velo. Chauffeurs dedies. Chaskis gere votre logistique du dernier kilometre avec la precision suisse et l'attention humaine.</p>
+        <div class="hero-actions">
+          <button class="btn btn-teal">Demander une offre <span class="arr">&rarr;</span></button>
+          <button class="btn btn-ghost">Devenir coursier</button>
+        </div>
+        <div class="hero-proof">
+          <div class="hero-avatars">
+            <div class="hero-av t">ML</div>
+            <div class="hero-av y">SK</div>
+            <div class="hero-av p">JD</div>
+            <div class="hero-av more">+247</div>
+          </div>
+          <div class="hero-proof-text"><strong>250+ coursiers</strong> nous font confiance</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="mq-wrap">
+    <div class="mq mq-teal"><div class="mq-track">
+      <span class="mq-w">Coursiers a velo</span><span class="mq-w">Livraison express</span><span class="mq-w">Chauffeurs dedies</span><span class="mq-w">Gestion de flotte</span><span class="mq-w">Sur-mesure</span><span class="mq-w">Suisse romande</span>
+      <span class="mq-w">Coursiers a velo</span><span class="mq-w">Livraison express</span><span class="mq-w">Chauffeurs dedies</span><span class="mq-w">Gestion de flotte</span><span class="mq-w">Sur-mesure</span><span class="mq-w">Suisse romande</span>
+    </div></div>
+    <div class="mq mq-sand"><div class="mq-track">
+      <span class="mq-w">Bien-etre</span><span class="mq-w">Eco-responsable</span><span class="mq-w">Precision suisse</span><span class="mq-w">Technologie</span><span class="mq-w">Confiance</span><span class="mq-w">Ponctualite</span>
+      <span class="mq-w">Bien-etre</span><span class="mq-w">Eco-responsable</span><span class="mq-w">Precision suisse</span><span class="mq-w">Technologie</span><span class="mq-w">Confiance</span><span class="mq-w">Ponctualite</span>
+    </div></div>
+  </div>
+
+  <!-- 2. SERVICES -->
+  <section id="services" class="services">
+    <div class="container">
+      <div class="services-header rv">
+        <div class="overline">Nos services</div>
+        <h2>Tout ce qu'il faut<br>pour <span class="it">bien livrer.</span></h2>
+        <p>Que vous soyez restaurateur, e-commercant ou particulier, on a la solution qui s'adapte a vos besoins.</p>
+      </div>
+      <div class="srv-grid">
+        <div class="srv-card sc-teal tall rv">
+          <div class="srv-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="srv-t">Coursiers a velo</div>
+          <div class="srv-d">Des coursiers formes, equipes, accompagnes. Livraison ecologique et rapide dans toute la zone urbaine. L'avenir du dernier kilometre, a chaque pedale.</div>
+          <div style="margin-top:auto;padding-top:32px;">
+            <div class="srv-n">12<span style="font-size:.4em;opacity:.5;"> min</span></div>
+            <div class="srv-nl">Temps moyen de livraison</div>
+          </div>
+        </div>
+        <div class="srv-card sc-ink rv rd1">
+          <div class="srv-ico"><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+          <div class="srv-t">Chauffeurs dedies</div>
+          <div class="srv-d">Longues distances, charges lourdes, livraisons speciales. Vos chauffeurs, a votre image.</div>
+        </div>
+        <div class="srv-card sc-ylw rv rd2" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+          <div class="srv-n">98%</div>
+          <div class="srv-nl">Satisfaction client</div>
+        </div>
+        <div class="srv-card sc-off rv rd1">
+          <div class="srv-ico"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="srv-t">Bien-etre au travail</div>
+          <div class="srv-d">Equipement fourni, horaires flexibles, accompagnement humain. Nos gens sont notre priorite absolue.</div>
+        </div>
+        <div class="srv-card sc-teal-bg rv rd2">
+          <div class="srv-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <div class="srv-t">Gestion de flotte complete</div>
+          <div class="srv-d">Plannings, forecasts, suivi temps reel. Tout centralise pour une logistique zero friction.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. ABOUT -->
+  <section id="about" class="about">
+    <div class="container">
+      <div class="about-inner">
+        <div class="about-photos">
+          <div class="about-ph ap1 ph" data-parallax="0.02"><span class="ph-lbl">Notre equipe &mdash; Lausanne</span>
+            <svg style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);opacity:.04;width:70%" viewBox="0 0 300 320"><ellipse cx="80" cy="50" rx="24" ry="28" fill="currentColor"/><path d="M50,88 Q50,76 80,76 Q110,76 110,88 L114,220 Q114,268 80,274 Q46,268 46,220Z" fill="currentColor"/><ellipse cx="160" cy="44" rx="26" ry="30" fill="currentColor"/><path d="M128,82 Q128,70 160,70 Q192,70 192,82 L196,230 Q196,278 160,284 Q124,278 124,230Z" fill="currentColor"/><ellipse cx="235" cy="52" rx="22" ry="26" fill="currentColor"/><path d="M208,88 Q208,78 235,78 Q262,78 262,88 L265,216 Q265,258 235,264 Q205,258 205,216Z" fill="currentColor"/></svg>
+          </div>
+          <div class="about-ph ap2 ph" data-parallax="0.04"><span class="ph-lbl">En livraison</span></div>
+          <div class="about-ph ap3" data-parallax="0.06"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+        </div>
+        <div class="about-text rv">
+          <div class="overline">A propos</div>
+          <h2>Des gens, avant<br><span class="it">tout le reste.</span></h2>
+          <blockquote>Chaque coursier qui roule pour nous est un humain, pas un numero.</blockquote>
+          <p>Chez Chaskis, on ne gere pas que des livraisons. On prend soin des gens qui les font. Equipement fourni, horaires flexibles, accompagnement personnalise. Parce qu'un coursier heureux, c'est un client satisfait.</p>
+          <button class="btn btn-teal" style="align-self:flex-start">Rejoindre l'equipe <span class="arr">&rarr;</span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. HOW IT WORKS -->
+  <section id="how" class="how">
+    <div class="container">
+      <div class="how-header rv">
+        <div>
+          <div class="overline">Comment ca marche</div>
+          <h2>Planifier une<br><span class="it">livraison.</span></h2>
+        </div>
+        <p>En 4 etapes simples, votre colis est en route. Technologie + humain = zero friction.</p>
+      </div>
+      <div class="how-scroll">
+        <div class="how-card rv">
+          <div class="how-num">1</div>
+          <h3>Lieu de prise en charge</h3>
+          <p>Indiquez l'adresse de depart. Notre algorithme trouve le coursier le plus proche en temps reel.</p>
+        </div>
+        <div class="how-card rv rd1">
+          <div class="how-num">2</div>
+          <h3>Lieu de livraison</h3>
+          <p>Precisez la destination. L'itineraire est calcule et optimise automatiquement.</p>
+        </div>
+        <div class="how-card rv rd2">
+          <div class="how-num">3</div>
+          <h3>Horaires & options</h3>
+          <p>Choisissez le creneau et les services supplementaires. On s'adapte a votre planning.</p>
+        </div>
+        <div class="how-card rv rd3">
+          <div class="how-num">4</div>
+          <h3>Suivi en temps reel</h3>
+          <p>Suivez votre livraison a chaque etape. Notifications, ETA, preuve de livraison.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. PRICING -->
+  <section id="pricing" class="pricing">
+    <div class="container">
+      <div class="pricing-header rv">
+        <div class="overline">Tarifs</div>
+        <h2>Une offre<br><span class="it">flexible.</span></h2>
+      </div>
+      <div class="pricing-grid">
+        <div class="pc rv">
+          <div class="pc-name">A la demande</div>
+          <div class="pc-tag">Sans engagement</div>
+          <div class="pc-price"><span class="c">CHF</span><span class="a">12</span><span class="u">/ commande</span></div>
+          <div class="pc-note">*3.5 commandes/heure</div>
+          <div class="pc-div"></div>
+          <ul class="pc-feats">
+            <li class="st"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Sans engagement</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Choix du transport</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Support 7/7</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Suivi temps reel</li>
+          </ul>
+          <button class="pc-btn outline">Demander une offre</button>
+        </div>
+        <div class="pc feat rv rd1">
+          <div class="pc-badge">Populaire</div>
+          <div class="pc-name" style="color:var(--off)">Dedie</div>
+          <div class="pc-tag">Votre flotte, votre image</div>
+          <div class="pc-price"><span class="c">CHF</span><span class="a" style="color:var(--off)">8</span><span class="u">/ commande</span></div>
+          <div class="pc-note">*6 commandes/heure</div>
+          <div class="pc-div"></div>
+          <ul class="pc-feats">
+            <li class="st"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Coursiers attitres</li>
+            <li class="st"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Dispo immediate</li>
+            <li class="st"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Equipement brande</li>
+            <li class="st"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Ops manager dedie</li>
+          </ul>
+          <button class="pc-btn fill">Demander une offre &rarr;</button>
+        </div>
+        <div class="pc rv rd2">
+          <div class="pc-name">Ponctuelle</div>
+          <div class="pc-tag">A la distance</div>
+          <div class="pc-price"><span class="c">CHF</span><span class="a">16</span><span class="u">/ commande</span></div>
+          <div class="pc-note">*Pour 1 km</div>
+          <div class="pc-div"></div>
+          <ul class="pc-feats">
+            <li class="st"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Sans engagement</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Tarif au km</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Support 7/7</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Suivi temps reel</li>
+          </ul>
+          <button class="pc-btn outline">Demander une offre</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. TESTIMONIALS -->
+  <section id="testi" class="testi">
+    <div class="container">
+      <div class="testi-header rv">
+        <div class="overline">Temoignages</div>
+        <h2>Ils nous font <span class="it">confiance.</span></h2>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card rv">
+          <div class="tc-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <div class="tc-quote">Depuis qu'on travaille avec Chaskis, nos livraisons sont plus rapides et nos clients plus satisfaits. Le suivi en temps reel change tout.</div>
+          <div class="tc-author">
+            <div class="tc-av" style="background:var(--teal-bg);color:var(--teal-d)">ML</div>
+            <div><div class="tc-name">Marie Laurent</div><div class="tc-role">Directrice ops &mdash; FoodCo</div></div>
+          </div>
+        </div>
+        <div class="testi-card rv rd1">
+          <div class="tc-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <div class="tc-quote">L'equipe Chaskis est incroyable. On a nos coursiers dedies qui connaissent notre menu par coeur. C'est comme avoir notre propre flotte.</div>
+          <div class="tc-author">
+            <div class="tc-av" style="background:var(--yellow-bg);color:#8A6E00">PD</div>
+            <div><div class="tc-name">Pierre Dubois</div><div class="tc-role">Gerant &mdash; Bistrot du Lac</div></div>
+          </div>
+        </div>
+        <div class="testi-card rv rd2">
+          <div class="tc-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <div class="tc-quote">En tant que coursier, je me sens valorise ici. L'equipement est top, les horaires sont flexibles, et on est vraiment ecoute.</div>
+          <div class="tc-author">
+            <div class="tc-av" style="background:var(--purple-bg);color:var(--purple)">AK</div>
+            <div><div class="tc-name">Ahmed Keita</div><div class="tc-role">Coursier &mdash; Chaskis</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. CTA -->
+  <section class="cta">
+    <div class="container">
+      <div class="cta-card">
+        <div class="cta-text">
+          <div class="blob b1"></div>
+          <div class="blob b2"></div>
+          <div class="overline">Pret a commencer ?</div>
+          <h2>Simplifiez vos livraisons <span class="it">des aujourd'hui.</span></h2>
+          <p>Rejoignez les entreprises suisses qui font confiance a Chaskis pour reinventer leur logistique.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button class="btn btn-teal">Demander une offre <span class="arr">&rarr;</span></button>
+            <button class="btn btn-ghost" style="color:var(--off);border-color:rgba(255,255,255,.15)">Prendre rendez-vous</button>
+          </div>
+        </div>
+        <div class="cta-photo ph" style="background:var(--teal-bg)">
+          <span class="ph-lbl">L'equipe Chaskis</span>
+          <svg style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);opacity:.04;width:65%" viewBox="0 0 300 280"><ellipse cx="70" cy="50" rx="22" ry="26" fill="currentColor"/><path d="M42,84 Q42,74 70,74 Q98,74 98,84 L102,190 Q102,230 70,236 Q38,230 38,190Z" fill="currentColor"/><ellipse cx="150" cy="44" rx="24" ry="28" fill="currentColor"/><path d="M120,80 Q120,70 150,70 Q180,70 180,80 L184,200 Q184,240 150,246 Q116,240 116,200Z" fill="currentColor"/><ellipse cx="232" cy="52" rx="21" ry="25" fill="currentColor"/><path d="M206,86 Q206,76 232,76 Q258,76 258,86 L261,188 Q261,222 232,228 Q203,222 203,188Z" fill="currentColor"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="ft-top">
+        <div><div class="ft-brand"><span>C</span>HASKIS</div><p class="ft-desc">La logistique du dernier kilometre, reinventee. Coursiers a velo et chauffeurs dedies en Suisse romande.</p></div>
+        <div class="ft-col"><div class="ft-ct">Services</div><a href="#">A la demande</a><a href="#">Coursiers dedies</a><a href="#">Ponctuelle</a><a href="#">Entreprises</a></div>
+        <div class="ft-col"><div class="ft-ct">Entreprise</div><a href="#">A propos</a><a href="#">Carrieres</a><a href="#">Blog</a><a href="#">Contact</a></div>
+        <div class="ft-col"><div class="ft-ct">Legal</div><a href="#">CGV</a><a href="#">Confidentialite</a><a href="#">Mentions legales</a></div>
+      </div>
+      <div class="ft-bottom">
+        <span class="ft-copy">&copy; 2026 Chaskis. Tous droits reserves.</span>
+        <div class="ft-soc"><a href="#">in</a><a href="#">ig</a><a href="#">X</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════
+       SCRIPTS — Scroll, Parallax, 3D Tilt
+  ═══════════════════════════════════════════ -->
+  <script>
+    // Reveal on scroll
+    const io = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+    }, { threshold: .05, rootMargin: '0px 0px -40px' });
+    document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+    // Nav solid
+    const nav = document.getElementById('nav');
+    addEventListener('scroll', () => nav.classList.toggle('solid', scrollY > 60), { passive: true });
+
+    // Parallax + 3D rotation on scroll for hero cards
+    const parallaxEls = document.querySelectorAll('[data-parallax]');
+    let ticking = false;
+
+    function updateParallax() {
+      const st = scrollY;
+      const vh = innerHeight;
+
+      parallaxEls.forEach(el => {
+        const speed = parseFloat(el.dataset.parallax) || 0.03;
+        const baseRY = parseFloat(el.dataset.rotateY) || 0;
+        const baseRX = parseFloat(el.dataset.rotateX) || 0;
+
+        // scroll-linked translation
+        const ty = st * speed * -1;
+        // scroll-linked rotation variation
+        const scrollFactor = Math.min(st / vh, 1);
+        const ry = baseRY + scrollFactor * 6;
+        const rx = baseRX + scrollFactor * -4;
+
+        el.style.transform = `perspective(800px) rotateY(${ry}deg) rotateX(${rx}deg) translateY(${ty}px)`;
+      });
+
+      ticking = false;
+    }
+
+    addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    // 3D tilt on hover for service/pricing/testi cards
+    document.querySelectorAll('.srv-card, .pc, .testi-card, .how-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        const tiltX = y * -8;  // degrees
+        const tiltY = x * 8;
+
+        card.style.transform = `translateY(-10px) perspective(600px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  </script>
+
+</body>
+</html>

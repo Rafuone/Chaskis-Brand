@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chaskis — Brand System v2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --teal: #3AAFA9;
+      --teal-light: #4DD1C1;
+      --teal-soft: #E8F6F5;
+      --teal-muted: #B3EBE4;
+      --teal-dark: #2E8E89;
+      --teal-deep: #1A5C59;
+      --yellow: #F5B800;
+      --yellow-soft: #FFF6DC;
+      --yellow-muted: #FFE899;
+      --purple: #5B3D8F;
+      --purple-soft: #F0EBF5;
+
+      --white: #FFFFFF;
+      --cream: #FAFBF8;
+      --warm-gray: #F4F3EF;
+      --sand: #EBE8E1;
+      --stone: #D4CFC5;
+      --text: #1A1F1C;
+      --text-mid: #3D4A42;
+      --text-light: #6B7C72;
+      --text-muted: #99A89E;
+
+      --serif: 'DM Serif Display', serif;
+      --sans: 'Urbanist', sans-serif;
+
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --radius: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--sans);
+      font-size: 16px;
+      color: var(--text);
+      background: var(--white);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ════════════════════════════════════════════
+       PHOTO PLACEHOLDERS — Human feel
+    ════════════════════════════════════════════ */
+    .photo {
+      background: var(--warm-gray);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .photo::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(58,175,169,0.06) 0%, rgba(245,184,0,0.04) 100%);
+    }
+
+    .photo-label {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      font-family: var(--sans);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 100px;
+    }
+
+    .photo-silhouette {
+      position: absolute;
+      bottom: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      width: 100%;
+      height: 80%;
+    }
+
+    .photo-silhouette svg {
+      width: 60%;
+      max-width: 200px;
+      opacity: 0.07;
+    }
+
+    /* ════════════════════════════════════════════
+       NAVIGATION
+    ════════════════════════════════════════════ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.4s ease;
+    }
+
+    .nav.scrolled {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+    }
+
+    .nav-logo {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .nav-logo span { color: var(--teal); }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-light);
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--teal); }
+
+    .nav-cta {
+      padding: 10px 24px;
+      background: var(--teal);
+      color: white;
+      border-radius: 100px;
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s var(--ease);
+    }
+
+    .nav-cta:hover {
+      background: var(--teal-dark);
+      transform: translateY(-1px);
+    }
+
+    /* ════════════════════════════════════════════
+       HERO
+    ════════════════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      padding: 140px 48px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      max-width: 1440px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .hero-text {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px 6px 8px;
+      background: var(--teal-soft);
+      border-radius: 100px;
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--teal-dark);
+      margin-bottom: 32px;
+    }
+
+    .hero-badge .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(3.2rem, 6.5vw, 5.5rem);
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+
+    .hero-title .line {
+      display: block;
+      overflow: hidden;
+    }
+
+    .hero-title .line span {
+      display: inline-block;
+      animation: revealUp 1s var(--ease) forwards;
+      opacity: 0;
+      transform: translateY(110%);
+    }
+
+    .hero-title .line:nth-child(2) span { animation-delay: 0.12s; }
+    .hero-title .line:nth-child(3) span { animation-delay: 0.24s; }
+
+    @keyframes revealUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--teal);
+    }
+
+    .hero-title .sans-bold {
+      font-family: var(--sans);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--text-light);
+      max-width: 440px;
+      line-height: 1.75;
+      margin-bottom: 36px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 14px 28px;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.4s var(--ease);
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: white;
+      box-shadow: 0 4px 20px rgba(58,175,169,0.25);
+    }
+    .btn-primary:hover {
+      background: var(--teal-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(58,175,169,0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--stone);
+    }
+    .btn-outline:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      transform: translateY(-2px);
+    }
+
+    .btn-yellow {
+      background: var(--yellow);
+      color: var(--text);
+      box-shadow: 0 4px 20px rgba(245,184,0,0.2);
+    }
+    .btn-yellow:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(245,184,0,0.3);
+    }
+
+    .btn .arrow {
+      transition: transform 0.3s var(--ease);
+    }
+    .btn:hover .arrow { transform: translateX(4px); }
+
+    /* Hero visual — photo composition */
+    .hero-visual {
+      position: relative;
+      height: 600px;
+    }
+
+    .hero-photo-main {
+      width: 100%;
+      height: 100%;
+      border-radius: var(--radius-xl);
+    }
+
+    .hero-photo-float {
+      position: absolute;
+      width: 200px;
+      height: 250px;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+      border: 4px solid white;
+    }
+
+    .hero-photo-float.pos-1 {
+      bottom: -30px;
+      left: -40px;
+    }
+
+    .hero-photo-float.pos-2 {
+      top: 40px;
+      right: -30px;
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+    }
+
+    .hero-stat-float {
+      position: absolute;
+      bottom: 60px;
+      right: -20px;
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+
+    .hero-stat-float .number {
+      font-family: var(--serif);
+      font-size: 2rem;
+      color: var(--teal);
+      line-height: 1;
+    }
+
+    .hero-stat-float .label {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ════════════════════════════════════════════
+       MARQUEE — Tilted strips
+    ════════════════════════════════════════════ */
+    .marquee-section {
+      padding: 12px 0;
+      overflow: hidden;
+      position: relative;
+      z-index: 3;
+    }
+
+    .marquee-strip {
+      padding: 14px 0;
+      overflow: hidden;
+    }
+
+    .marquee-strip.tilt-down { transform: rotate(-1.5deg) scale(1.03); background: var(--teal); }
+    .marquee-strip.tilt-up { transform: rotate(1.5deg) scale(1.03); background: var(--yellow); margin-top: -8px; }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: scroll 28s linear infinite;
+    }
+
+    .marquee-strip.tilt-up .marquee-track { animation-direction: reverse; }
+
+    @keyframes scroll {
+      to { transform: translateX(-50%); }
+    }
+
+    .marquee-word {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      padding: 0 24px;
+      color: white;
+    }
+
+    .marquee-strip.tilt-up .marquee-word { color: var(--text); }
+
+    .marquee-word .sep {
+      display: inline-block;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.3;
+      vertical-align: middle;
+      margin-left: 24px;
+    }
+
+    /* ════════════════════════════════════════════
+       SECTION HEADERS — reusable
+    ════════════════════════════════════════════ */
+    .section-overline {
+      font-family: var(--sans);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-overline::before {
+      content: '';
+      width: 32px;
+      height: 1.5px;
+      background: var(--teal);
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(2.4rem, 4.5vw, 4rem);
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--teal);
+    }
+
+    .section-desc {
+      font-size: 1rem;
+      color: var(--text-light);
+      max-width: 520px;
+      line-height: 1.75;
+    }
+
+    /* ════════════════════════════════════════════
+       ABOUT / HUMAN SECTION
+    ════════════════════════════════════════════ */
+    .about {
+      padding: 120px 48px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 80px;
+      align-items: center;
+      margin-top: 64px;
+    }
+
+    .about-photo-stack {
+      position: relative;
+      height: 550px;
+    }
+
+    .about-photo-big {
+      width: 80%;
+      height: 100%;
+      border-radius: var(--radius-xl);
+    }
+
+    .about-photo-small {
+      position: absolute;
+      width: 220px;
+      height: 300px;
+      border-radius: var(--radius-lg);
+      bottom: -20px;
+      right: 0;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+      border: 5px solid white;
+    }
+
+    .about-text .big-quote {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 24px;
+      position: relative;
+      padding-left: 28px;
+    }
+
+    .about-text .big-quote::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 4px;
+      bottom: 4px;
+      width: 3px;
+      border-radius: 2px;
+      background: var(--teal);
+    }
+
+    .about-text .body {
+      font-size: 1rem;
+      color: var(--text-light);
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .team-avatars {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .team-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--warm-gray);
+      border: 3px solid white;
+      margin-left: -12px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--sans);
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .team-avatar:first-child { margin-left: 0; }
+
+    .team-avatar.teal { background: var(--teal-soft); color: var(--teal-dark); }
+    .team-avatar.yellow { background: var(--yellow-soft); color: #8A6E00; }
+    .team-avatar.purple { background: var(--purple-soft); color: var(--purple); }
+
+    .team-label {
+      margin-left: 16px;
+      font-size: 0.82rem;
+      color: var(--text-light);
+    }
+
+    .team-label strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    /* ════════════════════════════════════════════
+       STATS BAR
+    ════════════════════════════════════════════ */
+    .stats-bar {
+      padding: 80px 48px;
+      background: var(--cream);
+    }
+
+    .stats-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 48px;
+      text-align: center;
+    }
+
+    .stat-item .number {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 4vw, 3.5rem);
+      color: var(--teal);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-item .label {
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+
+    /* ════════════════════════════════════════════
+       TYPOGRAPHY SHOWCASE
+    ════════════════════════════════════════════ */
+    .type-section {
+      padding: 120px 48px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .type-compositions {
+      margin-top: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .type-comp {
+      padding: 48px 56px;
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.5s var(--ease);
+    }
+
+    .type-comp:hover { transform: scale(1.005); }
+
+    .type-comp.bg-cream { background: var(--cream); }
+    .type-comp.bg-teal-soft { background: var(--teal-soft); }
+    .type-comp.bg-dark { background: var(--text); }
+    .type-comp.bg-yellow-soft { background: var(--yellow-soft); }
+    .type-comp.bg-sand { background: var(--sand); }
+
+    .type-comp .tc-label {
+      font-family: var(--sans);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .type-comp.bg-cream .tc-label,
+    .type-comp.bg-teal-soft .tc-label,
+    .type-comp.bg-yellow-soft .tc-label,
+    .type-comp.bg-sand .tc-label { color: var(--teal); }
+
+    .type-comp.bg-dark .tc-label { color: var(--teal-light); }
+
+    .type-giant {
+      font-size: clamp(3rem, 9vw, 8rem);
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+    }
+
+    .type-giant.serif {
+      font-family: var(--serif);
+      font-weight: 400;
+    }
+
+    .type-giant.sans {
+      font-family: var(--sans);
+      font-weight: 800;
+    }
+
+    .type-giant.serif-italic {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .type-comp.bg-dark .type-giant { color: var(--cream); }
+    .type-comp.bg-cream .type-giant { color: var(--text); }
+    .type-comp.bg-teal-soft .type-giant { color: var(--teal-deep); }
+    .type-comp.bg-yellow-soft .type-giant { color: var(--text); }
+    .type-comp.bg-sand .type-giant { color: var(--text); }
+
+    .type-comp .tc-aside {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-top: 16px;
+      max-width: 400px;
+    }
+
+    .type-comp.bg-dark .tc-aside { color: var(--text-muted); }
+    .type-comp.bg-cream .tc-aside,
+    .type-comp.bg-teal-soft .tc-aside,
+    .type-comp.bg-yellow-soft .tc-aside,
+    .type-comp.bg-sand .tc-aside { color: var(--text-light); }
+
+    /* Font specimens row */
+    .font-specimens {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .font-spec {
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      background: var(--cream);
+      position: relative;
+    }
+
+    .font-spec .spec-name {
+      font-family: var(--sans);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 6px;
+    }
+
+    .font-spec .spec-role {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .font-spec .spec-sample {
+      font-size: 2.2rem;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .font-spec .spec-alphabet {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      letter-spacing: 0.08em;
+      line-height: 2;
+    }
+
+    .font-spec .spec-weights {
+      display: flex;
+      gap: 20px;
+      margin-top: 16px;
+    }
+
+    .font-spec .spec-weights span {
+      font-size: 1.8rem;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    /* ════════════════════════════════════════════
+       COLORS — Immersive blocks
+    ════════════════════════════════════════════ */
+    .color-section {
+      padding: 0;
+    }
+
+    .color-block {
+      min-height: 45vh;
+      display: flex;
+      align-items: center;
+      padding: 80px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .color-block-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cb-type {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(4rem, 10vw, 9rem);
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+    }
+
+    .cb-info {
+      text-align: right;
+      max-width: 340px;
+    }
+
+    .cb-label {
+      font-family: var(--sans);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      opacity: 0.6;
+    }
+
+    .cb-hex {
+      font-family: var(--sans);
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .cb-desc {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      opacity: 0.7;
+    }
+
+    /* Teal */
+    .cb-teal { background: var(--teal); color: white; }
+    .cb-teal .cb-type { color: rgba(255,255,255,0.2); -webkit-text-stroke: 1.5px rgba(255,255,255,0.5); }
+
+    /* Yellow */
+    .cb-yellow { background: var(--yellow); color: var(--text); }
+    .cb-yellow .cb-type { color: rgba(0,0,0,0.06); -webkit-text-stroke: 1.5px rgba(0,0,0,0.2); }
+
+    /* Cream */
+    .cb-cream { background: var(--cream); color: var(--text); border-top: 1px solid var(--sand); border-bottom: 1px solid var(--sand); }
+    .cb-cream .cb-type { color: var(--sand); -webkit-text-stroke: 1.5px var(--stone); }
+
+    /* Purple */
+    .cb-purple { background: var(--purple); color: white; }
+    .cb-purple .cb-type { color: rgba(255,255,255,0.1); -webkit-text-stroke: 1.5px rgba(255,255,255,0.35); }
+
+    /* ════════════════════════════════════════════
+       BENTO GRID — Services
+    ════════════════════════════════════════════ */
+    .services {
+      padding: 120px 48px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 10px;
+      margin-top: 64px;
+    }
+
+    .b-card {
+      border-radius: var(--radius-lg);
+      padding: 40px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.5s var(--ease);
+    }
+
+    .b-card:hover { transform: translateY(-4px); }
+
+    .b-span-8 { grid-column: span 8; }
+    .b-span-4 { grid-column: span 4; }
+    .b-span-5 { grid-column: span 5; }
+    .b-span-7 { grid-column: span 7; }
+    .b-span-6 { grid-column: span 6; }
+
+    .b-teal { background: var(--teal); color: white; }
+    .b-cream { background: var(--cream); color: var(--text); border: 1px solid var(--sand); }
+    .b-dark { background: var(--text); color: var(--cream); }
+    .b-yellow { background: var(--yellow); color: var(--text); }
+    .b-teal-soft { background: var(--teal-soft); color: var(--text); }
+    .b-photo { padding: 0; }
+
+    .b-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+    }
+
+    .b-teal .b-icon { background: rgba(255,255,255,0.18); }
+    .b-cream .b-icon { background: var(--teal-soft); }
+    .b-dark .b-icon { background: rgba(58,175,169,0.15); }
+    .b-yellow .b-icon { background: rgba(0,0,0,0.06); }
+    .b-teal-soft .b-icon { background: var(--teal-muted); }
+
+    .b-title {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .b-desc {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      line-height: 1.7;
+      opacity: 0.75;
+      max-width: 380px;
+    }
+
+    .b-stat {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      line-height: 1;
+    }
+
+    .b-stat-label {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      margin-top: 8px;
+    }
+
+    /* ════════════════════════════════════════════
+       PRICING
+    ════════════════════════════════════════════ */
+    .pricing {
+      padding: 120px 48px;
+      background: var(--cream);
+    }
+
+    .pricing-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .pricing-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .p-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.5s var(--ease), box-shadow 0.5s ease;
+      position: relative;
+    }
+
+    .p-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+    }
+
+    .p-card.featured {
+      background: var(--text);
+      color: var(--cream);
+    }
+
+    .p-card.featured::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--teal-dark), var(--teal-light));
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .p-badge {
+      display: inline-flex;
+      align-self: flex-start;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-family: var(--sans);
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--teal);
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    .p-name {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+
+    .p-tagline {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      margin-bottom: 24px;
+    }
+
+    .p-card.featured .p-tagline { color: var(--text-muted); }
+
+    .p-price {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .p-price .cur {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .p-price .amt {
+      font-family: var(--serif);
+      font-size: 3rem;
+      line-height: 1;
+    }
+
+    .p-price .unit {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .p-note {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .p-divider {
+      height: 1px;
+      background: var(--sand);
+      margin-bottom: 20px;
+    }
+
+    .p-card.featured .p-divider { background: rgba(255,255,255,0.08); }
+
+    .p-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 32px;
+      flex: 1;
+    }
+
+    .p-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      color: var(--text-light);
+    }
+
+    .p-card.featured .p-features li { color: var(--text-muted); }
+    .p-card.featured .p-features li.strong { color: var(--cream); }
+
+    .p-features li.strong { color: var(--text); font-weight: 700; }
+
+    .p-features .ck {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--teal-soft);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .p-card.featured .p-features .ck { background: rgba(58,175,169,0.15); }
+
+    .p-features .ck svg { width: 10px; height: 10px; color: var(--teal); }
+
+    .p-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s var(--ease);
+      text-align: center;
+    }
+
+    .p-btn.fill {
+      background: var(--teal);
+      color: white;
+    }
+    .p-btn.fill:hover {
+      background: var(--teal-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(58,175,169,0.25);
+    }
+
+    .p-btn.ghost {
+      background: var(--cream);
+      color: var(--text);
+      border: 1.5px solid var(--sand);
+    }
+    .p-btn.ghost:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .p-card.featured .p-btn.ghost {
+      background: rgba(255,255,255,0.06);
+      color: var(--cream);
+      border-color: rgba(255,255,255,0.1);
+    }
+    .p-card.featured .p-btn.ghost:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    /* ════════════════════════════════════════════
+       CTA — With photo
+    ════════════════════════════════════════════ */
+    .cta-section {
+      padding: 120px 48px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .cta-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      min-height: 480px;
+    }
+
+    .cta-text {
+      padding: 64px 56px;
+      background: var(--text);
+      color: var(--cream);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    .cta-text::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 0% 100%, rgba(58,175,169,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 100% 0%, rgba(245,184,0,0.06) 0%, transparent 50%);
+    }
+
+    .cta-text > * { position: relative; z-index: 1; }
+
+    .cta-text .section-overline { color: var(--teal-light); }
+
+    .cta-text .section-title {
+      color: var(--cream);
+      margin-bottom: 16px;
+    }
+
+    .cta-text .section-title em { color: var(--teal-light); }
+
+    .cta-text .section-desc {
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .cta-photo {
+      background: var(--warm-gray);
+      position: relative;
+    }
+
+    .cta-photo .photo-label { bottom: 24px; left: 24px; }
+
+    /* ════════════════════════════════════════════
+       BACKGROUNDS GALLERY
+    ════════════════════════════════════════════ */
+    .bg-section {
+      padding: 120px 48px;
+      background: var(--cream);
+    }
+
+    .bg-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .bg-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 240px;
+      gap: 10px;
+      margin-top: 64px;
+    }
+
+    .bg-cell {
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 20px;
+      transition: transform 0.4s var(--ease);
+      cursor: pointer;
+    }
+
+    .bg-cell:hover { transform: scale(1.015); }
+
+    .bg-cell.tall { grid-row: span 2; }
+
+    .bg-tag {
+      font-family: var(--sans);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 100px;
+      backdrop-filter: blur(8px);
+      z-index: 1;
+    }
+
+    .bg-tag.light { background: rgba(255,255,255,0.8); color: var(--text); }
+    .bg-tag.dark { background: rgba(0,0,0,0.3); color: white; }
+
+    .cell-dots {
+      background-color: var(--white);
+      background-image: radial-gradient(circle, var(--teal-muted) 1px, transparent 1px);
+      background-size: 18px 18px;
+    }
+
+    .cell-grid {
+      background-color: var(--white);
+      background-image:
+        linear-gradient(rgba(58,175,169,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(58,175,169,0.08) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+
+    .cell-mesh {
+      background: var(--white);
+      background-image:
+        radial-gradient(ellipse at 20% 40%, rgba(58,175,169,0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 60%, rgba(245,184,0,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(91,61,143,0.04) 0%, transparent 40%);
+    }
+
+    .cell-teal-grad {
+      background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 50%, var(--teal-light) 100%);
+    }
+
+    .cell-warm-grad {
+      background: linear-gradient(135deg, #C49300 0%, var(--yellow) 50%, var(--yellow-light) 100%);
+    }
+
+    .cell-diagonal {
+      background-color: var(--cream);
+      background-image: repeating-linear-gradient(
+        -45deg, transparent, transparent 6px,
+        rgba(58,175,169,0.05) 6px, rgba(58,175,169,0.05) 7px
+      );
+    }
+
+    .cell-topo {
+      background-color: var(--cream);
+      background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 10 C70 20,90 40,80 60 C70 80,30 80,20 60 C10 40,30 20,50 10Z' fill='none' stroke='%233AAFA9' stroke-opacity='0.08' stroke-width='0.5'/%3E%3Cpath d='M50 25 C65 32,78 45,72 58 C63 72,37 72,28 58 C22 45,35 32,50 25Z' fill='none' stroke='%233AAFA9' stroke-opacity='0.05' stroke-width='0.5'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+    }
+
+    .cell-glass {
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.8);
+    }
+
+    .cell-sand {
+      background: var(--sand);
+    }
+
+    /* ════════════════════════════════════════════
+       FOOTER
+    ════════════════════════════════════════════ */
+    .footer {
+      padding: 80px 48px 40px;
+      background: var(--text);
+      color: var(--cream);
+    }
+
+    .footer-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 64px;
+      margin-bottom: 64px;
+    }
+
+    .footer-brand {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand span { color: var(--teal); }
+
+    .footer-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 320px;
+    }
+
+    .footer-col-title {
+      font-family: var(--sans);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .footer-col a {
+      display: block;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.45);
+      padding: 4px 0;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover { color: var(--teal); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .footer-copy {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 10px;
+    }
+
+    .footer-socials a {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      transition: all 0.3s;
+    }
+
+    .footer-socials a:hover { background: var(--teal); color: white; }
+
+    /* ════════════════════════════════════════════
+       SCROLL REVEAL
+    ════════════════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: all 0.9s var(--ease);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.08s; }
+    .reveal-d2 { transition-delay: 0.16s; }
+    .reveal-d3 { transition-delay: 0.24s; }
+
+    /* ════════════════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; padding: 120px 32px 60px; }
+      .hero-visual { height: 400px; }
+      .about-grid { grid-template-columns: 1fr; gap: 48px; }
+      .about-photo-stack { height: 400px; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .bento .b-card { grid-column: span 12 !important; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+      .cta-block { grid-template-columns: 1fr; }
+      .cta-photo { min-height: 300px; }
+      .bg-grid { grid-template-columns: 1fr 1fr; }
+      .bg-cell.tall { grid-row: span 1; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 100px 24px 40px; }
+      .stats-inner { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .font-specimens { grid-template-columns: 1fr; }
+      .bg-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; gap: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav-logo"><span>C</span>HASKIS</div>
+    <ul class="nav-links">
+      <li><a href="#about">A propos</a></li>
+      <li><a href="#type">Typographie</a></li>
+      <li><a href="#colors">Couleurs</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#pricing">Tarifs</a></li>
+    </ul>
+    <button class="nav-cta">Demander une offre</button>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="hero-text">
+      <div class="hero-badge"><div class="dot"></div> Fleet Management — Suisse</div>
+      <h1 class="hero-title">
+        <span class="line"><span>La livraison</span></span>
+        <span class="line"><span class="sans-bold"><em>reinventee</em></span></span>
+        <span class="line"><span>avec <em>soin.</em></span></span>
+      </h1>
+      <p class="hero-desc">Coursiers a velo, chauffeurs dedies. Chaskis gere votre logistique du dernier kilometre avec precision suisse et humanite.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-primary">Demander une offre <span class="arrow">&rarr;</span></button>
+        <button class="btn btn-outline">Devenir coursier</button>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-photo-main photo">
+        <span class="photo-label">Coursier Chaskis, Geneve</span>
+        <div class="photo-silhouette">
+          <svg viewBox="0 0 200 300"><ellipse cx="100" cy="60" rx="30" ry="35" fill="currentColor"/><path d="M60,110 Q60,95 100,95 Q140,95 140,110 L150,220 Q150,280 100,290 Q50,280 50,220 Z" fill="currentColor"/></svg>
+        </div>
+      </div>
+      <div class="hero-photo-float pos-1 photo">
+        <span class="photo-label">Equipe terrain</span>
+      </div>
+      <div class="hero-photo-float pos-2 photo" style="background:var(--teal-soft);">
+        <span class="photo-label" style="bottom:auto;top:50%;left:50%;transform:translate(-50%,-50%);background:none;color:var(--teal-dark);font-size:0.55rem;">Chauffeur</span>
+      </div>
+      <div class="hero-stat-float">
+        <div class="number">250+</div>
+        <div class="label">Coursiers actifs</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ MARQUEE ═══ -->
+  <div class="marquee-section">
+    <div class="marquee-strip tilt-down">
+      <div class="marquee-track">
+        <span class="marquee-word">Coursiers a velo <span class="sep"></span></span>
+        <span class="marquee-word">Livraison express <span class="sep"></span></span>
+        <span class="marquee-word">Chauffeurs dedies <span class="sep"></span></span>
+        <span class="marquee-word">Gestion de flotte <span class="sep"></span></span>
+        <span class="marquee-word">Sur-mesure <span class="sep"></span></span>
+        <span class="marquee-word">Suisse romande <span class="sep"></span></span>
+        <span class="marquee-word">Coursiers a velo <span class="sep"></span></span>
+        <span class="marquee-word">Livraison express <span class="sep"></span></span>
+        <span class="marquee-word">Chauffeurs dedies <span class="sep"></span></span>
+        <span class="marquee-word">Gestion de flotte <span class="sep"></span></span>
+        <span class="marquee-word">Sur-mesure <span class="sep"></span></span>
+        <span class="marquee-word">Suisse romande <span class="sep"></span></span>
+      </div>
+    </div>
+    <div class="marquee-strip tilt-up">
+      <div class="marquee-track">
+        <span class="marquee-word">Bien-etre <span class="sep"></span></span>
+        <span class="marquee-word">Ponctualite <span class="sep"></span></span>
+        <span class="marquee-word">Technologie <span class="sep"></span></span>
+        <span class="marquee-word">Eco-responsable <span class="sep"></span></span>
+        <span class="marquee-word">Precision <span class="sep"></span></span>
+        <span class="marquee-word">Confiance <span class="sep"></span></span>
+        <span class="marquee-word">Bien-etre <span class="sep"></span></span>
+        <span class="marquee-word">Ponctualite <span class="sep"></span></span>
+        <span class="marquee-word">Technologie <span class="sep"></span></span>
+        <span class="marquee-word">Eco-responsable <span class="sep"></span></span>
+        <span class="marquee-word">Precision <span class="sep"></span></span>
+        <span class="marquee-word">Confiance <span class="sep"></span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ABOUT / HUMAN ═══ -->
+  <section id="about" class="about">
+    <div class="section-overline">A propos</div>
+    <div class="section-title">Des gens, avant<br><em>tout le reste.</em></div>
+
+    <div class="about-grid">
+      <div class="about-photo-stack">
+        <div class="about-photo-big photo" style="background:var(--teal-soft);">
+          <span class="photo-label">Notre equipe, Lausanne</span>
+          <div class="photo-silhouette" style="height:70%;">
+            <svg viewBox="0 0 300 250" style="width:80%;max-width:300px;">
+              <ellipse cx="80" cy="50" rx="22" ry="26" fill="currentColor"/>
+              <path d="M50,85 Q50,75 80,75 Q110,75 110,85 L115,180 Q115,220 80,225 Q45,220 45,180 Z" fill="currentColor"/>
+              <ellipse cx="150" cy="45" rx="24" ry="28" fill="currentColor"/>
+              <path d="M118,80 Q118,70 150,70 Q182,70 182,80 L188,185 Q188,230 150,235 Q112,230 112,185 Z" fill="currentColor"/>
+              <ellipse cx="225" cy="52" rx="21" ry="25" fill="currentColor"/>
+              <path d="M197,88 Q197,78 225,78 Q253,78 253,88 L257,178 Q257,215 225,220 Q193,215 193,178 Z" fill="currentColor"/>
+            </svg>
+          </div>
+        </div>
+        <div class="about-photo-small photo" style="background:var(--yellow-soft);">
+          <span class="photo-label">Coursier en livraison</span>
+        </div>
+      </div>
+      <div class="about-text">
+        <div class="big-quote">
+          Chaque coursier qui roule pour nous est un humain, pas un numero. C'est la difference Chaskis.
+        </div>
+        <div class="body">
+          Chez Chaskis, on ne gere pas que des livraisons. On prend soin des gens qui les font. Equipement fourni, horaires flexibles, accompagnement personnalise. Parce qu'un coursier heureux, c'est un client satisfait.
+        </div>
+        <div style="display:flex;align-items:center;">
+          <div class="team-avatars">
+            <div class="team-avatar teal">ML</div>
+            <div class="team-avatar yellow">SK</div>
+            <div class="team-avatar purple">JD</div>
+            <div class="team-avatar teal">AR</div>
+            <div class="team-avatar" style="background:var(--teal);color:white;font-size:0.55rem;">+86</div>
+          </div>
+          <div class="team-label"><strong>250+ personnes</strong> qui font Chaskis</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ STATS ═══ -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item reveal">
+        <div class="number">250+</div>
+        <div class="label">Coursiers actifs</div>
+      </div>
+      <div class="stat-item reveal reveal-d1">
+        <div class="number">15k</div>
+        <div class="label">Livraisons / mois</div>
+      </div>
+      <div class="stat-item reveal reveal-d2">
+        <div class="number">98%</div>
+        <div class="label">Satisfaction client</div>
+      </div>
+      <div class="stat-item reveal reveal-d3">
+        <div class="number">12 min</div>
+        <div class="label">Temps moyen</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TYPOGRAPHY ═══ -->
+  <section id="type" class="type-section">
+    <div class="section-overline">Typographie</div>
+    <div class="section-title">Deux voix,<br><em>une identite.</em></div>
+    <div class="section-desc">DM Serif Display pour le caractere editorial. Urbanist pour la clarte et la modernite. Un duo qui raconte Chaskis.</div>
+
+    <div class="type-compositions">
+      <div class="type-comp bg-cream reveal">
+        <div class="tc-label">Serif &mdash; Editorial</div>
+        <div class="type-giant serif">La livraison</div>
+        <div class="tc-aside">DM Serif Display — Pour les titres hero, les accroches emotionnelles, tout ce qui doit marquer les esprits.</div>
+      </div>
+
+      <div class="type-comp bg-teal-soft reveal">
+        <div class="tc-label">Serif Italic &mdash; Accent</div>
+        <div class="type-giant serif-italic" style="color:var(--teal);">reinventee.</div>
+        <div class="tc-aside">L'italique de la serif pour les mots-cles, les mises en valeur, le caractere.</div>
+      </div>
+
+      <div class="type-comp bg-dark reveal">
+        <div class="tc-label">Sans &mdash; Impact</div>
+        <div class="type-giant sans">CHASKIS</div>
+        <div class="tc-aside">Urbanist en poids 800 — Pour le logo, les CTAs, les moments ou il faut de la force brute.</div>
+      </div>
+
+      <div class="type-comp bg-yellow-soft reveal">
+        <div class="tc-label">Mix &mdash; Contraste</div>
+        <div style="display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;">
+          <span class="type-giant serif" style="color:var(--text);">Livrer</span>
+          <span class="type-giant sans" style="font-size:clamp(2rem,6vw,5rem);color:var(--teal);">avec soin</span>
+        </div>
+        <div class="tc-aside">Le mix serif + sans cree un rythme visuel unique. Le caractere edito + la precision geometrique.</div>
+      </div>
+
+      <div class="type-comp bg-sand reveal">
+        <div class="tc-label">Hierarchie</div>
+        <div style="font-family:var(--sans);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:12px;">Pour repondre a vos besoins</div>
+        <div style="font-family:var(--serif);font-size:clamp(2rem,4vw,3.5rem);line-height:1.05;color:var(--text);margin-bottom:12px;">Planifier une <em style="color:var(--teal);font-style:italic;">livraison</em></div>
+        <div style="font-family:var(--sans);font-size:0.95rem;color:var(--text-light);max-width:480px;line-height:1.7;">Chez Chaskis, on combine operations, RH et technologie pour une logistique plus simple et plus humaine.</div>
+      </div>
+    </div>
+
+    <div class="font-specimens">
+      <div class="font-spec reveal">
+        <div class="spec-name">DM Serif Display</div>
+        <div class="spec-role">Titres &bull; Accroches &bull; Citations</div>
+        <div class="spec-sample" style="font-family:var(--serif);">La precision<br>suisse.</div>
+        <div class="spec-alphabet" style="font-family:var(--serif);">
+          A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br>
+          a b c d e f g h i j k l m n o p q r s t u v w x y z<br>
+          0 1 2 3 4 5 6 7 8 9
+        </div>
+      </div>
+      <div class="font-spec reveal reveal-d1">
+        <div class="spec-name">Urbanist</div>
+        <div class="spec-role">Corps &bull; Interface &bull; Navigation</div>
+        <div class="spec-sample" style="font-family:var(--sans);font-weight:700;">L'avenir de<br>la livraison.</div>
+        <div class="spec-alphabet" style="font-family:var(--sans);">
+          A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br>
+          a b c d e f g h i j k l m n o p q r s t u v w x y z<br>
+          0 1 2 3 4 5 6 7 8 9
+        </div>
+        <div class="spec-weights">
+          <span style="font-family:var(--sans);font-weight:300;">Ag</span>
+          <span style="font-family:var(--sans);font-weight:500;">Ag</span>
+          <span style="font-family:var(--sans);font-weight:700;">Ag</span>
+          <span style="font-family:var(--sans);font-weight:900;">Ag</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ COLORS ═══ -->
+  <section id="colors" class="color-section">
+    <div class="color-block cb-teal">
+      <div class="color-block-inner">
+        <div class="cb-type">Teal</div>
+        <div class="cb-info">
+          <div class="cb-label">Couleur primaire &mdash; Coursiers</div>
+          <div class="cb-hex">#3AAFA9</div>
+          <div class="cb-desc">L'ADN visuel de Chaskis. L'energie du velo, la vitesse, la fiabilite. Present partout ou un coursier roule.</div>
+        </div>
+      </div>
+    </div>
+    <div class="color-block cb-yellow">
+      <div class="color-block-inner">
+        <div class="cb-type">Warm</div>
+        <div class="cb-info">
+          <div class="cb-label">Secondaire &mdash; Chauffeurs</div>
+          <div class="cb-hex">#F5B800</div>
+          <div class="cb-desc">Le taxi new-yorkais. La chaleur. La confiance. Chaque chauffeur porte cette couleur avec fierte.</div>
+        </div>
+      </div>
+    </div>
+    <div class="color-block cb-cream">
+      <div class="color-block-inner">
+        <div class="cb-type">Cream</div>
+        <div class="cb-info">
+          <div class="cb-label">Fond &mdash; Chaleur</div>
+          <div class="cb-hex">#FAFBF8</div>
+          <div class="cb-desc">Ni blanc froid, ni beige date. Un cream subtil aux sous-tons verts qui respire la fraicheur et l'humain.</div>
+        </div>
+      </div>
+    </div>
+    <div class="color-block cb-purple">
+      <div class="color-block-inner">
+        <div class="cb-type">Accent</div>
+        <div class="cb-info">
+          <div class="cb-label">Accent &mdash; Premium</div>
+          <div class="cb-hex">#5B3D8F</div>
+          <div class="cb-desc">Le premium, l'exception. Utilise avec parcimonie pour les moments qui comptent.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SERVICES BENTO ═══ -->
+  <section id="services" class="services">
+    <div class="section-overline">Services</div>
+    <div class="section-title">Tout ce qu'il faut<br>pour <em>livrer.</em></div>
+
+    <div class="bento">
+      <div class="b-card b-span-8 b-teal reveal">
+        <div class="b-icon">&#x1F6B2;</div>
+        <div class="b-title">Coursiers a velo</div>
+        <div class="b-desc">Des coursiers formes, equipes, accompagnes. Livraison ecologique et rapide dans toute la zone urbaine. L'avenir du dernier kilometre.</div>
+      </div>
+      <div class="b-card b-span-4 b-photo photo reveal reveal-d1" style="min-height:220px;background:var(--teal-soft);">
+        <span class="photo-label">En livraison</span>
+      </div>
+      <div class="b-card b-span-4 b-yellow reveal" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+        <div class="b-stat">12 min</div>
+        <div class="b-stat-label">Temps moyen</div>
+      </div>
+      <div class="b-card b-span-4 b-dark reveal reveal-d1">
+        <div class="b-icon">&#x1F697;</div>
+        <div class="b-title">Chauffeurs dedies</div>
+        <div class="b-desc">Longues distances, charges lourdes, livraisons speciales.</div>
+      </div>
+      <div class="b-card b-span-4 b-cream reveal reveal-d2">
+        <div class="b-icon">&#x2764;&#xFE0F;</div>
+        <div class="b-title">Bien-etre au travail</div>
+        <div class="b-desc">Equipement fourni, horaires flexibles, accompagnement humain.</div>
+      </div>
+      <div class="b-card b-span-7 b-teal-soft reveal">
+        <div class="b-icon">&#x1F4CB;</div>
+        <div class="b-title">Gestion de flotte complete</div>
+        <div class="b-desc">Plannings, forecasts, suivi temps reel. Tout centralise pour une logistique zero friction.</div>
+      </div>
+      <div class="b-card b-span-5 b-photo photo reveal reveal-d1" style="min-height:200px;background:var(--yellow-soft);">
+        <span class="photo-label">Briefing equipe</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRICING ═══ -->
+  <section id="pricing" class="pricing">
+    <div class="pricing-inner">
+      <div class="pricing-header">
+        <div class="section-overline" style="justify-content:center;">Tarifs</div>
+        <div class="section-title">Une offre<br><em>flexible.</em></div>
+      </div>
+      <div class="pricing-grid">
+        <div class="p-card reveal">
+          <div class="p-name">A la demande</div>
+          <div class="p-tagline">Sans engagement, quand vous voulez</div>
+          <div class="p-price"><span class="cur">CHF</span><span class="amt">12</span><span class="unit">/ commande</span></div>
+          <div class="p-note">*3.5 commandes/heure</div>
+          <div class="p-divider"></div>
+          <ul class="p-features">
+            <li class="strong"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Sans engagement</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Choix du transport</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Remplacement coursier</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Support 7/7</li>
+          </ul>
+          <button class="p-btn ghost">Demander une offre</button>
+        </div>
+        <div class="p-card featured reveal reveal-d1">
+          <div class="p-badge">Populaire</div>
+          <div class="p-name" style="color:var(--cream);">Dedie</div>
+          <div class="p-tagline">Votre flotte, votre image</div>
+          <div class="p-price"><span class="cur">CHF</span><span class="amt" style="color:var(--cream);">8</span><span class="unit">/ commande</span></div>
+          <div class="p-note">*6 commandes/heure</div>
+          <div class="p-divider"></div>
+          <ul class="p-features">
+            <li class="strong"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Coursiers attitres</li>
+            <li class="strong"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Disponibilite immediate</li>
+            <li class="strong"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Equipement a votre image</li>
+            <li class="strong"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Ops manager dedie</li>
+          </ul>
+          <button class="p-btn fill">Demander une offre &rarr;</button>
+        </div>
+        <div class="p-card reveal reveal-d2">
+          <div class="p-name">Ponctuelle</div>
+          <div class="p-tagline">Courses speciales, a la distance</div>
+          <div class="p-price"><span class="cur">CHF</span><span class="amt">16</span><span class="unit">/ commande</span></div>
+          <div class="p-note">*Pour 1 km</div>
+          <div class="p-divider"></div>
+          <ul class="p-features">
+            <li class="strong"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Sans engagement</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Choix du transport</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Tarif au kilometre</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Support 7/7</li>
+          </ul>
+          <button class="p-btn ghost">Demander une offre</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA WITH PHOTO ═══ -->
+  <section class="cta-section">
+    <div class="cta-block">
+      <div class="cta-text">
+        <div class="section-overline">Pret a commencer ?</div>
+        <div class="section-title">Simplifiez vos<br>livraisons <em>des<br>aujourd'hui.</em></div>
+        <div class="section-desc">Rejoignez les entreprises suisses qui font confiance a Chaskis.</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn btn-primary">Demander une offre <span class="arrow">&rarr;</span></button>
+          <button class="btn btn-outline" style="color:var(--cream);border-color:rgba(255,255,255,0.2);">Prendre rendez-vous</button>
+        </div>
+      </div>
+      <div class="cta-photo photo" style="background:var(--teal-soft);">
+        <span class="photo-label">L'equipe Chaskis</span>
+        <div class="photo-silhouette" style="height:65%;">
+          <svg viewBox="0 0 300 200" style="width:75%;max-width:280px;">
+            <ellipse cx="75" cy="40" rx="20" ry="24" fill="currentColor"/>
+            <path d="M50,72 Q50,64 75,64 Q100,64 100,72 L104,160 Q104,190 75,195 Q46,190 46,160 Z" fill="currentColor"/>
+            <ellipse cx="150" cy="35" rx="22" ry="26" fill="currentColor"/>
+            <path d="M122,68 Q122,60 150,60 Q178,60 178,68 L182,165 Q182,200 150,205 Q118,200 118,165 Z" fill="currentColor"/>
+            <ellipse cx="228" cy="42" rx="19" ry="23" fill="currentColor"/>
+            <path d="M204,74 Q204,66 228,66 Q252,66 252,74 L255,158 Q255,186 228,190 Q201,186 201,158 Z" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ BACKGROUNDS ═══ -->
+  <section class="bg-section">
+    <div class="bg-inner">
+      <div class="section-overline">Textures</div>
+      <div class="section-title">Fonds &<br><em>atmospheres.</em></div>
+
+      <div class="bg-grid">
+        <div class="bg-cell tall cell-mesh"><span class="bg-tag light">Mesh</span></div>
+        <div class="bg-cell cell-dots"><span class="bg-tag light">Dots</span></div>
+        <div class="bg-cell cell-teal-grad"><span class="bg-tag dark">Teal</span></div>
+        <div class="bg-cell cell-grid"><span class="bg-tag light">Grid</span></div>
+        <div class="bg-cell cell-warm-grad"><span class="bg-tag dark">Warm</span></div>
+        <div class="bg-cell cell-diagonal"><span class="bg-tag light">Diagonal</span></div>
+        <div class="bg-cell cell-topo"><span class="bg-tag light">Topo</span></div>
+        <div class="bg-cell cell-sand"><span class="bg-tag light">Sand</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-brand"><span>C</span>HASKIS</div>
+          <p class="footer-desc">La logistique du dernier kilometre, reinventee. Coursiers a velo et chauffeurs dedies en Suisse romande.</p>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Services</div>
+          <a href="#">A la demande</a>
+          <a href="#">Coursiers dedies</a>
+          <a href="#">Ponctuelle</a>
+          <a href="#">Entreprises</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Entreprise</div>
+          <a href="#">A propos</a>
+          <a href="#">Carrieres</a>
+          <a href="#">Blog</a>
+          <a href="#">Contact</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Legal</div>
+          <a href="#">CGV</a>
+          <a href="#">Confidentialite</a>
+          <a href="#">Mentions legales</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; 2026 Chaskis. Tous droits reserves.</span>
+        <div class="footer-socials">
+          <a href="#">in</a>
+          <a href="#">ig</a>
+          <a href="#">X</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    // Nav scroll state
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chaskis — Brand Identity v3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --teal: #3AAFA9;
+      --teal-l: #5BC5C0;
+      --teal-xl: #8EDED9;
+      --teal-bg: #EFF9F8;
+      --teal-d: #2A8A85;
+      --teal-dd: #1A5C59;
+      --yellow: #F5B800;
+      --yellow-l: #FFD54F;
+      --yellow-bg: #FFFAED;
+      --purple: #6B4FA0;
+      --purple-bg: #F3F0F8;
+      --white: #FFFFFF;
+      --off: #F7F6F3;
+      --sand: #EDE9E0;
+      --warm: #D6CFC2;
+      --ink: #191C1A;
+      --ink-m: #3B403D;
+      --ink-l: #6B736E;
+      --ink-xl: #9EA69F;
+      --sans: 'Urbanist', sans-serif;
+      --serif: 'Instrument Serif', serif;
+      --ease: cubic-bezier(.19, 1, .22, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--sans); color: var(--ink); background: var(--white); overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ┌──────────────────────────────────────────┐
+       │  UTILITY                                  │
+       └──────────────────────────────────────────┘ */
+    .container { max-width: 1360px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 56px); }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: all 1.1s var(--ease);
+    }
+    .reveal.vis { opacity: 1; transform: none; }
+    .rd1 { transition-delay: .07s; }
+    .rd2 { transition-delay: .14s; }
+    .rd3 { transition-delay: .21s; }
+    .rd4 { transition-delay: .28s; }
+
+    .overline {
+      font-family: var(--sans);
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--teal);
+    }
+
+    /* photo placeholder with silhouette */
+    .ph {
+      background: var(--off);
+      position: relative;
+      overflow: hidden;
+    }
+    .ph::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, transparent 40%, rgba(58,175,169,.06) 100%);
+    }
+    .ph-label {
+      position: absolute;
+      z-index: 2;
+      bottom: 14px; left: 14px;
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ink-l);
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(6px);
+      padding: 5px 12px;
+      border-radius: 100px;
+    }
+
+    /* SVG person silhouette reusable */
+    .silhouette {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: .05;
+    }
+
+    /* ┌──────────────────────────────────────────┐
+       │  NAV                                      │
+       └──────────────────────────────────────────┘ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 18px 0;
+      transition: background .5s, box-shadow .5s;
+    }
+    .nav.solid {
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(24px);
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-weight: 900;
+      font-size: 1.05rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .nav-logo span { color: var(--teal); }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: .76rem;
+      font-weight: 700;
+      color: var(--ink-l);
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--teal); }
+    .nav-btn {
+      padding: 10px 22px;
+      background: var(--ink);
+      color: white;
+      border-radius: 100px;
+      font-size: .76rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all .35s var(--ease);
+    }
+    .nav-btn:hover { background: var(--teal); transform: translateY(-2px); }
+
+    /* ┌──────────────────────────────────────────┐
+       │  1. HERO — EDITORIAL SPLIT                │
+       └──────────────────────────────────────────┘ */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      padding: 160px clamp(24px,5vw,72px) 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-title {
+      font-family: var(--sans);
+      font-weight: 900;
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      line-height: .92;
+      letter-spacing: -.045em;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .hero-title .serif-line {
+      display: block;
+      font-family: var(--serif);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--teal);
+      letter-spacing: -.02em;
+      font-size: 1.08em;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--ink-l);
+      max-width: 400px;
+      line-height: 1.75;
+      margin: 24px 0 36px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: .82rem;
+      padding: 15px 30px;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      transition: all .4s var(--ease);
+      position: relative;
+    }
+    .btn .arr { transition: transform .3s var(--ease); }
+    .btn:hover .arr { transform: translateX(5px); }
+
+    .btn-teal {
+      background: var(--teal);
+      color: white;
+      box-shadow: 0 6px 24px rgba(58,175,169,.25);
+    }
+    .btn-teal:hover {
+      box-shadow: 0 10px 36px rgba(58,175,169,.35);
+      transform: translateY(-3px);
+    }
+    .btn-ink {
+      background: var(--ink);
+      color: white;
+    }
+    .btn-ink:hover { background: var(--teal-dd); transform: translateY(-3px); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1.5px solid var(--warm);
+    }
+    .btn-ghost:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); }
+
+    .hero-meta {
+      margin-top: 48px;
+      display: flex;
+      gap: 36px;
+    }
+    .hero-meta-item .val {
+      font-weight: 900;
+      font-size: 1.5rem;
+      color: var(--ink);
+      letter-spacing: -.02em;
+    }
+    .hero-meta-item .lbl {
+      font-size: .7rem;
+      font-weight: 600;
+      color: var(--ink-xl);
+      margin-top: 2px;
+    }
+
+    /* Hero right — photo composition */
+    .hero-right {
+      position: relative;
+      background: var(--off);
+      overflow: hidden;
+    }
+    .hero-right .blob { position: absolute; }
+    .hero-right .b1 { width: 500px; height: 500px; background: rgba(58,175,169,.1); top: -100px; right: -100px; }
+    .hero-right .b2 { width: 300px; height: 300px; background: rgba(245,184,0,.08); bottom: 100px; left: -50px; }
+
+    /* Overlapping photo cards */
+    .hero-photos {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hp {
+      position: absolute;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,.08);
+    }
+    .hp-main {
+      width: 65%;
+      height: 72%;
+      top: 14%;
+      left: 12%;
+      background: var(--teal-bg);
+      z-index: 2;
+    }
+    .hp-float1 {
+      width: 180px;
+      height: 240px;
+      bottom: 8%;
+      right: 8%;
+      background: var(--yellow-bg);
+      z-index: 3;
+      border: 4px solid white;
+      border-radius: 16px;
+      transform: rotate(3deg);
+    }
+    .hp-float2 {
+      width: 140px;
+      height: 140px;
+      top: 8%;
+      right: 12%;
+      background: var(--teal);
+      z-index: 3;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 2.2rem;
+      letter-spacing: -.03em;
+      border: 5px solid white;
+      box-shadow: 0 16px 48px rgba(58,175,169,.25);
+    }
+    .hp-float2 .unit {
+      font-size: .55rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      display: block;
+      margin-top: 2px;
+      opacity: .7;
+    }
+
+    .hp-tag {
+      position: absolute;
+      z-index: 4;
+      left: 5%;
+      bottom: 30%;
+      background: white;
+      border-radius: 14px;
+      padding: 14px 18px;
+      box-shadow: 0 12px 36px rgba(0,0,0,.06);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hp-tag-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: dotPulse 2s ease infinite;
+    }
+    @keyframes dotPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,.4); }
+      50% { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+    }
+    .hp-tag-text {
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .hp-tag-text span { color: var(--teal); }
+
+    /* Decorative organic shapes */
+    .deco-shape {
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ┌──────────────────────────────────────────┐
+       │  MARQUEE                                  │
+       └──────────────────────────────────────────┘ */
+    .marquee-wrap {
+      overflow: hidden;
+      padding: 6px 0;
+      position: relative;
+      z-index: 10;
+    }
+    .mq {
+      padding: 16px 0;
+      overflow: hidden;
+    }
+    .mq-teal {
+      background: var(--teal);
+      transform: rotate(-1.2deg) scale(1.04);
+    }
+    .mq-sand {
+      background: var(--sand);
+      transform: rotate(1.2deg) scale(1.04);
+      margin-top: -6px;
+    }
+    .mq-track {
+      display: flex;
+      width: max-content;
+      animation: mqScroll 32s linear infinite;
+    }
+    .mq-sand .mq-track { animation-direction: reverse; }
+    @keyframes mqScroll { to { transform: translateX(-50%); } }
+    .mq-w {
+      font-weight: 900;
+      font-size: .78rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      padding: 0 28px;
+    }
+    .mq-teal .mq-w { color: white; }
+    .mq-sand .mq-w { color: var(--ink-m); }
+    .mq-dot {
+      display: inline-block;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: .3;
+      vertical-align: middle;
+      margin-left: 28px;
+    }
+
+    /* ┌──────────────────────────────────────────┐
+       │  2. MANIFESTE — BIG TYPE + PHOTO          │
+       └──────────────────────────────────────────┘ */
+    .manifeste {
+      padding: clamp(80px,12vw,160px) 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .manifeste-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(32px,5vw,80px);
+      align-items: center;
+    }
+
+    .manifeste-text h2 {
+      font-family: var(--sans);
+      font-weight: 900;
+      font-size: clamp(2.2rem, 4.5vw, 4rem);
+      line-height: 1.0;
+      letter-spacing: -.035em;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+    .manifeste-text h2 .it {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--teal);
+      letter-spacing: -.01em;
+    }
+
+    .manifeste-text p {
+      font-size: .95rem;
+      color: var(--ink-l);
+      line-height: 1.8;
+      max-width: 440px;
+      margin-bottom: 20px;
+    }
+
+    .manifeste-photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 10px;
+      height: 520px;
+    }
+    .manifeste-photo-grid .ph { border-radius: 18px; }
+    .manifeste-photo-grid .ph:nth-child(1) { grid-row: span 2; background: var(--teal-bg); }
+    .manifeste-photo-grid .ph:nth-child(2) { background: var(--yellow-bg); }
+    .manifeste-photo-grid .ph:nth-child(3) { background: var(--purple-bg); }
+
+    /* ┌──────────────────────────────────────────┐
+       │  3. CHIFFRES — FULL-WIDTH STRIP           │
+       └──────────────────────────────────────────┘ */
+    .chiffres {
+      background: var(--ink);
+      padding: 64px 0;
+      overflow: hidden;
+    }
+    .chiffres-inner {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+    .chiffre {
+      text-align: center;
+    }
+    .chiffre .n {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--teal-l);
+      line-height: 1;
+    }
+    .chiffre .l {
+      font-size: .72rem;
+      font-weight: 700;
+      color: rgba(255,255,255,.4);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    /* ┌──────────────────────────────────────────┐
+       │  4. TYPOGRAPHIE — COMPOSITIONS            │
+       └──────────────────────────────────────────┘ */
+    .typo-section {
+      padding: clamp(80px,12vw,140px) 0;
+    }
+
+    .typo-header {
+      margin-bottom: 64px;
+    }
+    .typo-header h2 {
+      font-weight: 900;
+      font-size: clamp(2rem,4vw,3.5rem);
+      line-height: 1.05;
+      letter-spacing: -.03em;
+      margin-top: 12px;
+    }
+    .typo-header h2 .it {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--teal);
+    }
+
+    .typo-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .typo-card {
+      border-radius: 22px;
+      padding: clamp(32px,4vw,56px);
+      position: relative;
+      overflow: hidden;
+      transition: transform .5s var(--ease);
+    }
+    .typo-card:hover { transform: scale(1.004); }
+
+    .tc-bg-1 { background: var(--off); }
+    .tc-bg-2 { background: var(--teal-bg); }
+    .tc-bg-3 { background: var(--ink); color: white; }
+    .tc-bg-4 { background: var(--yellow-bg); }
+    .tc-bg-5 { background: var(--sand); }
+    .tc-bg-6 { background: linear-gradient(135deg, var(--teal-bg), var(--purple-bg)); }
+
+    .tc-lbl {
+      font-size: .58rem;
+      font-weight: 800;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+    .tc-bg-3 .tc-lbl { color: var(--teal-l); }
+
+    .tc-big {
+      font-size: clamp(2.8rem,8vw,7.5rem);
+      line-height: .88;
+      letter-spacing: -.04em;
+    }
+    .tc-big.sans { font-family: var(--sans); font-weight: 900; }
+    .tc-big.serif { font-family: var(--serif); font-weight: 400; }
+    .tc-big.serif-i { font-family: var(--serif); font-style: italic; }
+
+    .tc-bg-3 .tc-big { color: var(--off); }
+
+    .tc-note {
+      font-size: .85rem;
+      color: var(--ink-l);
+      max-width: 420px;
+      margin-top: 14px;
+      line-height: 1.65;
+    }
+    .tc-bg-3 .tc-note { color: var(--ink-xl); }
+
+    /* dual font cards side by side */
+    .typo-duo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .typo-duo .typo-card { min-height: 280px; display: flex; flex-direction: column; justify-content: space-between; }
+
+    .tc-alphabet {
+      font-size: .78rem;
+      letter-spacing: .06em;
+      color: var(--ink-l);
+      line-height: 2.2;
+      margin-top: 20px;
+    }
+    .tc-bg-3 .tc-alphabet { color: var(--ink-xl); }
+
+    .tc-weights {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+      align-items: baseline;
+    }
+    .tc-weights span { font-size: 2rem; line-height: 1; }
+
+    /* ┌──────────────────────────────────────────┐
+       │  5. COULEURS — IMMERSION                  │
+       └──────────────────────────────────────────┘ */
+    .colors {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .color-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 420px;
+    }
+
+    .cr-swatch {
+      padding: clamp(40px,5vw,72px);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cr-giant {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(5rem,12vw,12rem);
+      line-height: .8;
+      letter-spacing: -.04em;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      opacity: .08;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .cr-label {
+      font-size: .58rem;
+      font-weight: 800;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      opacity: .5;
+      margin-bottom: 6px;
+    }
+    .cr-hex {
+      font-weight: 900;
+      font-size: 1.4rem;
+      letter-spacing: -.01em;
+      margin-bottom: 8px;
+    }
+    .cr-desc {
+      font-size: .85rem;
+      line-height: 1.65;
+      opacity: .65;
+      max-width: 300px;
+    }
+
+    .cr-info {
+      padding: clamp(40px,5vw,72px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .cr-info .cr-name {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(2.5rem,5vw,4rem);
+      line-height: 1;
+      margin-bottom: 12px;
+      letter-spacing: -.02em;
+    }
+
+    .cr-info .cr-usage {
+      font-size: .88rem;
+      color: var(--ink-l);
+      line-height: 1.75;
+      max-width: 380px;
+    }
+
+    .cr-teal .cr-swatch { background: var(--teal); color: white; }
+    .cr-teal .cr-info { background: var(--teal-bg); }
+    .cr-teal .cr-info .cr-name { color: var(--teal-dd); }
+
+    .cr-yellow .cr-swatch { background: var(--yellow); color: var(--ink); }
+    .cr-yellow .cr-info { background: var(--yellow-bg); }
+    .cr-yellow .cr-info .cr-name { color: #8A6E00; }
+
+    .cr-purple .cr-swatch { background: var(--purple); color: white; }
+    .cr-purple .cr-info { background: var(--purple-bg); }
+    .cr-purple .cr-info .cr-name { color: var(--purple); }
+
+    .cr-dark .cr-swatch { background: var(--ink); color: var(--off); }
+    .cr-dark .cr-info { background: var(--off); }
+    .cr-dark .cr-info .cr-name { color: var(--ink); }
+
+    /* ┌──────────────────────────────────────────┐
+       │  6. BENTO SERVICES                        │
+       └──────────────────────────────────────────┘ */
+    .services {
+      padding: clamp(80px,12vw,140px) 0;
+    }
+    .services-header {
+      margin-bottom: 56px;
+    }
+    .services-header h2 {
+      font-weight: 900;
+      font-size: clamp(2rem,4vw,3.5rem);
+      line-height: 1.05;
+      letter-spacing: -.03em;
+      margin-top: 12px;
+    }
+    .services-header h2 .it {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--teal);
+    }
+
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 8px;
+    }
+    .bc {
+      border-radius: 20px;
+      padding: 36px 32px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .5s var(--ease);
+    }
+    .bc:hover { transform: translateY(-5px); }
+
+    .s8 { grid-column: span 8; }
+    .s4 { grid-column: span 4; }
+    .s5 { grid-column: span 5; }
+    .s7 { grid-column: span 7; }
+    .s6 { grid-column: span 6; }
+
+    .bc-teal { background: var(--teal); color: white; }
+    .bc-off { background: var(--off); color: var(--ink); }
+    .bc-ink { background: var(--ink); color: var(--off); }
+    .bc-ylw { background: var(--yellow); color: var(--ink); }
+    .bc-teal-bg { background: var(--teal-bg); color: var(--ink); }
+    .bc-sand { background: var(--sand); color: var(--ink); }
+    .bc-photo { padding: 0; }
+
+    .bc-ico {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      font-size: 1.15rem;
+    }
+    .bc-teal .bc-ico { background: rgba(255,255,255,.18); }
+    .bc-off .bc-ico { background: var(--teal-bg); }
+    .bc-ink .bc-ico { background: rgba(58,175,169,.12); }
+    .bc-ylw .bc-ico { background: rgba(0,0,0,.06); }
+    .bc-teal-bg .bc-ico { background: var(--teal); color: white; font-size: .85rem; }
+    .bc-sand .bc-ico { background: var(--warm); }
+
+    .bc-t {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .bc-d {
+      font-size: .82rem;
+      line-height: 1.7;
+      opacity: .7;
+      max-width: 360px;
+    }
+    .bc-n {
+      font-weight: 900;
+      font-size: clamp(2.5rem,5vw,4rem);
+      letter-spacing: -.04em;
+      line-height: 1;
+    }
+    .bc-nl {
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      opacity: .45;
+      margin-top: 6px;
+    }
+
+    /* ┌──────────────────────────────────────────┐
+       │  7. PRICING                               │
+       └──────────────────────────────────────────┘ */
+    .pricing {
+      padding: clamp(80px,12vw,140px) 0;
+      background: var(--off);
+    }
+    .pricing-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .pricing-header h2 {
+      font-weight: 900;
+      font-size: clamp(2rem,4vw,3.5rem);
+      line-height: 1.05;
+      letter-spacing: -.03em;
+      margin-top: 12px;
+    }
+    .pricing-header h2 .it { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--teal); }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .pc {
+      background: var(--white);
+      border-radius: 22px;
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      transition: transform .5s var(--ease), box-shadow .5s;
+      position: relative;
+    }
+    .pc:hover { transform: translateY(-8px); box-shadow: 0 24px 64px rgba(0,0,0,.06); }
+    .pc.feat {
+      background: var(--ink);
+      color: var(--off);
+    }
+    .pc.feat::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 20%; right: 20%;
+      height: 3px;
+      border-radius: 0 0 4px 4px;
+      background: linear-gradient(90deg, var(--teal), var(--teal-l));
+    }
+
+    .pc-badge {
+      display: inline-flex;
+      align-self: flex-start;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: .58rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      background: var(--teal);
+      color: white;
+      margin-bottom: 18px;
+    }
+
+    .pc-name {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+    .pc-tag {
+      font-size: .78rem;
+      color: var(--ink-l);
+      margin-bottom: 24px;
+    }
+    .pc.feat .pc-tag { color: var(--ink-xl); }
+
+    .pc-price {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+    .pc-price .c { font-weight: 800; font-size: .85rem; color: var(--ink-xl); }
+    .pc-price .a {
+      font-family: var(--serif);
+      font-size: 3.2rem;
+      line-height: 1;
+    }
+    .pc-price .u { font-size: .78rem; color: var(--ink-xl); }
+
+    .pc-note { font-size: .65rem; color: var(--ink-xl); margin-bottom: 24px; }
+    .pc-div { height: 1px; background: var(--sand); margin-bottom: 20px; }
+    .pc.feat .pc-div { background: rgba(255,255,255,.07); }
+
+    .pc-feats {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 28px;
+      flex: 1;
+    }
+    .pc-feats li {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: .8rem;
+      color: var(--ink-l);
+    }
+    .pc.feat .pc-feats li { color: var(--ink-xl); }
+    .pc-feats li.st { color: var(--ink); font-weight: 700; }
+    .pc.feat .pc-feats li.st { color: var(--off); }
+    .pc-feats .ck {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--teal-bg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .pc.feat .ck { background: rgba(58,175,169,.12); }
+    .ck svg { width: 9px; height: 9px; color: var(--teal); }
+
+    .pc-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      font-family: var(--sans);
+      font-size: .8rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .35s var(--ease);
+      text-align: center;
+    }
+    .pc-btn.fill { background: var(--teal); color: white; }
+    .pc-btn.fill:hover { background: var(--teal-d); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(58,175,169,.25); }
+    .pc-btn.outline { background: var(--off); color: var(--ink); border: 1.5px solid var(--sand); }
+    .pc-btn.outline:hover { border-color: var(--teal); color: var(--teal); }
+    .pc.feat .pc-btn.outline { background: rgba(255,255,255,.04); color: var(--off); border-color: rgba(255,255,255,.08); }
+    .pc.feat .pc-btn.outline:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* ┌──────────────────────────────────────────┐
+       │  8. CTA CLOSING                           │
+       └──────────────────────────────────────────┘ */
+    .cta-end {
+      padding: clamp(80px,12vw,140px) 0;
+    }
+
+    .cta-card {
+      border-radius: 28px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      min-height: 500px;
+    }
+
+    .cta-card-text {
+      background: var(--ink);
+      padding: clamp(40px,5vw,72px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-card-text .blob { position: absolute; }
+    .cta-card-text .b1 { width: 400px; height: 400px; background: rgba(58,175,169,.1); bottom: -100px; left: -100px; }
+    .cta-card-text .b2 { width: 250px; height: 250px; background: rgba(245,184,0,.06); top: -60px; right: -60px; }
+
+    .cta-card-text > * { position: relative; z-index: 1; }
+    .cta-card-text .overline { color: var(--teal-l); }
+    .cta-card-text h2 {
+      font-weight: 900;
+      font-size: clamp(2rem,4vw,3.2rem);
+      line-height: 1.05;
+      letter-spacing: -.03em;
+      color: var(--off);
+      margin: 12px 0 16px;
+    }
+    .cta-card-text h2 .it { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--teal-l); }
+    .cta-card-text p { font-size: .92rem; color: var(--ink-xl); line-height: 1.7; max-width: 400px; margin-bottom: 32px; }
+
+    .cta-card-photo {
+      background: var(--teal-bg);
+      position: relative;
+    }
+
+    .cta-card-photo .silhouette { width: 65%; max-width: 250px; }
+
+    /* ┌──────────────────────────────────────────┐
+       │  FOOTER                                   │
+       └──────────────────────────────────────────┘ */
+    .footer {
+      background: var(--ink);
+      padding: 72px 0 36px;
+      color: var(--off);
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 56px;
+      margin-bottom: 56px;
+    }
+    .footer-brand {
+      font-weight: 900;
+      font-size: 1.1rem;
+      letter-spacing: .12em;
+      margin-bottom: 14px;
+    }
+    .footer-brand span { color: var(--teal); }
+    .footer-desc { font-size: .82rem; color: var(--ink-xl); line-height: 1.8; max-width: 300px; }
+    .footer-col-title {
+      font-size: .58rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--ink-xl);
+      margin-bottom: 14px;
+    }
+    .footer-col a {
+      display: block;
+      font-size: .82rem;
+      color: rgba(255,255,255,.4);
+      padding: 4px 0;
+      transition: color .2s;
+    }
+    .footer-col a:hover { color: var(--teal); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,.05);
+    }
+    .footer-copy { font-size: .68rem; color: rgba(255,255,255,.2); }
+    .footer-socials { display: flex; gap: 8px; }
+    .footer-socials a {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.04);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .68rem;
+      color: var(--ink-xl);
+      transition: all .3s;
+    }
+    .footer-socials a:hover { background: var(--teal); color: white; }
+
+    /* ┌──────────────────────────────────────────┐
+       │  RESPONSIVE                               │
+       └──────────────────────────────────────────┘ */
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { min-height: 50vh; }
+      .manifeste-inner { grid-template-columns: 1fr; }
+      .manifeste-photo-grid { height: 380px; }
+      .color-row { grid-template-columns: 1fr; }
+      .bento .bc { grid-column: span 12 !important; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+      .typo-duo { grid-template-columns: 1fr; }
+      .cta-card { grid-template-columns: 1fr; }
+      .cta-card-photo { min-height: 280px; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .nav-links, .nav-btn { display: none; }
+      .hero-meta { gap: 24px; }
+      .chiffres-inner { flex-direction: column; gap: 32px; }
+      .footer-top { grid-template-columns: 1fr; gap: 36px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="container nav-inner">
+      <div class="nav-logo"><span>C</span>HASKIS</div>
+      <ul class="nav-links">
+        <li><a href="#manifeste">Manifeste</a></li>
+        <li><a href="#typo">Typographie</a></li>
+        <li><a href="#couleurs">Couleurs</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#tarifs">Tarifs</a></li>
+      </ul>
+      <button class="nav-btn">Demander une offre</button>
+    </div>
+  </nav>
+
+  <!-- 1. HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="overline" style="margin-bottom:24px;">Fleet management &mdash; Suisse</div>
+      <h1 class="hero-title">
+        Vos colis,
+        <span class="serif-line">nos coursiers.</span>
+      </h1>
+      <p class="hero-sub">Coursiers a velo. Chauffeurs dedies. Chaskis gere votre logistique du dernier kilometre avec la precision suisse et l'attention humaine.</p>
+      <div class="hero-actions">
+        <button class="btn btn-teal">Demander une offre <span class="arr">&rarr;</span></button>
+        <button class="btn btn-ghost">Devenir coursier</button>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-meta-item"><div class="val">250+</div><div class="lbl">Coursiers</div></div>
+        <div class="hero-meta-item"><div class="val">12 min</div><div class="lbl">Temps moyen</div></div>
+        <div class="hero-meta-item"><div class="val">98%</div><div class="lbl">Satisfaction</div></div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="hero-photos">
+        <div class="hp hp-main ph">
+          <span class="ph-label">Coursier Chaskis &mdash; Geneve</span>
+          <svg class="silhouette" viewBox="0 0 200 360" width="180"><ellipse cx="100" cy="55" rx="32" ry="38" fill="currentColor"/><path d="M58,108 Q58,92 100,92 Q142,92 142,108 L150,260 Q150,330 100,340 Q50,330 50,260Z" fill="currentColor"/></svg>
+        </div>
+        <div class="hp hp-float1 ph">
+          <span class="ph-label">Chauffeur</span>
+        </div>
+        <div class="hp hp-float2">
+          <div><span>12</span><span class="unit">min moy.</span></div>
+        </div>
+        <div class="hp-tag">
+          <div class="hp-tag-dot"></div>
+          <div class="hp-tag-text">Livraison <span>en cours</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="mq mq-teal">
+      <div class="mq-track">
+        <span class="mq-w">Coursiers a velo <span class="mq-dot"></span></span>
+        <span class="mq-w">Livraison express <span class="mq-dot"></span></span>
+        <span class="mq-w">Chauffeurs dedies <span class="mq-dot"></span></span>
+        <span class="mq-w">Gestion de flotte <span class="mq-dot"></span></span>
+        <span class="mq-w">Sur-mesure <span class="mq-dot"></span></span>
+        <span class="mq-w">Coursiers a velo <span class="mq-dot"></span></span>
+        <span class="mq-w">Livraison express <span class="mq-dot"></span></span>
+        <span class="mq-w">Chauffeurs dedies <span class="mq-dot"></span></span>
+        <span class="mq-w">Gestion de flotte <span class="mq-dot"></span></span>
+        <span class="mq-w">Sur-mesure <span class="mq-dot"></span></span>
+      </div>
+    </div>
+    <div class="mq mq-sand">
+      <div class="mq-track">
+        <span class="mq-w">Bien-etre <span class="mq-dot"></span></span>
+        <span class="mq-w">Eco-responsable <span class="mq-dot"></span></span>
+        <span class="mq-w">Precision suisse <span class="mq-dot"></span></span>
+        <span class="mq-w">Technologie <span class="mq-dot"></span></span>
+        <span class="mq-w">Confiance <span class="mq-dot"></span></span>
+        <span class="mq-w">Bien-etre <span class="mq-dot"></span></span>
+        <span class="mq-w">Eco-responsable <span class="mq-dot"></span></span>
+        <span class="mq-w">Precision suisse <span class="mq-dot"></span></span>
+        <span class="mq-w">Technologie <span class="mq-dot"></span></span>
+        <span class="mq-w">Confiance <span class="mq-dot"></span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. MANIFESTE -->
+  <section id="manifeste" class="manifeste">
+    <div class="container">
+      <div class="manifeste-inner">
+        <div class="manifeste-text reveal">
+          <div class="overline">Manifeste</div>
+          <h2>Des gens,<br>avant <span class="it">tout le reste.</span></h2>
+          <p>Chaskis, ce n'est pas qu'un service de livraison. C'est une vision du dernier kilometre ou technologie, humanite et precision se rencontrent.</p>
+          <p>Chaque coursier qui roule pour nous est un humain, pas un numero. Equipement fourni, horaires flexibles, accompagnement personnalise. Un coursier heureux, c'est un client satisfait.</p>
+          <button class="btn btn-ink" style="align-self:flex-start;">Rejoindre l'equipe <span class="arr">&rarr;</span></button>
+        </div>
+        <div class="manifeste-photo-grid reveal rd1">
+          <div class="ph">
+            <span class="ph-label">Notre equipe</span>
+            <svg class="silhouette" viewBox="0 0 280 400" width="200">
+              <ellipse cx="80" cy="55" rx="26" ry="30" fill="currentColor"/>
+              <path d="M48,96 Q48,84 80,84 Q112,84 112,96 L116,240 Q116,290 80,296 Q44,290 44,240Z" fill="currentColor"/>
+              <ellipse cx="200" cy="50" rx="28" ry="32" fill="currentColor"/>
+              <path d="M166,92 Q166,80 200,80 Q234,80 234,92 L238,250 Q238,300 200,306 Q162,300 162,250Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="ph"><span class="ph-label">En livraison</span></div>
+          <div class="ph"><span class="ph-label">Briefing</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. CHIFFRES -->
+  <div class="chiffres">
+    <div class="container chiffres-inner">
+      <div class="chiffre reveal"><div class="n">250+</div><div class="l">Coursiers actifs</div></div>
+      <div class="chiffre reveal rd1"><div class="n">15k</div><div class="l">Livraisons / mois</div></div>
+      <div class="chiffre reveal rd2"><div class="n">98%</div><div class="l">Satisfaction client</div></div>
+      <div class="chiffre reveal rd3"><div class="n">12 min</div><div class="l">Temps moyen</div></div>
+    </div>
+  </div>
+
+  <!-- 4. TYPOGRAPHIE -->
+  <section id="typo" class="typo-section">
+    <div class="container">
+      <div class="typo-header reveal">
+        <div class="overline">Typographie</div>
+        <h2>Deux voix,<br>une <span class="it">identite.</span></h2>
+      </div>
+
+      <div class="typo-stage">
+        <div class="typo-card tc-bg-1 reveal">
+          <div class="tc-lbl">Urbanist &mdash; Puissance</div>
+          <div class="tc-big sans" style="color:var(--ink);">LA LIVRAISON</div>
+          <div class="tc-note">Urbanist en poids 900 — Le muscle de la marque. Titres, CTAs, tout ce qui doit percuter.</div>
+        </div>
+
+        <div class="typo-card tc-bg-2 reveal">
+          <div class="tc-lbl">Instrument Serif &mdash; Caractere</div>
+          <div class="tc-big serif-i" style="color:var(--teal-dd);">reinventee.</div>
+          <div class="tc-note">L'italique editoriale. Pour les mots qui comptent, les accents d'emotion, le caractere.</div>
+        </div>
+
+        <div class="typo-card tc-bg-3 reveal">
+          <div class="tc-lbl">Le duo &mdash; Contraste</div>
+          <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;">
+            <span class="tc-big sans" style="font-size:clamp(2rem,6vw,5.5rem);">Livrer</span>
+            <span class="tc-big serif-i" style="font-size:clamp(2rem,6vw,5.5rem);color:var(--teal-l);">avec soin</span>
+          </div>
+          <div class="tc-note">Le contraste sans-serif 900 + serif italique cree un rythme visuel unique. La force et l'elegance.</div>
+        </div>
+
+        <div class="typo-card tc-bg-4 reveal">
+          <div class="tc-lbl">Hierarchie complete</div>
+          <div style="font-size:.62rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;">Pour repondre a vos besoins</div>
+          <div style="font-weight:900;font-size:clamp(1.8rem,3.5vw,3rem);line-height:1.05;letter-spacing:-.03em;color:var(--ink);">Planifier une <span style="font-family:var(--serif);font-style:italic;font-weight:400;color:var(--teal);">livraison</span></div>
+          <div style="font-size:.92rem;color:var(--ink-l);line-height:1.7;max-width:500px;margin-top:10px;">Chez Chaskis, on combine operations, RH et technologie pour une logistique plus simple et plus humaine.</div>
+        </div>
+
+        <!-- Two font cards -->
+        <div class="typo-duo">
+          <div class="typo-card tc-bg-5 reveal">
+            <div>
+              <div class="tc-lbl">Urbanist</div>
+              <div style="font-weight:900;font-size:2rem;letter-spacing:-.02em;margin-bottom:4px;">La precision suisse.</div>
+              <div style="font-size:.72rem;color:var(--ink-l);margin-bottom:16px;">Corps &bull; Interface &bull; Navigation &bull; CTAs</div>
+            </div>
+            <div>
+              <div class="tc-alphabet">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br>a b c d e f g h i j k l m n o p q r s t u v w x y z<br>0 1 2 3 4 5 6 7 8 9</div>
+              <div class="tc-weights">
+                <span style="font-weight:200;">Ag</span>
+                <span style="font-weight:400;">Ag</span>
+                <span style="font-weight:700;">Ag</span>
+                <span style="font-weight:900;">Ag</span>
+              </div>
+            </div>
+          </div>
+          <div class="typo-card tc-bg-6 reveal rd1">
+            <div>
+              <div class="tc-lbl">Instrument Serif</div>
+              <div style="font-family:var(--serif);font-size:2rem;margin-bottom:4px;">L'elegance editoriale.</div>
+              <div style="font-size:.72rem;color:var(--ink-l);margin-bottom:16px;">Titres hero &bull; Accents &bull; Citations &bull; Noms de section</div>
+            </div>
+            <div>
+              <div class="tc-alphabet" style="font-family:var(--serif);">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br>a b c d e f g h i j k l m n o p q r s t u v w x y z<br>0 1 2 3 4 5 6 7 8 9</div>
+              <div class="tc-weights">
+                <span style="font-family:var(--serif);font-size:2rem;">Ag</span>
+                <span style="font-family:var(--serif);font-style:italic;font-size:2rem;">Ag</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. COULEURS -->
+  <section id="couleurs" class="colors">
+    <div class="color-row cr-teal">
+      <div class="cr-swatch"><div class="cr-giant">Teal</div><div class="cr-label">Couleur primaire</div><div class="cr-hex">#3AAFA9</div></div>
+      <div class="cr-info"><div class="overline" style="margin-bottom:12px;">Coursiers a velo</div><div class="cr-name">L'energie<br>du <span style="font-style:italic;">mouvement.</span></div><div class="cr-usage">L'ADN visuel de Chaskis. La vitesse, la fiabilite, la route. Present partout ou un coursier roule, partout ou la marque s'exprime.</div></div>
+    </div>
+    <div class="color-row cr-yellow" style="direction:rtl;">
+      <div class="cr-swatch" style="direction:ltr;"><div class="cr-giant">Warm</div><div class="cr-label">Secondaire</div><div class="cr-hex">#F5B800</div></div>
+      <div class="cr-info" style="direction:ltr;"><div class="overline" style="margin-bottom:12px;">Chauffeurs</div><div class="cr-name">La chaleur<br>de la <span style="font-style:italic;">confiance.</span></div><div class="cr-usage">Le taxi new-yorkais. Chaque chauffeur Chaskis porte cette couleur comme un signe de qualite et de fiabilite.</div></div>
+    </div>
+    <div class="color-row cr-purple">
+      <div class="cr-swatch"><div class="cr-giant">Accent</div><div class="cr-label">Premium</div><div class="cr-hex">#6B4FA0</div></div>
+      <div class="cr-info"><div class="overline" style="margin-bottom:12px;">Moments premium</div><div class="cr-name">Le detail<br>qui <span style="font-style:italic;">compte.</span></div><div class="cr-usage">Utilise avec parcimonie pour marquer les moments importants, les offres speciales, les elements distinctifs.</div></div>
+    </div>
+    <div class="color-row cr-dark" style="direction:rtl;">
+      <div class="cr-swatch" style="direction:ltr;"><div class="cr-giant">Ink</div><div class="cr-label">Fondation</div><div class="cr-hex">#191C1A</div></div>
+      <div class="cr-info" style="direction:ltr;"><div class="overline" style="margin-bottom:12px;">Texte & fondation</div><div class="cr-name">L'ancrage<br><span style="font-style:italic;">visuel.</span></div><div class="cr-usage">Un noir aux sous-tons verts, en harmonie avec le teal. Pour le texte, les fonds de section, les elements structurants.</div></div>
+    </div>
+  </section>
+
+  <!-- 6. SERVICES BENTO -->
+  <section id="services" class="services">
+    <div class="container">
+      <div class="services-header reveal">
+        <div class="overline">Services</div>
+        <h2>Tout ce qu'il faut<br>pour <span class="it">bien livrer.</span></h2>
+      </div>
+      <div class="bento">
+        <div class="bc s8 bc-teal reveal">
+          <div class="bc-ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="bc-t">Coursiers a velo</div>
+          <div class="bc-d">Des coursiers formes, equipes, accompagnes. Livraison ecologique et rapide dans toute la zone urbaine. L'avenir du dernier kilometre, a chaque pedale.</div>
+        </div>
+        <div class="bc s4 bc-photo ph reveal rd1" style="min-height:220px;background:var(--teal-bg);">
+          <span class="ph-label">En livraison</span>
+        </div>
+        <div class="bc s4 bc-ylw reveal" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+          <div class="bc-n">12<span style="font-size:.4em;opacity:.5;"> min</span></div>
+          <div class="bc-nl">Temps moyen</div>
+        </div>
+        <div class="bc s4 bc-ink reveal rd1">
+          <div class="bc-ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div class="bc-t">Chauffeurs dedies</div>
+          <div class="bc-d">Longues distances, charges lourdes, livraisons speciales.</div>
+        </div>
+        <div class="bc s4 bc-off reveal rd2">
+          <div class="bc-ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="bc-t">Bien-etre au travail</div>
+          <div class="bc-d">Equipement fourni, horaires flexibles, accompagnement humain. Nos gens sont notre priorite.</div>
+        </div>
+        <div class="bc s7 bc-teal-bg reveal">
+          <div class="bc-ico">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="bc-t">Gestion de flotte complete</div>
+          <div class="bc-d">Plannings, forecasts, suivi temps reel. Tout centralise pour une logistique zero friction.</div>
+        </div>
+        <div class="bc s5 bc-photo ph reveal rd1" style="min-height:200px;background:var(--yellow-bg);">
+          <span class="ph-label">Briefing equipe</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. PRICING -->
+  <section id="tarifs" class="pricing">
+    <div class="container">
+      <div class="pricing-header reveal">
+        <div class="overline">Tarifs</div>
+        <h2>Une offre<br><span class="it">flexible.</span></h2>
+      </div>
+      <div class="pricing-grid">
+        <div class="pc reveal">
+          <div class="pc-name">A la demande</div>
+          <div class="pc-tag">Sans engagement</div>
+          <div class="pc-price"><span class="c">CHF</span><span class="a">12</span><span class="u">/ commande</span></div>
+          <div class="pc-note">*3.5 commandes/heure</div>
+          <div class="pc-div"></div>
+          <ul class="pc-feats">
+            <li class="st"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Sans engagement</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Choix du transport</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Support 7/7</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Suivi temps reel</li>
+          </ul>
+          <button class="pc-btn outline">Demander une offre</button>
+        </div>
+        <div class="pc feat reveal rd1">
+          <div class="pc-badge">Populaire</div>
+          <div class="pc-name" style="color:var(--off);">Dedie</div>
+          <div class="pc-tag">Votre flotte, votre image</div>
+          <div class="pc-price"><span class="c">CHF</span><span class="a" style="color:var(--off);">8</span><span class="u">/ commande</span></div>
+          <div class="pc-note">*6 commandes/heure</div>
+          <div class="pc-div"></div>
+          <ul class="pc-feats">
+            <li class="st"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Coursiers attitres</li>
+            <li class="st"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Dispo immediate</li>
+            <li class="st"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Equipement brande</li>
+            <li class="st"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Ops manager dedie</li>
+          </ul>
+          <button class="pc-btn fill">Demander une offre &rarr;</button>
+        </div>
+        <div class="pc reveal rd2">
+          <div class="pc-name">Ponctuelle</div>
+          <div class="pc-tag">A la distance</div>
+          <div class="pc-price"><span class="c">CHF</span><span class="a">16</span><span class="u">/ commande</span></div>
+          <div class="pc-note">*Pour 1 km</div>
+          <div class="pc-div"></div>
+          <ul class="pc-feats">
+            <li class="st"><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Sans engagement</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Choix du transport</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Tarif au km</li>
+            <li><span class="ck"><svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Support 7/7</li>
+          </ul>
+          <button class="pc-btn outline">Demander une offre</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. CTA -->
+  <section class="cta-end">
+    <div class="container">
+      <div class="cta-card">
+        <div class="cta-card-text">
+          <div class="blob b1"></div>
+          <div class="blob b2"></div>
+          <div class="overline">Pret a commencer ?</div>
+          <h2>Simplifiez vos livraisons <span class="it">des aujourd'hui.</span></h2>
+          <p>Rejoignez les entreprises suisses qui font confiance a Chaskis pour reinventer leur logistique du dernier kilometre.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="btn btn-teal">Demander une offre <span class="arr">&rarr;</span></button>
+            <button class="btn btn-ghost" style="color:var(--off);border-color:rgba(255,255,255,.15);">Prendre rendez-vous</button>
+          </div>
+        </div>
+        <div class="cta-card-photo ph" style="background:var(--teal-bg);">
+          <span class="ph-label">L'equipe Chaskis</span>
+          <svg class="silhouette" viewBox="0 0 300 280" width="220">
+            <ellipse cx="70" cy="50" rx="22" ry="26" fill="currentColor"/>
+            <path d="M42,84 Q42,74 70,74 Q98,74 98,84 L102,190 Q102,230 70,236 Q38,230 38,190Z" fill="currentColor"/>
+            <ellipse cx="150" cy="44" rx="24" ry="28" fill="currentColor"/>
+            <path d="M120,80 Q120,70 150,70 Q180,70 180,80 L184,200 Q184,240 150,246 Q116,240 116,200Z" fill="currentColor"/>
+            <ellipse cx="232" cy="52" rx="21" ry="25" fill="currentColor"/>
+            <path d="M206,86 Q206,76 232,76 Q258,76 258,86 L261,188 Q261,222 232,228 Q203,222 203,188Z" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <div class="footer-brand"><span>C</span>HASKIS</div>
+          <p class="footer-desc">La logistique du dernier kilometre, reinventee. Coursiers a velo et chauffeurs dedies en Suisse romande.</p>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Services</div>
+          <a href="#">A la demande</a><a href="#">Coursiers dedies</a><a href="#">Ponctuelle</a><a href="#">Entreprises</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Entreprise</div>
+          <a href="#">A propos</a><a href="#">Carrieres</a><a href="#">Blog</a><a href="#">Contact</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Legal</div>
+          <a href="#">CGV</a><a href="#">Confidentialite</a><a href="#">Mentions legales</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; 2026 Chaskis. Tous droits reserves.</span>
+        <div class="footer-socials"><a href="#">in</a><a href="#">ig</a><a href="#">X</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const io = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+    }, { threshold: .05, rootMargin: '0px 0px -40px' });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Nav
+    const nav = document.getElementById('nav');
+    addEventListener('scroll', () => nav.classList.toggle('solid', scrollY > 60), { passive: true });
+  </script>
+
+</body>
+</html>

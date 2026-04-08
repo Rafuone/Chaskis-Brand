@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Postuler — Devenir coursier ou chauffeur chez Chaskis</title>
+<meta name="description" content="Rejoignez Chaskis en Suisse romande. CDI, horaires flexibles, matériel fourni, assurance complète. Postulez comme coursier à vélo ou chauffeur via notre app.">
+<link rel="canonical" href="https://www.chaskis.ch/postuler">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Recruit hero */
+.rec-hero{padding:100px 0 60px;background:linear-gradient(135deg,var(--ink) 0%,#1e2926 100%);color:#fff;position:relative;overflow:hidden;min-height:480px;display:flex;align-items:center}
+.rec-hero::before{content:'';position:absolute;top:-40%;right:-15%;width:600px;height:600px;background:radial-gradient(circle,rgba(107,79,160,.15),transparent 65%);border-radius:50%;animation:float 10s ease-in-out infinite}
+.rec-hero::after{content:'';position:absolute;bottom:-30%;left:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(58,175,169,.08),transparent 65%);border-radius:50%;animation:float 12s ease-in-out infinite reverse}
+.rec-hero-inner{position:relative;z-index:1;max-width:640px}
+.rec-hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1.1;letter-spacing:-.04em;margin-bottom:16px}
+.rec-hero h1 .ac{color:var(--accent-light)}
+.rec-hero p{font-size:1.05rem;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:28px;max-width:500px}
+.rec-hero-stats{display:flex;gap:32px;margin-bottom:32px}
+.rec-hero-stat strong{font-size:1.5rem;font-weight:900;display:block;line-height:1.1}
+.rec-hero-stat span{font-size:.72rem;color:rgba(255,255,255,.4)}
+
+/* Role selector */
+.rec-roles{padding:0;margin-top:-40px;position:relative;z-index:2}
+.rec-roles-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:800px;margin:0 auto}
+.rec-role{background:var(--white);border-radius:var(--rxl);box-shadow:var(--sh-lg);padding:36px 32px;text-align:center;transition:all .5s var(--ease);border:2px solid transparent;cursor:pointer}
+.rec-role:hover{transform:translateY(-6px);border-color:var(--accent);box-shadow:var(--sh-xl)}
+.rec-role-icon{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.rec-role-icon svg{width:32px;height:32px;color:#fff}
+.rec-role:first-child .rec-role-icon{background:var(--teal)}
+.rec-role:last-child .rec-role-icon{background:var(--accent)}
+.rec-role h3{font-size:1.15rem;font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
+.rec-role p{font-size:.85rem;color:var(--ink-light);line-height:1.55;margin-bottom:16px}
+
+/* Advantages */
+.rec-avantages{background:var(--bg)}
+.rec-av-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.rec-av{padding:28px 24px;background:var(--white);border-radius:var(--rxl);border:1.5px solid rgba(0,0,0,.04);transition:all .5s var(--ease);text-align:center}
+.rec-av:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:rgba(107,79,160,.08)}
+.rec-av-icon{width:48px;height:48px;border-radius:14px;background:var(--accent-bg);color:var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.rec-av-icon svg{width:22px;height:22px}
+.rec-av h4{font-size:.95rem;font-weight:800;margin-bottom:4px}
+.rec-av p{font-size:.8rem;color:var(--ink-light);line-height:1.55}
+
+/* Testimonials */
+.rec-testi{background:var(--white)}
+.rec-testi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.rec-tc{background:var(--bg);border-radius:var(--rxl);padding:24px;border:1.5px solid transparent;transition:all .5s var(--ease)}
+.rec-tc:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:rgba(107,79,160,.06)}
+.rec-tc-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.rec-tc-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;color:#fff}
+.rec-tc-info h4{font-size:.82rem;font-weight:700}
+.rec-tc-info p{font-size:.68rem;color:var(--ink-muted)}
+.rec-tc blockquote{font-size:.82rem;color:var(--ink-mid);line-height:1.6;font-style:italic}
+
+/* App download CTA */
+.rec-cta{background:linear-gradient(135deg,var(--accent-dark),var(--accent),var(--accent-light));color:#fff;text-align:center;position:relative;overflow:hidden}
+.rec-cta::before{content:'';position:absolute;top:-50%;left:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(255,255,255,.08),transparent 60%);border-radius:50%}
+.rec-cta-inner{position:relative;z-index:1;max-width:520px;margin:0 auto}
+.rec-cta h2{font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:12px}
+.rec-cta p{font-size:.92rem;color:rgba(255,255,255,.7);margin-bottom:28px;line-height:1.6}
+.rec-cta .app-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.app-dl{display:flex;align-items:center;gap:10px;padding:14px 28px;border-radius:var(--r);background:rgba(255,255,255,.15);backdrop-filter:blur(8px);color:#fff;font-size:.88rem;font-weight:700;transition:all .3s var(--ease);border:1px solid rgba(255,255,255,.2)}
+.app-dl:hover{background:rgba(255,255,255,.25);transform:translateY(-2px)}
+.app-dl svg{width:24px;height:24px}
+
+/* Photo placeholder for recruit */
+.rec-photo{aspect-ratio:16/9;border-radius:var(--rxl);overflow:hidden;background:linear-gradient(135deg,var(--accent-bg),var(--cream),var(--sand));display:flex;align-items:center;justify-content:center;margin-top:clamp(40px,5vw,64px)}
+.rec-photo svg{width:30%;opacity:.15}
+
+@media(max-width:1024px){
+  .rec-roles-grid{grid-template-columns:1fr;max-width:400px}
+  .rec-av-grid{grid-template-columns:repeat(2,1fr)}
+  .rec-testi-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .rec-av-grid{grid-template-columns:1fr}
+  .rec-testi-grid{grid-template-columns:1fr}
+  .rec-hero-stats{flex-wrap:wrap;gap:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="mob-m" id="mm">
+  <a href="/" onclick="cm()">Accueil</a>
+  <a href="/#services" onclick="cm()">Nos services</a>
+  <a href="commander.html" onclick="cm()">Commander</a>
+  <a href="postuler.html" onclick="cm()">Postuler</a>
+  <a href="/#faq" onclick="cm()">FAQ</a>
+</div>
+
+<nav class="nav scrolled" id="nav">
+  <div class="ct nav-in">
+    <a href="/" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a>
+    <div class="nav-mid">
+      <a href="/#services">Nos services</a>
+      <a href="commander.html">Commander</a>
+      <a href="postuler.html">Postuler</a>
+      <a href="/#faq">FAQ</a>
+    </div>
+    <div class="nav-right">
+      <a href="#" class="nav-login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Connexion</span></a>
+      <a href="/#booking" class="btn btn-p nav-cta btn-sm"><span>Réserver un appel</span></a>
+    </div>
+    <button class="mob-t" id="mt" aria-label="Menu"><span></span></button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="rec-hero">
+  <div class="ct rec-hero-inner">
+    <div class="rv">
+      <div class="sl" style="color:var(--accent-light)"><span style="width:20px;height:2px;background:var(--accent-light);display:inline-block;border-radius:1px;margin-right:8px"></span>On recrute</div>
+      <h1>Rejoignez les <span class="ac">800+ coursiers</span> qui ont choisi Chaskis</h1>
+      <p>Pas de statut précaire. Un vrai CDI, du matériel fourni, une assurance complète et des horaires que vous choisissez. Bienvenue dans une équipe qui vous respecte.</p>
+      <div class="rec-hero-stats">
+        <div class="rec-hero-stat"><strong style="color:var(--teal)">800+</strong><span>Employés</span></div>
+        <div class="rec-hero-stat"><strong style="color:var(--accent-light)">CDI</strong><span>Pour tous</span></div>
+        <div class="rec-hero-stat"><strong style="color:var(--teal)">97%</strong><span>Satisfaction interne</span></div>
+      </div>
+      <a href="#roles" class="btn btn-purple"><span>Découvrir les postes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<!-- Role selector -->
+<section class="rec-roles" id="roles">
+  <div class="ct">
+    <div class="rec-roles-grid stg">
+      <div class="rec-role tilt-3d rv">
+        <div class="rec-role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18.5" cy="18.5" r="3.5"/><circle cx="5.5" cy="18.5" r="3.5"/><path d="M15 18.5h-6M9 18.5V8.5l6-3v13"/></svg></div>
+        <h3>Coursier à vélo</h3>
+        <p>Livraison écologique en zone urbaine. Vous aimez le vélo et le contact humain ? Ce poste est pour vous.</p>
+        <ul style="text-align:left;font-size:.8rem;color:var(--ink-light);line-height:1.8;margin-bottom:16px">
+          <li>CDI + salaire fixe</li>
+          <li>Planning mensuel flexible</li>
+          <li>Vélo et matériel fournis</li>
+          <li>Primes de performance</li>
+          <li>Formation continue</li>
+        </ul>
+        <a href="#download" class="btn btn-p btn-sm"><span>Postuler via l'app</span></a>
+      </div>
+      <div class="rec-role tilt-3d rv d2">
+        <div class="rec-role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0"/><path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0"/><path d="M5 17H3v-6l2-5h9l4 5h1a2 2 0 0 1 2 2v4h-2M9 17h6"/></svg></div>
+        <h3>Chauffeur</h3>
+        <p>Mobilité premium et livraisons longue distance. Permis B21/D requis, véhicule fourni possible.</p>
+        <ul style="text-align:left;font-size:.8rem;color:var(--ink-light);line-height:1.8;margin-bottom:16px">
+          <li>CDI + salaire fixe</li>
+          <li>Horaires flexibles</li>
+          <li>Frais remboursés</li>
+          <li>Assurance complète</li>
+          <li>Primes de performance</li>
+        </ul>
+        <a href="#download" class="btn btn-purple btn-sm"><span>Postuler via l'app</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Advantages -->
+<section class="rec-avantages">
+  <div class="ct">
+    <div class="sh c rv">
+      <span class="sl" style="color:var(--accent)"><span style="width:20px;height:2px;background:var(--accent);display:inline-block;border-radius:1px;margin-right:8px"></span>Vos avantages</span>
+      <h2 class="st">Pourquoi nos <span style="color:var(--accent)">coursiers restent</span></h2>
+      <p class="sd">97% de satisfaction interne. Découvrez ce qui fait la différence.</p>
+    </div>
+    <div class="rec-av-grid stg">
+      <div class="rec-av tilt-3d"><div class="rec-av-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div><h4>CDI garanti</h4><p>Contrat de travail suisse. Pas de statut indépendant précaire.</p></div>
+      <div class="rec-av tilt-3d"><div class="rec-av-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h4>Horaires flex</h4><p>Choisissez vos créneaux selon votre emploi du temps.</p></div>
+      <div class="rec-av tilt-3d"><div class="rec-av-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4>Assurance complète</h4><p>Accident, maladie, intempéries. Vous êtes couvert.</p></div>
+      <div class="rec-av tilt-3d"><div class="rec-av-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><h4>Matériel fourni</h4><p>Vélo, sac isotherme, veste, téléphone professionnel.</p></div>
+      <div class="rec-av tilt-3d"><div class="rec-av-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><h4>Salaire fixe + primes</h4><p>Rémunération stable avec primes de performance.</p></div>
+      <div class="rec-av tilt-3d"><div class="rec-av-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div><h4>Formation continue</h4><p>Formations adaptées pour progresser dans l'entreprise.</p></div>
+      <div class="rec-av tilt-3d"><div class="rec-av-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><h4>Esprit d'équipe</h4><p>Une vraie communauté. Événements, entraide, convivialité.</p></div>
+      <div class="rec-av tilt-3d"><div class="rec-av-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4M12 16h.01"/></svg></div><h4>Convention collective</h4><p>Respect de la CCT des coursiers urbains.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="rec-testi">
+  <div class="ct">
+    <div class="sh c rv">
+      <span class="sl">Ils en parlent mieux que nous</span>
+      <h2 class="st">L'avis de nos <span class="ac">équipes</span></h2>
+    </div>
+    <div class="rec-testi-grid stg">
+      <article class="rec-tc tilt-3d"><div class="rec-tc-header"><div class="rec-tc-av" style="background:var(--teal)">PR</div><div class="rec-tc-info"><h4>Pierre</h4><p>Coursier — Depuis 2022</p></div></div><blockquote>J'aime la flexibilité des horaires et la solidarité entre collègues. On se sent respecté ici.</blockquote></article>
+      <article class="rec-tc tilt-3d"><div class="rec-tc-header"><div class="rec-tc-av" style="background:var(--accent)">AB</div><div class="rec-tc-info"><h4>Abdel</h4><p>Coursier — Depuis 2020</p></div></div><blockquote>Le management est à l'écoute. Quand il y a un souci, on trouve une solution ensemble.</blockquote></article>
+      <article class="rec-tc tilt-3d"><div class="rec-tc-header"><div class="rec-tc-av" style="background:var(--teal-dark)">JN</div><div class="rec-tc-info"><h4>John</h4><p>Chauffeur — Depuis 2021</p></div></div><blockquote>La stabilité du CDI et les primes font une vraie différence par rapport à l'indépendant.</blockquote></article>
+      <article class="rec-tc tilt-3d"><div class="rec-tc-header"><div class="rec-tc-av" style="background:var(--accent-light)">AM</div><div class="rec-tc-info"><h4>Amelia</h4><p>Coursière — Depuis 2024</p></div></div><blockquote>Le matériel fourni est top. Je n'ai rien eu à acheter pour commencer. Et l'ambiance est chouette.</blockquote></article>
+    </div>
+
+    <!-- Team photo placeholder -->
+    <div class="rec-photo rv">
+      <svg viewBox="0 0 400 200" fill="none">
+        <circle cx="80" cy="80" r="25" fill="currentColor"/><ellipse cx="80" cy="150" rx="35" ry="30" fill="currentColor"/>
+        <circle cx="160" cy="75" r="27" fill="currentColor"/><ellipse cx="160" cy="148" rx="37" ry="32" fill="currentColor"/>
+        <circle cx="240" cy="78" r="24" fill="currentColor"/><ellipse cx="240" cy="150" rx="34" ry="30" fill="currentColor"/>
+        <circle cx="320" cy="80" r="26" fill="currentColor"/><ellipse cx="320" cy="150" rx="36" ry="31" fill="currentColor"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- App Download CTA -->
+<section class="rec-cta" id="download">
+  <div class="ct rec-cta-inner rv">
+    <h2>Téléchargez l'app et postulez</h2>
+    <p>L'inscription prend 2 minutes. Téléchargez l'application Chaskis, créez votre profil et on vous recontacte dans les 48h.</p>
+    <div class="app-btns">
+      <a href="#" class="app-dl"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>App Store</a>
+      <a href="#" class="app-dl"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-1.4l2.584 1.496a1 1 0 010 1.394l-2.585 1.496-2.528-2.528 2.53-2.858zM5.864 2.658L16.8 8.99l-2.302 2.302-8.635-8.635z"/></svg>Google Play</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="ct">
+    <div class="ft">
+      <div class="fb"><a href="/" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg3" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg3)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a><p>Gestion de livraison en Suisse romande.</p></div>
+      <div class="fc"><h4>Services</h4><a href="commander.html">Commander</a><a href="/#services">Nos services</a><a href="/#booking">Réserver un appel</a></div>
+      <div class="fc"><h4>Entreprise</h4><a href="postuler.html">Postuler</a><a href="/#faq">FAQ</a><a href="mailto:contact@chaskis.ch">Contact</a></div>
+      <div class="fc"><h4>Légal</h4><a href="#">Mentions légales</a><a href="#">Confidentialité</a></div>
+    </div>
+    <div class="f-btm"><span>&copy; 2026 Chaskis SA — Lausanne</span><span>Fait en Suisse romande</span></div>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script src="auth.js"></script>
+</body>
+</html>

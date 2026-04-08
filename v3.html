@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chaskis — Gestion de livraison pour entreprises en Suisse romande</title>
+<meta name="description" content="Chaskis gère vos livraisons en Suisse romande. 800 coursiers et chauffeurs salariés, 1.5 million de courses par an. Réservez un appel découverte gratuit.">
+<meta name="keywords" content="gestion livraison entreprise Suisse, coursier vélo Lausanne, chauffeur dédié Genève, flotte livraison, alternative Uber Eats, livraison écologique, emploi coursier Suisse">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<link rel="canonical" href="https://www.chaskis.ch/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Chaskis — On gère vos livraisons, vous gérez votre business">
+<meta property="og:description" content="800 coursiers salariés, 1.5M livraisons/an, -40% vs plateformes. Réservez un appel découverte gratuit.">
+<meta property="og:url" content="https://www.chaskis.ch/">
+<meta property="og:site_name" content="Chaskis">
+<meta property="og:locale" content="fr_CH">
+<meta name="geo.region" content="CH-VD">
+<meta name="geo.placename" content="Lausanne">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Urbanist:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"LocalBusiness","name":"Chaskis","description":"Gestion de flotte de livraison en Suisse romande. 800 coursiers et chauffeurs salariés.","url":"https://www.chaskis.ch","telephone":"+41 21 000 00 00","address":{"@type":"PostalAddress","addressLocality":"Lausanne","postalCode":"1003","addressRegion":"VD","addressCountry":"CH"},"areaServed":{"@type":"Place","name":"Suisse romande"},"priceRange":"CHF 8 - CHF 16","aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"347","bestRating":"5"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"En quoi Chaskis est différent des plateformes ?","acceptedAnswer":{"@type":"Answer","text":"Nos 800 coursiers et chauffeurs sont salariés, pas auto-entrepreneurs. Tarif fixe, pas de commission à 30%."}},{"@type":"Question","name":"Combien coûte une livraison ?","acceptedAnswer":{"@type":"Answer","text":"CHF 16 en Express, dès CHF 8 pour les clients réguliers."}},{"@type":"Question","name":"Comment postuler chez Chaskis ?","acceptedAnswer":{"@type":"Answer","text":"Téléchargez l'app Chaskis Coursier sur App Store ou Google Play et postulez directement depuis l'application."}}]}
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Urbanist',system-ui,sans-serif;color:var(--ink);background:var(--bg);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
+img,svg{display:block;max-width:100%}a{text-decoration:none;color:inherit}button{font-family:inherit;cursor:pointer;border:none;background:none}ul,ol{list-style:none}
+::selection{background:var(--teal);color:#fff}
+
+:root{
+--teal:#3AAFA9;--teal-light:#5BC5C0;--teal-x-light:#B8E8E5;--teal-bg:#EFF9F8;--teal-dark:#2A8A85;--teal-deep:#1A5C59;
+--yellow:#F5B800;--yellow-light:#FFD54F;--yellow-bg:#FFFAED;
+--purple:#6B4FA0;--purple-light:#8B73B8;--purple-bg:#F3F0F8;
+--white:#FFFFFF;--bg:#FAFAF7;--cream:#F5F3EE;--sand:#EDE9E0;--warm-gray:#D6CFC2;
+--ink:#191C1A;--ink-mid:#3B403D;--ink-light:#6B736E;--ink-muted:#9EA69F;
+--r:12px;--rl:20px;--rxl:28px;--pill:100px;
+--sh-sm:0 1px 3px rgba(0,0,0,.04),0 1px 2px rgba(0,0,0,.06);
+--sh-md:0 4px 16px rgba(0,0,0,.06),0 1px 4px rgba(0,0,0,.04);
+--sh-lg:0 12px 40px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.04);
+--ease:cubic-bezier(.19,1,.22,1);
+--mw:1200px;--gut:clamp(20px,4vw,48px);
+}
+.ct{max-width:var(--mw);margin:0 auto;padding:0 var(--gut)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:var(--pill);font-weight:700;font-size:.92rem;letter-spacing:-.01em;transition:all .4s var(--ease)}
+.btn svg{width:18px;height:18px;transition:transform .3s var(--ease)}
+.btn-p{background:var(--teal);color:#fff;box-shadow:0 4px 20px rgba(58,175,169,.25)}
+.btn-p:hover{background:var(--teal-dark);transform:translateY(-2px);box-shadow:0 8px 32px rgba(58,175,169,.35)}
+.btn-o{border:2px solid var(--sand);color:var(--ink);background:var(--white)}
+.btn-o:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-2px)}
+.btn-g{color:var(--teal);font-weight:700;padding:0;gap:8px}
+.btn-g:hover{gap:12px}
+.btn-g:hover svg{transform:translateX(4px)}
+.btn-w{background:#fff;color:var(--teal-deep);box-shadow:var(--sh-md)}
+.btn-w:hover{transform:translateY(-2px);box-shadow:var(--sh-lg)}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 0;transition:all .5s var(--ease)}
+.nav.scrolled{background:rgba(250,250,247,.95);backdrop-filter:blur(20px);box-shadow:0 1px 0 rgba(0,0,0,.04);padding:10px 0}
+.nav-in{display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem;letter-spacing:-.03em}
+.nav-logo svg{width:32px;height:32px}
+.nav-mid{display:flex;align-items:center;gap:28px}
+.nav-mid a{font-size:.85rem;font-weight:600;color:var(--ink-mid);transition:color .3s}
+.nav-mid a:hover{color:var(--teal)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-cta{padding:10px 24px;font-size:.82rem}
+.mob-t{display:none;width:44px;height:44px;align-items:center;justify-content:center}
+.mob-t span{display:block;width:20px;height:2px;background:var(--ink);position:relative;transition:all .3s var(--ease)}
+.mob-t span::before,.mob-t span::after{content:'';position:absolute;left:0;width:100%;height:2px;background:var(--ink);transition:all .3s var(--ease)}
+.mob-t span::before{top:-6px}.mob-t span::after{top:6px}
+.mob-t.on span{background:transparent}.mob-t.on span::before{top:0;transform:rotate(45deg)}.mob-t.on span::after{top:0;transform:rotate(-45deg)}
+.mob-m{position:fixed;inset:0;z-index:99;background:rgba(250,250,247,.98);backdrop-filter:blur(24px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
+.mob-m.on{opacity:1;pointer-events:auto}
+.mob-m a{font-size:1.2rem;font-weight:700}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;align-items:center;padding:120px 0 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-20%;right:-15%;width:700px;height:700px;background:radial-gradient(circle,rgba(58,175,169,.06),transparent 70%);border-radius:50%}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(40px,5vw,72px);align-items:center}
+.hero-overline{display:inline-flex;align-items:center;gap:8px;padding:6px 16px 6px 6px;background:var(--teal-bg);border:1px solid rgba(58,175,169,.12);border-radius:var(--pill);font-size:.78rem;font-weight:700;color:var(--teal-dark);margin-bottom:22px}
+.hero-overline .dot{width:8px;height:8px;background:var(--teal);border-radius:50%;animation:pulse 2s ease infinite;margin:0 4px 0 4px}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+.hero-overline .wrap{display:flex;align-items:center;gap:6px;background:var(--white);border-radius:var(--pill);padding:4px 10px}
+.hero h1{font-size:clamp(2.4rem,4.5vw,3.6rem);font-weight:800;line-height:1.08;letter-spacing:-.04em;margin-bottom:20px}
+.hero h1 .sa{font-family:'Instrument Serif',serif;font-weight:400;font-style:italic;color:var(--teal)}
+.hero-sub{font-size:clamp(1rem,1.2vw,1.12rem);color:var(--ink-light);line-height:1.65;max-width:520px;margin-bottom:28px}
+.hero-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:40px}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--sand);padding-top:28px}
+.hero-stat{padding-right:20px}
+.hero-stat:not(:last-child){border-right:1px solid var(--sand)}
+.hero-stat:not(:first-child){padding-left:20px}
+.hero-stat strong{font-size:1.35rem;font-weight:900;letter-spacing:-.03em;line-height:1.1;display:block}
+.hero-stat span{font-size:.7rem;color:var(--ink-muted);font-weight:500;line-height:1.3}
+
+/* Hero visual */
+.hero-vis{position:relative}
+.hero-photo{aspect-ratio:3/4;border-radius:var(--rxl);overflow:hidden;position:relative;background:linear-gradient(135deg,var(--teal-bg),var(--sand))}
+.hero-photo .ph-silhouette{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.hero-photo .ph-silhouette svg{width:45%;opacity:.2}
+.hero-photo::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(transparent,rgba(0,0,0,.04))}
+/* Floating card on top of photo */
+.hero-float{position:absolute;background:var(--white);border-radius:var(--rl);box-shadow:var(--sh-lg);padding:16px 20px;z-index:2}
+.hero-float-booking{bottom:24px;left:-20px;right:20px;animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.hfb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.hfb-header h4{font-size:.88rem;font-weight:800;letter-spacing:-.02em}
+.hfb-badge{font-size:.65rem;font-weight:700;color:var(--teal);background:var(--teal-bg);padding:3px 10px;border-radius:var(--pill);display:flex;align-items:center;gap:4px}
+.hfb-badge::before{content:'';width:5px;height:5px;background:var(--teal);border-radius:50%;animation:pulse 2s ease infinite}
+.hfb-slots{display:flex;gap:6px}
+.hfb-slot{flex:1;padding:8px;border-radius:var(--r);font-size:.75rem;font-weight:600;text-align:center;border:1.5px solid var(--sand);color:var(--ink-mid);transition:all .3s var(--ease)}
+.hfb-slot.active{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
+.hero-float-stat{top:20px;right:-16px;display:flex;align-items:center;gap:10px;animation:float 4s ease-in-out infinite;animation-delay:1.5s}
+.hfs-icon{width:36px;height:36px;border-radius:10px;background:var(--yellow);display:flex;align-items:center;justify-content:center}
+.hfs-icon svg{width:16px;height:16px;color:var(--ink)}
+.hfs-text strong{font-size:1rem;font-weight:800;letter-spacing:-.02em;display:block;line-height:1.1}
+.hfs-text span{font-size:.65rem;color:var(--ink-muted)}
+
+/* Partners */
+.partners{padding:36px 0;border-top:1px solid rgba(0,0,0,.04);overflow:hidden}
+.p-label{text-align:center;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-muted);margin-bottom:16px}
+.mq-w{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.mq{display:flex;gap:48px;animation:mqx 28s linear infinite;width:max-content}
+.mq-i{font-size:.9rem;font-weight:700;color:var(--ink-muted);opacity:.35;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.mq-i svg{width:20px;height:20px;flex-shrink:0}
+@keyframes mqx{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* Sections */
+section{padding:clamp(72px,9vw,112px) 0}
+.sl{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);margin-bottom:12px}
+.sl::before{content:'';width:20px;height:2px;background:var(--teal);border-radius:1px}
+.st{font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800;line-height:1.12;letter-spacing:-.03em;margin-bottom:14px;max-width:600px}
+.st .ac{color:var(--teal)}.st .sa{font-family:'Instrument Serif',serif;font-weight:400;font-style:italic;color:var(--teal)}
+.sd{font-size:.95rem;color:var(--ink-light);line-height:1.65;max-width:500px;margin-bottom:40px}
+.sh{margin-bottom:clamp(40px,5vw,60px)}
+.sh.c{text-align:center;display:flex;flex-direction:column;align-items:center}
+
+/* Value Props */
+.vp{background:var(--white)}
+.vp-g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.vpc{padding:32px 28px;border-radius:var(--rxl);background:var(--bg);border:1px solid transparent;transition:all .5s var(--ease);overflow:hidden;position:relative}
+.vpc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.vpc:hover{transform:translateY(-4px);box-shadow:var(--sh-md);background:var(--white)}
+.vpc:hover::before{transform:scaleX(1)}
+.vpc:nth-child(1)::before{background:var(--teal)}.vpc:nth-child(2)::before{background:var(--yellow)}.vpc:nth-child(3)::before{background:var(--purple)}
+.vpc-ic{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.vpc-ic svg{width:22px;height:22px}
+.vpc-ic.t{background:var(--teal-bg);color:var(--teal)}.vpc-ic.y{background:var(--yellow-bg);color:var(--yellow)}.vpc-ic.p{background:var(--purple-bg);color:var(--purple)}
+.vpc h3{font-size:1.1rem;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+.vpc p{font-size:.88rem;color:var(--ink-light);line-height:1.6}
+.vpc-big{font-size:1.8rem;font-weight:900;letter-spacing:-.03em;margin-top:14px;line-height:1}
+
+/* How it works */
+.how{background:var(--bg)}
+.how-g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:s}
+.how-s{counter-increment:s;background:var(--white);border-radius:var(--rxl);padding:32px 28px;border:1px solid rgba(0,0,0,.04);transition:all .5s var(--ease)}
+.how-s:hover{transform:translateY(-4px);box-shadow:var(--sh-md)}
+.how-n{font-size:3rem;font-weight:900;color:var(--teal-x-light);line-height:1;margin-bottom:14px;letter-spacing:-.05em}
+.how-s h3{font-size:1.05rem;font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
+.how-s p{font-size:.86rem;color:var(--ink-light);line-height:1.6}
+
+/* Order */
+.order{background:var(--white)}
+.order-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(40px,5vw,64px);align-items:start}
+.order-tiers{display:flex;flex-direction:column;gap:10px;margin-top:28px}
+.ot{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--rl);border:1.5px solid var(--sand);background:var(--white);transition:all .3s var(--ease)}
+.ot:hover{border-color:var(--teal-light)}
+.ot-b{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:3px 10px;border-radius:var(--pill)}
+.ot-b.express{background:var(--yellow-bg);color:#8a7000}.ot-b.flex{background:var(--teal-bg);color:var(--teal-dark)}.ot-b.dedie{background:var(--purple-bg);color:var(--purple)}
+.ot-info{flex:1}.ot-info strong{font-size:.88rem;font-weight:700}.ot-info span{font-size:.75rem;color:var(--ink-muted);display:block}
+.ot-price{font-size:.95rem;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+
+.of{background:var(--bg);border-radius:var(--rxl);box-shadow:var(--sh-lg);padding:32px;position:relative;overflow:hidden}
+.of::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--yellow),var(--teal))}
+.of-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.of-hd h3{font-size:1.05rem;font-weight:800;letter-spacing:-.02em}
+.of-login{font-size:.78rem;font-weight:700;color:var(--teal);cursor:pointer;display:flex;align-items:center;gap:6px}
+.of-login svg{width:15px;height:15px}
+.of-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.oft{padding:10px 8px;border-radius:var(--r);border:1.5px solid var(--sand);text-align:center;cursor:pointer;transition:all .3s var(--ease)}
+.oft:hover{border-color:var(--teal-light)}.oft.on{border-color:var(--teal);background:var(--teal-bg)}
+.oft .tn{font-size:.8rem;font-weight:700;display:block}.oft .tp{font-size:.68rem;color:var(--ink-muted)}
+.oft.lk{opacity:.5;cursor:not-allowed;position:relative}
+.oft.lk::after{content:'Pro';position:absolute;top:3px;right:3px;font-size:.5rem;font-weight:800;background:var(--purple-bg);color:var(--purple);padding:1px 5px;border-radius:var(--pill)}
+.of-r{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.of-f{margin-bottom:12px}
+.of-f label{display:block;font-size:.75rem;font-weight:700;color:var(--ink-mid);margin-bottom:4px}
+.of-f input,.of-f select,.of-f textarea{width:100%;padding:10px 13px;border:1.5px solid var(--sand);border-radius:var(--r);font-family:inherit;font-size:.86rem;color:var(--ink);background:var(--white);outline:none;transition:border-color .3s}
+.of-f input:focus,.of-f select:focus,.of-f textarea:focus{border-color:var(--teal)}
+.of-f textarea{resize:vertical;min-height:60px}
+.of-sub{width:100%;padding:13px;border-radius:var(--r);background:var(--teal);color:#fff;font-weight:700;font-size:.9rem;cursor:pointer;border:none;transition:all .3s var(--ease);margin-top:6px}
+.of-sub:hover{background:var(--teal-dark);transform:translateY(-1px)}
+.of-note{text-align:center;font-size:.72rem;color:var(--ink-muted);margin-top:8px}
+
+/* Testimonials */
+.testi{background:var(--bg)}
+.testi-g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tc{background:var(--white);border-radius:var(--rxl);padding:28px;border:1px solid rgba(0,0,0,.04);transition:all .5s var(--ease)}
+.tc:hover{transform:translateY(-4px);box-shadow:var(--sh-md)}
+.tc-stars{display:flex;gap:2px;margin-bottom:14px}
+.tc-stars svg{width:15px;height:15px;fill:var(--yellow)}
+.tc-text{font-size:.9rem;color:var(--ink-mid);line-height:1.65;margin-bottom:20px}
+.tc-author{display:flex;align-items:center;gap:10px}
+.tc-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff}
+.tc-info h4{font-size:.85rem;font-weight:700}.tc-info p{font-size:.72rem;color:var(--ink-muted)}
+
+/* Recruit */
+.recruit{background:linear-gradient(135deg,var(--ink) 0%,#1e2926 100%);color:#fff;position:relative;overflow:hidden}
+.recruit::before{content:'';position:absolute;top:-30%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(107,79,160,.1),transparent 70%);border-radius:50%}
+.recruit-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,5vw,64px);align-items:center;position:relative;z-index:1}
+.recruit .sl{color:var(--purple-light)}.recruit .sl::before{background:var(--purple-light)}
+.recruit .st{color:#fff}.recruit .sd{color:rgba(255,255,255,.5)}
+.recruit-perks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px}
+.rp{padding:16px;border-radius:var(--rl);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
+.rp h4{font-size:.85rem;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:8px}
+.rp h4 svg{width:15px;height:15px;color:var(--purple-light)}
+.rp p{font-size:.75rem;color:rgba(255,255,255,.35);line-height:1.5}
+/* App download card */
+.app-card{background:var(--white);border-radius:var(--rxl);padding:36px;color:var(--ink);text-align:center}
+.app-card h3{font-size:1.2rem;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+.app-card .app-sub{font-size:.85rem;color:var(--ink-light);margin-bottom:24px}
+.app-card .app-icon{width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,var(--purple),var(--purple-light));margin:0 auto 20px;display:flex;align-items:center;justify-content:center}
+.app-card .app-icon svg{width:36px;height:36px;color:#fff}
+.app-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.app-btn{display:flex;align-items:center;gap:10px;padding:12px 24px;border-radius:var(--r);background:var(--ink);color:#fff;font-size:.85rem;font-weight:700;transition:all .3s var(--ease)}
+.app-btn:hover{transform:translateY(-2px);box-shadow:var(--sh-md)}
+.app-btn svg{width:24px;height:24px}
+.app-note{font-size:.72rem;color:var(--ink-muted);margin-top:16px}
+
+/* Booking */
+.booking{background:var(--white)}
+.bk-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(40px,5vw,64px);align-items:start}
+.bk-perks{margin-top:24px}
+.bkp{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
+.bkp-ic{width:32px;height:32px;border-radius:8px;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bkp-ic svg{width:15px;height:15px;color:var(--teal)}
+.bkp h4{font-size:.85rem;font-weight:700;margin-bottom:2px}.bkp p{font-size:.75rem;color:var(--ink-muted)}
+
+.bk-w{background:var(--bg);border-radius:var(--rxl);padding:32px;border:1px solid rgba(0,0,0,.04)}
+.bk-prog{display:flex;gap:6px;margin-bottom:22px}
+.bk-prog span{flex:1;height:3px;border-radius:2px;background:var(--sand);transition:background .4s var(--ease)}
+.bk-prog span.done{background:var(--teal)}
+.bk-step{display:none}.bk-step.active{display:block}
+.bk-t{font-size:1rem;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.bk-s{font-size:.75rem;color:var(--ink-muted);margin-bottom:18px}
+.bk-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px}
+.bk-d{width:100%;aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.76rem;font-weight:600;color:var(--ink-light);cursor:default;transition:all .25s var(--ease)}
+.bk-d.hd{font-size:.58rem;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.04em}
+.bk-d.av{color:var(--teal-dark);cursor:pointer;background:var(--teal-bg)}.bk-d.av:hover{background:var(--teal);color:#fff;transform:scale(1.05)}
+.bk-d.pk{background:var(--teal);color:#fff;box-shadow:0 4px 12px rgba(58,175,169,.2)}.bk-d.past{color:var(--warm-gray)}
+.bk-slots{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.bk-sl{padding:8px 14px;border-radius:var(--pill);font-size:.78rem;font-weight:600;border:1.5px solid var(--sand);color:var(--ink-mid);cursor:pointer;transition:all .3s var(--ease)}
+.bk-sl:hover,.bk-sl.pk{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
+.bk-f{margin-bottom:12px}.bk-f label{display:block;font-size:.75rem;font-weight:700;color:var(--ink-mid);margin-bottom:4px}
+.bk-f input,.bk-f select,.bk-f textarea{width:100%;padding:10px 13px;border:1.5px solid var(--sand);border-radius:var(--r);font-family:inherit;font-size:.86rem;color:var(--ink);background:var(--white);outline:none;transition:border-color .3s}
+.bk-f input:focus,.bk-f select:focus,.bk-f textarea:focus{border-color:var(--teal)}
+.bk-f textarea{resize:vertical;min-height:60px}
+.bk-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bk-nav{display:flex;gap:8px;margin-top:18px}
+.bk-nav .btn{flex:1;justify-content:center;padding:12px 18px;font-size:.86rem}
+.bk-back{background:var(--white);color:var(--ink-mid);font-weight:600;border:1.5px solid var(--sand)}
+.bk-confirm{text-align:center;padding:20px 0}
+.bk-confirm svg{width:48px;height:48px;color:var(--teal);margin:0 auto 12px}
+.bk-confirm h3{font-size:1.1rem;font-weight:800;margin-bottom:6px}
+.bk-confirm p{font-size:.82rem;color:var(--ink-light)}
+
+/* FAQ */
+.faq{background:var(--bg)}
+.faq-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(40px,5vw,64px);align-items:start}
+.faq-item{border-bottom:1px solid rgba(0,0,0,.06)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 0;cursor:pointer;gap:14px;transition:color .3s}
+.faq-q:hover{color:var(--teal)}
+.faq-q h3{font-size:.92rem;font-weight:700;letter-spacing:-.01em}
+.fi{width:28px;height:28px;border-radius:50%;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .4s var(--ease)}
+.fi svg{width:13px;height:13px;color:var(--teal);transition:transform .4s var(--ease)}
+.faq-item.open .fi{background:var(--teal)}.faq-item.open .fi svg{color:#fff;transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .5s var(--ease)}
+.faq-a p{padding:0 0 18px;font-size:.85rem;color:var(--ink-light);line-height:1.7}
+
+/* Footer */
+.footer{background:var(--ink);color:#fff;padding:56px 0 0}
+.ft{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:36px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.06)}
+.fb{max-width:250px}.fb .nav-logo{color:#fff;margin-bottom:12px}
+.fb p{font-size:.8rem;color:rgba(255,255,255,.35);line-height:1.6}
+.fb-soc{display:flex;gap:8px;margin-top:14px}
+.fb-soc a{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;transition:all .3s var(--ease)}
+.fb-soc a:hover{background:var(--teal);transform:translateY(-2px)}
+.fb-soc a svg{width:14px;height:14px;color:rgba(255,255,255,.4)}.fb-soc a:hover svg{color:#fff}
+.fc h4{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.25);margin-bottom:12px}
+.fc a{display:block;font-size:.8rem;color:rgba(255,255,255,.4);padding:4px 0;transition:all .3s}.fc a:hover{color:#fff;padding-left:4px}
+.f-btm{display:flex;align-items:center;justify-content:space-between;padding:16px 0;font-size:.7rem;color:rgba(255,255,255,.2)}
+
+/* Reveal */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.rv.v{opacity:1;transform:translateY(0)}
+.rl{opacity:0;transform:translateX(-28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}.rl.v{opacity:1;transform:translateX(0)}
+.rr{opacity:0;transform:translateX(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}.rr.v{opacity:1;transform:translateX(0)}
+.stg>*{opacity:0;transform:translateY(16px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.stg.v>*:nth-child(1){transition-delay:.05s}.stg.v>*:nth-child(2){transition-delay:.12s}.stg.v>*:nth-child(3){transition-delay:.19s}
+.stg.v>*{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+
+@media(max-width:1024px){
+  .hero-grid{grid-template-columns:1fr}.hero-vis{max-width:400px;margin:0 auto}.hero-float-stat{display:none}
+  .vp-g,.how-g,.testi-g{grid-template-columns:1fr}
+  .order-layout,.recruit-grid,.bk-layout,.faq-layout{grid-template-columns:1fr}
+  .ft{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .nav-mid{display:none}.mob-t{display:flex}
+  .hero-stats{grid-template-columns:repeat(2,1fr);gap:16px}
+  .hero-stat:not(:last-child){border-right:none}.hero-stat:not(:first-child){padding-left:0}
+  .of-tiers,.of-r,.bk-row{grid-template-columns:1fr}
+  .recruit-perks{grid-template-columns:1fr}.app-btns{flex-direction:column;align-items:center}
+  .ft{grid-template-columns:1fr;gap:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="mob-m" id="mm">
+  <a href="#services" onclick="cm()">Pourquoi nous</a>
+  <a href="#order" onclick="cm()">Commander</a>
+  <a href="#recruit" onclick="cm()">Devenir coursier</a>
+  <a href="#booking" onclick="cm()">Réserver un appel</a>
+  <a href="#faq" onclick="cm()">FAQ</a>
+</div>
+
+<nav class="nav" id="nav">
+  <div class="ct nav-in">
+    <a href="/" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a>
+    <div class="nav-mid">
+      <a href="#services">Pourquoi nous</a>
+      <a href="#order">Commander</a>
+      <a href="#recruit">Devenir coursier</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-right">
+      <a href="#booking" class="btn btn-p nav-cta">Réserver un appel</a>
+    </div>
+    <button class="mob-t" id="mt" aria-label="Menu"><span></span></button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="ct hero-grid">
+    <div>
+      <div class="hero-overline rv">
+        <div class="wrap"><span class="dot"></span>6 créneaux disponibles cette semaine</div>
+      </div>
+      <h1 class="rv d1">On gère vos livraisons,<br>vous gérez votre <span class="sa">business</span></h1>
+      <p class="hero-sub rv d2">800 coursiers et chauffeurs salariés, 1.5 million de livraisons par an. Confiez-nous votre logistique et concentrez-vous sur ce qui compte.</p>
+      <div class="hero-actions rv d3">
+        <a href="#booking" class="btn btn-p">Réserver un appel découverte <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#order" class="btn btn-o">Commander une course</a>
+      </div>
+      <div class="hero-stats rv d3">
+        <div class="hero-stat"><strong>12 min</strong><span>Temps de livraison moyen</span></div>
+        <div class="hero-stat"><strong>-40%</strong><span>vs plateformes</span></div>
+        <div class="hero-stat"><strong>800+</strong><span>Coursiers & chauffeurs</span></div>
+        <div class="hero-stat"><strong>1.5M</strong><span>Livraisons par an</span></div>
+      </div>
+    </div>
+    <div class="hero-vis rr d2">
+      <div class="hero-photo">
+        <div class="ph-silhouette">
+          <svg viewBox="0 0 200 300" fill="none"><circle cx="100" cy="75" r="35" fill="currentColor"/><ellipse cx="100" cy="200" rx="60" ry="55" fill="currentColor"/><rect x="60" y="145" width="80" height="15" rx="7" fill="currentColor"/></svg>
+        </div>
+      </div>
+      <div class="hero-float hero-float-booking">
+        <div class="hfb-header">
+          <h4>Prochain créneau</h4>
+          <span class="hfb-badge">Dispo</span>
+        </div>
+        <div class="hfb-slots">
+          <div class="hfb-slot">Mar 9h</div>
+          <div class="hfb-slot active">Mer 14h</div>
+          <div class="hfb-slot">Jeu 10h</div>
+        </div>
+      </div>
+      <div class="hero-float hero-float-stat">
+        <div class="hfs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <div class="hfs-text"><strong>98%</strong><span>Satisfaction</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Partners -->
+<div class="partners">
+  <p class="p-label">Ils nous font confiance</p>
+  <div class="mq-w"><div class="mq" aria-hidden="true">
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="18" rx="3"/><path d="M2 9h20"/></svg>Restaurant Le Central</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg>Pharmacie du Lac</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Swiss E-Shop</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>Café Romand</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Fleurs Express</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Boulangerie Artisan</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>Cabinet Riviera</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="18" rx="3"/><path d="M2 9h20"/></svg>Restaurant Le Central</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg>Pharmacie du Lac</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Swiss E-Shop</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>Café Romand</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Fleurs Express</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Boulangerie Artisan</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>Cabinet Riviera</span>
+  </div></div>
+</div>
+
+<!-- Value Props -->
+<section class="vp" id="services">
+  <div class="ct">
+    <div class="sh rv"><span class="sl">Pourquoi choisir Chaskis</span><h2 class="st">Vos livraisons méritent <span class="ac">mieux</span> qu'une plateforme</h2><p class="sd">Les plateformes prennent 30% de commission. Nous, on vous propose un tarif fixe avec une équipe qui connaît vos clients.</p></div>
+    <div class="vp-g stg">
+      <article class="vpc"><div class="vpc-ic t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><h3>Moins cher</h3><p>Tarif fixe par livraison, pas de commission. Plus de marge pour votre business.</p><div class="vpc-big" style="color:var(--teal)">-40%</div></article>
+      <article class="vpc"><div class="vpc-ic y"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div><h3>Des humains, pas un algo</h3><p>800 coursiers et chauffeurs salariés, formés et dédiés à votre entreprise.</p><div class="vpc-big" style="color:var(--yellow)">800+</div></article>
+      <article class="vpc"><div class="vpc-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Fiabilité suisse</h3><p>1.5 million de livraisons par an, 98% de satisfaction, suivi en temps réel.</p><div class="vpc-big" style="color:var(--purple)">1.5M</div></article>
+    </div>
+  </div>
+</section>
+
+<!-- How -->
+<section class="how">
+  <div class="ct">
+    <div class="sh c rv"><span class="sl">Comment ça marche</span><h2 class="st">Opérationnel en <span class="ac">48 heures</span></h2><p class="sd">De l'appel découverte à votre première livraison, on fait vite et bien.</p></div>
+    <div class="how-g stg">
+      <article class="how-s"><div class="how-n">01</div><h3>Appel découverte</h3><p>20 minutes pour comprendre votre activité, votre volume et vos besoins.</p></article>
+      <article class="how-s"><div class="how-n">02</div><h3>Mise en place</h3><p>On configure votre compte, assigne vos coursiers et connecte votre système.</p></article>
+      <article class="how-s"><div class="how-n">03</div><h3>Vous livrez, on gère</h3><p>Dashboard temps réel, notifications clients, support dédié 7j/7.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- Order -->
+<section class="order" id="order">
+  <div class="ct order-layout">
+    <div class="rl">
+      <span class="sl">Commander une livraison</span>
+      <h2 class="st">Du point A au point B, <span class="ac">simplement</span></h2>
+      <p class="sd">Restaurant, pharmacie, fleuriste ou particulier — commandez une course en quelques clics.</p>
+      <div class="order-tiers">
+        <div class="ot"><span class="ot-b express">Express</span><div class="ot-info"><strong>Sans compte</strong><span>One-shot, pour tout le monde</span></div><div class="ot-price">CHF 16</div></div>
+        <div class="ot"><span class="ot-b flex">Flex</span><div class="ot-info"><strong>Compte Pro</strong><span>Volume irrégulier, tarif préférentiel</span></div><div class="ot-price">~CHF 10</div></div>
+        <div class="ot"><span class="ot-b dedie">Dédié</span><div class="ot-info"><strong>Contrat signé</strong><span>Volume récurrent, flotte dédiée</span></div><div class="ot-price">CHF 8</div></div>
+      </div>
+    </div>
+    <div class="of rr">
+      <div class="of-hd"><h3>Nouvelle livraison</h3><span class="of-login">Se connecter <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg></span></div>
+      <div class="of-tiers" id="ofT">
+        <div class="oft on" data-t="express"><span class="tn">Express</span><span class="tp">CHF 16</span></div>
+        <div class="oft lk" data-t="flex"><span class="tn">Flex</span><span class="tp">Connexion requise</span></div>
+        <div class="oft lk" data-t="dedie"><span class="tn">Dédié</span><span class="tp">Connexion requise</span></div>
+      </div>
+      <div class="of-r"><div class="of-f"><label>Adresse de retrait</label><input placeholder="Rue du Pont 12, Lausanne"></div><div class="of-f"><label>Adresse de livraison</label><input placeholder="Avenue de Cour 45, Lausanne"></div></div>
+      <div class="of-r"><div class="of-f"><label>Date</label><input type="date"></div><div class="of-f"><label>Créneau</label><select><option>Dès que possible</option><option>Matin (8h-12h)</option><option>Après-midi (12h-17h)</option><option>Soir (17h-21h)</option></select></div></div>
+      <div class="of-f"><label>Description du colis</label><textarea placeholder="2 sacs, fragile, max 10 kg..."></textarea></div>
+      <div class="of-r"><div class="of-f"><label>Votre nom</label><input placeholder="Jean Dupont"></div><div class="of-f"><label>Téléphone</label><input type="tel" placeholder="+41 79 000 00 00"></div></div>
+      <div class="of-f"><label>Email</label><input type="email" placeholder="jean@example.ch"></div>
+      <button class="of-sub" id="ofSub">Commander — CHF 16</button>
+      <p class="of-note">Paiement à la livraison ou par facture (comptes Pro)</p>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testi">
+  <div class="ct">
+    <div class="sh c rv"><span class="sl">Témoignages</span><h2 class="st">Ce qu'en disent nos <span class="ac">clients</span></h2></div>
+    <div class="testi-g stg">
+      <article class="tc">
+        <div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div>
+        <p class="tc-text">On est passé de 30% de commission à un tarif fixe. En 3 mois, on a récupéré une marge énorme sur chaque commande livrée.</p>
+        <div class="tc-author"><div class="tc-av" style="background:var(--teal)">ML</div><div class="tc-info"><h4>Marie Laurent</h4><p>Gérante — Le Central, Lausanne</p></div></div>
+      </article>
+      <article class="tc">
+        <div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div>
+        <p class="tc-text">Les coursiers connaissent nos produits fragiles. C'est un vrai partenariat, pas juste un bouton "livrer" sur une app.</p>
+        <div class="tc-author"><div class="tc-av" style="background:var(--purple)">PD</div><div class="tc-info"><h4>Pierre Dubois</h4><p>Pharmacie du Lac, Genève</p></div></div>
+      </article>
+      <article class="tc">
+        <div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div>
+        <p class="tc-text">-35% sur nos coûts logistiques. Le dashboard est top et le support répond en moins d'une heure.</p>
+        <div class="tc-author"><div class="tc-av" style="background:var(--yellow);color:var(--ink)">SB</div><div class="tc-info"><h4>Sophie Blanc</h4><p>CEO — Swiss E-Shop, Neuchâtel</p></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Recruit -->
+<section class="recruit" id="recruit">
+  <div class="ct recruit-grid">
+    <div class="rl">
+      <span class="sl">On recrute</span>
+      <h2 class="st">Rejoignez une équipe qui vous <span style="color:var(--purple-light)">respecte</span></h2>
+      <p class="sd">Pas de statut précaire. Chez Chaskis, vous êtes salarié, assuré et accompagné.</p>
+      <div class="recruit-perks stg">
+        <div class="rp"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg> CDI garanti</h4><p>Contrat suisse, pas d'indépendant.</p></div>
+        <div class="rp"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Horaires flexibles</h4><p>Choisissez vos créneaux.</p></div>
+        <div class="rp"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Assurance complète</h4><p>Couvert accident et maladie.</p></div>
+        <div class="rp"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> Matériel fourni</h4><p>Vélo, sac, veste, téléphone.</p></div>
+      </div>
+    </div>
+    <div class="app-card rr">
+      <div class="app-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18.5" cy="18.5" r="3.5"/><circle cx="5.5" cy="18.5" r="3.5"/><path d="M15 18.5h-6M9 18.5V8.5l6-3v13"/></svg></div>
+      <h3>Téléchargez l'app Chaskis</h3>
+      <p class="app-sub">Postulez et gérez vos courses directement depuis l'application</p>
+      <div class="app-btns" id="appBtns">
+        <a href="#" class="app-btn" data-os="ios">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          App Store
+        </a>
+        <a href="#" class="app-btn" data-os="android">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 2.236l1.468 2.56a9.48 9.48 0 012.005 5.86A9.53 9.53 0 0112.005 20.2 9.53 9.53 0 013.013 10.656a9.48 9.48 0 012.005-5.86l1.468-2.56M8 10h.01M16 10h.01M7 14c.5 1.5 2.5 3 5 3s4.5-1.5 5-3"/></svg>
+          Google Play
+        </a>
+      </div>
+      <p class="app-note">Disponible sur iOS et Android — Inscription en 2 minutes</p>
+    </div>
+  </div>
+</section>
+
+<!-- Booking -->
+<section class="booking" id="booking">
+  <div class="ct bk-layout">
+    <div class="rl">
+      <span class="sl">Confier vos livraisons</span>
+      <h2 class="st">Réservez votre appel <span class="sa">découverte</span></h2>
+      <p class="sd">20 minutes pour comprendre votre activité et proposer la solution adaptée. Sans engagement.</p>
+      <div class="bk-perks">
+        <div class="bkp"><div class="bkp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><h4>20 min, pas plus</h4><p>On respecte votre temps.</p></div></div>
+        <div class="bkp"><div class="bkp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4>Sans engagement</h4><p>On discute, vous décidez.</p></div></div>
+        <div class="bkp"><div class="bkp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><h4>Offre sur mesure</h4><p>Tarif adapté à votre volume.</p></div></div>
+      </div>
+    </div>
+    <div class="bk-w rr" id="bkW">
+      <div class="bk-prog"><span class="done"></span><span></span><span></span></div>
+      <div class="bk-step active" id="bkS1">
+        <div class="bk-t">Choisissez une date</div>
+        <div class="bk-s">Avril 2026</div>
+        <div class="bk-cal" id="bkCal">
+          <div class="bk-d hd">L</div><div class="bk-d hd">M</div><div class="bk-d hd">M</div><div class="bk-d hd">J</div><div class="bk-d hd">V</div><div class="bk-d hd">S</div><div class="bk-d hd">D</div>
+          <div class="bk-d"></div><div class="bk-d"></div><div class="bk-d past">1</div><div class="bk-d past">2</div><div class="bk-d past">3</div><div class="bk-d past">4</div><div class="bk-d past">5</div>
+          <div class="bk-d past">6</div><div class="bk-d past">7</div><div class="bk-d av" data-d="8">8</div><div class="bk-d av" data-d="9">9</div><div class="bk-d av" data-d="10">10</div><div class="bk-d">11</div><div class="bk-d">12</div>
+          <div class="bk-d av" data-d="14">14</div><div class="bk-d av" data-d="15">15</div><div class="bk-d av" data-d="16">16</div><div class="bk-d av" data-d="17">17</div><div class="bk-d av" data-d="18">18</div><div class="bk-d">19</div><div class="bk-d">20</div>
+          <div class="bk-d av" data-d="21">21</div><div class="bk-d av" data-d="22">22</div><div class="bk-d av" data-d="23">23</div><div class="bk-d av" data-d="24">24</div><div class="bk-d av" data-d="25">25</div><div class="bk-d">26</div><div class="bk-d">27</div>
+          <div class="bk-d av" data-d="28">28</div><div class="bk-d av" data-d="29">29</div><div class="bk-d av" data-d="30">30</div><div class="bk-d"></div><div class="bk-d"></div><div class="bk-d"></div><div class="bk-d"></div>
+        </div>
+        <div class="bk-slots" id="bkSl" style="display:none"><div class="bk-sl" data-t="09:00">09:00</div><div class="bk-sl" data-t="10:00">10:00</div><div class="bk-sl" data-t="14:00">14:00</div><div class="bk-sl" data-t="15:30">15:30</div><div class="bk-sl" data-t="16:30">16:30</div></div>
+        <div class="bk-nav"><button class="btn btn-p" id="bkN1" disabled>Suivant</button></div>
+      </div>
+      <div class="bk-step" id="bkS2">
+        <div class="bk-t">Quelques infos</div><div class="bk-s">Pour préparer l'appel</div>
+        <div class="bk-row"><div class="bk-f"><label>Prénom</label><input placeholder="Jean"></div><div class="bk-f"><label>Nom</label><input placeholder="Dupont"></div></div>
+        <div class="bk-f"><label>Email pro</label><input type="email" placeholder="jean@monentreprise.ch"></div>
+        <div class="bk-f"><label>Entreprise</label><input placeholder="Restaurant Le Central"></div>
+        <div class="bk-f"><label>Volume estimé / jour</label><select><option>Moins de 10</option><option>10 à 30</option><option>30 à 100</option><option>Plus de 100</option></select></div>
+        <div class="bk-f"><label>Quelque chose à ajouter ?</label><textarea placeholder="Ex: on utilise Uber Eats et on cherche mieux..."></textarea></div>
+        <div class="bk-nav"><button class="btn bk-back" id="bkB2">Retour</button><button class="btn btn-p" id="bkN2">Confirmer</button></div>
+      </div>
+      <div class="bk-step" id="bkS3"><div class="bk-confirm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><h3>C'est réservé !</h3><p>Confirmation par email. À très vite !</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="ct faq-layout">
+    <div class="rl"><span class="sl">FAQ</span><h2 class="st">Vos questions, nos <span class="ac">réponses</span></h2><p class="sd">Pas trouvé ? Réservez un appel.</p></div>
+    <div class="faq-list rr">
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>En quoi c'est différent d'Uber Eats ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>Les plateformes prennent 25-30% de commission. Chez Chaskis, tarif fixe par livraison. Nos 800 coursiers sont salariés et dédiés à votre entreprise.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>C'est quoi Express, Flex et Dédié ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p><strong>Express</strong> : course unique, sans compte, CHF 16. <strong>Flex</strong> : compte pro, volume irrégulier, ~CHF 10. <strong>Dédié</strong> : contrat, volume récurrent, coursiers dédiés, CHF 8.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>Quels types d'entreprises ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>Restaurants, pharmacies, fleuristes, e-commerce, cabinets médicaux — de 5 à 500 livraisons par jour.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>C'est rapide à mettre en place ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>48h entre l'appel et votre première livraison.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>Quelles zones ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>Lausanne, Genève, Neuchâtel, Fribourg, Montreux, Nyon et environs.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>Comment postuler ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>Téléchargez l'app Chaskis sur App Store ou Google Play. CDI, horaires flexibles, matériel fourni, assurance complète.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="ct">
+    <div class="ft">
+      <div class="fb"><a href="/" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg3" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg3)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a><p>Gestion de livraison en Suisse romande.</p><div class="fb-soc"><a href="https://www.instagram.com/chaskis.ch" aria-label="Instagram" rel="noopener" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a><a href="https://www.linkedin.com/company/chaskis" aria-label="LinkedIn" rel="noopener" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></div></div>
+      <div class="fc"><h4>Services</h4><a href="#order">Commander</a><a href="#services">Pourquoi nous</a><a href="#booking">Réserver un appel</a></div>
+      <div class="fc"><h4>Entreprise</h4><a href="#recruit">Devenir coursier</a><a href="#faq">FAQ</a><a href="mailto:contact@chaskis.ch">Contact</a></div>
+      <div class="fc"><h4>Légal</h4><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">CGV</a></div>
+    </div>
+    <div class="f-btm"><span>&copy; 2026 Chaskis SA — Lausanne</span><span>Fait en Suisse romande</span></div>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50),{passive:true});
+const mt=document.getElementById('mt'),mm=document.getElementById('mm');
+mt.addEventListener('click',()=>{const o=mm.classList.toggle('on');mt.classList.toggle('on');document.body.style.overflow=o?'hidden':'';});
+function cm(){mm.classList.remove('on');mt.classList.remove('on');document.body.style.overflow='';}
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();cm();t.scrollIntoView({behavior:'smooth'});}}));
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v');obs.unobserve(e.target);}}),{threshold:.08,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.rv,.rl,.rr,.stg').forEach(el=>obs.observe(el));
+document.querySelectorAll('.faq-q').forEach(q=>{q.addEventListener('click',()=>{const i=q.parentElement,a=i.querySelector('.faq-a'),w=i.classList.contains('open');document.querySelectorAll('.faq-item.open').forEach(x=>{x.classList.remove('open');x.querySelector('.faq-a').style.maxHeight='0';});if(!w){i.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';}});q.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();q.click();}});});
+document.querySelectorAll('#ofT .oft:not(.lk)').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('#ofT .oft').forEach(x=>x.classList.remove('on'));t.classList.add('on');const p=t.dataset.t==='express'?'16':t.dataset.t==='flex'?'10':'8';document.getElementById('ofSub').textContent='Commander — CHF '+p;});});
+const bkSt=[document.getElementById('bkS1'),document.getElementById('bkS2'),document.getElementById('bkS3')];
+const bkPr=document.querySelectorAll('.bk-prog span');
+function bkGo(n){bkSt.forEach((s,i)=>s.classList.toggle('active',i===n));bkPr.forEach((p,i)=>p.classList.toggle('done',i<=n));}
+document.querySelectorAll('#bkCal .bk-d.av').forEach(d=>{d.addEventListener('click',()=>{document.querySelectorAll('#bkCal .bk-d.pk').forEach(p=>p.classList.remove('pk'));d.classList.add('pk');document.getElementById('bkSl').style.display='flex';document.querySelectorAll('.bk-sl.pk').forEach(s=>s.classList.remove('pk'));document.getElementById('bkN1').disabled=true;});});
+document.querySelectorAll('.bk-sl').forEach(s=>{s.addEventListener('click',()=>{document.querySelectorAll('.bk-sl.pk').forEach(p=>p.classList.remove('pk'));s.classList.add('pk');document.getElementById('bkN1').disabled=false;});});
+document.getElementById('bkN1').addEventListener('click',()=>bkGo(1));
+document.getElementById('bkB2').addEventListener('click',()=>bkGo(0));
+document.getElementById('bkN2').addEventListener('click',()=>bkGo(2));
+// Smart app links
+const ua=navigator.userAgent.toLowerCase();
+const isIOS=/iphone|ipad|ipod/.test(ua);
+const isAndroid=/android/.test(ua);
+if(isIOS){const ab=document.querySelector('[data-os="android"]');if(ab)ab.style.display='none';}
+else if(isAndroid){const ab=document.querySelector('[data-os="ios"]');if(ab)ab.style.display='none';}
+</script>
+</body>
+</html>

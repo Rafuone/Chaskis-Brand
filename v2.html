@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chaskis — Gestion de livraison pour entreprises en Suisse romande</title>
+<meta name="description" content="Chaskis gère vos livraisons en Suisse romande. Coursiers à vélo et chauffeurs salariés, suivi en temps réel, moins cher que les plateformes. Commandez une course ou réservez un appel découverte.">
+<meta name="keywords" content="gestion livraison entreprise Suisse, coursier vélo Lausanne, chauffeur dédié Genève, flotte livraison Suisse romande, alternative Uber Eats restaurant, livraison écologique, last mile delivery Switzerland, emploi coursier Suisse">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<link rel="canonical" href="https://www.chaskis.ch/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Chaskis — On gère vos livraisons, vous gérez votre business">
+<meta property="og:description" content="Coursiers salariés, tarifs transparents, suivi en temps réel. Commandez une livraison ou devenez partenaire.">
+<meta property="og:url" content="https://www.chaskis.ch/">
+<meta property="og:site_name" content="Chaskis">
+<meta property="og:locale" content="fr_CH">
+<meta name="geo.region" content="CH-VD">
+<meta name="geo.placename" content="Lausanne">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Urbanist:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"LocalBusiness","name":"Chaskis","description":"Gestion de flotte de livraison pour entreprises en Suisse romande.","url":"https://www.chaskis.ch","telephone":"+41 21 000 00 00","address":{"@type":"PostalAddress","addressLocality":"Lausanne","postalCode":"1003","addressRegion":"VD","addressCountry":"CH"},"areaServed":{"@type":"Place","name":"Suisse romande"},"priceRange":"CHF 8 - CHF 16","aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"347","bestRating":"5"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"En quoi Chaskis est différent des plateformes comme Uber Eats ?","acceptedAnswer":{"@type":"Answer","text":"Nos coursiers sont salariés et dédiés à votre entreprise. Pas de commission à 30%, un tarif fixe transparent et un interlocuteur unique."}},{"@type":"Question","name":"Combien coûte une livraison ?","acceptedAnswer":{"@type":"Answer","text":"CHF 16 en Express (sans compte), à partir de CHF 8 pour les partenaires avec du volume (offre Dédié)."}},{"@type":"Question","name":"Comment devenir coursier chez Chaskis ?","acceptedAnswer":{"@type":"Answer","text":"Postulez en ligne. CDI, horaires flexibles, matériel fourni, assurance complète. Pas de statut précaire."}}]}
+</script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Urbanist',system-ui,sans-serif;color:var(--ink);background:var(--bg);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
+img,svg{display:block;max-width:100%}a{text-decoration:none;color:inherit}button{font-family:inherit;cursor:pointer;border:none;background:none}ul,ol{list-style:none}
+::selection{background:var(--teal);color:#fff}
+
+:root{
+--teal:#3AAFA9;--teal-light:#5BC5C0;--teal-x-light:#B8E8E5;--teal-bg:#EFF9F8;--teal-dark:#2A8A85;--teal-deep:#1A5C59;
+--yellow:#F5B800;--yellow-light:#FFD54F;--yellow-bg:#FFFAED;
+--purple:#6B4FA0;--purple-light:#8B73B8;--purple-bg:#F3F0F8;
+--white:#FFFFFF;--bg:#FAFAF7;--cream:#F5F3EE;--sand:#EDE9E0;--warm-gray:#D6CFC2;
+--ink:#191C1A;--ink-mid:#3B403D;--ink-light:#6B736E;--ink-muted:#9EA69F;
+--r:12px;--rl:20px;--rxl:28px;--pill:100px;
+--sh-sm:0 1px 3px rgba(0,0,0,.04),0 1px 2px rgba(0,0,0,.06);
+--sh-md:0 4px 16px rgba(0,0,0,.06),0 1px 4px rgba(0,0,0,.04);
+--sh-lg:0 12px 40px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.04);
+--ease:cubic-bezier(.19,1,.22,1);
+--mw:1200px;--gutter:clamp(20px,4vw,48px);
+}
+.ctn{max-width:var(--mw);margin:0 auto;padding:0 var(--gutter)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:var(--pill);font-weight:700;font-size:.92rem;letter-spacing:-.01em;transition:all .4s var(--ease)}
+.btn svg{width:18px;height:18px;transition:transform .3s var(--ease)}
+.btn-p{background:var(--teal);color:#fff;box-shadow:0 4px 20px rgba(58,175,169,.25)}
+.btn-p:hover{background:var(--teal-dark);transform:translateY(-2px);box-shadow:0 8px 32px rgba(58,175,169,.35)}
+.btn-o{border:2px solid var(--sand);color:var(--ink);background:var(--white)}
+.btn-o:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-2px)}
+.btn-w{background:#fff;color:var(--teal-deep);box-shadow:var(--sh-md)}
+.btn-w:hover{transform:translateY(-2px);box-shadow:var(--sh-lg)}
+.btn-g{color:var(--teal);font-weight:700;padding:0;gap:8px}
+.btn-g:hover{gap:12px}
+.btn-g:hover svg{transform:translateX(4px)}
+.btn-yellow{background:var(--yellow);color:var(--ink)}
+.btn-yellow:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,184,0,.3)}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-purple:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(107,79,160,.3)}
+.arrow-r{width:18px;height:18px}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 0;transition:all .5s var(--ease)}
+.nav.scrolled{background:rgba(250,250,247,.95);backdrop-filter:blur(20px);box-shadow:0 1px 0 rgba(0,0,0,.04);padding:10px 0}
+.nav-in{display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem;letter-spacing:-.03em}
+.nav-logo svg{width:32px;height:32px}
+.nav-center{display:flex;align-items:center;gap:28px}
+.nav-center a{font-size:.85rem;font-weight:600;color:var(--ink-mid);transition:color .3s}
+.nav-center a:hover{color:var(--teal)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-cta{padding:10px 24px;font-size:.82rem}
+.nav-order{padding:10px 24px;font-size:.82rem;background:var(--ink);color:#fff;border-radius:var(--pill);font-weight:700;transition:all .3s var(--ease)}
+.nav-order:hover{background:var(--teal-deep);transform:translateY(-1px)}
+.mob-toggle{display:none;width:44px;height:44px;align-items:center;justify-content:center}
+.mob-toggle span{display:block;width:20px;height:2px;background:var(--ink);position:relative;transition:all .3s var(--ease)}
+.mob-toggle span::before,.mob-toggle span::after{content:'';position:absolute;left:0;width:100%;height:2px;background:var(--ink);transition:all .3s var(--ease)}
+.mob-toggle span::before{top:-6px}.mob-toggle span::after{top:6px}
+.mob-toggle.on span{background:transparent}
+.mob-toggle.on span::before{top:0;transform:rotate(45deg)}
+.mob-toggle.on span::after{top:0;transform:rotate(-45deg)}
+.mob-menu{position:fixed;inset:0;z-index:99;background:rgba(250,250,247,.98);backdrop-filter:blur(24px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
+.mob-menu.on{opacity:1;pointer-events:auto}
+.mob-menu a{font-size:1.2rem;font-weight:700;color:var(--ink)}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;align-items:center;padding:120px 0 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-20%;right:-15%;width:700px;height:700px;background:radial-gradient(circle,rgba(58,175,169,.06) 0%,transparent 70%);border-radius:50%}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1fr;gap:48px}
+.hero-top{max-width:720px}
+.hero-overline{display:inline-flex;align-items:center;gap:8px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);margin-bottom:20px}
+.hero-overline::before{content:'';width:24px;height:2px;background:var(--teal)}
+.hero h1{font-size:clamp(2.4rem,4.5vw,3.6rem);font-weight:800;line-height:1.08;letter-spacing:-.04em;margin-bottom:20px}
+.hero h1 .sa{font-family:'Instrument Serif',serif;font-weight:400;font-style:italic;color:var(--teal)}
+.hero-sub{font-size:clamp(1rem,1.2vw,1.15rem);color:var(--ink-light);line-height:1.65;max-width:560px;margin-bottom:32px}
+.hero-metrics{display:flex;gap:32px;margin-bottom:40px;flex-wrap:wrap}
+.hero-metric{display:flex;flex-direction:column}
+.hero-metric strong{font-size:1.6rem;font-weight:900;letter-spacing:-.03em;line-height:1.1}
+.hero-metric span{font-size:.75rem;color:var(--ink-muted);font-weight:500}
+
+/* 3 action cards */
+.hero-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.hero-card{border-radius:var(--rxl);padding:32px 28px;transition:all .5s var(--ease);position:relative;overflow:hidden;border:2px solid transparent;cursor:pointer}
+.hero-card:hover{transform:translateY(-4px)}
+.hero-card h3{font-size:1.1rem;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+.hero-card p{font-size:.85rem;line-height:1.55;margin-bottom:20px}
+.hero-card .hc-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.hero-card .hc-icon svg{width:24px;height:24px}
+.hc-acquire{background:var(--teal-bg);border-color:rgba(58,175,169,.12)}
+.hc-acquire:hover{border-color:var(--teal);box-shadow:0 12px 32px rgba(58,175,169,.12)}
+.hc-acquire .hc-icon{background:var(--teal);color:#fff}
+.hc-acquire p{color:var(--teal-dark)}
+.hc-order{background:var(--yellow-bg);border-color:rgba(245,184,0,.12)}
+.hc-order:hover{border-color:var(--yellow);box-shadow:0 12px 32px rgba(245,184,0,.12)}
+.hc-order .hc-icon{background:var(--yellow);color:var(--ink)}
+.hc-order p{color:#8a7000}
+.hc-recruit{background:var(--purple-bg);border-color:rgba(107,79,160,.1)}
+.hc-recruit:hover{border-color:var(--purple);box-shadow:0 12px 32px rgba(107,79,160,.1)}
+.hc-recruit .hc-icon{background:var(--purple);color:#fff}
+.hc-recruit p{color:#5a4288}
+
+/* Partners */
+.partners{padding:36px 0;border-top:1px solid rgba(0,0,0,.04);overflow:hidden}
+.partners-label{text-align:center;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-muted);margin-bottom:16px}
+.mq-wrap{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.mq{display:flex;gap:48px;animation:mqx 28s linear infinite;width:max-content}
+.mq-i{font-size:.9rem;font-weight:700;color:var(--ink-muted);letter-spacing:-.01em;opacity:.35;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.mq-i svg{width:20px;height:20px;flex-shrink:0}
+@keyframes mqx{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* Sections */
+section{padding:clamp(72px,9vw,112px) 0}
+.slabel{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);margin-bottom:12px}
+.slabel::before{content:'';width:20px;height:2px;background:var(--teal);border-radius:1px}
+.stitle{font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800;line-height:1.12;letter-spacing:-.03em;margin-bottom:14px;max-width:600px}
+.stitle .ac{color:var(--teal)}
+.stitle .sa{font-family:'Instrument Serif',serif;font-weight:400;font-style:italic;color:var(--teal)}
+.sdesc{font-size:.95rem;color:var(--ink-light);line-height:1.65;max-width:500px;margin-bottom:40px}
+.sh{margin-bottom:clamp(40px,5vw,60px)}
+.sh.c{text-align:center;display:flex;flex-direction:column;align-items:center}
+
+/* Value Props */
+.vp{background:var(--white)}
+.vp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.vp-card{padding:32px 28px;border-radius:var(--rxl);background:var(--bg);border:1px solid transparent;transition:all .5s var(--ease);overflow:hidden;position:relative}
+.vp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.vp-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md);background:var(--white)}
+.vp-card:hover::before{transform:scaleX(1)}
+.vp-card:nth-child(1)::before{background:var(--teal)}
+.vp-card:nth-child(2)::before{background:var(--yellow)}
+.vp-card:nth-child(3)::before{background:var(--purple)}
+.vp-ic{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.vp-ic svg{width:22px;height:22px}
+.vp-ic.t{background:var(--teal-bg);color:var(--teal)}
+.vp-ic.y{background:var(--yellow-bg);color:var(--yellow)}
+.vp-ic.p{background:var(--purple-bg);color:var(--purple)}
+.vp-card h3{font-size:1.1rem;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+.vp-card p{font-size:.88rem;color:var(--ink-light);line-height:1.6}
+.vp-big{font-size:1.8rem;font-weight:900;color:var(--teal);letter-spacing:-.03em;margin-top:14px;line-height:1}
+
+/* Order Section */
+.order{background:var(--bg)}
+.order-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(40px,5vw,64px);align-items:start}
+.order-tiers{display:flex;flex-direction:column;gap:12px;margin-top:32px}
+.order-tier{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:var(--rl);border:1.5px solid var(--sand);background:var(--white);transition:all .3s var(--ease);cursor:default}
+.order-tier:hover{border-color:var(--teal-light)}
+.ot-badge{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:3px 10px;border-radius:var(--pill)}
+.ot-badge.express{background:var(--yellow-bg);color:#8a7000}
+.ot-badge.flex{background:var(--teal-bg);color:var(--teal-dark)}
+.ot-badge.dedie{background:var(--purple-bg);color:var(--purple)}
+.ot-info{flex:1}
+.ot-info strong{font-size:.9rem;font-weight:700}
+.ot-info span{font-size:.78rem;color:var(--ink-muted);display:block}
+.ot-price{font-size:1rem;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+
+/* Order Form */
+.order-form{background:var(--white);border-radius:var(--rxl);box-shadow:var(--sh-lg);padding:36px;position:relative;overflow:hidden}
+.order-form::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--yellow),var(--teal))}
+.of-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.of-header h3{font-size:1.1rem;font-weight:800;letter-spacing:-.02em}
+.of-login{font-size:.8rem;font-weight:700;color:var(--teal);cursor:pointer;display:flex;align-items:center;gap:6px;transition:gap .3s var(--ease)}
+.of-login:hover{gap:10px}
+.of-login svg{width:16px;height:16px}
+.of-tier-select{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.of-tier{padding:12px 10px;border-radius:var(--r);border:1.5px solid var(--sand);text-align:center;cursor:pointer;transition:all .3s var(--ease)}
+.of-tier:hover{border-color:var(--teal-light)}
+.of-tier.active{border-color:var(--teal);background:var(--teal-bg)}
+.of-tier .tier-name{font-size:.82rem;font-weight:700;display:block}
+.of-tier .tier-price{font-size:.7rem;color:var(--ink-muted)}
+.of-tier.locked{opacity:.5;cursor:not-allowed;position:relative}
+.of-tier.locked::after{content:'Pro';position:absolute;top:4px;right:4px;font-size:.55rem;font-weight:800;background:var(--purple-bg);color:var(--purple);padding:1px 6px;border-radius:var(--pill)}
+.of-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.of-field{margin-bottom:14px}
+.of-field label{display:block;font-size:.78rem;font-weight:700;color:var(--ink-mid);margin-bottom:5px}
+.of-field input,.of-field select,.of-field textarea{width:100%;padding:11px 14px;border:1.5px solid var(--sand);border-radius:var(--r);font-family:inherit;font-size:.88rem;color:var(--ink);background:var(--bg);outline:none;transition:border-color .3s}
+.of-field input:focus,.of-field select:focus,.of-field textarea:focus{border-color:var(--teal)}
+.of-field textarea{resize:vertical;min-height:70px}
+.of-submit{width:100%;padding:14px;border-radius:var(--r);background:var(--teal);color:#fff;font-weight:700;font-size:.92rem;transition:all .3s var(--ease);cursor:pointer;border:none;margin-top:8px}
+.of-submit:hover{background:var(--teal-dark);transform:translateY(-1px)}
+.of-note{text-align:center;font-size:.75rem;color:var(--ink-muted);margin-top:10px}
+
+/* Recruit Section */
+.recruit{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.recruit::before{content:'';position:absolute;bottom:-30%;left:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(107,79,160,.1),transparent 70%);border-radius:50%}
+.recruit-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,5vw,64px);align-items:center;position:relative;z-index:1}
+.recruit .slabel{color:var(--purple-light)}.recruit .slabel::before{background:var(--purple-light)}
+.recruit .stitle{color:#fff}
+.recruit .sdesc{color:rgba(255,255,255,.55)}
+.recruit-perks{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:32px}
+.rp{padding:18px;border-radius:var(--rl);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);transition:all .3s var(--ease)}
+.rp:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1)}
+.rp h4{font-size:.88rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.rp h4 svg{width:16px;height:16px;color:var(--purple-light)}
+.rp p{font-size:.78rem;color:rgba(255,255,255,.4);line-height:1.5}
+.recruit-form{background:var(--white);border-radius:var(--rxl);padding:36px;color:var(--ink)}
+.recruit-form h3{font-size:1.1rem;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.recruit-form .rf-sub{font-size:.82rem;color:var(--ink-muted);margin-bottom:24px}
+.rf-types{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.rf-type{padding:14px;border-radius:var(--r);border:1.5px solid var(--sand);text-align:center;cursor:pointer;transition:all .3s var(--ease)}
+.rf-type:hover{border-color:var(--purple-light)}
+.rf-type.active{border-color:var(--purple);background:var(--purple-bg)}
+.rf-type svg{width:28px;height:28px;margin:0 auto 6px;color:var(--ink-light)}
+.rf-type.active svg{color:var(--purple)}
+.rf-type span{font-size:.82rem;font-weight:700;display:block}
+.rf-field{margin-bottom:14px}
+.rf-field label{display:block;font-size:.78rem;font-weight:700;color:var(--ink-mid);margin-bottom:5px}
+.rf-field input,.rf-field select{width:100%;padding:11px 14px;border:1.5px solid var(--sand);border-radius:var(--r);font-family:inherit;font-size:.88rem;color:var(--ink);background:var(--bg);outline:none;transition:border-color .3s}
+.rf-field input:focus,.rf-field select:focus{border-color:var(--purple)}
+.rf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rf-submit{width:100%;padding:14px;border-radius:var(--r);background:var(--purple);color:#fff;font-weight:700;font-size:.92rem;cursor:pointer;border:none;transition:all .3s var(--ease);margin-top:8px}
+.rf-submit:hover{background:#5a3d8f;transform:translateY(-1px)}
+
+/* Booking */
+.booking{background:var(--white)}
+.booking-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(40px,5vw,64px);align-items:start}
+.booking-perks{margin-top:28px}
+.bp{display:flex;align-items:flex-start;gap:12px;margin-bottom:18px}
+.bp-ic{width:34px;height:34px;border-radius:10px;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bp-ic svg{width:16px;height:16px;color:var(--teal)}
+.bp h4{font-size:.88rem;font-weight:700;margin-bottom:2px}
+.bp p{font-size:.78rem;color:var(--ink-muted)}
+.bk-widget{background:var(--bg);border-radius:var(--rxl);padding:32px;border:1px solid rgba(0,0,0,.04)}
+.bk-progress{display:flex;gap:6px;margin-bottom:24px}
+.bk-progress span{flex:1;height:3px;border-radius:2px;background:var(--sand);transition:background .4s var(--ease)}
+.bk-progress span.done{background:var(--teal)}
+.bk-step{display:none}.bk-step.active{display:block}
+.bk-title{font-size:1.05rem;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.bk-sub{font-size:.78rem;color:var(--ink-muted);margin-bottom:20px}
+.bk-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:18px}
+.bk-d{width:100%;aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:600;color:var(--ink-light);cursor:default;transition:all .25s var(--ease)}
+.bk-d.hd{font-size:.6rem;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.04em}
+.bk-d.av{color:var(--teal-dark);cursor:pointer;background:var(--teal-bg)}
+.bk-d.av:hover{background:var(--teal);color:#fff;transform:scale(1.05)}
+.bk-d.pk{background:var(--teal);color:#fff;box-shadow:0 4px 12px rgba(58,175,169,.2)}
+.bk-d.past{color:var(--warm-gray)}
+.bk-slots{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.bk-slot{padding:9px 16px;border-radius:var(--pill);font-size:.8rem;font-weight:600;border:1.5px solid var(--sand);color:var(--ink-mid);cursor:pointer;transition:all .3s var(--ease)}
+.bk-slot:hover,.bk-slot.pk{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
+.bk-field{margin-bottom:14px}
+.bk-field label{display:block;font-size:.78rem;font-weight:700;color:var(--ink-mid);margin-bottom:5px}
+.bk-field input,.bk-field select,.bk-field textarea{width:100%;padding:11px 14px;border:1.5px solid var(--sand);border-radius:var(--r);font-family:inherit;font-size:.88rem;color:var(--ink);background:var(--white);outline:none;transition:border-color .3s}
+.bk-field input:focus,.bk-field select:focus,.bk-field textarea:focus{border-color:var(--teal)}
+.bk-field textarea{resize:vertical;min-height:70px}
+.bk-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bk-nav{display:flex;gap:10px;margin-top:20px}
+.bk-nav .btn{flex:1;justify-content:center;padding:12px 20px;font-size:.88rem}
+.bk-back{background:var(--white);color:var(--ink-mid);font-weight:600;border:1.5px solid var(--sand)}
+.bk-confirm{text-align:center;padding:24px 0}
+.bk-confirm svg{width:48px;height:48px;color:var(--teal);margin:0 auto 12px}
+.bk-confirm h3{font-size:1.1rem;font-weight:800;margin-bottom:6px}
+.bk-confirm p{font-size:.85rem;color:var(--ink-light)}
+
+/* FAQ */
+.faq{background:var(--bg)}
+.faq-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(40px,5vw,64px);align-items:start}
+.faq-list{max-width:100%}
+.faq-item{border-bottom:1px solid rgba(0,0,0,.06)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 0;cursor:pointer;gap:16px;transition:color .3s}
+.faq-q:hover{color:var(--teal)}
+.faq-q h3{font-size:.95rem;font-weight:700;letter-spacing:-.01em}
+.faq-q .fi{width:28px;height:28px;border-radius:50%;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .4s var(--ease)}
+.faq-q .fi svg{width:13px;height:13px;color:var(--teal);transition:transform .4s var(--ease)}
+.faq-item.open .fi{background:var(--teal)}.faq-item.open .fi svg{color:#fff;transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .5s var(--ease)}
+.faq-a p{padding:0 0 18px;font-size:.85rem;color:var(--ink-light);line-height:1.7}
+
+/* Footer */
+.footer{background:var(--ink);color:#fff;padding:64px 0 0}
+.footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:36px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.06)}
+.footer-brand{max-width:260px}
+.footer-brand .nav-logo{color:#fff;margin-bottom:12px}
+.footer-brand p{font-size:.82rem;color:rgba(255,255,255,.35);line-height:1.6}
+.footer-social{display:flex;gap:8px;margin-top:16px}
+.footer-social a{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;transition:all .3s var(--ease)}
+.footer-social a:hover{background:var(--teal);transform:translateY(-2px)}
+.footer-social a svg{width:15px;height:15px;color:rgba(255,255,255,.45)}.footer-social a:hover svg{color:#fff}
+.footer-col h4{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.25);margin-bottom:14px}
+.footer-col a{display:block;font-size:.82rem;color:rgba(255,255,255,.45);padding:4px 0;transition:all .3s}
+.footer-col a:hover{color:#fff;padding-left:4px}
+.footer-btm{display:flex;align-items:center;justify-content:space-between;padding:18px 0;font-size:.72rem;color:rgba(255,255,255,.2)}
+
+/* Animations */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.rv.v{opacity:1;transform:translateY(0)}
+.rl{opacity:0;transform:translateX(-28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.rl.v{opacity:1;transform:translateX(0)}
+.rr{opacity:0;transform:translateX(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.rr.v{opacity:1;transform:translateX(0)}
+.stg>*{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.stg.v>*:nth-child(1){transition-delay:.05s}.stg.v>*:nth-child(2){transition-delay:.12s}.stg.v>*:nth-child(3){transition-delay:.19s}.stg.v>*:nth-child(4){transition-delay:.26s}
+.stg.v>*{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+
+/* Responsive */
+@media(max-width:1024px){
+  .hero-cards{grid-template-columns:1fr}
+  .vp-grid{grid-template-columns:1fr}
+  .order-layout{grid-template-columns:1fr}
+  .recruit-grid{grid-template-columns:1fr}
+  .booking-layout{grid-template-columns:1fr}
+  .faq-layout{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .nav-center,.nav-right .nav-cta{display:none}
+  .mob-toggle{display:flex}
+  .hero-cards{gap:12px}
+  .of-tier-select{grid-template-columns:1fr}
+  .of-row,.bk-row,.rf-row{grid-template-columns:1fr}
+  .recruit-perks,.rf-types{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr;gap:24px}
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile menu -->
+<div class="mob-menu" id="mm">
+  <a href="#services" onclick="closeMob()">Pourquoi nous</a>
+  <a href="#order" onclick="closeMob()">Commander</a>
+  <a href="#recruit" onclick="closeMob()">Rejoindre l'équipe</a>
+  <a href="#booking" onclick="closeMob()">Devenir partenaire</a>
+  <a href="#faq" onclick="closeMob()">FAQ</a>
+</div>
+
+<!-- Nav -->
+<nav class="nav" id="nav">
+  <div class="ctn nav-in">
+    <a href="/" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a>
+    <div class="nav-center">
+      <a href="#services">Pourquoi nous</a>
+      <a href="#order">Commander</a>
+      <a href="#recruit">Rejoindre l'équipe</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-right">
+      <a href="#booking" class="btn btn-p nav-cta">Devenir partenaire</a>
+      <a href="#order" class="nav-order">Commander une course</a>
+    </div>
+    <button class="mob-toggle" id="mobT" aria-label="Menu"><span></span></button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="ctn hero-grid">
+    <div class="hero-top rv">
+      <div class="hero-overline">Livraison en Suisse romande</div>
+      <h1>On gère vos livraisons,<br>vous gérez votre <span class="sa">business</span></h1>
+      <p class="hero-sub">Coursiers à vélo et chauffeurs salariés, dédiés à votre entreprise. Plus fiable qu'une plateforme, moins cher aussi.</p>
+      <div class="hero-metrics">
+        <div class="hero-metric"><strong>12 min</strong><span>Temps moyen</span></div>
+        <div class="hero-metric"><strong>-40%</strong><span>vs plateformes</span></div>
+        <div class="hero-metric"><strong>250+</strong><span>Coursiers actifs</span></div>
+        <div class="hero-metric"><strong>98%</strong><span>Satisfaction</span></div>
+      </div>
+    </div>
+    <div class="hero-cards stg">
+      <a href="#booking" class="hero-card hc-acquire">
+        <div class="hc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <h3>Devenir partenaire</h3>
+        <p>Réservez un appel découverte de 20 min. On évalue vos besoins, vous recevez une offre sur mesure.</p>
+        <span class="btn btn-g">Réserver un appel <svg class="arrow-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </a>
+      <a href="#order" class="hero-card hc-order">
+        <div class="hc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+        <h3>Commander une livraison</h3>
+        <p>Besoin d'une course maintenant ? Express dès CHF 16, tarifs pro dès CHF 8 avec un compte.</p>
+        <span class="btn btn-g" style="color:#8a7000">Passer commande <svg class="arrow-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </a>
+      <a href="#recruit" class="hero-card hc-recruit">
+        <div class="hc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18.5" cy="18.5" r="3.5"/><circle cx="5.5" cy="18.5" r="3.5"/><path d="M15 18.5h-6M9 18.5V8.5l6-3v13"/></svg></div>
+        <h3>Rejoindre l'équipe</h3>
+        <p>CDI, horaires flexibles, matériel fourni. On recrute des coursiers et chauffeurs en Suisse romande.</p>
+        <span class="btn btn-g" style="color:#5a4288">Postuler maintenant <svg class="arrow-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Partners -->
+<div class="partners">
+  <p class="partners-label">Ils nous font confiance</p>
+  <div class="mq-wrap"><div class="mq" aria-hidden="true">
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="18" rx="3"/><path d="M2 9h20"/></svg>Restaurant Le Central</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg>Pharmacie du Lac</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Swiss E-Shop</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>Café Romand</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Fleurs Express</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Boulangerie Artisan</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>Cabinet Riviera</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="18" rx="3"/><path d="M2 9h20"/></svg>Restaurant Le Central</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg>Pharmacie du Lac</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Swiss E-Shop</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>Café Romand</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Fleurs Express</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Boulangerie Artisan</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>Cabinet Riviera</span>
+  </div></div>
+</div>
+
+<!-- Value Props -->
+<section class="vp" id="services">
+  <div class="ctn">
+    <div class="sh rv">
+      <span class="slabel">Pourquoi choisir Chaskis</span>
+      <h2 class="stitle">Vos livraisons méritent <span class="ac">mieux</span> qu'une plateforme</h2>
+      <p class="sdesc">Les plateformes prennent 30% de commission. Nous, on vous propose un tarif fixe avec des coursiers qui connaissent vos clients.</p>
+    </div>
+    <div class="vp-grid stg">
+      <article class="vp-card">
+        <div class="vp-ic t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <h3>Moins cher que les plateformes</h3>
+        <p>Pas de commission. Un tarif fixe par livraison, transparent et bien inférieur aux plateformes.</p>
+        <div class="vp-big">-40%</div>
+      </article>
+      <article class="vp-card">
+        <div class="vp-ic y"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <h3>Une équipe, pas un algorithme</h3>
+        <p>Nos coursiers sont salariés, formés et dédiés. Ils connaissent vos produits et vos clients.</p>
+        <div class="vp-big" style="color:var(--yellow)">250+</div>
+      </article>
+      <article class="vp-card">
+        <div class="vp-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Fiabilité suisse garantie</h3>
+        <p>98% de satisfaction, suivi en temps réel, un interlocuteur unique pour toute votre logistique.</p>
+        <div class="vp-big" style="color:var(--purple)">98%</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Order Section -->
+<section class="order" id="order">
+  <div class="ctn order-layout">
+    <div class="rl">
+      <span class="slabel">Commander une livraison</span>
+      <h2 class="stitle">Du point A au point B, <span class="ac">simplement</span></h2>
+      <p class="sdesc">Restaurant, pharmacie, fleuriste, e-commerce ou particulier — commandez une course en quelques clics.</p>
+      <div class="order-tiers">
+        <div class="order-tier">
+          <span class="ot-badge express">Express</span>
+          <div class="ot-info"><strong>Sans compte</strong><span>One-shot, tout le monde</span></div>
+          <div class="ot-price">CHF 16</div>
+        </div>
+        <div class="order-tier">
+          <span class="ot-badge flex">Flex</span>
+          <div class="ot-info"><strong>Compte Pro</strong><span>Volume irrégulier, tarif préférentiel</span></div>
+          <div class="ot-price">~CHF 10</div>
+        </div>
+        <div class="order-tier">
+          <span class="ot-badge dedie">Dédié</span>
+          <div class="ot-info"><strong>Contrat partenaire</strong><span>Volume récurrent, flotte dédiée</span></div>
+          <div class="ot-price">CHF 8</div>
+        </div>
+      </div>
+    </div>
+    <div class="order-form rr">
+      <div class="of-header">
+        <h3>Nouvelle livraison</h3>
+        <span class="of-login">
+          Se connecter
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+        </span>
+      </div>
+      <div class="of-tier-select" id="ofTiers">
+        <div class="of-tier active" data-tier="express"><span class="tier-name">Express</span><span class="tier-price">CHF 16 / course</span></div>
+        <div class="of-tier locked" data-tier="flex"><span class="tier-name">Flex</span><span class="tier-price">Connexion requise</span></div>
+        <div class="of-tier locked" data-tier="dedie"><span class="tier-name">Dédié</span><span class="tier-price">Connexion requise</span></div>
+      </div>
+      <div class="of-row">
+        <div class="of-field"><label>Adresse de retrait</label><input type="text" placeholder="Ex: Rue du Pont 12, Lausanne"></div>
+        <div class="of-field"><label>Adresse de livraison</label><input type="text" placeholder="Ex: Avenue de Cour 45, Lausanne"></div>
+      </div>
+      <div class="of-row">
+        <div class="of-field"><label>Date souhaitée</label><input type="date"></div>
+        <div class="of-field">
+          <label>Créneau</label>
+          <select><option>Dès que possible</option><option>Matin (8h-12h)</option><option>Après-midi (12h-17h)</option><option>Soir (17h-21h)</option></select>
+        </div>
+      </div>
+      <div class="of-field"><label>Description du colis</label><textarea placeholder="Ex: 2 sacs de courses, fragile, max 10 kg..."></textarea></div>
+      <div class="of-row">
+        <div class="of-field"><label>Votre nom</label><input type="text" placeholder="Jean Dupont"></div>
+        <div class="of-field"><label>Téléphone</label><input type="tel" placeholder="+41 79 000 00 00"></div>
+      </div>
+      <div class="of-field"><label>Email</label><input type="email" placeholder="jean@example.ch"></div>
+      <button class="of-submit">Commander — CHF 16</button>
+      <p class="of-note">Paiement à la livraison ou par facture pour les comptes Pro</p>
+    </div>
+  </div>
+</section>
+
+<!-- Recruit -->
+<section class="recruit" id="recruit">
+  <div class="ctn recruit-grid">
+    <div class="rl">
+      <span class="slabel">On recrute</span>
+      <h2 class="stitle">Rejoignez une équipe qui vous <span class="ac" style="color:var(--purple-light)">respecte</span></h2>
+      <p class="sdesc">Pas de statut précaire. Chez Chaskis, vous êtes salarié, assuré et accompagné. On fournit le matériel, vous apportez la motivation.</p>
+      <div class="recruit-perks stg">
+        <div class="rp"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg> CDI garanti</h4><p>Contrat de travail suisse, pas de statut indépendant.</p></div>
+        <div class="rp"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Horaires flexibles</h4><p>Choisissez vos créneaux selon votre vie.</p></div>
+        <div class="rp"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Assurance complète</h4><p>Couvert en cas d'accident, maladie, intempéries.</p></div>
+        <div class="rp"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> Matériel fourni</h4><p>Vélo, sac isotherme, veste, téléphone pro.</p></div>
+      </div>
+    </div>
+    <div class="recruit-form rr">
+      <h3>Postuler en 2 minutes</h3>
+      <p class="rf-sub">Coursier ou chauffeur, on a besoin de vous</p>
+      <div class="rf-types" id="rfTypes">
+        <div class="rf-type active" data-type="coursier">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18.5" cy="18.5" r="3.5"/><circle cx="5.5" cy="18.5" r="3.5"/><path d="M15 18.5h-6M9 18.5V8.5l6-3v13"/></svg>
+          <span>Coursier à vélo</span>
+        </div>
+        <div class="rf-type" data-type="chauffeur">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0"/><path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0"/><path d="M5 17H3v-6l2-5h9l4 5h1a2 2 0 0 1 2 2v4h-2M9 17h6"/></svg>
+          <span>Chauffeur</span>
+        </div>
+      </div>
+      <div class="rf-row">
+        <div class="rf-field"><label>Prénom</label><input type="text" placeholder="Marco"></div>
+        <div class="rf-field"><label>Nom</label><input type="text" placeholder="Rossi"></div>
+      </div>
+      <div class="rf-field"><label>Email</label><input type="email" placeholder="marco@example.ch"></div>
+      <div class="rf-field"><label>Téléphone</label><input type="tel" placeholder="+41 79 000 00 00"></div>
+      <div class="rf-row">
+        <div class="rf-field">
+          <label>Ville</label>
+          <select><option>Lausanne</option><option>Genève</option><option>Neuchâtel</option><option>Fribourg</option><option>Montreux</option><option>Autre</option></select>
+        </div>
+        <div class="rf-field">
+          <label>Disponibilité</label>
+          <select><option>Temps plein</option><option>Temps partiel</option><option>Week-ends</option><option>Flexible</option></select>
+        </div>
+      </div>
+      <button class="rf-submit">Envoyer ma candidature</button>
+    </div>
+  </div>
+</section>
+
+<!-- Booking / B2B -->
+<section class="booking" id="booking">
+  <div class="ctn booking-layout">
+    <div class="rl">
+      <span class="slabel">Devenir partenaire</span>
+      <h2 class="stitle">Réservez votre appel <span class="sa">découverte</span></h2>
+      <p class="sdesc">20 minutes pour comprendre votre activité et proposer la solution adaptée. Sans engagement.</p>
+      <div class="booking-perks">
+        <div class="bp"><div class="bp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><h4>20 min, pas plus</h4><p>On respecte votre temps.</p></div></div>
+        <div class="bp"><div class="bp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4>Sans engagement</h4><p>On discute, vous décidez.</p></div></div>
+        <div class="bp"><div class="bp-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><h4>Offre sur mesure</h4><p>Tarif adapté à votre volume.</p></div></div>
+      </div>
+    </div>
+    <div class="bk-widget rr" id="bkW">
+      <div class="bk-progress"><span class="done"></span><span></span><span></span></div>
+      <div class="bk-step active" id="bkS1">
+        <div class="bk-title">Choisissez une date</div>
+        <div class="bk-sub">Avril 2026 — Créneaux en teal</div>
+        <div class="bk-cal" id="bkCal">
+          <div class="bk-d hd">L</div><div class="bk-d hd">M</div><div class="bk-d hd">M</div><div class="bk-d hd">J</div><div class="bk-d hd">V</div><div class="bk-d hd">S</div><div class="bk-d hd">D</div>
+          <div class="bk-d"></div><div class="bk-d"></div><div class="bk-d past">1</div><div class="bk-d past">2</div><div class="bk-d past">3</div><div class="bk-d past">4</div><div class="bk-d past">5</div>
+          <div class="bk-d past">6</div><div class="bk-d past">7</div><div class="bk-d av" data-d="8">8</div><div class="bk-d av" data-d="9">9</div><div class="bk-d av" data-d="10">10</div><div class="bk-d">11</div><div class="bk-d">12</div>
+          <div class="bk-d av" data-d="14">14</div><div class="bk-d av" data-d="15">15</div><div class="bk-d av" data-d="16">16</div><div class="bk-d av" data-d="17">17</div><div class="bk-d av" data-d="18">18</div><div class="bk-d">19</div><div class="bk-d">20</div>
+          <div class="bk-d av" data-d="21">21</div><div class="bk-d av" data-d="22">22</div><div class="bk-d av" data-d="23">23</div><div class="bk-d av" data-d="24">24</div><div class="bk-d av" data-d="25">25</div><div class="bk-d">26</div><div class="bk-d">27</div>
+          <div class="bk-d av" data-d="28">28</div><div class="bk-d av" data-d="29">29</div><div class="bk-d av" data-d="30">30</div><div class="bk-d"></div><div class="bk-d"></div><div class="bk-d"></div><div class="bk-d"></div>
+        </div>
+        <div class="bk-slots" id="bkSlots" style="display:none">
+          <div class="bk-slot" data-t="09:00">09:00</div><div class="bk-slot" data-t="10:00">10:00</div><div class="bk-slot" data-t="14:00">14:00</div><div class="bk-slot" data-t="15:30">15:30</div><div class="bk-slot" data-t="16:30">16:30</div>
+        </div>
+        <div class="bk-nav"><button class="btn btn-p" id="bkN1" disabled>Suivant</button></div>
+      </div>
+      <div class="bk-step" id="bkS2">
+        <div class="bk-title">Quelques infos</div>
+        <div class="bk-sub">Pour préparer l'appel au mieux</div>
+        <div class="bk-row"><div class="bk-field"><label>Prénom</label><input placeholder="Jean"></div><div class="bk-field"><label>Nom</label><input placeholder="Dupont"></div></div>
+        <div class="bk-field"><label>Email pro</label><input type="email" placeholder="jean@monentreprise.ch"></div>
+        <div class="bk-field"><label>Entreprise</label><input placeholder="Restaurant Le Central"></div>
+        <div class="bk-field"><label>Volume estimé / jour</label><select><option>Moins de 10</option><option>10 à 30</option><option>30 à 100</option><option>Plus de 100</option></select></div>
+        <div class="bk-field"><label>Quelque chose à ajouter ?</label><textarea placeholder="Ex: on utilise Uber Eats et on cherche mieux..."></textarea></div>
+        <div class="bk-nav"><button class="btn bk-back" id="bkB2">Retour</button><button class="btn btn-p" id="bkN2">Confirmer</button></div>
+      </div>
+      <div class="bk-step" id="bkS3">
+        <div class="bk-confirm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <h3>C'est réservé !</h3>
+          <p>Confirmation par email. À très vite !</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="ctn faq-layout">
+    <div class="rl">
+      <span class="slabel">FAQ</span>
+      <h2 class="stitle">Vos questions, nos <span class="ac">réponses</span></h2>
+      <p class="sdesc">Pas trouvé votre réponse ? Réservez un appel.</p>
+    </div>
+    <div class="faq-list rr">
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>En quoi c'est différent d'Uber Eats ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>Les plateformes prennent 25-30% de commission. Chez nous, tarif fixe par livraison. Et nos coursiers sont salariés, dédiés à votre entreprise — pas des indépendants qui jonglent entre 5 apps.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>C'est quoi la différence entre Express, Flex et Dédié ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p><strong>Express</strong> : course unique, sans compte, CHF 16. <strong>Flex</strong> : compte pro, volume irrégulier, tarif préférentiel (~CHF 10). <strong>Dédié</strong> : contrat partenaire, volume récurrent, coursiers dédiés à votre marque, CHF 8.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>Quels types d'entreprises travaillent avec vous ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>Restaurants, pharmacies, fleuristes, e-commerce, cabinets médicaux — toute entreprise qui doit livrer du point A au point B. De 5 à 500 livraisons par jour.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>C'est rapide à mettre en place ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>48h entre l'appel et votre première livraison. On gère la config, l'assignation des coursiers et la connexion à votre système.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>Quelles zones couvrez-vous ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>Toute la Suisse romande : Lausanne, Genève, Neuchâtel, Fribourg, Montreux, Nyon et environs.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>Comment devenir coursier ou chauffeur ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>Postulez via le formulaire en ligne. CDI, horaires flexibles, matériel fourni (vélo, sac, veste), assurance complète. On recrute en continu.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="ctn">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg3" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg3)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a>
+        <p>Gestion de livraison en Suisse romande. Rapide, humain, moins cher.</p>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/chaskis.ch" aria-label="Instagram" rel="noopener" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a>
+          <a href="https://www.linkedin.com/company/chaskis" aria-label="LinkedIn" rel="noopener" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Services</h4><a href="#order">Commander une course</a><a href="#services">Coursiers à vélo</a><a href="#services">Chauffeurs dédiés</a><a href="#booking">Devenir partenaire</a></div>
+      <div class="footer-col"><h4>Entreprise</h4><a href="#services">Pourquoi Chaskis</a><a href="#recruit">Rejoindre l'équipe</a><a href="#faq">FAQ</a><a href="mailto:contact@chaskis.ch">Contact</a></div>
+      <div class="footer-col"><h4>Légal</h4><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">CGV</a></div>
+    </div>
+    <div class="footer-btm"><span>&copy; 2026 Chaskis SA — Lausanne</span><span>Fait en Suisse romande</span></div>
+  </div>
+</footer>
+
+<script>
+// Nav
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50),{passive:true});
+// Mobile
+const mobT=document.getElementById('mobT'),mm=document.getElementById('mm');
+mobT.addEventListener('click',()=>{const o=mm.classList.toggle('on');mobT.classList.toggle('on');document.body.style.overflow=o?'hidden':'';});
+function closeMob(){mm.classList.remove('on');mobT.classList.remove('on');document.body.style.overflow='';}
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();closeMob();t.scrollIntoView({behavior:'smooth'});}}));
+// Reveal
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v');obs.unobserve(e.target);}}),{threshold:.08,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.rv,.rl,.rr,.stg').forEach(el=>obs.observe(el));
+// FAQ
+document.querySelectorAll('.faq-q').forEach(q=>{q.addEventListener('click',()=>{const item=q.parentElement,a=item.querySelector('.faq-a'),was=item.classList.contains('open');document.querySelectorAll('.faq-item.open').forEach(i=>{i.classList.remove('open');i.querySelector('.faq-a').style.maxHeight='0';});if(!was){item.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';}});q.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();q.click();}});});
+// Order tier select
+document.querySelectorAll('#ofTiers .of-tier:not(.locked)').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('#ofTiers .of-tier').forEach(x=>x.classList.remove('active'));t.classList.add('active');const price=t.dataset.tier==='express'?'16':t.dataset.tier==='flex'?'10':'8';document.querySelector('.of-submit').textContent=`Commander — CHF ${price}`;});});
+// Recruit type select
+document.querySelectorAll('#rfTypes .rf-type').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('#rfTypes .rf-type').forEach(x=>x.classList.remove('active'));t.classList.add('active');});});
+// Booking widget
+const bkSteps=[document.getElementById('bkS1'),document.getElementById('bkS2'),document.getElementById('bkS3')];
+const bkProg=document.querySelectorAll('.bk-progress span');
+function bkGo(n){bkSteps.forEach((s,i)=>s.classList.toggle('active',i===n));bkProg.forEach((p,i)=>p.classList.toggle('done',i<=n));}
+document.querySelectorAll('#bkCal .bk-d.av').forEach(d=>{d.addEventListener('click',()=>{document.querySelectorAll('#bkCal .bk-d.pk').forEach(p=>p.classList.remove('pk'));d.classList.add('pk');document.getElementById('bkSlots').style.display='flex';document.querySelectorAll('.bk-slot.pk').forEach(s=>s.classList.remove('pk'));document.getElementById('bkN1').disabled=true;});});
+document.querySelectorAll('.bk-slot').forEach(s=>{s.addEventListener('click',()=>{document.querySelectorAll('.bk-slot.pk').forEach(p=>p.classList.remove('pk'));s.classList.add('pk');document.getElementById('bkN1').disabled=false;});});
+document.getElementById('bkN1').addEventListener('click',()=>bkGo(1));
+document.getElementById('bkB2').addEventListener('click',()=>bkGo(0));
+document.getElementById('bkN2').addEventListener('click',()=>bkGo(2));
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/index-v7.html" },
+    { "source": "/app", "destination": "/app.html" },
+    { "source": "/commander", "destination": "/commander-v7.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/postuler", "destination": "/postuler.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*\\.html)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" },
+        { "key": "Service-Worker-Allowed", "value": "/" }
+      ]
+    },
+    {
+      "source": "/manifest.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    }
+  ]
+}

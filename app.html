@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#3AAFA9">
+<title>Chaskis</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800;900&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --teal:#3AAFA9;--teal-d:#2A8A85;--teal-bg:#EDF7F6;
+  --purple:#6B4FA0;--purple-bg:#F0EBF9;
+  --ink:#1A1A1A;--ink-mid:#4A4A4A;--ink-muted:#9A9A9A;
+  --bg:#FAFAF7;--white:#FFFFFF;--sand:#EBEBЕ6;
+  --r:12px;--rl:16px;--rxl:20px;--pill:999px;
+  --ease:cubic-bezier(.25,.46,.45,.94);
+  --safe-top:env(safe-area-inset-top);
+  --safe-bot:env(safe-area-inset-bottom);
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'Urbanist',sans-serif;color:var(--ink)}
+input,button,select,textarea{font-family:'Urbanist',sans-serif}
+
+/* ===== SCREENS ===== */
+.screen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--bg);overflow:hidden}
+.screen.active{display:flex}
+
+/* ===== LOGIN SCREEN ===== */
+#s-login{background:var(--white);justify-content:center;align-items:center;padding:0 28px}
+#s-login::before{content:'';position:absolute;top:-20%;right:-20%;width:70vw;height:70vw;background:radial-gradient(circle,rgba(58,175,169,.08),transparent 65%);border-radius:50%}
+#s-login::after{content:'';position:absolute;bottom:-15%;left:-15%;width:50vw;height:50vw;background:radial-gradient(circle,rgba(107,79,160,.06),transparent 65%);border-radius:50%}
+.login-inner{width:100%;max-width:360px;position:relative;z-index:1}
+.login-logo{margin-bottom:32px;text-align:center}
+.login-logo svg{width:56px;height:auto}
+.login-logo span{display:block;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-top:6px}
+.login-title{font-size:1.7rem;font-weight:900;letter-spacing:-.04em;line-height:1.1;margin-bottom:6px;text-align:center}
+.login-sub{font-size:.86rem;color:var(--ink-muted);text-align:center;margin-bottom:32px}
+.inp-group{margin-bottom:14px}
+.inp-label{font-size:.72rem;font-weight:700;color:var(--ink-mid);display:block;margin-bottom:5px}
+.inp{width:100%;padding:14px 16px;border:1.5px solid #E8E8E4;border-radius:var(--rl);font-size:.92rem;color:var(--ink);background:var(--bg);outline:none;transition:all .25s}
+.inp:focus{border-color:var(--teal);background:var(--white);box-shadow:0 0 0 3px rgba(58,175,169,.1)}
+.btn-login{width:100%;padding:15px;border-radius:var(--rl);background:var(--teal);color:#fff;font-weight:800;font-size:.95rem;border:none;cursor:pointer;margin-top:8px;transition:all .2s;letter-spacing:-.01em}
+.btn-login:active{transform:scale(.98);background:var(--teal-d)}
+.login-divider{display:flex;align-items:center;gap:10px;margin:20px 0;color:var(--ink-muted);font-size:.78rem}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:#E8E8E4}
+.demo-chips{display:flex;flex-direction:column;gap:8px}
+.demo-chip{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--bg);border:1.5px solid #E8E8E4;border-radius:var(--r);cursor:pointer;transition:all .2s}
+.demo-chip:active{background:var(--teal-bg);border-color:var(--teal)}
+.demo-chip-left{display:flex;align-items:center;gap:10px}
+.demo-chip-dot{width:8px;height:8px;border-radius:50%}
+.demo-chip strong{font-size:.82rem;font-weight:700;display:block}
+.demo-chip span{font-size:.7rem;color:var(--ink-muted)}
+.demo-chip-plan{font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:var(--pill)}
+.login-create{text-align:center;margin-top:24px;font-size:.82rem;color:var(--ink-muted)}
+.login-create a{color:var(--teal);font-weight:700;text-decoration:none}
+.login-err{background:#FEF2F2;border:1px solid rgba(239,68,68,.2);border-radius:var(--r);padding:10px 14px;font-size:.8rem;color:#DC2626;margin-bottom:14px;display:none}
+.login-err.show{display:block}
+
+/* ===== APP SHELL ===== */
+#s-app{padding-bottom:calc(64px + var(--safe-bot))}
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:calc(16px + var(--safe-top)) 20px 14px;background:var(--white);border-bottom:1px solid rgba(0,0,0,.06);flex-shrink:0}
+.app-header-logo svg{width:40px;height:auto}
+.app-header-right{display:flex;align-items:center;gap:10px}
+.app-user-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.76rem;color:#fff}
+.app-logout{font-size:.72rem;font-weight:700;color:var(--ink-muted);background:none;border:none;cursor:pointer;padding:6px 10px;border-radius:var(--r)}
+
+/* Scroll area */
+.app-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+
+/* Tab panels */
+.tab-panel{display:none;padding:20px}
+.tab-panel.active{display:block}
+
+/* ===== TAB BAR ===== */
+.tab-bar{position:absolute;bottom:0;left:0;right:0;height:calc(64px + var(--safe-bot));background:var(--white);border-top:1px solid rgba(0,0,0,.08);display:flex;padding-bottom:var(--safe-bot)}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:none;background:none;transition:all .2s;padding:0}
+.tab-item svg{width:22px;height:22px;color:var(--ink-muted);transition:color .2s}
+.tab-item span{font-size:.65rem;font-weight:600;color:var(--ink-muted);transition:color .2s}
+.tab-item.on svg{color:var(--teal)}
+.tab-item.on span{color:var(--teal);font-weight:800}
+.tab-dot{width:4px;height:4px;border-radius:50%;background:transparent;transition:background .2s}
+.tab-item.on .tab-dot{background:var(--teal)}
+
+/* ===== COMMANDER TAB ===== */
+.cmd-hero{background:linear-gradient(135deg,var(--teal),var(--teal-d));border-radius:var(--rxl);padding:20px;margin-bottom:16px;color:#fff}
+.cmd-hero h2{font-size:1.2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:2px}
+.cmd-hero p{font-size:.78rem;opacity:.75}
+.form-card{background:var(--white);border-radius:var(--rxl);padding:20px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.fc-title{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-muted);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.fc-title-dot{width:6px;height:6px;border-radius:50%}
+.route-stop{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.route-ic{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;font-size:.72rem;font-weight:800}
+.route-ic.a{background:var(--teal-bg);color:var(--teal)}
+.route-ic.b{background:var(--purple-bg);color:var(--purple)}
+.route-inp{flex:1}
+.route-inp input{width:100%;padding:11px 13px;border:1.5px solid #E8E8E4;border-radius:var(--r);font-size:.88rem;outline:none;transition:all .25s;background:var(--bg)}
+.route-inp input:focus{border-color:var(--teal);background:var(--white);box-shadow:0 0 0 3px rgba(58,175,169,.08)}
+.route-inp .inp-hint{font-size:.65rem;color:var(--ink-muted);margin-top:3px;padding-left:2px}
+.route-connector{width:28px;display:flex;justify-content:center;margin:-4px 0}
+.route-connector-line{width:2px;height:18px;background:linear-gradient(to bottom,var(--teal-bg),var(--purple-bg));border-radius:1px}
+
+/* Container picker */
+.cpk-app{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.cpk-app-card{padding:12px 10px;border-radius:var(--r);border:2px solid #E8E8E4;cursor:pointer;text-align:center;transition:all .2s}
+.cpk-app-card:active{transform:scale(.97)}
+.cpk-app-card.on{border-color:var(--teal);background:var(--teal-bg)}
+.cpk-app-emoji{font-size:1.4rem;display:block;margin-bottom:4px}
+.cpk-app-name{font-size:.76rem;font-weight:700;display:block}
+.cpk-app-sub{font-size:.6rem;color:var(--ink-muted)}
+.cpk-app-card.on .cpk-app-sub{color:var(--teal-d)}
+
+/* Time tabs */
+.time-tabs{display:flex;gap:8px;margin-bottom:4px}
+.time-tab{flex:1;padding:10px 8px;border-radius:var(--r);border:2px solid #E8E8E4;text-align:center;cursor:pointer;transition:all .2s;background:none}
+.time-tab:active{transform:scale(.97)}
+.time-tab.on{border-color:var(--teal);background:var(--teal-bg)}
+.time-tab-emoji{font-size:1rem;display:block;margin-bottom:2px}
+.time-tab h4{font-size:.76rem;font-weight:700;color:var(--ink)}
+.time-tab p{font-size:.6rem;color:var(--ink-muted)}
+.time-tab.on h4{color:var(--teal-d)}
+
+/* Price bar */
+.price-bar{background:var(--teal-bg);border-radius:var(--rl);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.price-bar-left span{font-size:.7rem;font-weight:700;color:var(--teal-d);display:block}
+.price-bar-left strong{font-size:1.6rem;font-weight:900;color:var(--teal);letter-spacing:-.04em;line-height:1}
+.btn-cmd{width:100%;padding:16px;border-radius:var(--rl);background:var(--teal);color:#fff;font-weight:800;font-size:.95rem;border:none;cursor:pointer;letter-spacing:-.01em;transition:all .2s}
+.btn-cmd:active{transform:scale(.98);background:var(--teal-d)}
+.btn-cmd:disabled{opacity:.4;pointer-events:none}
+
+/* ===== MES COURSES TAB ===== */
+.courses-section{margin-bottom:20px}
+.courses-section-title{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-muted);margin-bottom:10px}
+.active-card{background:var(--white);border-radius:var(--rxl);padding:18px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.ac-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.ac-id{font-size:.82rem;font-weight:800}
+.ac-badge{font-size:.6rem;font-weight:700;padding:3px 9px;border-radius:var(--pill);background:rgba(58,175,169,.12);color:var(--teal)}
+.ac-eta{font-size:.7rem;color:var(--ink-muted)}
+/* Courier row */
+.ac-courier{display:flex;align-items:center;gap:10px;background:var(--teal-bg);border-radius:var(--r);padding:10px 12px;margin-bottom:14px}
+.ac-courier-av{width:30px;height:30px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.7rem;color:#fff;flex-shrink:0}
+.ac-courier-info strong{font-size:.78rem;font-weight:700;display:block}
+.ac-courier-info span{font-size:.65rem;color:var(--teal-d)}
+/* Mini timeline */
+.mini-tl{display:flex;align-items:center;gap:0}
+.mt-step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:0 0 auto}
+.mt-dot{width:20px;height:20px;border-radius:50%;border:2px solid #E8E8E4;background:var(--white);display:flex;align-items:center;justify-content:center;transition:all .3s}
+.mt-dot svg{width:9px;height:9px;color:var(--ink-muted)}
+.mt-step.done .mt-dot{background:var(--teal);border-color:var(--teal)}
+.mt-step.done .mt-dot svg{color:#fff}
+.mt-step.active .mt-dot{border-color:var(--teal);box-shadow:0 0 0 3px rgba(58,175,169,.15)}
+.mt-step.active .mt-dot svg{color:var(--teal)}
+.mt-label{font-size:.55rem;font-weight:600;color:var(--ink-muted);text-align:center;max-width:52px;line-height:1.3}
+.mt-step.done .mt-label,.mt-step.active .mt-label{color:var(--teal);font-weight:700}
+.mt-conn{flex:1;height:2px;background:#E8E8E4;border-radius:1px;margin:0 2px;align-self:flex-start;margin-top:9px}
+.mt-conn.done{background:var(--teal)}
+/* History list */
+.hist-item{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(0,0,0,.05)}
+.hist-item:last-child{border:none}
+.hist-ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem}
+.hist-info{flex:1}
+.hist-info strong{font-size:.82rem;font-weight:700;display:block}
+.hist-info span{font-size:.7rem;color:var(--ink-muted)}
+.hist-right{text-align:right}
+.hist-price{font-size:.88rem;font-weight:800;display:block}
+.hist-status{font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:var(--pill)}
+.empty-state{text-align:center;padding:40px 20px;color:var(--ink-muted)}
+.empty-state svg{width:40px;height:40px;margin:0 auto 10px;opacity:.3}
+.empty-state p{font-size:.84rem}
+
+/* ===== ANIMATIONS ===== */
+@keyframes slide-up{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+.slide-up{animation:slide-up .35s var(--ease) both}
+@keyframes fade-in{from{opacity:0}to{opacity:1}}
+
+/* Install banner */
+#install-bar{position:fixed;top:0;left:0;right:0;z-index:500;background:linear-gradient(135deg,#6B4FA0,#8B6FC0);padding:calc(12px + var(--safe-top)) 16px 12px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 16px rgba(107,79,160,.3);animation:slide-down .4s cubic-bezier(.33,1,.68,1) both}
+@keyframes slide-down{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+#install-bar .ib-text{flex:1;color:#fff}
+#install-bar .ib-text strong{font-size:.84rem;font-weight:800;display:block}
+#install-bar .ib-text span{font-size:.72rem;opacity:.8;line-height:1.4}
+#install-bar .ib-btn{padding:9px 18px;background:#fff;color:#6B4FA0;font-weight:800;font-size:.82rem;border:none;border-radius:999px;cursor:pointer;white-space:nowrap;font-family:'Urbanist',sans-serif}
+#install-bar .ib-btn:active{transform:scale(.95)}
+#install-bar .ib-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:1.2rem;cursor:pointer;padding:4px 8px;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<!-- ================================ -->
+<!-- SCREEN: LOGIN                    -->
+<!-- ================================ -->
+<div class="screen active" id="s-login">
+  <div class="login-inner">
+    <div class="login-logo">
+      <svg width="56" viewBox="0 0 32 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29028 20H23.3109H23.3208V14.8356H5.30018V12.9691C5.30018 11.9052 5.93423 10.9284 6.9051 10.4642L16.9903 5.69632C17.7234 5.34816 18.5457 5.16441 19.3581 5.16441H23.3108V14.8356C23.3108 14.8356 31.9497 14.5938 31.9497 5.16439H23.3208V0H19.3581C17.7432 0 16.1284 0.357834 14.682 1.04449L4.58689 5.82205C1.80305 7.13733 0 9.94197 0 12.9691V14.8356C0 17.6789 2.36775 20 5.29028 20Z" fill="#3AAFA9"/>
+      </svg>
+      <span>Chaskis</span>
+    </div>
+    <h1 class="login-title">Bon retour 👋</h1>
+    <p class="login-sub">Connectez-vous pour gérer vos livraisons</p>
+    <div class="login-err" id="loginErr">Email ou mot de passe incorrect.</div>
+    <div class="inp-group">
+      <label class="inp-label">Email</label>
+      <input class="inp" type="email" id="loginEmail" placeholder="vous@email.ch" autocomplete="email">
+    </div>
+    <div class="inp-group">
+      <label class="inp-label">Mot de passe</label>
+      <input class="inp" type="password" id="loginPwd" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Se connecter →</button>
+    <div class="login-divider">Comptes de démo</div>
+    <div class="demo-chips">
+      <div class="demo-chip" onclick="fillLogin('demo@chaskis.ch','demo')">
+        <div class="demo-chip-left">
+          <div class="demo-chip-dot" style="background:#3AAFA9"></div>
+          <div><strong>Particulier Express</strong><span>demo@chaskis.ch · demo</span></div>
+        </div>
+        <div class="demo-chip-plan" style="background:#EDF7F6;color:#2A8A85">CHF 16</div>
+      </div>
+      <div class="demo-chip" onclick="fillLogin('flex@chaskis.ch','flex')">
+        <div class="demo-chip-left">
+          <div class="demo-chip-dot" style="background:#6B4FA0"></div>
+          <div><strong>Pro Flex</strong><span>flex@chaskis.ch · flex</span></div>
+        </div>
+        <div class="demo-chip-plan" style="background:#F0EBF9;color:#6B4FA0">CHF 10</div>
+      </div>
+      <div class="demo-chip" onclick="fillLogin('dedie@chaskis.ch','dedie')">
+        <div class="demo-chip-left">
+          <div class="demo-chip-dot" style="background:#1A5C59"></div>
+          <div><strong>Pro Dédié</strong><span>dedie@chaskis.ch · dedie</span></div>
+        </div>
+        <div class="demo-chip-plan" style="background:#E8F3F2;color:#1A5C59">CHF 8</div>
+      </div>
+    </div>
+    <p class="login-create">Pas encore client ? <a href="#">Créer un compte</a></p>
+  </div>
+</div>
+
+<!-- ================================ -->
+<!-- SCREEN: APP                      -->
+<!-- ================================ -->
+<div class="screen" id="s-app">
+
+  <!-- Header -->
+  <div class="app-header">
+    <svg width="36" viewBox="0 0 32 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29028 20H23.3109H23.3208V14.8356H5.30018V12.9691C5.30018 11.9052 5.93423 10.9284 6.9051 10.4642L16.9903 5.69632C17.7234 5.34816 18.5457 5.16441 19.3581 5.16441H23.3108V14.8356C23.3108 14.8356 31.9497 14.5938 31.9497 5.16439H23.3208V0H19.3581C17.7432 0 16.1284 0.357834 14.682 1.04449L4.58689 5.82205C1.80305 7.13733 0 9.94197 0 12.9691V14.8356C0 17.6789 2.36775 20 5.29028 20Z" fill="#3AAFA9"/>
+    </svg>
+    <div class="app-header-right">
+      <div class="app-user-av" id="appAv" style="background:#3AAFA9">?</div>
+      <button class="app-logout" onclick="doLogout()">Déconnexion</button>
+    </div>
+  </div>
+
+  <!-- Scrollable content -->
+  <div class="app-content">
+
+    <!-- TAB: COMMANDER -->
+    <div class="tab-panel active" id="tab-cmd">
+      <div class="cmd-hero slide-up">
+        <h2>Nouvelle livraison</h2>
+        <p>Où faut-il aller aujourd'hui ?</p>
+      </div>
+
+      <!-- Route -->
+      <div class="form-card slide-up" style="animation-delay:.05s">
+        <div class="fc-title">
+          <div class="fc-title-dot" style="background:#3AAFA9"></div>
+          Trajet
+        </div>
+        <div class="route-stop">
+          <div class="route-ic a">A</div>
+          <div class="route-inp">
+            <input type="text" id="appPickAddr" placeholder="Adresse de retrait" oninput="updateAppPrice()">
+            <input type="text" id="appPickRef" placeholder="Réf. commande (ex: CMD-991)" style="margin-top:6px" oninput="updateAppPrice()">
+            <p class="inp-hint">Code pour identifier votre colis auprès du marchand</p>
+          </div>
+        </div>
+        <div class="route-connector"><div class="route-connector-line"></div></div>
+        <div class="route-stop" style="margin-bottom:0">
+          <div class="route-ic b">B</div>
+          <div class="route-inp">
+            <input type="text" id="appDropAddr" placeholder="Adresse de livraison" oninput="updateAppPrice()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Format -->
+      <div class="form-card slide-up" style="animation-delay:.1s">
+        <div class="fc-title">
+          <div class="fc-title-dot" style="background:#6B4FA0"></div>
+          Format du colis
+        </div>
+        <div class="cpk-app">
+          <div class="cpk-app-card on" id="cpk-sac" onclick="selectAppContainer('sac')">
+            <span class="cpk-app-emoji">🎒</span>
+            <span class="cpk-app-name">Sac à dos</span>
+            <span class="cpk-app-sub">Vélo · inclus</span>
+          </div>
+          <div class="cpk-app-card" id="cpk-coffre" onclick="selectAppContainer('coffre')">
+            <span class="cpk-app-emoji">🚗</span>
+            <span class="cpk-app-name">Coffre voiture</span>
+            <span class="cpk-app-sub">Auto · +5 CHF</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Horaire -->
+      <div class="form-card slide-up" style="animation-delay:.15s">
+        <div class="fc-title">
+          <div class="fc-title-dot" style="background:#3AAFA9"></div>
+          Quand ?
+        </div>
+        <div class="time-tabs">
+          <button class="time-tab on" id="tt-asap" onclick="selectAppTime('asap')">
+            <span class="time-tab-emoji">⚡</span>
+            <h4>Dès que possible</h4>
+            <p>Min. 3h à l'avance</p>
+          </button>
+          <button class="time-tab" id="tt-plan" onclick="selectAppTime('plan')">
+            <span class="time-tab-emoji">📅</span>
+            <h4>Planifier</h4>
+            <p>Choisir date & heure</p>
+          </button>
+        </div>
+        <div id="planFields" style="display:none;margin-top:10px;display:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+            <input class="inp" type="date" id="appDate">
+            <input class="inp" type="time" id="appTime">
+          </div>
+        </div>
+      </div>
+
+      <!-- Prix + CTA -->
+      <div class="price-bar slide-up" style="animation-delay:.2s">
+        <div class="price-bar-left">
+          <span>Total estimé</span>
+          <strong id="appPrice">CHF —</strong>
+        </div>
+        <div style="font-size:.7rem;color:var(--teal-d);text-align:right;line-height:1.4">Paiement<br>sécurisé</div>
+      </div>
+      <button class="btn-cmd slide-up" id="appCmdBtn" onclick="submitAppOrder()" disabled style="animation-delay:.22s">
+        Commander →
+      </button>
+    </div>
+
+    <!-- TAB: MES COURSES -->
+    <div class="tab-panel" id="tab-courses">
+      <div id="activeCourses"></div>
+      <div id="histCourses"></div>
+    </div>
+
+  </div><!-- /app-content -->
+
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <button class="tab-item on" id="tab-btn-cmd" onclick="switchTab('cmd')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      <div class="tab-dot"></div>
+      <span>Commander</span>
+    </button>
+    <button class="tab-item" id="tab-btn-courses" onclick="switchTab('courses')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <div class="tab-dot"></div>
+      <span>Mes courses</span>
+    </button>
+  </div>
+
+</div><!-- /s-app -->
+
+<!-- ================================ -->
+<!-- CONFIRM OVERLAY                  -->
+<!-- ================================ -->
+<div id="confirmOverlay" style="position:fixed;inset:0;z-index:100;background:rgba(250,250,247,.95);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:32px">
+  <div style="width:64px;height:64px;border-radius:50%;background:#EDF7F6;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;animation:pop .5s cubic-bezier(.34,1.56,.64,1) both">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#3AAFA9" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <h2 style="font-size:1.3rem;font-weight:900;letter-spacing:-.03em;margin-bottom:6px">Commande confirmée !</h2>
+  <p style="font-size:.84rem;color:#888;margin-bottom:16px;line-height:1.6">Votre livreur a été notifié.<br>Vous recevrez un SMS dès qu'il part.</p>
+  <div id="confirmId" style="background:#EDF7F6;color:#2A8A85;font-weight:800;font-size:.88rem;padding:10px 20px;border-radius:999px;margin-bottom:24px"></div>
+  <button onclick="closeConfirm()" style="width:100%;max-width:280px;padding:14px;border-radius:14px;background:#3AAFA9;color:#fff;font-weight:800;font-size:.9rem;border:none;cursor:pointer">Suivre ma course →</button>
+</div>
+
+<script>
+// ===== AUTH =====
+const DEMO = {
+  'demo@chaskis.ch':  { pwd:'demo',  name:'Alexandre M.', plan:'express', price:16  },
+  'flex@chaskis.ch':  { pwd:'flex',  name:'Pharmacie Centrale', plan:'flex',    price:10 },
+  'dedie@chaskis.ch': { pwd:'dedie', name:'Clinique Léman', plan:'dedie',   price:8  },
+};
+
+let appUser = null;
+let appContainer = 'sac';
+let appTime = 'asap';
+
+function fillLogin(email, pwd) {
+  document.getElementById('loginEmail').value = email;
+  document.getElementById('loginPwd').value = pwd;
+}
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pwd = document.getElementById('loginPwd').value;
+  const err = document.getElementById('loginErr');
+  const user = DEMO[email];
+  if (!user || user.pwd !== pwd) {
+    err.classList.add('show');
+    setTimeout(() => err.classList.remove('show'), 3000);
+    return;
+  }
+  err.classList.remove('show');
+  appUser = { ...user, email };
+  showApp();
+}
+
+function doLogout() {
+  appUser = null;
+  document.getElementById('s-app').classList.remove('active');
+  document.getElementById('s-login').classList.add('active');
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPwd').value = '';
+}
+
+function showApp() {
+  document.getElementById('s-login').classList.remove('active');
+  document.getElementById('s-app').classList.add('active');
+  // Avatar
+  const av = document.getElementById('appAv');
+  av.textContent = appUser.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+  av.style.background = appUser.plan === 'dedie' ? '#1A5C59' : appUser.plan === 'flex' ? '#6B4FA0' : '#3AAFA9';
+  // Init price
+  updateAppPrice();
+  renderCourses();
+}
+
+// Auto-login si session active
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = sessionStorage.getItem('chaskis_app_user');
+  if (saved) { appUser = JSON.parse(saved); showApp(); }
+});
+
+// ===== TABS =====
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('on'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('tab-btn-' + tab).classList.add('on');
+}
+
+// ===== COMMANDER =====
+function selectAppContainer(c) {
+  appContainer = c;
+  document.querySelectorAll('.cpk-app-card').forEach(el => el.classList.remove('on'));
+  document.getElementById('cpk-' + c).classList.add('on');
+  updateAppPrice();
+}
+
+function selectAppTime(t) {
+  appTime = t;
+  document.getElementById('tt-asap').classList.toggle('on', t === 'asap');
+  document.getElementById('tt-plan').classList.toggle('on', t === 'plan');
+  const pf = document.getElementById('planFields');
+  pf.style.display = t === 'plan' ? 'block' : 'none';
+}
+
+function calcAppPrice() {
+  if (!appUser) return 0;
+  let p = appUser.price;
+  if (appContainer === 'coffre') p += 5;
+  return p;
+}
+
+function updateAppPrice() {
+  const pick = document.getElementById('appPickAddr').value.trim();
+  const drop = document.getElementById('appDropAddr').value.trim();
+  const price = calcAppPrice();
+  const priceEl = document.getElementById('appPrice');
+  const btn = document.getElementById('appCmdBtn');
+  if (pick && drop) {
+    priceEl.textContent = 'CHF ' + price + '.—';
+    btn.disabled = false;
+    btn.textContent = 'Commander · CHF ' + price + '.— →';
+  } else {
+    priceEl.textContent = 'CHF —';
+    btn.disabled = true;
+    btn.textContent = 'Remplissez les adresses →';
+  }
+}
+
+function submitAppOrder() {
+  const id = 'CK-' + (40000 + Math.floor(Math.random() * 9000));
+  document.getElementById('confirmId').textContent = id;
+  const ov = document.getElementById('confirmOverlay');
+  ov.style.display = 'flex';
+  // Reset form
+  document.getElementById('appPickAddr').value = '';
+  document.getElementById('appPickRef').value = '';
+  document.getElementById('appDropAddr').value = '';
+  updateAppPrice();
+}
+
+function closeConfirm() {
+  document.getElementById('confirmOverlay').style.display = 'none';
+  switchTab('courses');
+  renderCourses();
+}
+
+// ===== MES COURSES =====
+const DEMO_ORDERS = [
+  { id:'CK-44128', from:'Rue du Rhône 42, Genève', to:'Av. de Cour 18, Lausanne', courier:'Marc T.', step:2, eta:'~35 min', price:16, status:'active' },
+  { id:'CK-44091', from:'Pl. de Cornavin 1, Genève', to:'Ch. du Bois-des-Frères 4, Meyrin', courier:'Julia S.', step:3, eta:'Livré', price:21, status:'done', date:'Hier' },
+  { id:'CK-44050', from:'Rue de la Paix 10, Lausanne', to:'Av. Général-Guisan 12, Lausanne', courier:'Karim B.', step:3, eta:'Livré', price:16, status:'done', date:'Il y a 2 jours' },
+];
+
+const STEP_ICONS = [
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`
+];
+const STEP_LABELS = ['Confirmée','Retrait','En route','Livrée'];
+
+function renderCourses() {
+  const active = DEMO_ORDERS.filter(o => o.status === 'active');
+  const done = DEMO_ORDERS.filter(o => o.status === 'done');
+
+  const activeEl = document.getElementById('activeCourses');
+  const histEl = document.getElementById('histCourses');
+
+  if (active.length === 0) {
+    activeEl.innerHTML = '';
+  } else {
+    activeEl.innerHTML = `<div class="courses-section-title">En cours</div>` + active.map(o => `
+      <div class="active-card">
+        <div class="ac-header">
+          <div><span class="ac-id">${o.id}</span></div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="ac-eta">${o.eta}</span>
+            <span class="ac-badge">En cours</span>
+          </div>
+        </div>
+        <div class="ac-courier">
+          <div class="ac-courier-av">${o.courier.split(' ').map(w=>w[0]).join('')}</div>
+          <div class="ac-courier-info">
+            <strong>${o.courier}</strong>
+            <span>${o.step >= 2 ? 'En route vers vous' : 'Se dirige vers le retrait'}</span>
+          </div>
+        </div>
+        <div style="font-size:.74rem;color:#888;margin-bottom:12px">
+          <span style="color:#1a1a1a;font-weight:600">A</span> ${o.from.split(',')[0]} → <span style="color:#1a1a1a;font-weight:600">B</span> ${o.to.split(',')[0]}
+        </div>
+        <div class="mini-tl">
+          ${STEP_LABELS.map((s, si) => `
+            ${si > 0 ? `<div class="mt-conn ${si <= o.step ? 'done' : ''}"></div>` : ''}
+            <div class="mt-step ${si < o.step ? 'done' : si === o.step ? 'active' : ''}">
+              <div class="mt-dot">${STEP_ICONS[si]}</div>
+              <div class="mt-label">${s}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  if (done.length === 0) {
+    histEl.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p>Aucune course passée</p></div>`;
+  } else {
+    histEl.innerHTML = `<div class="courses-section-title" style="margin-top:20px">Historique</div>
+      <div class="form-card" style="padding:4px 16px">
+        ${done.map(o => `
+          <div class="hist-item">
+            <div class="hist-ic" style="background:#EDF7F6">✅</div>
+            <div class="hist-info">
+              <strong>${o.id}</strong>
+              <span>${o.from.split(',')[0]} → ${o.to.split(',')[0]}</span>
+              <span style="display:block;margin-top:1px">${o.date}</span>
+            </div>
+            <div class="hist-right">
+              <span class="hist-price">CHF ${o.price}</span>
+              <span class="hist-status" style="background:#EDF7F6;color:#2A8A85">Livré</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+  }
+}
+
+// Enter key on login
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('s-login').classList.contains('active')) doLogin();
+});
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+
+// ===== PWA INSTALL BANNER =====
+let _pwaPrompt = null;
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaPrompt = e;
+  showInstallBanner('native');
+});
+window.addEventListener('appinstalled', () => {
+  _pwaPrompt = null;
+  const b = document.getElementById('install-bar');
+  if (b) b.remove();
+});
+
+function showInstallBanner(type) {
+  if (isStandalone) return; // Déjà installé
+  let existing = document.getElementById('install-bar');
+  if (existing) existing.remove();
+
+  const bar = document.createElement('div');
+  bar.id = 'install-bar';
+
+  if (type === 'native') {
+    bar.innerHTML = `
+      <div class="ib-text"><strong>Installer Chaskis</strong><span>Accès rapide depuis l'écran d'accueil</span></div>
+      <button class="ib-btn" onclick="doNativeInstall()">Installer</button>
+      <button class="ib-close" onclick="this.parentElement.remove()">&times;</button>
+    `;
+  } else {
+    const hint = isIOS
+      ? 'Appuyez sur <strong>Partager ↑</strong> puis <strong>"Sur l\'écran d\'accueil"</strong>'
+      : 'Appuyez sur <strong>⋮</strong> puis <strong>"Ajouter à l\'écran d\'accueil"</strong>';
+    bar.innerHTML = `
+      <div class="ib-text"><strong>Ajouter Chaskis à l'écran d'accueil</strong><span>${hint}</span></div>
+      <button class="ib-close" onclick="this.parentElement.remove()">&times;</button>
+    `;
+  }
+  document.body.prepend(bar);
+}
+
+function doNativeInstall() {
+  if (!_pwaPrompt) return;
+  _pwaPrompt.prompt();
+  _pwaPrompt.userChoice.then(r => {
+    _pwaPrompt = null;
+    const b = document.getElementById('install-bar');
+    if (b) b.remove();
+  });
+}
+
+// Si pas standalone et que le prompt natif n'arrive pas après 3s, afficher le guide manuel
+if (!isStandalone) {
+  setTimeout(() => {
+    if (!_pwaPrompt) showInstallBanner('manual');
+  }, 3000);
+}
+</script>
+</body>
+</html>

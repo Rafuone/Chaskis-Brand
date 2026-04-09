@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Chaskis Icon Generator</title>
+<style>
+  body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 40px; background: #f5f5f5; }
+  canvas { border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+  button { background: #3AAFA9; color: white; border: none; padding: 12px 28px; border-radius: 8px; font-size: 16px; cursor: pointer; }
+  button:hover { background: #2d8f8a; }
+  .row { display: flex; gap: 32px; align-items: flex-end; }
+  p { color: #666; font-size: 14px; }
+</style>
+</head>
+<body>
+<h2>Générateur d'icônes Chaskis</h2>
+<div class="row">
+  <div style="text-align:center">
+    <canvas id="c192" width="192" height="192"></canvas>
+    <p>192×192</p>
+  </div>
+  <div style="text-align:center">
+    <canvas id="c512" width="512" height="512"></canvas>
+    <p>512×512</p>
+  </div>
+</div>
+<button id="btn">Télécharger les 2 PNG</button>
+
+<script>
+// Union logo path — coordonnées SVG originales dans un viewBox 0 0 32 20
+// transform dans le SVG: translate(36,59) scale(3.75) pour 192px
+// On recalcule directement pour chaque taille de canvas
+
+function drawChaskisIcon(canvas) {
+  const size = canvas.width;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, size, size);
+
+  // ── Background arrondi ──────────────────────────────────────
+  const r = size * 0.208; // ~40/192
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.lineTo(size - r, 0);
+  ctx.quadraticCurveTo(size, 0, size, r);
+  ctx.lineTo(size, size - r);
+  ctx.quadraticCurveTo(size, size, size - r, size);
+  ctx.lineTo(r, size);
+  ctx.quadraticCurveTo(0, size, 0, size - r);
+  ctx.lineTo(0, r);
+  ctx.quadraticCurveTo(0, 0, r, 0);
+  ctx.closePath();
+  ctx.fillStyle = '#3AAFA9';
+  ctx.fill();
+
+  // ── Logo Union (path original: viewBox 0 0 31.9497 20, centré) ──
+  // Dimensions du path: 31.95 × 20
+  // On veut qu'il occupe ~56% de la largeur du canvas, centré
+  const logoW = 31.9497;
+  const logoH = 20;
+  const targetW = size * 0.56;
+  const scale = targetW / logoW;
+  const offsetX = (size - logoW * scale) / 2;
+  const offsetY = (size - logoH * scale) / 2;
+
+  ctx.save();
+  ctx.translate(offsetX, offsetY);
+  ctx.scale(scale, scale);
+
+  ctx.beginPath();
+  // M5.29028 20H23.3109H23.3208V14.8356H5.30018V12.9691
+  ctx.moveTo(5.29028, 20);
+  ctx.lineTo(23.3109, 20);
+  ctx.lineTo(23.3208, 20);
+  ctx.lineTo(23.3208, 14.8356);
+  ctx.lineTo(5.30018, 14.8356);
+  ctx.lineTo(5.30018, 12.9691);
+  // C5.30018 11.9052 5.93423 10.9284 6.9051 10.4642
+  ctx.bezierCurveTo(5.30018, 11.9052, 5.93423, 10.9284, 6.9051, 10.4642);
+  // L16.9903 5.69632
+  ctx.lineTo(16.9903, 5.69632);
+  // C17.7234 5.34816 18.5457 5.16441 19.3581 5.16441
+  ctx.bezierCurveTo(17.7234, 5.34816, 18.5457, 5.16441, 19.3581, 5.16441);
+  // H23.3108
+  ctx.lineTo(23.3108, 5.16441);
+  // V14.8356
+  ctx.lineTo(23.3108, 14.8356);
+  // (C23.3108 14.8356 31.9497 14.5938 31.9497 5.16439)
+  // Cette partie est le "U" droit — on le trace comme sous-path séparé
+
+  // Fermer le bas
+  ctx.lineTo(23.3208, 14.8356);
+  ctx.lineTo(23.3208, 20);
+  ctx.closePath();
+
+  // Sous-path: arc droit du U
+  ctx.moveTo(31.9497, 5.16439);
+  ctx.bezierCurveTo(31.9497, 14.5938, 23.3108, 14.8356, 23.3108, 14.8356);
+  ctx.lineTo(23.3108, 5.16441);
+  ctx.lineTo(23.3208, 5.16441);
+  ctx.lineTo(23.3208, 0);
+  ctx.lineTo(19.3581, 0);
+  // C17.7432 0 16.1284 0.357834 14.682 1.04449
+  ctx.bezierCurveTo(17.7432, 0, 16.1284, 0.357834, 14.682, 1.04449);
+  // L4.58689 5.82205
+  ctx.lineTo(4.58689, 5.82205);
+  // C1.80305 7.13733 0 9.94197 0 12.9691
+  ctx.bezierCurveTo(1.80305, 7.13733, 0, 9.94197, 0, 12.9691);
+  // V14.8356
+  ctx.lineTo(0, 14.8356);
+  // C0 17.6789 2.36775 20 5.29028 20
+  ctx.bezierCurveTo(0, 17.6789, 2.36775, 20, 5.29028, 20);
+  ctx.closePath();
+
+  ctx.fillStyle = 'white';
+  ctx.fill('evenodd');
+
+  ctx.restore();
+}
+
+// Dessine avec la bonne approche SVG Path2D
+function drawChaskisIconV2(canvas) {
+  const size = canvas.width;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, size, size);
+
+  // ── Background arrondi ──
+  const r = size * 0.208;
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.arcTo(size, 0, size, size, r);
+  ctx.arcTo(size, size, 0, size, r);
+  ctx.arcTo(0, size, 0, 0, r);
+  ctx.arcTo(0, 0, size, 0, r);
+  ctx.closePath();
+  ctx.fillStyle = '#3AAFA9';
+  ctx.fill();
+
+  // ── Logo Union via Path2D ──
+  // Path original dans un viewBox 0 0 31.9497 20
+  const svgPath = `M5.29028 20H23.3109H23.3208V14.8356H5.30018V12.9691
+    C5.30018 11.9052 5.93423 10.9284 6.9051 10.4642
+    L16.9903 5.69632
+    C17.7234 5.34816 18.5457 5.16441 19.3581 5.16441
+    H23.3108V14.8356
+    C23.3108 14.8356 31.9497 14.5938 31.9497 5.16439
+    H23.3208V0H19.3581
+    C17.7432 0 16.1284 0.357834 14.682 1.04449
+    L4.58689 5.82205
+    C1.80305 7.13733 0 9.94197 0 12.9691
+    V14.8356
+    C0 17.6789 2.36775 20 5.29028 20Z`;
+
+  const logoW = 31.9497;
+  const logoH = 20;
+  const targetW = size * 0.56;
+  const scale = targetW / logoW;
+  const offsetX = (size - logoW * scale) / 2;
+  const offsetY = (size - logoH * scale) / 2;
+
+  ctx.save();
+  ctx.translate(offsetX, offsetY);
+  ctx.scale(scale, scale);
+
+  const p = new Path2D(svgPath);
+  ctx.fillStyle = 'white';
+  ctx.fill(p, 'evenodd');
+
+  ctx.restore();
+}
+
+// Utilise Path2D (méthode la plus fiable)
+const c192 = document.getElementById('c192');
+const c512 = document.getElementById('c512');
+drawChaskisIconV2(c192);
+drawChaskisIconV2(c512);
+
+// Téléchargement
+document.getElementById('btn').addEventListener('click', () => {
+  const a192 = document.createElement('a');
+  a192.download = 'icon-192.png';
+  a192.href = c192.toDataURL('image/png');
+  a192.click();
+
+  setTimeout(() => {
+    const a512 = document.createElement('a');
+    a512.download = 'icon-512.png';
+    a512.href = c512.toDataURL('image/png');
+    a512.click();
+  }, 300);
+});
+</script>
+</body>
+</html>

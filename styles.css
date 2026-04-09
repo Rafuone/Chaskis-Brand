@@ -66,6 +66,9 @@ img,svg{display:block;max-width:100%}a{text-decoration:none;color:inherit}button
 .nav-login:hover{background:var(--teal-bg);color:var(--teal)}
 .nav-login svg{width:16px;height:16px}
 .nav-cta{padding:9px 22px;font-size:.8rem}
+.nav-install{display:none;align-items:center;gap:5px;font-size:.76rem;font-weight:700;color:var(--accent);background:var(--accent-bg);padding:7px 14px;border-radius:var(--pill);cursor:pointer;border:none;font-family:inherit;transition:all .3s var(--ease);white-space:nowrap}
+.nav-install:hover{background:var(--accent);color:#fff}
+.nav-install svg{width:14px;height:14px}
 .mob-t{display:none;width:40px;height:40px;align-items:center;justify-content:center;border-radius:var(--r);transition:background .3s}
 .mob-t:hover{background:var(--teal-bg)}
 .mob-t span{display:block;width:18px;height:2px;background:var(--ink);position:relative;transition:all .3s var(--ease)}

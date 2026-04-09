@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chaskis — Livraisons express en Suisse romande</title>
+<meta name="description" content="Automatisez vos livraisons en Suisse romande. 800 coursiers salariés, dispatch automatique, zéro appel. Dédié, Flex et Express. Depuis Genève.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3AAFA9">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ===== HERO v7 — B2B REFRAME ===== */
+.hero{min-height:100dvh;display:flex;align-items:center;padding:64px 0 48px;position:relative;overflow:hidden;background:var(--bg)}
+.hero::before{content:'';position:absolute;top:-10%;right:-10%;width:60vw;height:60vw;max-width:800px;background:radial-gradient(circle,rgba(58,175,169,.06),transparent 65%);border-radius:50%;pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-15%;left:-8%;width:40vw;height:40vw;max-width:500px;background:radial-gradient(circle,rgba(107,79,160,.04),transparent 65%);border-radius:50%;pointer-events:none}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,4vw,56px);align-items:center}
+.hero-overline{display:inline-flex;align-items:center;gap:0;padding:4px 14px 4px 4px;background:var(--teal-bg);border:1px solid rgba(58,175,169,.1);border-radius:var(--pill);font-size:.74rem;font-weight:700;color:var(--teal-dark);margin-bottom:16px}
+.hero-overline .wrap{display:flex;align-items:center;gap:5px;background:var(--white);border-radius:var(--pill);padding:3px 9px;margin-right:7px}
+.hero-overline .dot{width:6px;height:6px;background:var(--teal);border-radius:50%;position:relative}
+.hero-overline .dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--teal);animation:pulse-ring 2s ease infinite}
+
+.hero h1{font-size:clamp(2.6rem,5.2vw,4.2rem);font-weight:800;line-height:1.04;letter-spacing:-.05em;margin-bottom:18px}
+.hero h1 .word{display:inline-block;opacity:0;transform:translateY(40px) rotateX(-15deg);animation:word-in .7s var(--ease) forwards}
+.hero h1 .word:nth-child(1){animation-delay:.1s}.hero h1 .word:nth-child(2){animation-delay:.15s}.hero h1 .word:nth-child(3){animation-delay:.2s}
+.hero h1 .word:nth-child(4){animation-delay:.25s}.hero h1 .word:nth-child(5){animation-delay:.3s}.hero h1 .word:nth-child(6){animation-delay:.35s}
+.hero h1 .word:nth-child(7){animation-delay:.4s}.hero h1 .word:nth-child(8){animation-delay:.45s}
+.hero h1 .sa{font-family:'Instrument Serif',serif;font-weight:400;font-style:italic;color:var(--teal)}
+@keyframes word-in{to{opacity:1;transform:translateY(0) rotateX(0)}}
+@keyframes pulse-ring{0%{transform:scale(1);opacity:1}100%{transform:scale(2.2);opacity:0}}
+
+.hero-sub{font-size:clamp(.95rem,1.1vw,1.08rem);color:var(--ink-light);line-height:1.65;max-width:480px;margin-bottom:24px;opacity:0;animation:fade-up .6s var(--ease) .5s forwards}
+.hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:32px;opacity:0;animation:fade-up .6s var(--ease) .6s forwards}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--sand);padding-top:20px;opacity:0;animation:fade-up .6s var(--ease) .7s forwards}
+.hero-stat{padding-right:14px}.hero-stat:not(:last-child){border-right:1px solid var(--sand)}.hero-stat:not(:first-child){padding-left:14px}
+.hero-stat strong{font-size:1.3rem;font-weight:900;letter-spacing:-.03em;line-height:1.1;display:block;color:var(--teal)}
+.hero-stat span{font-size:.66rem;color:var(--ink-muted);font-weight:500}
+
+/* Hero visual */
+.hero-vis{position:relative;perspective:1200px;height:clamp(380px,45vw,520px);opacity:0;animation:slide-in-right .8s var(--ease) .3s forwards}
+@keyframes slide-in-right{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+.hv-card{position:absolute;border-radius:var(--rxl);overflow:hidden;box-shadow:var(--sh-lg);transition:transform .8s var(--ease),box-shadow .5s var(--ease);will-change:transform}
+.hv-main{width:72%;height:88%;top:6%;left:14%;z-index:3;background:linear-gradient(135deg,var(--teal-bg),var(--cream),var(--sand))}
+.hv-back-1{width:60%;height:78%;top:0;left:0;z-index:1;background:linear-gradient(135deg,var(--accent-bg),var(--cream));transform:rotate(-8deg) translateX(-20px) translateZ(-80px);opacity:.6}
+.hv-back-2{width:55%;height:72%;top:10%;right:0;z-index:2;background:linear-gradient(135deg,var(--teal-bg),var(--white));transform:rotate(5deg) translateX(15px) translateZ(-40px);opacity:.8}
+.hv-card .silhouette{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.hv-card .silhouette svg{width:40%;opacity:.15}
+.hv-float{position:absolute;z-index:10;background:var(--white);border-radius:var(--rl);box-shadow:var(--sh-xl);transition:transform .4s var(--ease)}
+.hv-float:hover{transform:translateY(-6px) scale(1.02) !important}
+.hv-booking{bottom:16px;left:-16px;right:20%;padding:14px 16px;cursor:pointer}
+.hvb-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.hvb-head h4{font-size:.8rem;font-weight:800;letter-spacing:-.02em}
+.hvb-badge{font-size:.58rem;font-weight:700;color:var(--teal);background:var(--teal-bg);padding:2px 8px;border-radius:var(--pill);display:flex;align-items:center;gap:3px}
+.hvb-badge::before{content:'';width:4px;height:4px;background:var(--teal);border-radius:50%;animation:pulse-ring 2s ease infinite}
+.hvb-slots{display:flex;gap:4px}
+.hvb-slot{flex:1;padding:6px;border-radius:7px;font-size:.68rem;font-weight:600;text-align:center;border:1.5px solid var(--sand);color:var(--ink-mid);transition:all .3s var(--ease)}
+.hvb-slot.on{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
+.hv-stat{top:12px;right:-12px;z-index:10;padding:10px 14px;display:flex;align-items:center;gap:8px}
+.hv-stat-icon{width:30px;height:30px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center}
+.hv-stat-icon svg{width:14px;height:14px;color:#fff}
+.hv-stat strong{font-size:.92rem;font-weight:800;display:block;line-height:1.1}
+.hv-stat span{font-size:.58rem;color:var(--ink-muted)}
+
+/* ===== ZOOM SECTION ===== */
+.zoom-section{position:relative;padding:0;height:70vh;min-height:400px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--ink)}
+.zoom-bg{position:absolute;inset:-20%;background:linear-gradient(135deg,var(--teal-deep),var(--ink),#1a1a2e);will-change:transform;transition:transform .1s linear}
+.zoom-content{position:relative;z-index:1;text-align:center;color:#fff;max-width:700px;padding:0 var(--gut)}
+.zoom-content h2{font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-.04em;line-height:1.08;margin-bottom:12px}
+.zoom-content h2 .accent{color:var(--teal-light)}
+.zoom-content p{font-size:1rem;color:rgba(255,255,255,.55);line-height:1.6;max-width:500px;margin:0 auto 28px}
+.zoom-counters{display:flex;justify-content:center;gap:clamp(24px,4vw,56px);margin-top:32px}
+.zoom-counter{text-align:center}
+.zoom-counter strong{font-size:clamp(2.2rem,4vw,3.5rem);font-weight:900;letter-spacing:-.04em;display:block;line-height:1}
+.zoom-counter span{font-size:.72rem;color:rgba(255,255,255,.4);font-weight:500;margin-top:4px;display:block}
+
+/* ===== SECTEURS ===== */
+.secteurs{background:var(--white);overflow:hidden}
+.sec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.sec-card{padding:28px 24px;border-radius:var(--rxl);background:var(--bg);border:1.5px solid transparent;cursor:default;transition:all .5s var(--ease);position:relative;overflow:hidden}
+.sec-card:hover{transform:translateY(-8px) scale(1.02);box-shadow:var(--sh-xl);background:var(--white);border-color:rgba(0,0,0,.04)}
+.sec-emoji{font-size:2.2rem;margin-bottom:14px;display:block;transition:transform .4s var(--ease-bounce)}
+.sec-card:hover .sec-emoji{transform:scale(1.2) rotate(-5deg)}
+.sec-card h3{font-size:1rem;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.sec-tag{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-muted);margin-bottom:12px;display:block}
+.sec-uses{list-style:none}
+.sec-uses li{font-size:.76rem;color:var(--ink-light);padding:3px 0;display:flex;align-items:center;gap:6px;border-bottom:1px solid rgba(0,0,0,.04)}
+.sec-uses li:last-child{border:none}
+.sec-uses li::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--teal);flex-shrink:0}
+.sec-cta-link{display:inline-flex;align-items:center;gap:5px;font-size:.74rem;font-weight:700;color:var(--teal);margin-top:14px;transition:gap .3s var(--ease)}
+.sec-cta-link:hover{gap:9px}
+.sec-cta-link svg{width:13px;height:13px}
+.sec-card:nth-child(2) .sec-uses li::before{background:var(--accent)}
+.sec-card:nth-child(2) .sec-cta-link{color:var(--accent)}
+.sec-card:nth-child(3) .sec-uses li::before{background:var(--teal-dark)}
+.sec-card:nth-child(4) .sec-uses li::before{background:var(--accent-light)}
+.sec-card:nth-child(4) .sec-cta-link{color:var(--accent-light)}
+
+/* ===== VALUE PROPS ===== */
+.vp{background:var(--bg);overflow:hidden}
+.vp-g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.vpc{padding:32px 28px;border-radius:var(--rxl);background:var(--bg);border:1.5px solid transparent;overflow:hidden;position:relative;transform:scale(.92);opacity:0;transition:all .8s var(--ease)}
+.vpc.v{transform:scale(1);opacity:1}
+.vpc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
+.vpc:hover{transform:translateY(-8px) scale(1.02);box-shadow:var(--sh-xl);background:var(--white);border-color:rgba(58,175,169,.06)}
+.vpc:hover::before{transform:scaleX(1)}
+.vpc:nth-child(1){transition-delay:.05s}.vpc:nth-child(2){transition-delay:.15s}.vpc:nth-child(3){transition-delay:.25s}
+.vpc:nth-child(1)::before{background:var(--teal)}.vpc:nth-child(2)::before{background:var(--accent)}.vpc:nth-child(3)::before{background:var(--teal-dark)}
+.vpc-ic{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;transition:all .5s var(--ease-bounce)}
+.vpc:hover .vpc-ic{transform:scale(1.15) rotate(-5deg)}
+.vpc-ic svg{width:24px;height:24px}
+.vpc-ic.t{background:var(--teal-bg);color:var(--teal)}.vpc-ic.p{background:var(--accent-bg);color:var(--accent)}.vpc-ic.td{background:rgba(26,92,89,.08);color:var(--teal-dark)}
+.vpc h3{font-size:1.1rem;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+.vpc p{font-size:.86rem;color:var(--ink-light);line-height:1.6}
+.vpc-big{font-size:2.2rem;font-weight:900;letter-spacing:-.04em;margin-top:16px;line-height:1;background:linear-gradient(135deg,var(--teal),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ===== PIPELINE "COMMENT ÇA FONCTIONNE" ===== */
+.pipeline{background:var(--ink);overflow:hidden;position:relative}
+.pipeline::before{content:'';position:absolute;top:-20%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(58,175,169,.08),transparent 65%);border-radius:50%}
+.pipeline::after{content:'';position:absolute;bottom:-20%;left:-5%;width:400px;height:400px;background:radial-gradient(circle,rgba(107,79,160,.06),transparent 65%);border-radius:50%}
+.pipeline-inner{position:relative;z-index:1}
+.pipeline-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.pipe-step{padding:28px;border-radius:var(--rxl);border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);transition:all .5s var(--ease);transform:translateY(20px);opacity:0}
+.pipe-step.v{transform:translateY(0);opacity:1}
+.pipe-step:hover{background:rgba(255,255,255,.06);border-color:rgba(58,175,169,.2);transform:translateY(-4px)}
+.pipe-step:nth-child(1){transition-delay:.05s}.pipe-step:nth-child(2){transition-delay:.12s}.pipe-step:nth-child(3){transition-delay:.19s}
+.pipe-step:nth-child(4){transition-delay:.26s}.pipe-step:nth-child(5){transition-delay:.33s}.pipe-step:nth-child(6){transition-delay:.4s}
+.pipe-n{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
+.pipe-n.t{color:var(--teal)}.pipe-n.p{color:var(--accent-light)}
+.pipe-icon{font-size:1.8rem;margin-bottom:10px;display:block}
+.pipe-step h3{font-size:.95rem;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:6px}
+.pipe-step p{font-size:.78rem;color:rgba(255,255,255,.4);line-height:1.6}
+.pipe-step .pipe-tag{display:inline-block;font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:var(--pill);margin-top:10px;text-transform:uppercase;letter-spacing:.05em}
+.pipe-tag.auto{background:rgba(58,175,169,.15);color:var(--teal-light)}
+.pipe-tag.trigger{background:rgba(107,79,160,.15);color:var(--accent-light)}
+.pipe-tag.human{background:rgba(255,255,255,.07);color:rgba(255,255,255,.4)}
+
+/* ===== HOW ===== */
+.how{background:var(--bg);overflow:hidden}
+.how-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:8px 4px 24px;scrollbar-width:none;-ms-overflow-style:none}
+.how-track::-webkit-scrollbar{display:none}
+.how-s{flex:0 0 clamp(280px,30vw,340px);scroll-snap-align:start;background:var(--white);border-radius:var(--rxl);padding:32px 28px;border:1.5px solid rgba(0,0,0,.04);transition:all .5s var(--ease);position:relative;overflow:hidden}
+.how-s:hover{transform:translateY(-6px);box-shadow:var(--sh-lg);border-color:var(--teal-bg)}
+.how-n{font-size:3.5rem;font-weight:900;background:linear-gradient(135deg,var(--teal-x-light),var(--accent-bg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:14px;letter-spacing:-.06em;transition:all .4s var(--ease)}
+.how-s:hover .how-n{background:linear-gradient(135deg,var(--teal),var(--accent));-webkit-background-clip:text;background-clip:text}
+.how-s h3{font-size:1.05rem;font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
+.how-s p{font-size:.84rem;color:var(--ink-light);line-height:1.6}
+.how-scroll-hint{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--ink-muted);margin-top:16px}
+.how-scroll-hint svg{width:16px;height:16px;animation:float 2s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+/* ===== BENTO ===== */
+.bento{background:var(--white);overflow:hidden}
+.bento-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;gap:16px}
+.bento-card{border-radius:var(--rxl);padding:32px;position:relative;overflow:hidden;transition:all .6s var(--ease);cursor:default}
+.bento-card:hover{transform:translateY(-4px)}
+.bento-card h3{font-size:1.1rem;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+.bento-card p{font-size:.84rem;line-height:1.6}
+.bento-card .bento-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.bento-card .bento-icon svg{width:24px;height:24px}
+.bento-1{grid-column:span 2;background:linear-gradient(135deg,var(--teal-deep),var(--teal-dark));color:#fff;min-height:240px}
+.bento-1 p{color:rgba(255,255,255,.65)}.bento-1 .bento-icon{background:rgba(255,255,255,.12)}.bento-1 .bento-icon svg{color:#fff}
+.bento-1::after{content:'';position:absolute;top:-30%;right:-10%;width:300px;height:300px;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);border-radius:50%}
+.bento-2{background:var(--accent-bg);color:var(--ink)}.bento-2 .bento-icon{background:var(--accent);}.bento-2 .bento-icon svg{color:#fff}
+.bento-3{background:var(--bg);border:1.5px solid rgba(0,0,0,.04)}.bento-3 .bento-icon{background:var(--teal-bg);color:var(--teal)}
+.bento-4{background:var(--bg);border:1.5px solid rgba(0,0,0,.04)}.bento-4 .bento-icon{background:var(--accent-bg);color:var(--accent)}
+.bento-5{grid-column:span 2;background:linear-gradient(135deg,var(--accent-dark),var(--accent));color:#fff;min-height:200px}
+.bento-5 p{color:rgba(255,255,255,.65)}.bento-5 .bento-icon{background:rgba(255,255,255,.12)}.bento-5 .bento-icon svg{color:#fff}
+.bento-5::before{content:'';position:absolute;bottom:-20%;left:-10%;width:250px;height:250px;background:radial-gradient(circle,rgba(255,255,255,.05),transparent 65%);border-radius:50%}
+
+/* ===== TESTIMONIALS ===== */
+.testi{background:var(--bg);overflow:hidden;padding-bottom:clamp(48px,6vw,72px)}
+.testi-track{display:flex;gap:16px;animation:testi-scroll 40s linear infinite;width:max-content}
+.testi-track:hover{animation-play-state:paused}
+.tc{flex:0 0 340px;background:var(--white);border-radius:var(--rxl);padding:28px;border:1.5px solid rgba(0,0,0,.04);transition:all .4s var(--ease)}
+.tc:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:rgba(107,79,160,.06)}
+.tc-stars{display:flex;gap:2px;margin-bottom:14px}
+.tc-stars svg{width:15px;height:15px;fill:var(--yellow)}
+.tc-text{font-size:.88rem;color:var(--ink-mid);line-height:1.65;margin-bottom:20px}
+.tc-author{display:flex;align-items:center;gap:10px}
+.tc-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff}
+.tc-info h4{font-size:.82rem;font-weight:700}.tc-info p{font-size:.7rem;color:var(--ink-muted)}
+@keyframes testi-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ===== RECRUIT ===== */
+.recruit{background:linear-gradient(135deg,var(--ink) 0%,#1e2926 100%);color:#fff;position:relative;overflow:hidden;padding:clamp(48px,6vw,72px) 0}
+.recruit::before{content:'';position:absolute;top:-40%;right:-15%;width:500px;height:500px;background:radial-gradient(circle,rgba(107,79,160,.12),transparent 70%);border-radius:50%}
+.recruit-inner{display:flex;align-items:center;justify-content:space-between;gap:40px;position:relative;z-index:1;flex-wrap:wrap}
+.recruit-text{max-width:520px}
+.recruit-text h2{font-size:clamp(1.5rem,2.4vw,2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:8px;line-height:1.15}
+.recruit-text h2 .purple{color:var(--accent-light)}
+.recruit-text p{font-size:.88rem;color:rgba(255,255,255,.45);line-height:1.6;margin-bottom:16px}
+.recruit-badges{display:flex;gap:8px;flex-wrap:wrap}
+.recruit-badge{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--pill);background:rgba(255,255,255,.06);font-size:.74rem;font-weight:600;color:rgba(255,255,255,.65)}
+.recruit-badge svg{width:13px;height:13px;color:var(--accent-light)}
+.recruit-cta{display:flex;gap:10px;flex-direction:column;align-items:flex-start}
+
+/* ===== BOOKING ===== */
+.cta-booking{background:var(--white);position:relative;overflow:hidden}
+.cta-booking::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--teal-bg),transparent 60%);pointer-events:none}
+.cta-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(28px,4vw,56px);align-items:start;position:relative;z-index:1}
+.cta-perks{margin-top:20px}
+.cta-perk{display:flex;gap:10px;margin-bottom:14px}
+.cta-perk-ic{width:30px;height:30px;border-radius:8px;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cta-perk-ic svg{width:14px;height:14px;color:var(--teal)}
+.cta-perk h4{font-size:.82rem;font-weight:700;margin-bottom:1px}.cta-perk p{font-size:.7rem;color:var(--ink-muted)}
+.bk-w{background:var(--bg);border-radius:var(--rxl);padding:28px;box-shadow:var(--sh-lg);border:1px solid rgba(0,0,0,.04)}
+.bk-prog{display:flex;gap:5px;margin-bottom:20px}
+.bk-prog span{flex:1;height:3px;border-radius:2px;background:var(--sand);transition:background .4s var(--ease)}
+.bk-prog span.done{background:var(--teal)}
+.bk-step{display:none}.bk-step.active{display:block}
+.bk-t{font-size:.95rem;font-weight:800;letter-spacing:-.02em;margin-bottom:3px}
+.bk-s{font-size:.72rem;color:var(--ink-muted);margin-bottom:16px}
+.bk-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:14px}
+.bk-d{width:100%;aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;color:var(--ink-light);cursor:default;transition:all .25s var(--ease)}
+.bk-d.hd{font-size:.55rem;font-weight:700;color:var(--ink-muted);text-transform:uppercase}
+.bk-d.av{color:var(--teal-dark);cursor:pointer;background:var(--teal-bg)}
+.bk-d.av:hover{background:var(--teal);color:#fff;transform:scale(1.1)}
+.bk-d.pk{background:var(--teal);color:#fff;box-shadow:0 4px 12px rgba(58,175,169,.2)}
+.bk-d.past{color:var(--warm-gray)}
+.bk-slots{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+.bk-sl{padding:7px 12px;border-radius:var(--pill);font-size:.74rem;font-weight:600;border:1.5px solid var(--sand);color:var(--ink-mid);cursor:pointer;transition:all .3s var(--ease)}
+.bk-sl:hover,.bk-sl.pk{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
+.bk-nav{display:flex;gap:8px;margin-top:16px}
+.bk-nav .btn{flex:1;justify-content:center;padding:11px 16px;font-size:.84rem}
+.bk-back{background:var(--white);color:var(--ink-mid);font-weight:600}
+.bk-confirm{text-align:center;padding:20px 0}
+.bk-confirm svg{width:48px;height:48px;color:var(--teal);margin:0 auto 12px}
+.bk-confirm h3{font-size:1.1rem;font-weight:800;margin-bottom:5px}
+.bk-confirm p{font-size:.82rem;color:var(--ink-light)}
+
+/* ===== FAQ ===== */
+.faq{background:var(--bg)}
+.faq-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(28px,4vw,56px);align-items:start}
+.faq-item{border-bottom:1px solid rgba(0,0,0,.06)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 0;cursor:pointer;gap:12px;transition:color .3s}
+.faq-q:hover{color:var(--teal)}.faq-q h3{font-size:.9rem;font-weight:700}
+.fi{width:26px;height:26px;border-radius:50%;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .4s var(--ease)}
+.fi svg{width:12px;height:12px;color:var(--teal);transition:transform .4s var(--ease)}
+.faq-item.open .fi{background:var(--teal)}.faq-item.open .fi svg{color:#fff;transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .5s var(--ease)}
+.faq-a p{padding:0 0 16px;font-size:.82rem;color:var(--ink-light);line-height:1.7}
+
+/* ===== SHARED SECTION HEADERS ===== */
+.sh{margin-bottom:clamp(28px,3.5vw,48px)}
+.sh.c{text-align:center}
+.sh.rv{opacity:0;transform:translateY(20px);transition:all .7s var(--ease)}
+.sh.rv.v{opacity:1;transform:none}
+.sl{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);margin-bottom:8px}
+.st{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:10px}
+.ac{color:var(--teal)}.sa{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--teal)}
+.sd{font-size:.9rem;color:var(--ink-light);max-width:520px;line-height:1.65}
+section{padding:clamp(56px,7vw,96px) 0}
+
+/* ===== PARTNERS ===== */
+.partners{padding:clamp(24px,3vw,40px) 0;background:var(--white);border-top:1px solid rgba(0,0,0,.04);border-bottom:1px solid rgba(0,0,0,.04);overflow:hidden}
+.p-label{text-align:center;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-muted);margin-bottom:16px}
+.mq-w{overflow:hidden;position:relative}
+.mq-w::before,.mq-w::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:1;pointer-events:none}
+.mq-w::before{left:0;background:linear-gradient(90deg,var(--white),transparent)}
+.mq-w::after{right:0;background:linear-gradient(-90deg,var(--white),transparent)}
+.mq{display:flex;gap:0;animation:mq-scroll 35s linear infinite;width:max-content}
+.mq:hover{animation-play-state:paused}
+.mq-i{display:inline-flex;align-items:center;gap:8px;padding:8px 24px;font-size:.78rem;font-weight:700;color:var(--ink-muted);white-space:nowrap;border-right:1px solid rgba(0,0,0,.06)}
+.mq-i svg{width:14px;height:14px}
+@keyframes mq-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ===== FIELD STYLES ===== */
+.field{margin-bottom:12px}
+.field label{display:block;font-size:.74rem;font-weight:600;color:var(--ink-mid);margin-bottom:4px}
+.field input,.field select,.field textarea{width:100%;padding:11px 14px;border:1.5px solid var(--sand);border-radius:var(--r);font-family:inherit;font-size:.85rem;color:var(--ink);background:var(--white);outline:none;transition:all .3s var(--ease)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(58,175,169,.08)}
+.field textarea{resize:vertical;min-height:80px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){
+  .hero-grid{grid-template-columns:1fr}.hero-vis{max-width:400px;margin:0 auto;height:340px}.hv-stat{display:none}
+  .sec-grid{grid-template-columns:1fr 1fr}
+  .vp-g{grid-template-columns:1fr}
+  .pipeline-grid{grid-template-columns:1fr 1fr}
+  .bento-grid{grid-template-columns:1fr}.bento-1,.bento-5{grid-column:span 1}
+  .recruit-inner{flex-direction:column;text-align:center;align-items:center}
+  .recruit-badges{justify-content:center}
+  .recruit-cta{align-items:center}
+  .cta-layout,.faq-layout{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .hero-stats{grid-template-columns:repeat(2,1fr);gap:14px}
+  .hero-stat{border:none!important;padding:0!important}
+  .hv-booking{left:-4px;right:4px}
+  .sec-grid{grid-template-columns:1fr}
+  .pipeline-grid{grid-template-columns:1fr}
+}
+/* ===== FOOTER ===== */
+.footer{background:var(--ink);color:rgba(255,255,255,.6);padding:clamp(40px,5vw,64px) 0 24px}
+.ft{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.fb .nav-logo{color:#fff;margin-bottom:10px}
+.fb p{font-size:.78rem;line-height:1.65}
+.fb-soc{display:flex;gap:10px;margin-top:14px}
+.fb-soc a{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;transition:background .3s}
+.fb-soc a:hover{background:rgba(255,255,255,.12)}.fb-soc svg{width:16px;height:16px}
+.fc h4{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.35);margin-bottom:12px}
+.fc a{display:block;font-size:.78rem;color:rgba(255,255,255,.5);padding:3px 0;transition:color .3s}
+.fc a:hover{color:rgba(255,255,255,.9)}
+.f-btm{display:flex;justify-content:space-between;padding-top:20px;border-top:1px solid rgba(255,255,255,.06);font-size:.72rem;color:rgba(255,255,255,.25)}
+@media(max-width:768px){.ft{grid-template-columns:1fr 1fr;gap:24px}}
+</style>
+</head>
+<body>
+
+<div class="mob-m" id="mm">
+  <a href="index-v7.html" onclick="cm()">Accueil</a>
+  <a href="#services" onclick="cm()">Nos services</a>
+  <a href="commander-v7.html" onclick="cm()">Commander</a>
+  <a href="postuler.html" onclick="cm()">Postuler</a>
+  <a href="#booking" onclick="cm()">Réserver un appel</a>
+  <a href="#faq" onclick="cm()">FAQ</a>
+</div>
+
+<nav class="nav" id="nav">
+  <div class="ct nav-in">
+    <a href="index-v7.html" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a>
+    <div class="nav-mid">
+      <a href="#services">Nos services</a>
+      <a href="commander-v7.html">Commander</a>
+      <a href="postuler.html">Postuler</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-right">
+      <a href="#" class="nav-login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Connexion</span></a>
+<a href="#booking" class="btn btn-p nav-cta btn-sm"><span>Réserver un appel</span></a>
+    </div>
+    <button class="mob-t" id="mt" aria-label="Menu"><span></span></button>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="ct hero-grid">
+    <div>
+      <div class="hero-overline"><div class="wrap"><span class="dot"></span>6 créneaux disponibles</div>cette semaine</div>
+      <h1>
+        <span class="word">On</span>
+        <span class="word">gère</span>
+        <span class="word">vos</span>
+        <span class="word">livraisons,</span><br>
+        <span class="word">vous</span>
+        <span class="word">gérez</span>
+        <span class="word">votre</span>
+        <span class="word sa">business</span>
+      </h1>
+      <p class="hero-sub">Dispatch automatique, zéro appel, zéro ressaisie. Vos livraisons partent dès que le paiement est confirmé — 800 coursiers salariés, 1.5M courses par an.</p>
+      <div class="hero-actions">
+        <a href="#booking" class="btn btn-p"><span>Réserver un appel découverte</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="commander-v7.html" class="btn btn-o"><span>Commander Express</span></a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong data-count="12" data-suffix=" min">0</strong><span>Délai moyen</span></div>
+        <div class="hero-stat"><strong data-count="40" data-prefix="-" data-suffix="%">0</strong><span>vs plateformes</span></div>
+        <div class="hero-stat"><strong data-count="800" data-suffix="+">0</strong><span>Coursiers CDI</span></div>
+        <div class="hero-stat"><strong data-count="1.5" data-suffix="M" data-decimal="true">0</strong><span>Courses / an</span></div>
+      </div>
+    </div>
+    <div class="hero-vis" id="heroVis">
+      <div class="hv-card hv-back-1"><div class="silhouette"><svg viewBox="0 0 200 300" fill="none"><circle cx="100" cy="80" r="30" fill="currentColor"/><ellipse cx="100" cy="190" rx="50" ry="45" fill="currentColor"/></svg></div></div>
+      <div class="hv-card hv-back-2"><div class="silhouette"><svg viewBox="0 0 200 300" fill="none"><circle cx="100" cy="80" r="30" fill="currentColor"/><ellipse cx="100" cy="190" rx="50" ry="45" fill="currentColor"/></svg></div></div>
+      <div class="hv-card hv-main"><div class="silhouette"><svg viewBox="0 0 200 300" fill="none"><circle cx="100" cy="75" r="35" fill="currentColor"/><ellipse cx="100" cy="200" rx="60" ry="55" fill="currentColor"/><rect x="60" y="145" width="80" height="15" rx="7" fill="currentColor"/></svg></div></div>
+      <a href="#booking" class="hv-float hv-booking">
+        <div class="hvb-head"><h4>Prochain créneau</h4><span class="hvb-badge">Dispo</span></div>
+        <div class="hvb-slots"><div class="hvb-slot">Mar 9h</div><div class="hvb-slot on">Mer 14h</div><div class="hvb-slot">Jeu 10h</div></div>
+      </a>
+      <div class="hv-float hv-stat">
+        <div class="hv-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <div><strong>98%</strong><span>Satisfaction</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== ZOOM STATS ===== -->
+<div class="zoom-section" id="zoomSection">
+  <div class="zoom-bg" id="zoomBg"></div>
+  <div class="zoom-content">
+    <h2>Fini le dispatch <span class="accent">manuel</span></h2>
+    <p>Sans auto-dispatch, la promesse Express est intenable. Chez Chaskis, chaque paiement déclenche automatiquement la création de la course, l'assignation du livreur et le SMS de suivi.</p>
+    <div class="zoom-counters">
+      <div class="zoom-counter"><strong style="color:var(--teal-light)" data-count="0" data-suffix=" appel">0</strong><span>Dispatch manuel</span></div>
+      <div class="zoom-counter"><strong style="color:var(--accent-light)" data-count="48" data-suffix="h">0</strong><span>Opérationnel en</span></div>
+      <div class="zoom-counter"><strong style="color:var(--teal-light)" data-count="98" data-suffix="%">0</strong><span>Satisfaction client</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PARTNERS ===== -->
+<div class="partners">
+  <p class="p-label">Ils nous font confiance</p>
+  <div class="mq-w"><div class="mq" aria-hidden="true">
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Étude Notariale Riviera</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg>Pharmacie du Lac</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Fleurs Express</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Swiss E-Shop</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="18" rx="3"/><path d="M2 9h20"/></svg>Cabinet Médical Central</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>Café Romand</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>Maison Bulgari GE</span>
+    <!-- duplicate -->
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Étude Notariale Riviera</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg>Pharmacie du Lac</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Fleurs Express</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Swiss E-Shop</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="18" rx="3"/><path d="M2 9h20"/></svg>Cabinet Médical Central</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>Café Romand</span>
+    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>Maison Bulgari GE</span>
+  </div></div>
+</div>
+
+<!-- ===== SECTEURS CIBLES ===== -->
+<section class="secteurs" id="services">
+  <div class="ct">
+    <div class="sh rv"><span class="sl">Pour qui</span><h2 class="st">Vos secteurs, <span class="ac">nos spécialités</span></h2><p class="sd">Chaque secteur a ses contraintes. Nos livreurs sont formés aux protocoles spécifiques de chaque industrie.</p></div>
+    <div class="sec-grid stg">
+      <div class="sec-card tilt-3d">
+        <span class="sec-emoji">🏥</span>
+        <h3>Médical &amp; Pharma</h3>
+        <span class="sec-tag">Délai critique · Chaîne du froid</span>
+        <ul class="sec-uses">
+          <li>Ordonnances &amp; médicaments urgents</li>
+          <li>Résultats d'analyses &amp; prélèvements</li>
+          <li>Matériel médical entre cliniques</li>
+          <li>Transport température contrôlée</li>
+        </ul>
+        <a href="#booking" class="sec-cta-link">Discuter de vos besoins <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="sec-card tilt-3d">
+        <span class="sec-emoji">💎</span>
+        <h3>Luxe &amp; Bijouterie</h3>
+        <span class="sec-tag">Remise en main propre · Discrétion</span>
+        <ul class="sec-uses">
+          <li>Bijoux &amp; montres (assurance incluse)</li>
+          <li>Colis luxe avec signature obligatoire</li>
+          <li>Livraison en tenue professionnelle</li>
+          <li>Proof of delivery photo systématique</li>
+        </ul>
+        <a href="#booking" class="sec-cta-link">Discuter de vos besoins <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="sec-card tilt-3d">
+        <span class="sec-emoji">⚖️</span>
+        <h3>Juridique &amp; Notarial</h3>
+        <span class="sec-tag">Confidentialité · Preuve de remise</span>
+        <ul class="sec-uses">
+          <li>Documents confidentiels &amp; actes notariés</li>
+          <li>Contrats signés entre études</li>
+          <li>Plis recommandés urgents</li>
+          <li>Tournées quotidiennes planifiées</li>
+        </ul>
+        <a href="#booking" class="sec-cta-link">Discuter de vos besoins <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="sec-card tilt-3d">
+        <span class="sec-emoji">📦</span>
+        <h3>E-commerce &amp; Retail</h3>
+        <span class="sec-tag">Volume · CSV · API</span>
+        <ul class="sec-uses">
+          <li>Import CSV de commandes en masse</li>
+          <li>Intégration API Shopify / WooCommerce</li>
+          <li>Tournées multi-colis optimisées</li>
+          <li>Notifications clients automatiques</li>
+        </ul>
+        <a href="commander-v7.html" class="sec-cta-link" style="color:var(--accent)">Commander maintenant <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== VALUE PROPS ===== -->
+<section class="vp">
+  <div class="ct">
+    <div class="sh rv"><span class="sl">Pourquoi Chaskis</span><h2 class="st">Vos livraisons méritent <span class="ac">mieux</span> qu'une plateforme</h2><p class="sd">Les plateformes prennent 30% de commission. Nous proposons un tarif fixe avec une équipe dédiée et zéro appel de dispatch.</p></div>
+    <div class="vp-g" id="vpGrid">
+      <article class="vpc tilt-3d"><div class="vpc-ic t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><h3>-40% sur vos coûts</h3><p>Tarif fixe dès CHF 8/course. Sans commission, sans frais cachés. Vos marges restent vos marges.</p><div class="vpc-big">-40%</div></article>
+      <article class="vpc tilt-3d"><div class="vpc-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><h3>Zéro gestion manuelle</h3><p>Paiement Stripe → course créée → livreur assigné → SMS envoyé. Tout en automatique, sans intervention humaine.</p><div class="vpc-big">0 appel</div></article>
+      <article class="vpc tilt-3d"><div class="vpc-ic td"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Fiabilité suisse</h3><p>800 coursiers salariés (pas auto-entrepreneurs), formation interne, assurance complète et preuve de livraison sur chaque course.</p><div class="vpc-big">CDI</div></article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PIPELINE AUTOMATISÉ ===== -->
+<section class="pipeline">
+  <div class="ct pipeline-inner">
+    <div class="sh rv"><span class="sl" style="color:var(--teal-light)">Le flux automatisé</span><h2 class="st" style="color:#fff">De la commande à la <span style="color:var(--teal-light)">livraison</span> — sans vous</h2><p class="sd" style="color:rgba(255,255,255,.45)">Voici ce qui se passe quand un client passe commande. Zéro intervention humaine côté Chaskis, 100% traçable.</p></div>
+    <div class="pipeline-grid stg">
+      <div class="pipe-step tilt-3d">
+        <div class="pipe-n t">Étape 1</div>
+        <span class="pipe-icon">🧾</span>
+        <h3>Client commande</h3>
+        <p>Via le formulaire web, votre API ou un import CSV. Référence marchand obligatoire pour identifier le colis.</p>
+        <span class="pipe-tag human">Web · API · CSV</span>
+      </div>
+      <div class="pipe-step tilt-3d">
+        <div class="pipe-n t">Étape 2</div>
+        <span class="pipe-icon">💳</span>
+        <h3>Stripe confirme</h3>
+        <p>Paiement chiffré. Dès validation, un webhook déclenche automatiquement le process en backend.</p>
+        <span class="pipe-tag auto">Automatique</span>
+      </div>
+      <div class="pipe-step tilt-3d">
+        <div class="pipe-n t">Étape 3</div>
+        <span class="pipe-icon">🤖</span>
+        <h3>Dispatch automatique</h3>
+        <p>Onfleet crée la tâche et assigne le coursier disponible le plus proche. Zéro appel, zéro coordination manuelle.</p>
+        <span class="pipe-tag auto">Automatique</span>
+      </div>
+      <div class="pipe-step tilt-3d">
+        <div class="pipe-n p">Étape 4</div>
+        <span class="pipe-icon">🔑</span>
+        <h3>Livreur s'identifie</h3>
+        <p>Le coursier utilise la référence marchand pour s'identifier au point de retrait. Le commerçant reçoit un SMS d'annonce.</p>
+        <span class="pipe-tag trigger">Make.com trigger</span>
+      </div>
+      <div class="pipe-step tilt-3d">
+        <div class="pipe-n p">Étape 5</div>
+        <span class="pipe-icon">📍</span>
+        <h3>Suivi GPS en direct</h3>
+        <p>Client et expéditeur reçoivent un lien de tracking en temps réel. Notifications automatiques à chaque étape clé.</p>
+        <span class="pipe-tag auto">Automatique</span>
+      </div>
+      <div class="pipe-step tilt-3d">
+        <div class="pipe-n p">Étape 6</div>
+        <span class="pipe-icon">✅</span>
+        <h3>Proof of Delivery</h3>
+        <p>L'app livreur exige une photo ou signature pour clôturer la course. Preuve horodatée disponible dans votre dashboard.</p>
+        <span class="pipe-tag trigger">POD · Dashboard</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW TO START ===== -->
+<section class="how">
+  <div class="ct">
+    <div class="sh rv"><span class="sl">Comment démarrer</span><h2 class="st">Opérationnel en <span class="ac">48 heures</span></h2><p class="sd">De l'appel découverte à votre première livraison automatisée.</p></div>
+    <div class="how-track">
+      <article class="how-s tilt-3d"><div class="how-n">01</div><h3>Appel découverte (20 min)</h3><p>On comprend votre volume, vos secteurs, vos contraintes. On propose le bon plan : Express, Flex ou Dédié.</p></article>
+      <article class="how-s tilt-3d"><div class="how-n">02</div><h3>Setup technique</h3><p>Création du compte, config API ou import CSV, connexion Stripe, parametrage Onfleet/Make.com. On gère tout.</p></article>
+      <article class="how-s tilt-3d"><div class="how-n">03</div><h3>Première course test</h3><p>On effectue une course en conditions réelles pour valider le flux complet : commande → dispatch → POD.</p></article>
+      <article class="how-s tilt-3d"><div class="how-n">04</div><h3>Go live &amp; optimisation</h3><p>Dashboard actif, coursiers dédiés assignés, analytics hebdomadaires. Vous n'avez plus à penser à la logistique.</p></article>
+    </div>
+    <div class="how-scroll-hint rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Swipez pour voir toutes les étapes</div>
+  </div>
+</section>
+
+<!-- ===== BENTO SERVICES ===== -->
+<section class="bento">
+  <div class="ct">
+    <div class="sh rv"><span class="sl">Nos services</span><h2 class="st">Tout ce dont votre logistique a <span class="ac">besoin</span></h2></div>
+    <div class="bento-grid stg">
+      <div class="bento-card bento-1 rv"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18.5" cy="18.5" r="3.5"/><circle cx="5.5" cy="18.5" r="3.5"/><path d="M15 18.5h-6M9 18.5V8.5l6-3v13"/></svg></div><h3>Coursiers &amp; chauffeurs salariés</h3><p>Vélo pour la zone urbaine, voiture pour les colis lourds ou longues distances. 800 employés CDI, formés &amp; assurés. Pas d'auto-entrepreneurs.</p></div>
+      <div class="bento-card bento-2 rv d2"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><h3>Import CSV &amp; API</h3><p>Connectez votre POS, WooCommerce ou Shopify. Commandes en masse par CSV. Zéro ressaisie.</p></div>
+      <div class="bento-card bento-3 rv d3"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><h3>Tournées multi-stops</h3><p>Optimisez vos tournées de livraison. Ajoutez autant de points que nécessaire, l'itinéraire est recalculé en temps réel.</p></div>
+      <div class="bento-card bento-4 rv d4"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><h3>Dashboard &amp; analytics</h3><p>Tableau de bord en temps réel, historique des courses, rapports mensuels, KPIs de performance.</p></div>
+      <div class="bento-card bento-5 rv d5"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Proof of Delivery</h3><p>Photo ou signature électronique à chaque remise. Horodaté, géolocalisé, stocké dans votre espace client. Litige? Vous avez la preuve.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="testi">
+  <div class="ct"><div class="sh c rv"><span class="sl">Témoignages</span><h2 class="st">Ce qu'en disent nos <span class="ac">clients</span></h2></div></div>
+  <div class="mq-w">
+    <div class="testi-track">
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">On est passé de 30% de commission à un tarif fixe. En 3 mois, marge récupérée sur chaque commande.</p><div class="tc-author"><div class="tc-av" style="background:var(--teal)">ML</div><div class="tc-info"><h4>Marie Laurent</h4><p>Pharmacie du Lac, Genève</p></div></div></article>
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">L'import CSV a tout changé. On envoie nos 40 commandes du matin en un clic, les livreurs reçoivent tout automatiquement.</p><div class="tc-author"><div class="tc-av" style="background:var(--accent)">PD</div><div class="tc-info"><h4>Pierre Dupont</h4><p>Swiss E-Shop, Neuchâtel</p></div></div></article>
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">Le livreur connaît notre protocole discrétion. Pour la bijouterie, c'est crucial. Et la preuve de remise en photo est irréprochable.</p><div class="tc-author"><div class="tc-av" style="background:var(--teal-dark)">SB</div><div class="tc-info"><h4>Sophie Berthier</h4><p>Maison Bulgari, Genève</p></div></div></article>
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">Notaire, on a des délais légaux stricts. Chaskis livre nos actes à temps, avec preuve électronique. Zéro litige depuis 6 mois.</p><div class="tc-author"><div class="tc-av" style="background:var(--accent-light)">FR</div><div class="tc-info"><h4>François Riviera</h4><p>Étude Notariale Riviera, Lausanne</p></div></div></article>
+      <!-- duplicate for loop -->
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">On est passé de 30% de commission à un tarif fixe. En 3 mois, marge récupérée sur chaque commande.</p><div class="tc-author"><div class="tc-av" style="background:var(--teal)">ML</div><div class="tc-info"><h4>Marie Laurent</h4><p>Pharmacie du Lac, Genève</p></div></div></article>
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">L'import CSV a tout changé. On envoie nos 40 commandes du matin en un clic.</p><div class="tc-author"><div class="tc-av" style="background:var(--accent)">PD</div><div class="tc-info"><h4>Pierre Dupont</h4><p>Swiss E-Shop, Neuchâtel</p></div></div></article>
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">Zéro litige depuis 6 mois. La preuve de remise photo est irréprochable pour notre étude.</p><div class="tc-author"><div class="tc-av" style="background:var(--accent-light)">FR</div><div class="tc-info"><h4>François Riviera</h4><p>Étude Notariale, Lausanne</p></div></div></article>
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">Le livreur connaît notre protocole discrétion. Pour la bijouterie, c'est crucial.</p><div class="tc-author"><div class="tc-av" style="background:var(--teal-dark)">SB</div><div class="tc-info"><h4>Sophie Berthier</h4><p>Maison Bulgari, Genève</p></div></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== RECRUIT ===== -->
+<section class="recruit" id="recruit">
+  <div class="ct recruit-inner">
+    <div class="recruit-text rv">
+      <h2>Rejoignez les <span class="purple">800+ coursiers</span> qui ont choisi Chaskis</h2>
+      <p>CDI, horaires flexibles, matériel fourni, assurance complète. Un vrai job, pas une mission freelance.</p>
+      <div class="recruit-badges">
+        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>CDI</span>
+        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Horaires flex</span>
+        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Assuré</span>
+        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Matériel fourni</span>
+      </div>
+    </div>
+    <div class="recruit-cta rv d2">
+      <a href="postuler.html" class="btn btn-purple"><span>Découvrir les postes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BOOKING ===== -->
+<section class="cta-booking" id="booking">
+  <div class="ct cta-layout">
+    <div class="rl">
+      <span class="sl">Démarrer avec Chaskis</span>
+      <h2 class="st">Réservez votre appel <span class="sa">découverte</span></h2>
+      <p class="sd">20 minutes pour comprendre votre activité et proposer le bon plan logistique. Sans engagement.</p>
+      <div class="cta-perks">
+        <div class="cta-perk"><div class="cta-perk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><h4>20 min chrono</h4><p>On respecte votre temps.</p></div></div>
+        <div class="cta-perk"><div class="cta-perk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4>Sans engagement</h4><p>On discute, vous décidez.</p></div></div>
+        <div class="cta-perk"><div class="cta-perk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div><h4>Tarif sur mesure</h4><p>Adapté à votre volume et secteur.</p></div></div>
+      </div>
+    </div>
+    <div class="bk-w rr" id="bkW">
+      <div class="bk-prog"><span class="done"></span><span></span><span></span></div>
+      <div class="bk-step active" id="bkS1">
+        <div class="bk-t">Choisissez une date</div><div class="bk-s">Avril 2026</div>
+        <div class="bk-cal" id="bkCal">
+          <div class="bk-d hd">L</div><div class="bk-d hd">M</div><div class="bk-d hd">M</div><div class="bk-d hd">J</div><div class="bk-d hd">V</div><div class="bk-d hd">S</div><div class="bk-d hd">D</div>
+          <div class="bk-d"></div><div class="bk-d"></div><div class="bk-d past">1</div><div class="bk-d past">2</div><div class="bk-d past">3</div><div class="bk-d past">4</div><div class="bk-d past">5</div>
+          <div class="bk-d past">6</div><div class="bk-d past">7</div><div class="bk-d past">8</div><div class="bk-d av" data-d="9">9</div><div class="bk-d av" data-d="10">10</div><div class="bk-d">11</div><div class="bk-d">12</div>
+          <div class="bk-d av" data-d="14">14</div><div class="bk-d av" data-d="15">15</div><div class="bk-d av" data-d="16">16</div><div class="bk-d av" data-d="17">17</div><div class="bk-d av" data-d="18">18</div><div class="bk-d">19</div><div class="bk-d">20</div>
+          <div class="bk-d av" data-d="21">21</div><div class="bk-d av" data-d="22">22</div><div class="bk-d av" data-d="23">23</div><div class="bk-d av" data-d="24">24</div><div class="bk-d av" data-d="25">25</div><div class="bk-d">26</div><div class="bk-d">27</div>
+          <div class="bk-d av" data-d="28">28</div><div class="bk-d av" data-d="29">29</div><div class="bk-d av" data-d="30">30</div>
+        </div>
+        <div class="bk-slots" id="bkSl" style="display:none"><div class="bk-sl" data-t="09:00">09:00</div><div class="bk-sl" data-t="10:00">10:00</div><div class="bk-sl" data-t="14:00">14:00</div><div class="bk-sl" data-t="15:30">15:30</div><div class="bk-sl" data-t="16:30">16:30</div></div>
+        <div class="bk-nav"><button class="btn btn-p" id="bkN1" disabled><span>Suivant</span></button></div>
+      </div>
+      <div class="bk-step" id="bkS2">
+        <div class="bk-t">Quelques infos</div><div class="bk-s">Pour préparer l'appel</div>
+        <div class="field-row"><div class="field"><label>Prénom</label><input placeholder="Jean"></div><div class="field"><label>Nom</label><input placeholder="Dupont"></div></div>
+        <div class="field"><label>Email pro</label><input type="email" placeholder="jean@monentreprise.ch"></div>
+        <div class="field"><label>Entreprise</label><input placeholder="Pharmacie du Lac"></div>
+        <div class="field"><label>Volume estimé / jour</label><select><option>Moins de 10</option><option>10 à 30</option><option>30 à 100</option><option>Plus de 100</option></select></div>
+        <div class="field"><label>Votre secteur</label><select><option>E-commerce / Retail</option><option>Médical / Pharma</option><option>Luxe / Bijouterie</option><option>Juridique / Notarial</option><option>Restauration</option><option>Autre</option></select></div>
+        <div class="bk-nav"><button class="btn bk-back" id="bkB2"><span>Retour</span></button><button class="btn btn-p" id="bkN2"><span>Confirmer</span></button></div>
+      </div>
+      <div class="bk-step" id="bkS3"><div class="bk-confirm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><h3>C'est réservé !</h3><p>Confirmation par email. À très vite !</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="faq" id="faq">
+  <div class="ct faq-layout">
+    <div class="rl"><span class="sl">FAQ</span><h2 class="st">Vos questions, nos <span class="ac">réponses</span></h2><p class="sd">Pas trouvé ? <a href="#booking" style="color:var(--teal);font-weight:700">Réservez un appel</a>.</p></div>
+    <div class="faq-list rr">
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>En quoi c'est différent d'Uber Eats ou Stuart ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>Pas de commission à 30%. Tarif fixe. Coursiers salariés CDI, pas auto-entrepreneurs. Et surtout : dispatch automatique, zéro appel, zéro coordination manuelle de votre côté.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>Express, Flex, Dédié — quelle différence ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p><strong>Express</strong> : course unique, CHF 16, sans compte, paiement en ligne. <strong>Flex</strong> : compte pro, ~CHF 10, tableau de bord, besoins variables. <strong>Dédié</strong> : contrat + flotte attitrée, CHF 8, import CSV, API, tornées automatisées.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>C'est quoi la "référence commande marchand" ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>C'est le code que le livreur présente au commerçant pour récupérer la bonne commande. Ça évite les erreurs de colis et permet de notifier le commerçant automatiquement à l'arrivée du coursier.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>C'est rapide à mettre en place ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>48h entre l'appel découverte et votre première livraison. On s'occupe de la config complète : API, Make.com, Onfleet, Stripe.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>Quelles zones de livraison ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>Lausanne, Genève, Neuchâtel, Fribourg, Montreux, Vevey et environs. Extension prévue vers Berne et Bâle en 2026.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="ct">
+    <div class="ft">
+      <div class="fb"><a href="index-v7.html" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg3" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg3)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a><p>Infrastructure logistique pour les entreprises de Suisse romande.</p><div class="fb-soc"><a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a><a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></div></div>
+      <div class="fc"><h4>Services</h4><a href="commander-v7.html">Commander</a><a href="dashboard.html">Tableau de bord</a><a href="#services">Nos secteurs</a><a href="#booking">Réserver un appel</a></div>
+      <div class="fc"><h4>Entreprise</h4><a href="postuler.html">Postuler</a><a href="#faq">FAQ</a><a href="mailto:contact@chaskis.ch">contact@chaskis.ch</a></div>
+      <div class="fc"><h4>Légal</h4><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">CGV</a></div>
+    </div>
+    <div class="f-btm"><span>&copy; 2026 Chaskis SA — Genève</span><span>Fait en Suisse romande</span></div>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script src="auth.js"></script>
+<script>
+// ===== HERO 3D CARD PARALLAX =====
+const heroVis = document.getElementById('heroVis');
+if (heroVis) {
+  const cards = heroVis.querySelectorAll('.hv-card');
+  const floats = heroVis.querySelectorAll('.hv-float');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    const f = Math.min(y / 500, 1);
+    cards[0].style.transform = `rotate(${-8 + f * 5}deg) translateX(${-20 + f * 10}px) translateZ(${-80 + f * 20}px)`;
+    cards[1].style.transform = `rotate(${5 - f * 3}deg) translateX(${15 - f * 8}px) translateZ(${-40 + f * 15}px)`;
+    cards[2].style.transform = `translateY(${f * -15}px)`;
+    floats.forEach((fl, i) => { fl.style.transform = `translateY(${f * (i === 0 ? 12 : -10)}px)`; });
+  }, { passive: true });
+
+  if (window.matchMedia('(hover:hover)').matches) {
+    heroVis.addEventListener('mousemove', e => {
+      const rect = heroVis.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      cards[2].style.transform = `rotateY(${x * 8}deg) rotateX(${y * -5}deg)`;
+      cards[1].style.transform = `rotate(${5 + x * 3}deg) translateX(${15 + x * 10}px) translateZ(-40px)`;
+      cards[0].style.transform = `rotate(${-8 + x * -2}deg) translateX(${-20 + x * -8}px) translateZ(-80px)`;
+    });
+    heroVis.addEventListener('mouseleave', () => {
+      cards[2].style.transform = '';
+      cards[1].style.transform = `rotate(5deg) translateX(15px) translateZ(-40px)`;
+      cards[0].style.transform = `rotate(-8deg) translateX(-20px) translateZ(-80px)`;
+    });
+  }
+}
+
+// ===== ZOOM PARALLAX =====
+const zoomBg = document.getElementById('zoomBg');
+if (zoomBg) {
+  window.addEventListener('scroll', () => {
+    const sect = zoomBg.parentElement;
+    const rect = sect.getBoundingClientRect();
+    const prog = -rect.top / (rect.height + window.innerHeight);
+    zoomBg.style.transform = `scale(${1 + prog * 0.08}) translateY(${prog * 20}px)`;
+  }, { passive: true });
+}
+
+// Observe .vpc and .pipe-step (custom animated elements not covered by shared.js selector)
+const extraReveal = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('v'); extraReveal.unobserve(e.target); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.vpc, .pipe-step').forEach(el => extraReveal.observe(el));
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+}
+</script>
+</body>
+</html>

@@ -1,5 +1,20 @@
 // ===== CHASKIS SHARED JS =====
 
+// ===== PWA INSTALL — capture globale =====
+let _pwaPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaPrompt = e;
+  // Si un bouton d'install existe sur cette page, l'activer
+  const btn = document.getElementById('pwa-install-btn');
+  if (btn) { btn.dataset.ready = 'true'; btn.textContent = 'Installer'; }
+});
+window.addEventListener('appinstalled', () => {
+  _pwaPrompt = null;
+  const banner = document.getElementById('appBanner');
+  if (banner) banner.remove();
+});
+
 // Nav scroll
 const nav = document.getElementById('nav');
 if (nav) window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40), { passive: true });

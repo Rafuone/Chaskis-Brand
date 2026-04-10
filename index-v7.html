@@ -4,26 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chaskis — Livraisons express en Suisse romande</title>
-<meta name="description" content="Automatisez vos livraisons en Suisse romande. 800 coursiers salariés, dispatch automatique, zéro appel. Dédié, Flex et Express. Depuis Genève.">
+<meta name="description" content="Service de livraison B2B en Suisse romande. 800 coursiers salariés, tarifs fixes dès CHF 8, sans engagement. Express, Flex et Dédié. Depuis Genève.">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#3AAFA9">
+<meta name="theme-color" content="#4BB3A4">
 <link rel="stylesheet" href="styles.css">
 <style>
 /* ===== HERO v7 — B2B REFRAME ===== */
-.hero{min-height:100dvh;display:flex;align-items:center;padding:64px 0 48px;position:relative;overflow:hidden;background:var(--bg)}
-.hero::before{content:'';position:absolute;top:-10%;right:-10%;width:60vw;height:60vw;max-width:800px;background:radial-gradient(circle,rgba(58,175,169,.06),transparent 65%);border-radius:50%;pointer-events:none}
-.hero::after{content:'';position:absolute;bottom:-15%;left:-8%;width:40vw;height:40vw;max-width:500px;background:radial-gradient(circle,rgba(107,79,160,.04),transparent 65%);border-radius:50%;pointer-events:none}
+.hero{display:flex;align-items:flex-start;padding:156px 0 140px;position:relative;overflow:hidden;background:var(--bg)}
+.hero::before{content:'';position:absolute;top:-25%;right:-18%;width:75vw;height:65vw;max-width:900px;background:radial-gradient(ellipse at 60% 40%,rgba(75,179,164,.16) 0%,rgba(75,179,164,.07) 42%,transparent 70%);pointer-events:none;animation:blob-a 22s ease-in-out infinite}
+.hero::after{content:'';position:absolute;bottom:-30%;left:-12%;width:55vw;height:70vw;max-width:640px;background:radial-gradient(ellipse at 35% 55%,rgba(107,79,160,.13) 0%,rgba(107,79,160,.05) 45%,transparent 72%);pointer-events:none;animation:blob-b 31s ease-in-out infinite}
+@keyframes blob-a{0%{transform:translate(0,0) scale(1) rotate(0deg)}28%{transform:translate(-6%,8%) scale(1.12) rotate(3deg)}57%{transform:translate(4%,-5%) scale(.91) rotate(-2deg)}82%{transform:translate(-2%,3%) scale(1.05) rotate(1deg)}100%{transform:translate(0,0) scale(1) rotate(0deg)}}
+@keyframes blob-b{0%{transform:translate(0,0) scale(1) rotate(0deg)}35%{transform:translate(7%,-4%) scale(1.14) rotate(-4deg)}70%{transform:translate(-3%,6%) scale(.88) rotate(2deg)}100%{transform:translate(0,0) scale(1) rotate(0deg)}}
 .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,4vw,56px);align-items:center}
-.hero-overline{display:inline-flex;align-items:center;gap:0;padding:4px 14px 4px 4px;background:var(--teal-bg);border:1px solid rgba(58,175,169,.1);border-radius:var(--pill);font-size:.74rem;font-weight:700;color:var(--teal-dark);margin-bottom:16px}
-.hero-overline .wrap{display:flex;align-items:center;gap:5px;background:var(--white);border-radius:var(--pill);padding:3px 9px;margin-right:7px}
-.hero-overline .dot{width:6px;height:6px;background:var(--teal);border-radius:50%;position:relative}
-.hero-overline .dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--teal);animation:pulse-ring 2s ease infinite}
+.hero-overline{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 10px;background:var(--teal-bg);border:1px solid rgba(75,179,164,.15);border-radius:var(--pill);font-size:.74rem;font-weight:600;color:var(--teal-dark);margin-bottom:20px;overflow:hidden}
+.hero-overline .dot{width:7px;height:7px;background:var(--teal);border-radius:50%;flex-shrink:0;animation:dot-breathe 2.4s ease-in-out infinite}
+@keyframes dot-breathe{0%,100%{box-shadow:0 0 0 0 rgba(75,179,164,.5);opacity:1}50%{box-shadow:0 0 0 4px rgba(75,179,164,0);opacity:.7}}
 
 .hero h1{font-size:clamp(2.6rem,5.2vw,4.2rem);font-weight:800;line-height:1.04;letter-spacing:-.05em;margin-bottom:18px}
 .hero h1 .word{display:inline-block;opacity:0;transform:translateY(40px) rotateX(-15deg);animation:word-in .7s var(--ease) forwards}
-.hero h1 .word:nth-child(1){animation-delay:.1s}.hero h1 .word:nth-child(2){animation-delay:.15s}.hero h1 .word:nth-child(3){animation-delay:.2s}
-.hero h1 .word:nth-child(4){animation-delay:.25s}.hero h1 .word:nth-child(5){animation-delay:.3s}.hero h1 .word:nth-child(6){animation-delay:.35s}
-.hero h1 .word:nth-child(7){animation-delay:.4s}.hero h1 .word:nth-child(8){animation-delay:.45s}
+/* <br> sits at child(5), offsets everything after — explicit rules per position */
+.hero h1 .word:nth-child(1){animation-delay:.1s}
+.hero h1 .word:nth-child(2){animation-delay:.15s}
+.hero h1 .word:nth-child(3){animation-delay:.2s}
+.hero h1 .word:nth-child(4){animation-delay:.25s}
+.hero h1 .word:nth-child(6){animation-delay:.3s}
+.hero h1 .word:nth-child(7){animation-delay:.35s}
+.hero h1 .word:nth-child(8){animation-delay:.4s}
+.hero h1 .word:nth-child(9){animation-delay:.45s}
 .hero h1 .sa{font-family:'Instrument Serif',serif;font-weight:400;font-style:italic;color:var(--teal)}
 @keyframes word-in{to{opacity:1;transform:translateY(0) rotateX(0)}}
 @keyframes pulse-ring{0%{transform:scale(1);opacity:1}100%{transform:scale(2.2);opacity:0}}
@@ -32,18 +39,15 @@
 .hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:32px;opacity:0;animation:fade-up .6s var(--ease) .6s forwards}
 .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--sand);padding-top:20px;opacity:0;animation:fade-up .6s var(--ease) .7s forwards}
 .hero-stat{padding-right:14px}.hero-stat:not(:last-child){border-right:1px solid var(--sand)}.hero-stat:not(:first-child){padding-left:14px}
-.hero-stat strong{font-size:1.3rem;font-weight:900;letter-spacing:-.03em;line-height:1.1;display:block;color:var(--teal)}
+.hero-stat strong{font-size:1.3rem;font-weight:700;letter-spacing:-.03em;line-height:1.1;display:block;color:var(--ink)}
 .hero-stat span{font-size:.66rem;color:var(--ink-muted);font-weight:500}
 
 /* Hero visual */
 .hero-vis{position:relative;perspective:1200px;height:clamp(380px,45vw,520px);opacity:0;animation:slide-in-right .8s var(--ease) .3s forwards}
 @keyframes slide-in-right{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
-.hv-card{position:absolute;border-radius:var(--rxl);overflow:hidden;box-shadow:var(--sh-lg);transition:transform .8s var(--ease),box-shadow .5s var(--ease);will-change:transform}
-.hv-main{width:72%;height:88%;top:6%;left:14%;z-index:3;background:linear-gradient(135deg,var(--teal-bg),var(--cream),var(--sand))}
-.hv-back-1{width:60%;height:78%;top:0;left:0;z-index:1;background:linear-gradient(135deg,var(--accent-bg),var(--cream));transform:rotate(-8deg) translateX(-20px) translateZ(-80px);opacity:.6}
-.hv-back-2{width:55%;height:72%;top:10%;right:0;z-index:2;background:linear-gradient(135deg,var(--teal-bg),var(--white));transform:rotate(5deg) translateX(15px) translateZ(-40px);opacity:.8}
-.hv-card .silhouette{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-.hv-card .silhouette svg{width:40%;opacity:.15}
+.hv-photo-wrap{position:absolute;inset:0;border-radius:var(--rxl);overflow:hidden;box-shadow:var(--sh-lg);transition:transform .8s var(--ease);will-change:transform}
+.hv-photo{width:100%;height:100%;object-fit:cover;object-position:66% center;display:block}
+.hv-photo-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,transparent 55%,rgba(10,20,30,.18) 100%);pointer-events:none}
 .hv-float{position:absolute;z-index:10;background:var(--white);border-radius:var(--rl);box-shadow:var(--sh-xl);transition:transform .4s var(--ease)}
 .hv-float:hover{transform:translateY(-6px) scale(1.02) !important}
 .hv-booking{bottom:16px;left:-16px;right:20%;padding:14px 16px;cursor:pointer}
@@ -59,6 +63,31 @@
 .hv-stat-icon svg{width:14px;height:14px;color:#fff}
 .hv-stat strong{font-size:.92rem;font-weight:800;display:block;line-height:1.1}
 .hv-stat span{font-size:.58rem;color:var(--ink-muted)}
+
+/* ===== LANG SWITCH ===== */
+.lang-sw{display:flex;align-items:center;gap:1px;background:rgba(44,32,82,.08);border-radius:var(--pill);padding:3px;margin-left:14px;position:relative}
+.lang-sw button{padding:4px 9px;border-radius:var(--pill);font-family:inherit;font-size:.65rem;font-weight:700;letter-spacing:.06em;color:var(--ink-light);background:transparent;border:none;cursor:pointer;transition:color .25s var(--ease),opacity .25s var(--ease);line-height:1;opacity:.55;position:relative;z-index:1}
+.lang-sw button.active{color:var(--ink);opacity:1}
+.lang-pill{position:absolute;top:3px;bottom:3px;left:3px;background:var(--white);border-radius:var(--pill);box-shadow:var(--sh-sm);transition:transform .28s var(--ease),width .28s var(--ease);pointer-events:none;z-index:0;will-change:transform}
+.nav.over-dark .lang-sw{background:rgba(255,255,255,.12)}
+.nav.over-dark .lang-sw .lang-pill{background:rgba(255,255,255,.22)}
+.nav.over-dark .lang-sw button{color:rgba(255,255,255,.6);opacity:.6}
+.nav.over-dark .lang-sw button.active{color:#fff;opacity:1}
+
+/* Floating CTA — fixed bottom-right */
+.nav-cta-float{position:fixed;bottom:28px;right:28px;z-index:200;box-shadow:0 8px 32px rgba(58,175,169,.3);opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .4s var(--ease),transform .4s var(--ease)}
+.nav-cta-float.visible{opacity:1;transform:translateY(0);pointer-events:auto}
+
+/* ===== CTA PULSE ===== */
+@keyframes cta-pulse{
+  0%{box-shadow:var(--sh-md),0 0 0 0 rgba(75,179,164,.42)}
+  65%{box-shadow:var(--sh-md),0 0 0 13px rgba(75,179,164,0)}
+  100%{box-shadow:var(--sh-md),0 0 0 0 rgba(75,179,164,0)}
+}
+.btn-p.pulse{animation:cta-pulse 2.6s ease-out infinite}
+
+/* ===== DELIVERY CANVAS BG ===== */
+#delivery-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
 
 /* ===== ZOOM SECTION ===== */
 .zoom-section{position:relative;padding:0;height:70vh;min-height:400px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--ink)}
@@ -251,16 +280,19 @@
 section{padding:clamp(56px,7vw,96px) 0}
 
 /* ===== PARTNERS ===== */
-.partners{padding:clamp(24px,3vw,40px) 0;background:var(--white);border-top:1px solid rgba(0,0,0,.04);border-bottom:1px solid rgba(0,0,0,.04);overflow:hidden}
-.p-label{text-align:center;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-muted);margin-bottom:16px}
+.partners{padding:clamp(32px,3.5vw,48px) 0 clamp(88px,10vw,128px);background:var(--white);border-top:1px solid rgba(0,0,0,.04);border-bottom:1px solid rgba(0,0,0,.04);overflow:hidden}
+.partners-head{text-align:center;margin-bottom:64px}
+.partners-head p{font-size:1.05rem;font-weight:600;letter-spacing:.01em;color:var(--ink)}
+.partners-head p em{font-style:normal;font-weight:800;color:var(--teal)}
 .mq-w{overflow:hidden;position:relative}
-.mq-w::before,.mq-w::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:1;pointer-events:none}
+.mq-w::before,.mq-w::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:1;pointer-events:none}
 .mq-w::before{left:0;background:linear-gradient(90deg,var(--white),transparent)}
 .mq-w::after{right:0;background:linear-gradient(-90deg,var(--white),transparent)}
-.mq{display:flex;gap:0;animation:mq-scroll 35s linear infinite;width:max-content}
-.mq:hover{animation-play-state:paused}
-.mq-i{display:inline-flex;align-items:center;gap:8px;padding:8px 24px;font-size:.78rem;font-weight:700;color:var(--ink-muted);white-space:nowrap;border-right:1px solid rgba(0,0,0,.06)}
-.mq-i svg{width:14px;height:14px}
+.mq{display:flex;align-items:center;animation:mq-scroll 32s linear infinite}
+.mq-inner{display:flex;align-items:center;flex-shrink:0}
+.mq-i{display:inline-flex;align-items:center;justify-content:center;padding:0 52px;border-right:1px solid var(--sand)}
+.mq-logo{height:34px;width:auto;display:block;filter:brightness(0);opacity:.42;transition:opacity .3s,filter .3s}
+.mq-i:hover .mq-logo{filter:brightness(0);opacity:.72}
 @keyframes mq-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
 /* ===== FIELD STYLES ===== */
@@ -284,8 +316,6 @@ section{padding:clamp(56px,7vw,96px) 0}
   .cta-layout,.faq-layout{grid-template-columns:1fr}
 }
 @media(max-width:768px){
-  .hero-stats{grid-template-columns:repeat(2,1fr);gap:14px}
-  .hero-stat{border:none!important;padding:0!important}
   .hv-booking{left:-4px;right:4px}
   .sec-grid{grid-template-columns:1fr}
   .pipeline-grid{grid-template-columns:1fr}
@@ -305,29 +335,28 @@ section{padding:clamp(56px,7vw,96px) 0}
 @media(max-width:768px){.ft{grid-template-columns:1fr 1fr;gap:24px}}
 </style>
 </head>
-<body>
+<body class="page-home">
 
 <div class="mob-m" id="mm">
   <a href="index-v7.html" onclick="cm()">Accueil</a>
   <a href="#services" onclick="cm()">Nos services</a>
   <a href="commander-v7.html" onclick="cm()">Commander</a>
   <a href="postuler.html" onclick="cm()">Postuler</a>
-  <a href="#booking" onclick="cm()">Réserver un appel</a>
+  <a href="#booking" onclick="cm()">Planifier un appel</a>
   <a href="#faq" onclick="cm()">FAQ</a>
 </div>
 
 <nav class="nav" id="nav">
   <div class="ct nav-in">
-    <a href="index-v7.html" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a>
-    <div class="nav-mid">
-      <a href="#services">Nos services</a>
-      <a href="commander-v7.html">Commander</a>
-      <a href="postuler.html">Postuler</a>
-      <a href="#faq">FAQ</a>
+    <a href="index-v7.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
+    <div class="nav-mid" style="margin-left:auto">
+      <a href="commander-v7.html" data-i18n="nav.order">Commander</a>
+      <a href="postuler.html" data-i18n="nav.join">Postuler</a>
     </div>
-    <div class="nav-right">
-      <a href="#" class="nav-login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Connexion</span></a>
-<a href="#booking" class="btn btn-p nav-cta btn-sm"><span>Réserver un appel</span></a>
+    <div class="lang-sw" id="langSw" role="radiogroup" aria-label="Langue / Language">
+      <span class="lang-pill" id="langPill" aria-hidden="true"></span>
+      <button class="active" role="radio" aria-checked="true" data-lang="fr" onclick="setLang('fr')" aria-label="Français">FR</button>
+      <button role="radio" aria-checked="false" data-lang="en" onclick="setLang('en')" aria-label="English">EN</button>
     </div>
     <button class="mob-t" id="mt" aria-label="Menu"><span></span></button>
   </div>
@@ -335,135 +364,141 @@ section{padding:clamp(56px,7vw,96px) 0}
 
 <!-- ===== HERO ===== -->
 <header class="hero">
+<canvas id="delivery-canvas" aria-hidden="true"></canvas>
   <div class="ct hero-grid">
     <div>
-      <div class="hero-overline"><div class="wrap"><span class="dot"></span>6 créneaux disponibles</div>cette semaine</div>
+      <div class="hero-overline"><span class="dot"></span><span data-i18n="hero.overline">6 créneaux disponibles cette semaine</span></div>
       <h1>
         <span class="word">On</span>
         <span class="word">gère</span>
         <span class="word">vos</span>
-        <span class="word">livraisons,</span><br>
+        <span class="word sa">livraisons,</span><br>
         <span class="word">vous</span>
         <span class="word">gérez</span>
         <span class="word">votre</span>
         <span class="word sa">business</span>
       </h1>
-      <p class="hero-sub">Dispatch automatique, zéro appel, zéro ressaisie. Vos livraisons partent dès que le paiement est confirmé — 800 coursiers salariés, 1.5M courses par an.</p>
+      <p class="hero-sub" data-i18n="hero.sub">Livraison B2B en Suisse romande. Coursiers salariés, tarifs fixes, traçabilité complète — le partenaire logistique des entreprises suisses.</p>
       <div class="hero-actions">
-        <a href="#booking" class="btn btn-p"><span>Réserver un appel découverte</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-        <a href="commander-v7.html" class="btn btn-o"><span>Commander Express</span></a>
+        <a href="#booking" class="btn btn-p pulse"><span data-i18n="hero.cta1">Planifier un appel gratuit</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="commander-v7.html" class="btn btn-o"><span data-i18n="hero.cta2">Commander une course</span></a>
       </div>
       <div class="hero-stats">
-        <div class="hero-stat"><strong data-count="12" data-suffix=" min">0</strong><span>Délai moyen</span></div>
-        <div class="hero-stat"><strong data-count="40" data-prefix="-" data-suffix="%">0</strong><span>vs plateformes</span></div>
-        <div class="hero-stat"><strong data-count="800" data-suffix="+">0</strong><span>Coursiers CDI</span></div>
-        <div class="hero-stat"><strong data-count="1.5" data-suffix="M" data-decimal="true">0</strong><span>Courses / an</span></div>
+        <div class="hero-stat"><strong data-count="12" data-suffix=" min">0</strong><span data-i18n="hero.stat1">Délai moyen</span></div>
+        <div class="hero-stat"><strong data-count="40" data-prefix="-" data-suffix="%">0</strong><span data-i18n="hero.stat2">vs plateformes</span></div>
+        <div class="hero-stat"><strong data-count="800" data-suffix="+">0</strong><span data-i18n="hero.stat3">Coursiers CDI</span></div>
+        <div class="hero-stat"><strong data-count="1.5" data-suffix="M" data-decimal="true">0</strong><span data-i18n="hero.stat4">Courses / an</span></div>
       </div>
     </div>
     <div class="hero-vis" id="heroVis">
-      <div class="hv-card hv-back-1"><div class="silhouette"><svg viewBox="0 0 200 300" fill="none"><circle cx="100" cy="80" r="30" fill="currentColor"/><ellipse cx="100" cy="190" rx="50" ry="45" fill="currentColor"/></svg></div></div>
-      <div class="hv-card hv-back-2"><div class="silhouette"><svg viewBox="0 0 200 300" fill="none"><circle cx="100" cy="80" r="30" fill="currentColor"/><ellipse cx="100" cy="190" rx="50" ry="45" fill="currentColor"/></svg></div></div>
-      <div class="hv-card hv-main"><div class="silhouette"><svg viewBox="0 0 200 300" fill="none"><circle cx="100" cy="75" r="35" fill="currentColor"/><ellipse cx="100" cy="200" rx="60" ry="55" fill="currentColor"/><rect x="60" y="145" width="80" height="15" rx="7" fill="currentColor"/></svg></div></div>
-      <a href="#booking" class="hv-float hv-booking">
-        <div class="hvb-head"><h4>Prochain créneau</h4><span class="hvb-badge">Dispo</span></div>
-        <div class="hvb-slots"><div class="hvb-slot">Mar 9h</div><div class="hvb-slot on">Mer 14h</div><div class="hvb-slot">Jeu 10h</div></div>
-      </a>
-      <div class="hv-float hv-stat">
-        <div class="hv-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-        <div><strong>98%</strong><span>Satisfaction</span></div>
+      <div class="hv-photo-wrap">
+        <img src="hero-courier.jpg" alt="Coursier Chaskis remettant un colis en ville" class="hv-photo">
       </div>
     </div>
   </div>
 </header>
 
-<!-- ===== ZOOM STATS ===== -->
-<div class="zoom-section" id="zoomSection">
-  <div class="zoom-bg" id="zoomBg"></div>
-  <div class="zoom-content">
-    <h2>Fini le dispatch <span class="accent">manuel</span></h2>
-    <p>Sans auto-dispatch, la promesse Express est intenable. Chez Chaskis, chaque paiement déclenche automatiquement la création de la course, l'assignation du livreur et le SMS de suivi.</p>
-    <div class="zoom-counters">
-      <div class="zoom-counter"><strong style="color:var(--teal-light)" data-count="0" data-suffix=" appel">0</strong><span>Dispatch manuel</span></div>
-      <div class="zoom-counter"><strong style="color:var(--accent-light)" data-count="48" data-suffix="h">0</strong><span>Opérationnel en</span></div>
-      <div class="zoom-counter"><strong style="color:var(--teal-light)" data-count="98" data-suffix="%">0</strong><span>Satisfaction client</span></div>
-    </div>
-  </div>
-</div>
-
 <!-- ===== PARTNERS ===== -->
 <div class="partners">
-  <p class="p-label">Ils nous font confiance</p>
+  <div class="partners-head"><p><em>60+</em> <span data-i18n="partners.headline">entreprises nous font confiance</span></p></div>
   <div class="mq-w"><div class="mq" aria-hidden="true">
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Étude Notariale Riviera</span>
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg>Pharmacie du Lac</span>
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Fleurs Express</span>
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Swiss E-Shop</span>
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="18" rx="3"/><path d="M2 9h20"/></svg>Cabinet Médical Central</span>
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>Café Romand</span>
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>Maison Bulgari GE</span>
-    <!-- duplicate -->
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Étude Notariale Riviera</span>
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg>Pharmacie du Lac</span>
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Fleurs Express</span>
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Swiss E-Shop</span>
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="18" rx="3"/><path d="M2 9h20"/></svg>Cabinet Médical Central</span>
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>Café Romand</span>
-    <span class="mq-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>Maison Bulgari GE</span>
+    <div class="mq-inner">
+      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+    </div>
+    <div class="mq-inner">
+      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+    </div>
   </div></div>
+</div>
+
+<!-- ===== ZOOM STATS ===== -->
+<div class="zoom-section" id="zoomSection" data-nav-dark>
+  <div class="zoom-bg" id="zoomBg"></div>
+  <div class="zoom-content">
+    <h2 data-i18n-html="zoom.h2">La livraison pro, <span class="accent">sans les galères</span></h2>
+    <p data-i18n="zoom.p">Tarifs fixes, coursiers salariés CDI, suivi en temps réel. Chaskis est le partenaire B2B conçu pour les entreprises de Suisse romande qui veulent de la fiabilité — pas des mauvaises surprises.</p>
+    <div class="zoom-counters">
+      <div class="zoom-counter"><strong style="color:var(--teal-light)" data-count="6" data-suffix=" créneaux">0</strong><span>Par semaine</span></div>
+      <div class="zoom-counter"><strong style="color:var(--accent-light)" data-count="48" data-suffix="h">0</strong><span>Mise en route</span></div>
+      <div class="zoom-counter"><strong style="color:var(--teal-light)" data-count="8" data-prefix="dès CHF ">0</strong><span>Par livraison</span></div>
+    </div>
+  </div>
 </div>
 
 <!-- ===== SECTEURS CIBLES ===== -->
 <section class="secteurs" id="services">
   <div class="ct">
-    <div class="sh rv"><span class="sl">Pour qui</span><h2 class="st">Vos secteurs, <span class="ac">nos spécialités</span></h2><p class="sd">Chaque secteur a ses contraintes. Nos livreurs sont formés aux protocoles spécifiques de chaque industrie.</p></div>
+    <div class="sh rv"><span class="sl" data-i18n="sec.label">Pour qui</span><h2 class="st" data-i18n-html="sec.h2">Vos secteurs, <span class="ac">nos spécialités</span></h2><p class="sd" data-i18n="sec.p">Chaque secteur a ses contraintes. Nos livreurs sont formés aux protocoles spécifiques de chaque industrie.</p></div>
     <div class="sec-grid stg">
       <div class="sec-card tilt-3d">
         <span class="sec-emoji">🏥</span>
-        <h3>Médical &amp; Pharma</h3>
-        <span class="sec-tag">Délai critique · Chaîne du froid</span>
-        <ul class="sec-uses">
+        <h3 data-i18n="sec1.h3">Médical &amp; Pharma</h3>
+        <span class="sec-tag" data-i18n="sec1.tag">Délai critique · Chaîne du froid</span>
+        <ul class="sec-uses" data-i18n-html="sec1.uses">
           <li>Ordonnances &amp; médicaments urgents</li>
           <li>Résultats d'analyses &amp; prélèvements</li>
           <li>Matériel médical entre cliniques</li>
           <li>Transport température contrôlée</li>
         </ul>
-        <a href="#booking" class="sec-cta-link">Discuter de vos besoins <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#booking" class="sec-cta-link"><span data-i18n="sec.cta.discuss">Discuter de vos besoins</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
       </div>
       <div class="sec-card tilt-3d">
         <span class="sec-emoji">💎</span>
-        <h3>Luxe &amp; Bijouterie</h3>
-        <span class="sec-tag">Remise en main propre · Discrétion</span>
-        <ul class="sec-uses">
+        <h3 data-i18n="sec2.h3">Luxe &amp; Bijouterie</h3>
+        <span class="sec-tag" data-i18n="sec2.tag">Remise en main propre · Discrétion</span>
+        <ul class="sec-uses" data-i18n-html="sec2.uses">
           <li>Bijoux &amp; montres (assurance incluse)</li>
           <li>Colis luxe avec signature obligatoire</li>
           <li>Livraison en tenue professionnelle</li>
           <li>Proof of delivery photo systématique</li>
         </ul>
-        <a href="#booking" class="sec-cta-link">Discuter de vos besoins <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#booking" class="sec-cta-link"><span data-i18n="sec.cta.discuss">Discuter de vos besoins</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
       </div>
       <div class="sec-card tilt-3d">
         <span class="sec-emoji">⚖️</span>
-        <h3>Juridique &amp; Notarial</h3>
-        <span class="sec-tag">Confidentialité · Preuve de remise</span>
-        <ul class="sec-uses">
+        <h3 data-i18n="sec3.h3">Juridique &amp; Notarial</h3>
+        <span class="sec-tag" data-i18n="sec3.tag">Confidentialité · Preuve de remise</span>
+        <ul class="sec-uses" data-i18n-html="sec3.uses">
           <li>Documents confidentiels &amp; actes notariés</li>
           <li>Contrats signés entre études</li>
           <li>Plis recommandés urgents</li>
           <li>Tournées quotidiennes planifiées</li>
         </ul>
-        <a href="#booking" class="sec-cta-link">Discuter de vos besoins <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#booking" class="sec-cta-link"><span data-i18n="sec.cta.discuss">Discuter de vos besoins</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
       </div>
       <div class="sec-card tilt-3d">
         <span class="sec-emoji">📦</span>
-        <h3>E-commerce &amp; Retail</h3>
-        <span class="sec-tag">Volume · CSV · API</span>
-        <ul class="sec-uses">
+        <h3 data-i18n="sec4.h3">E-commerce &amp; Retail</h3>
+        <span class="sec-tag" data-i18n="sec4.tag">Volume · CSV · API</span>
+        <ul class="sec-uses" data-i18n-html="sec4.uses">
           <li>Import CSV de commandes en masse</li>
           <li>Intégration API Shopify / WooCommerce</li>
           <li>Tournées multi-colis optimisées</li>
           <li>Notifications clients automatiques</li>
         </ul>
-        <a href="commander-v7.html" class="sec-cta-link" style="color:var(--accent)">Commander maintenant <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="commander-v7.html" class="sec-cta-link" style="color:var(--accent)"><span data-i18n="sec.cta.order">Commander maintenant</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
       </div>
     </div>
   </div>
@@ -472,60 +507,60 @@ section{padding:clamp(56px,7vw,96px) 0}
 <!-- ===== VALUE PROPS ===== -->
 <section class="vp">
   <div class="ct">
-    <div class="sh rv"><span class="sl">Pourquoi Chaskis</span><h2 class="st">Vos livraisons méritent <span class="ac">mieux</span> qu'une plateforme</h2><p class="sd">Les plateformes prennent 30% de commission. Nous proposons un tarif fixe avec une équipe dédiée et zéro appel de dispatch.</p></div>
+    <div class="sh rv"><span class="sl" data-i18n="why.label">Pourquoi Chaskis</span><h2 class="st" data-i18n-html="why.h2">Vos livraisons méritent <span class="ac">mieux</span> qu'une plateforme</h2><p class="sd" data-i18n="why.p">Les plateformes prennent 30% de commission. Nous proposons un tarif fixe avec une équipe dédiée et zéro appel de dispatch.</p></div>
     <div class="vp-g" id="vpGrid">
-      <article class="vpc tilt-3d"><div class="vpc-ic t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><h3>-40% sur vos coûts</h3><p>Tarif fixe dès CHF 8/course. Sans commission, sans frais cachés. Vos marges restent vos marges.</p><div class="vpc-big">-40%</div></article>
-      <article class="vpc tilt-3d"><div class="vpc-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><h3>Zéro gestion manuelle</h3><p>Paiement Stripe → course créée → livreur assigné → SMS envoyé. Tout en automatique, sans intervention humaine.</p><div class="vpc-big">0 appel</div></article>
-      <article class="vpc tilt-3d"><div class="vpc-ic td"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Fiabilité suisse</h3><p>800 coursiers salariés (pas auto-entrepreneurs), formation interne, assurance complète et preuve de livraison sur chaque course.</p><div class="vpc-big">CDI</div></article>
+      <article class="vpc tilt-3d"><div class="vpc-ic t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><h3 data-i18n="vpc1.h3">-40% sur vos coûts</h3><p data-i18n="vpc1.p">Tarif fixe dès CHF 8/course. Sans commission, sans frais cachés. Vos marges restent vos marges.</p><div class="vpc-big" data-i18n="vpc1.big">-40%</div></article>
+      <article class="vpc tilt-3d"><div class="vpc-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><h3 data-i18n="vpc2.h3">Zéro gestion manuelle</h3><p data-i18n="vpc2.p">Paiement Stripe → course créée → livreur assigné → SMS envoyé. Tout en automatique, sans intervention humaine.</p><div class="vpc-big" data-i18n="vpc2.big">0 appel</div></article>
+      <article class="vpc tilt-3d"><div class="vpc-ic td"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3 data-i18n="vpc3.h3">Fiabilité suisse</h3><p data-i18n="vpc3.p">800 coursiers salariés (pas auto-entrepreneurs), formation interne, assurance complète et preuve de livraison sur chaque course.</p><div class="vpc-big" data-i18n="vpc3.big">CDI</div></article>
     </div>
   </div>
 </section>
 
 <!-- ===== PIPELINE AUTOMATISÉ ===== -->
-<section class="pipeline">
+<section class="pipeline" data-nav-dark>
   <div class="ct pipeline-inner">
-    <div class="sh rv"><span class="sl" style="color:var(--teal-light)">Le flux automatisé</span><h2 class="st" style="color:#fff">De la commande à la <span style="color:var(--teal-light)">livraison</span> — sans vous</h2><p class="sd" style="color:rgba(255,255,255,.45)">Voici ce qui se passe quand un client passe commande. Zéro intervention humaine côté Chaskis, 100% traçable.</p></div>
+    <div class="sh rv"><span class="sl" style="color:var(--teal-light)" data-i18n="pipe.label">Le flux automatisé</span><h2 class="st" style="color:#fff" data-i18n-html="pipe.h2">De la commande à la <span style="color:var(--teal-light)">livraison</span> — sans vous</h2><p class="sd" style="color:rgba(255,255,255,.45)" data-i18n="pipe.p">Voici ce qui se passe quand un client passe commande. Zéro intervention humaine côté Chaskis, 100% traçable.</p></div>
     <div class="pipeline-grid stg">
       <div class="pipe-step tilt-3d">
-        <div class="pipe-n t">Étape 1</div>
+        <div class="pipe-n t" data-i18n="pipe1.n">Étape 1</div>
         <span class="pipe-icon">🧾</span>
-        <h3>Client commande</h3>
-        <p>Via le formulaire web, votre API ou un import CSV. Référence marchand obligatoire pour identifier le colis.</p>
+        <h3 data-i18n="pipe1.h3">Client commande</h3>
+        <p data-i18n="pipe1.p">Via le formulaire web, votre API ou un import CSV. Référence marchand obligatoire pour identifier le colis.</p>
         <span class="pipe-tag human">Web · API · CSV</span>
       </div>
       <div class="pipe-step tilt-3d">
-        <div class="pipe-n t">Étape 2</div>
+        <div class="pipe-n t" data-i18n="pipe2.n">Étape 2</div>
         <span class="pipe-icon">💳</span>
-        <h3>Stripe confirme</h3>
-        <p>Paiement chiffré. Dès validation, un webhook déclenche automatiquement le process en backend.</p>
-        <span class="pipe-tag auto">Automatique</span>
+        <h3 data-i18n="pipe2.h3">Stripe confirme</h3>
+        <p data-i18n="pipe2.p">Paiement chiffré. Dès validation, un webhook déclenche automatiquement le process en backend.</p>
+        <span class="pipe-tag auto" data-i18n="pipe.auto">Automatique</span>
       </div>
       <div class="pipe-step tilt-3d">
-        <div class="pipe-n t">Étape 3</div>
+        <div class="pipe-n t" data-i18n="pipe3.n">Étape 3</div>
         <span class="pipe-icon">🤖</span>
-        <h3>Dispatch automatique</h3>
-        <p>Onfleet crée la tâche et assigne le coursier disponible le plus proche. Zéro appel, zéro coordination manuelle.</p>
-        <span class="pipe-tag auto">Automatique</span>
+        <h3 data-i18n="pipe3.h3">Dispatch automatique</h3>
+        <p data-i18n="pipe3.p">Onfleet crée la tâche et assigne le coursier disponible le plus proche. Zéro appel, zéro coordination manuelle.</p>
+        <span class="pipe-tag auto" data-i18n="pipe.auto">Automatique</span>
       </div>
       <div class="pipe-step tilt-3d">
-        <div class="pipe-n p">Étape 4</div>
+        <div class="pipe-n p" data-i18n="pipe4.n">Étape 4</div>
         <span class="pipe-icon">🔑</span>
-        <h3>Livreur s'identifie</h3>
-        <p>Le coursier utilise la référence marchand pour s'identifier au point de retrait. Le commerçant reçoit un SMS d'annonce.</p>
+        <h3 data-i18n="pipe4.h3">Livreur s'identifie</h3>
+        <p data-i18n="pipe4.p">Le coursier utilise la référence marchand pour s'identifier au point de retrait. Le commerçant reçoit un SMS d'annonce.</p>
         <span class="pipe-tag trigger">Make.com trigger</span>
       </div>
       <div class="pipe-step tilt-3d">
-        <div class="pipe-n p">Étape 5</div>
+        <div class="pipe-n p" data-i18n="pipe5.n">Étape 5</div>
         <span class="pipe-icon">📍</span>
-        <h3>Suivi GPS en direct</h3>
-        <p>Client et expéditeur reçoivent un lien de tracking en temps réel. Notifications automatiques à chaque étape clé.</p>
-        <span class="pipe-tag auto">Automatique</span>
+        <h3 data-i18n="pipe5.h3">Suivi GPS en direct</h3>
+        <p data-i18n="pipe5.p">Client et expéditeur reçoivent un lien de tracking en temps réel. Notifications automatiques à chaque étape clé.</p>
+        <span class="pipe-tag auto" data-i18n="pipe.auto">Automatique</span>
       </div>
       <div class="pipe-step tilt-3d">
-        <div class="pipe-n p">Étape 6</div>
+        <div class="pipe-n p" data-i18n="pipe6.n">Étape 6</div>
         <span class="pipe-icon">✅</span>
-        <h3>Proof of Delivery</h3>
-        <p>L'app livreur exige une photo ou signature pour clôturer la course. Preuve horodatée disponible dans votre dashboard.</p>
+        <h3 data-i18n="pipe6.h3">Proof of Delivery</h3>
+        <p data-i18n="pipe6.p">L'app livreur exige une photo ou signature pour clôturer la course. Preuve horodatée disponible dans votre dashboard.</p>
         <span class="pipe-tag trigger">POD · Dashboard</span>
       </div>
     </div>
@@ -535,12 +570,12 @@ section{padding:clamp(56px,7vw,96px) 0}
 <!-- ===== HOW TO START ===== -->
 <section class="how">
   <div class="ct">
-    <div class="sh rv"><span class="sl">Comment démarrer</span><h2 class="st">Opérationnel en <span class="ac">48 heures</span></h2><p class="sd">De l'appel découverte à votre première livraison automatisée.</p></div>
+    <div class="sh rv"><span class="sl" data-i18n="how.label">Comment démarrer</span><h2 class="st" data-i18n-html="how.h2">Opérationnel en <span class="ac">48 heures</span></h2><p class="sd" data-i18n="how.p">De l'appel découverte à votre première livraison automatisée.</p></div>
     <div class="how-track">
-      <article class="how-s tilt-3d"><div class="how-n">01</div><h3>Appel découverte (20 min)</h3><p>On comprend votre volume, vos secteurs, vos contraintes. On propose le bon plan : Express, Flex ou Dédié.</p></article>
-      <article class="how-s tilt-3d"><div class="how-n">02</div><h3>Setup technique</h3><p>Création du compte, config API ou import CSV, connexion Stripe, parametrage Onfleet/Make.com. On gère tout.</p></article>
-      <article class="how-s tilt-3d"><div class="how-n">03</div><h3>Première course test</h3><p>On effectue une course en conditions réelles pour valider le flux complet : commande → dispatch → POD.</p></article>
-      <article class="how-s tilt-3d"><div class="how-n">04</div><h3>Go live &amp; optimisation</h3><p>Dashboard actif, coursiers dédiés assignés, analytics hebdomadaires. Vous n'avez plus à penser à la logistique.</p></article>
+      <article class="how-s tilt-3d"><div class="how-n">01</div><h3 data-i18n="how1.h3">Appel découverte (20 min)</h3><p data-i18n="how1.p">On comprend votre volume, vos secteurs, vos contraintes. On propose le bon plan : Express, Flex ou Dédié.</p></article>
+      <article class="how-s tilt-3d"><div class="how-n">02</div><h3 data-i18n="how2.h3">Setup technique</h3><p data-i18n="how2.p">Création du compte, config API ou import CSV, connexion Stripe, parametrage Onfleet/Make.com. On gère tout.</p></article>
+      <article class="how-s tilt-3d"><div class="how-n">03</div><h3 data-i18n="how3.h3">Première course test</h3><p data-i18n="how3.p">On effectue une course en conditions réelles pour valider le flux complet : commande → dispatch → POD.</p></article>
+      <article class="how-s tilt-3d"><div class="how-n">04</div><h3 data-i18n="how4.h3">Go live &amp; optimisation</h3><p data-i18n="how4.p">Dashboard actif, coursiers dédiés assignés, analytics hebdomadaires. Vous n'avez plus à penser à la logistique.</p></article>
     </div>
     <div class="how-scroll-hint rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Swipez pour voir toutes les étapes</div>
   </div>
@@ -549,20 +584,20 @@ section{padding:clamp(56px,7vw,96px) 0}
 <!-- ===== BENTO SERVICES ===== -->
 <section class="bento">
   <div class="ct">
-    <div class="sh rv"><span class="sl">Nos services</span><h2 class="st">Tout ce dont votre logistique a <span class="ac">besoin</span></h2></div>
+    <div class="sh rv"><span class="sl" data-i18n="bento.label">Nos services</span><h2 class="st" data-i18n-html="bento.h2">Tout ce dont votre logistique a <span class="ac">besoin</span></h2></div>
     <div class="bento-grid stg">
-      <div class="bento-card bento-1 rv"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18.5" cy="18.5" r="3.5"/><circle cx="5.5" cy="18.5" r="3.5"/><path d="M15 18.5h-6M9 18.5V8.5l6-3v13"/></svg></div><h3>Coursiers &amp; chauffeurs salariés</h3><p>Vélo pour la zone urbaine, voiture pour les colis lourds ou longues distances. 800 employés CDI, formés &amp; assurés. Pas d'auto-entrepreneurs.</p></div>
-      <div class="bento-card bento-2 rv d2"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><h3>Import CSV &amp; API</h3><p>Connectez votre POS, WooCommerce ou Shopify. Commandes en masse par CSV. Zéro ressaisie.</p></div>
-      <div class="bento-card bento-3 rv d3"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><h3>Tournées multi-stops</h3><p>Optimisez vos tournées de livraison. Ajoutez autant de points que nécessaire, l'itinéraire est recalculé en temps réel.</p></div>
-      <div class="bento-card bento-4 rv d4"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><h3>Dashboard &amp; analytics</h3><p>Tableau de bord en temps réel, historique des courses, rapports mensuels, KPIs de performance.</p></div>
-      <div class="bento-card bento-5 rv d5"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Proof of Delivery</h3><p>Photo ou signature électronique à chaque remise. Horodaté, géolocalisé, stocké dans votre espace client. Litige? Vous avez la preuve.</p></div>
+      <div class="bento-card bento-1 rv"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18.5" cy="18.5" r="3.5"/><circle cx="5.5" cy="18.5" r="3.5"/><path d="M15 18.5h-6M9 18.5V8.5l6-3v13"/></svg></div><h3 data-i18n="bento1.h3">Coursiers &amp; chauffeurs salariés</h3><p data-i18n="bento1.p">Vélo pour la zone urbaine, voiture pour les colis lourds ou longues distances. 800 employés CDI, formés &amp; assurés. Pas d'auto-entrepreneurs.</p></div>
+      <div class="bento-card bento-2 rv d2"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg></div><h3 data-i18n="bento2.h3">Import CSV &amp; API</h3><p data-i18n="bento2.p">Connectez votre POS, WooCommerce ou Shopify. Commandes en masse par CSV. Zéro ressaisie.</p></div>
+      <div class="bento-card bento-3 rv d3"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><h3 data-i18n="bento3.h3">Tournées multi-stops</h3><p data-i18n="bento3.p">Optimisez vos tournées de livraison. Ajoutez autant de points que nécessaire, l'itinéraire est recalculé en temps réel.</p></div>
+      <div class="bento-card bento-4 rv d4"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><h3 data-i18n="bento4.h3">Dashboard &amp; analytics</h3><p data-i18n="bento4.p">Tableau de bord en temps réel, historique des courses, rapports mensuels, KPIs de performance.</p></div>
+      <div class="bento-card bento-5 rv d5"><div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3 data-i18n="bento5.h3">Proof of Delivery</h3><p data-i18n="bento5.p">Photo ou signature électronique à chaque remise. Horodaté, géolocalisé, stocké dans votre espace client. Litige? Vous avez la preuve.</p></div>
     </div>
   </div>
 </section>
 
 <!-- ===== TESTIMONIALS ===== -->
 <section class="testi">
-  <div class="ct"><div class="sh c rv"><span class="sl">Témoignages</span><h2 class="st">Ce qu'en disent nos <span class="ac">clients</span></h2></div></div>
+  <div class="ct"><div class="sh c rv"><span class="sl" data-i18n="testi.label">Témoignages</span><h2 class="st" data-i18n-html="testi.h2">Ce qu'en disent nos <span class="ac">clients</span></h2></div></div>
   <div class="mq-w">
     <div class="testi-track">
       <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">On est passé de 30% de commission à un tarif fixe. En 3 mois, marge récupérée sur chaque commande.</p><div class="tc-author"><div class="tc-av" style="background:var(--teal)">ML</div><div class="tc-info"><h4>Marie Laurent</h4><p>Pharmacie du Lac, Genève</p></div></div></article>
@@ -582,17 +617,17 @@ section{padding:clamp(56px,7vw,96px) 0}
 <section class="recruit" id="recruit">
   <div class="ct recruit-inner">
     <div class="recruit-text rv">
-      <h2>Rejoignez les <span class="purple">800+ coursiers</span> qui ont choisi Chaskis</h2>
-      <p>CDI, horaires flexibles, matériel fourni, assurance complète. Un vrai job, pas une mission freelance.</p>
+      <h2 data-i18n-html="recruit.h2">Rejoignez les <span class="purple">800+ coursiers</span> qui ont choisi Chaskis</h2>
+      <p data-i18n="recruit.p">CDI, horaires flexibles, matériel fourni, assurance complète. Un vrai job, pas une mission freelance.</p>
       <div class="recruit-badges">
-        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>CDI</span>
-        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Horaires flex</span>
-        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Assuré</span>
-        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Matériel fourni</span>
+        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg><span data-i18n="recruit.b1">CDI</span></span>
+        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span data-i18n="recruit.b2">Horaires flex</span></span>
+        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span data-i18n="recruit.b3">Assuré</span></span>
+        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg><span data-i18n="recruit.b4">Matériel fourni</span></span>
       </div>
     </div>
     <div class="recruit-cta rv d2">
-      <a href="postuler.html" class="btn btn-purple"><span>Découvrir les postes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="postuler.html" class="btn btn-purple"><span data-i18n="recruit.cta">Découvrir les postes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
     </div>
   </div>
 </section>
@@ -601,19 +636,19 @@ section{padding:clamp(56px,7vw,96px) 0}
 <section class="cta-booking" id="booking">
   <div class="ct cta-layout">
     <div class="rl">
-      <span class="sl">Démarrer avec Chaskis</span>
-      <h2 class="st">Réservez votre appel <span class="sa">découverte</span></h2>
-      <p class="sd">20 minutes pour comprendre votre activité et proposer le bon plan logistique. Sans engagement.</p>
+      <span class="sl" data-i18n="booking.label">Démarrer avec Chaskis</span>
+      <h2 class="st" data-i18n-html="booking.h2">Planifiez votre appel <span class="sa">gratuit</span></h2>
+      <p class="sd" data-i18n="booking.p">20 minutes pour comprendre votre activité et proposer le bon plan logistique. Sans engagement.</p>
       <div class="cta-perks">
-        <div class="cta-perk"><div class="cta-perk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><h4>20 min chrono</h4><p>On respecte votre temps.</p></div></div>
-        <div class="cta-perk"><div class="cta-perk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4>Sans engagement</h4><p>On discute, vous décidez.</p></div></div>
-        <div class="cta-perk"><div class="cta-perk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div><h4>Tarif sur mesure</h4><p>Adapté à votre volume et secteur.</p></div></div>
+        <div class="cta-perk"><div class="cta-perk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><h4 data-i18n="perk1.h4">20 min chrono</h4><p data-i18n="perk1.p">On respecte votre temps.</p></div></div>
+        <div class="cta-perk"><div class="cta-perk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4 data-i18n="perk2.h4">Sans engagement</h4><p data-i18n="perk2.p">On discute, vous décidez.</p></div></div>
+        <div class="cta-perk"><div class="cta-perk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div><h4 data-i18n="perk3.h4">Tarif sur mesure</h4><p data-i18n="perk3.p">Adapté à votre volume et secteur.</p></div></div>
       </div>
     </div>
     <div class="bk-w rr" id="bkW">
       <div class="bk-prog"><span class="done"></span><span></span><span></span></div>
       <div class="bk-step active" id="bkS1">
-        <div class="bk-t">Choisissez une date</div><div class="bk-s">Avril 2026</div>
+        <div class="bk-t" data-i18n="bk.step1.t">Choisissez une date</div><div class="bk-s" data-i18n="bk.step1.s">Avril 2026</div>
         <div class="bk-cal" id="bkCal">
           <div class="bk-d hd">L</div><div class="bk-d hd">M</div><div class="bk-d hd">M</div><div class="bk-d hd">J</div><div class="bk-d hd">V</div><div class="bk-d hd">S</div><div class="bk-d hd">D</div>
           <div class="bk-d"></div><div class="bk-d"></div><div class="bk-d past">1</div><div class="bk-d past">2</div><div class="bk-d past">3</div><div class="bk-d past">4</div><div class="bk-d past">5</div>
@@ -623,18 +658,18 @@ section{padding:clamp(56px,7vw,96px) 0}
           <div class="bk-d av" data-d="28">28</div><div class="bk-d av" data-d="29">29</div><div class="bk-d av" data-d="30">30</div>
         </div>
         <div class="bk-slots" id="bkSl" style="display:none"><div class="bk-sl" data-t="09:00">09:00</div><div class="bk-sl" data-t="10:00">10:00</div><div class="bk-sl" data-t="14:00">14:00</div><div class="bk-sl" data-t="15:30">15:30</div><div class="bk-sl" data-t="16:30">16:30</div></div>
-        <div class="bk-nav"><button class="btn btn-p" id="bkN1" disabled><span>Suivant</span></button></div>
+        <div class="bk-nav"><button class="btn btn-p" id="bkN1" disabled><span data-i18n="bk.next">Suivant</span></button></div>
       </div>
       <div class="bk-step" id="bkS2">
-        <div class="bk-t">Quelques infos</div><div class="bk-s">Pour préparer l'appel</div>
-        <div class="field-row"><div class="field"><label>Prénom</label><input placeholder="Jean"></div><div class="field"><label>Nom</label><input placeholder="Dupont"></div></div>
-        <div class="field"><label>Email pro</label><input type="email" placeholder="jean@monentreprise.ch"></div>
-        <div class="field"><label>Entreprise</label><input placeholder="Pharmacie du Lac"></div>
-        <div class="field"><label>Volume estimé / jour</label><select><option>Moins de 10</option><option>10 à 30</option><option>30 à 100</option><option>Plus de 100</option></select></div>
-        <div class="field"><label>Votre secteur</label><select><option>E-commerce / Retail</option><option>Médical / Pharma</option><option>Luxe / Bijouterie</option><option>Juridique / Notarial</option><option>Restauration</option><option>Autre</option></select></div>
-        <div class="bk-nav"><button class="btn bk-back" id="bkB2"><span>Retour</span></button><button class="btn btn-p" id="bkN2"><span>Confirmer</span></button></div>
+        <div class="bk-t" data-i18n="bk.step2.t">Quelques infos</div><div class="bk-s" data-i18n="bk.step2.s">Pour préparer l'appel</div>
+        <div class="field-row"><div class="field"><label data-i18n="bk.f.first">Prénom</label><input data-i18n-placeholder="bk.f.first.ph" placeholder="Jean"></div><div class="field"><label data-i18n="bk.f.last">Nom</label><input data-i18n-placeholder="bk.f.last.ph" placeholder="Dupont"></div></div>
+        <div class="field"><label data-i18n="bk.f.email">Email pro</label><input type="email" placeholder="jean@monentreprise.ch"></div>
+        <div class="field"><label data-i18n="bk.f.company">Entreprise</label><input data-i18n-placeholder="bk.f.company.ph" placeholder="Pharmacie du Lac"></div>
+        <div class="field"><label data-i18n="bk.f.vol">Volume estimé / jour</label><select data-i18n-html="bk.f.vol.opts"><option>Moins de 10</option><option>10 à 30</option><option>30 à 100</option><option>Plus de 100</option></select></div>
+        <div class="field"><label data-i18n="bk.f.sector">Votre secteur</label><select data-i18n-html="bk.f.sector.opts"><option>E-commerce / Retail</option><option>Médical / Pharma</option><option>Luxe / Bijouterie</option><option>Juridique / Notarial</option><option>Restauration</option><option>Autre</option></select></div>
+        <div class="bk-nav"><button class="btn bk-back" id="bkB2"><span data-i18n="bk.back">Retour</span></button><button class="btn btn-p" id="bkN2"><span data-i18n="bk.confirm">Confirmer</span></button></div>
       </div>
-      <div class="bk-step" id="bkS3"><div class="bk-confirm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><h3>C'est réservé !</h3><p>Confirmation par email. À très vite !</p></div></div>
+      <div class="bk-step" id="bkS3"><div class="bk-confirm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><h3 data-i18n="bk.step3.h3">C'est réservé !</h3><p data-i18n="bk.step3.p">Confirmation par email. À très vite !</p></div></div>
     </div>
   </div>
 </section>
@@ -642,61 +677,55 @@ section{padding:clamp(56px,7vw,96px) 0}
 <!-- ===== FAQ ===== -->
 <section class="faq" id="faq">
   <div class="ct faq-layout">
-    <div class="rl"><span class="sl">FAQ</span><h2 class="st">Vos questions, nos <span class="ac">réponses</span></h2><p class="sd">Pas trouvé ? <a href="#booking" style="color:var(--teal);font-weight:700">Réservez un appel</a>.</p></div>
+    <div class="rl"><span class="sl">FAQ</span><h2 class="st" data-i18n-html="faq.h2">Vos questions, nos <span class="ac">réponses</span></h2><p class="sd" data-i18n-html="faq.sd">Pas trouvé ? <a href="#booking" style="color:var(--teal);font-weight:700">Réservez un appel</a>.</p></div>
     <div class="faq-list rr">
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>En quoi c'est différent d'Uber Eats ou Stuart ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>Pas de commission à 30%. Tarif fixe. Coursiers salariés CDI, pas auto-entrepreneurs. Et surtout : dispatch automatique, zéro appel, zéro coordination manuelle de votre côté.</p></div></div>
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>Express, Flex, Dédié — quelle différence ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p><strong>Express</strong> : course unique, CHF 16, sans compte, paiement en ligne. <strong>Flex</strong> : compte pro, ~CHF 10, tableau de bord, besoins variables. <strong>Dédié</strong> : contrat + flotte attitrée, CHF 8, import CSV, API, tornées automatisées.</p></div></div>
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>C'est quoi la "référence commande marchand" ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>C'est le code que le livreur présente au commerçant pour récupérer la bonne commande. Ça évite les erreurs de colis et permet de notifier le commerçant automatiquement à l'arrivée du coursier.</p></div></div>
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>C'est rapide à mettre en place ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>48h entre l'appel découverte et votre première livraison. On s'occupe de la config complète : API, Make.com, Onfleet, Stripe.</p></div></div>
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>Quelles zones de livraison ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p>Lausanne, Genève, Neuchâtel, Fribourg, Montreux, Vevey et environs. Extension prévue vers Berne et Bâle en 2026.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq1.q">En quoi c'est différent d'Uber Eats ou Stuart ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p data-i18n="faq1.a">Pas de commission à 30%. Tarif fixe. Coursiers salariés CDI, pas auto-entrepreneurs. Et surtout : coursiers salariés CDI, tarif fixe garanti, suivi en temps réel inclus.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq2.q">Express, Flex, Dédié — quelle différence ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p data-i18n-html="faq2.a"><strong>Express</strong> : course unique, CHF 16, sans compte, paiement en ligne. <strong>Flex</strong> : compte pro, ~CHF 10, tableau de bord, besoins variables. <strong>Dédié</strong> : contrat + flotte attitrée, CHF 8, import CSV, API, tornées automatisées.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq3.q">C'est quoi la "référence commande marchand" ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p data-i18n="faq3.a">C'est le code que le livreur présente au commerçant pour récupérer la bonne commande. Ça évite les erreurs de colis et permet de notifier le commerçant automatiquement à l'arrivée du coursier.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq4.q">C'est rapide à mettre en place ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p data-i18n="faq4.a">48h entre l'appel découverte et votre première livraison. On s'occupe de la config complète : API, Make.com, Onfleet, Stripe.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq5.q">Quelles zones de livraison ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></div><div class="faq-a"><p data-i18n="faq5.a">Lausanne, Genève, Neuchâtel, Fribourg, Montreux, Vevey et environs. Extension prévue vers Berne et Bâle en 2026.</p></div></div>
     </div>
   </div>
 </section>
 
 <!-- ===== FOOTER ===== -->
-<footer class="footer">
+<footer class="footer" data-nav-dark>
   <div class="ct">
     <div class="ft">
-      <div class="fb"><a href="index-v7.html" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg3" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg3)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a><p>Infrastructure logistique pour les entreprises de Suisse romande.</p><div class="fb-soc"><a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a><a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></div></div>
-      <div class="fc"><h4>Services</h4><a href="commander-v7.html">Commander</a><a href="dashboard.html">Tableau de bord</a><a href="#services">Nos secteurs</a><a href="#booking">Réserver un appel</a></div>
-      <div class="fc"><h4>Entreprise</h4><a href="postuler.html">Postuler</a><a href="#faq">FAQ</a><a href="mailto:contact@chaskis.ch">contact@chaskis.ch</a></div>
-      <div class="fc"><h4>Légal</h4><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">CGV</a></div>
+      <div class="fb"><a href="index-v7.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="20" style="filter:brightness(0) invert(1)"></a><p data-i18n="foot.tag">Infrastructure logistique pour les entreprises de Suisse romande.</p><div class="fb-soc"><a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a><a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a></div></div>
+      <div class="fc"><h4 data-i18n="foot.svc.h">Services</h4><a href="commander-v7.html" data-i18n="foot.svc.1">Commander</a><a href="dashboard.html" data-i18n="foot.svc.2">Tableau de bord</a><a href="#services" data-i18n="foot.svc.3">Nos secteurs</a><a href="#booking" data-i18n="foot.svc.4">Réserver un appel</a></div>
+      <div class="fc"><h4 data-i18n="foot.co.h">Entreprise</h4><a href="postuler.html" data-i18n="foot.co.1">Postuler</a><a href="#faq">FAQ</a><a href="mailto:contact@chaskis.ch">contact@chaskis.ch</a></div>
+      <div class="fc"><h4 data-i18n="foot.leg.h">Légal</h4><a href="#" data-i18n="foot.leg.1">Mentions légales</a><a href="#" data-i18n="foot.leg.2">Confidentialité</a><a href="#" data-i18n="foot.leg.3">CGV</a></div>
     </div>
-    <div class="f-btm"><span>&copy; 2026 Chaskis SA — Genève</span><span>Fait en Suisse romande</span></div>
+    <div class="f-btm"><span>&copy; 2026 Chaskis SA — Genève</span><span data-i18n="foot.made">Fait en Suisse romande</span></div>
   </div>
 </footer>
+
+<a href="#booking" class="btn btn-p pulse nav-cta-float"><span data-i18n="float.cta">Planifier un appel</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
 
 <script src="shared.js"></script>
 <script src="auth.js"></script>
 <script>
 // ===== HERO 3D CARD PARALLAX =====
+// Floating CTA: apparaît quand le CTA hero sort du viewport
+const floatCta = document.querySelector('.nav-cta-float');
+const heroCta = document.querySelector('.hero-actions');
+if (floatCta && heroCta) {
+  new IntersectionObserver(([e]) => floatCta.classList.toggle('visible', !e.isIntersecting)).observe(heroCta);
+}
+
+// Hero photo parallax & tilt
 const heroVis = document.getElementById('heroVis');
 if (heroVis) {
-  const cards = heroVis.querySelectorAll('.hv-card');
-  const floats = heroVis.querySelectorAll('.hv-float');
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    const f = Math.min(y / 500, 1);
-    cards[0].style.transform = `rotate(${-8 + f * 5}deg) translateX(${-20 + f * 10}px) translateZ(${-80 + f * 20}px)`;
-    cards[1].style.transform = `rotate(${5 - f * 3}deg) translateX(${15 - f * 8}px) translateZ(${-40 + f * 15}px)`;
-    cards[2].style.transform = `translateY(${f * -15}px)`;
-    floats.forEach((fl, i) => { fl.style.transform = `translateY(${f * (i === 0 ? 12 : -10)}px)`; });
-  }, { passive: true });
-
-  if (window.matchMedia('(hover:hover)').matches) {
+  const photoWrap = heroVis.querySelector('.hv-photo-wrap');
+  if (photoWrap && window.matchMedia('(hover:hover)').matches) {
     heroVis.addEventListener('mousemove', e => {
       const rect = heroVis.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
-      cards[2].style.transform = `rotateY(${x * 8}deg) rotateX(${y * -5}deg)`;
-      cards[1].style.transform = `rotate(${5 + x * 3}deg) translateX(${15 + x * 10}px) translateZ(-40px)`;
-      cards[0].style.transform = `rotate(${-8 + x * -2}deg) translateX(${-20 + x * -8}px) translateZ(-80px)`;
+      photoWrap.style.transform = `rotateY(${x * 4}deg) rotateX(${y * -2.5}deg) scale(1.02)`;
     });
-    heroVis.addEventListener('mouseleave', () => {
-      cards[2].style.transform = '';
-      cards[1].style.transform = `rotate(5deg) translateX(15px) translateZ(-40px)`;
-      cards[0].style.transform = `rotate(-8deg) translateX(-20px) translateZ(-80px)`;
-    });
+    heroVis.addEventListener('mouseleave', () => { photoWrap.style.transform = ''; });
   }
 }
 
@@ -717,9 +746,425 @@ const extraReveal = new IntersectionObserver(entries => {
 }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.vpc, .pipe-step').forEach(el => extraReveal.observe(el));
 
+// ===== NAV DARK DETECTION (auto — no manual tagging needed) =====
+(function() {
+  const nav = document.getElementById('nav');
+  if (!nav) return;
+
+  function luminance(r, g, b) {
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  }
+
+  function parseColor(str) {
+    const m = str.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/);
+    if (!m) return null;
+    const alpha = m[4] !== undefined ? +m[4] : 1;
+    if (alpha < 0.25) return null;
+    return { r: +m[1], g: +m[2], b: +m[3] };
+  }
+
+  function getElColor(el) {
+    const style = getComputedStyle(el);
+    // 1. Try background-color
+    const col = parseColor(style.backgroundColor);
+    if (col) return col;
+    // 2. Gradient: extract first color from background-image
+    const img = style.backgroundImage;
+    if (img && img !== 'none') return parseColor(img);
+    return null;
+  }
+
+  function check() {
+    const navH = nav.offsetHeight;
+    const candidates = document.querySelectorAll(
+      'header, section, footer, .hero, .zoom-section, .pipeline, .recruit, [data-nav-dark]'
+    );
+    let isDark = false;
+
+    candidates.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top >= navH || rect.bottom <= 0) return;
+      const col = getElColor(el);
+      if (col && luminance(col.r, col.g, col.b) < 0.38) isDark = true;
+    });
+
+    nav.classList.toggle('over-dark', isDark);
+  }
+
+  window.addEventListener('scroll', check, { passive: true });
+  window.addEventListener('resize', check, { passive: true });
+  // Run after first paint so computed styles are ready
+  requestAnimationFrame(check);
+})();
+
+// ===== I18N =====
+const T = {
+  fr: {
+    'nav.order': 'Commander', 'nav.join': 'Postuler',
+    'hero.overline': '6 créneaux disponibles cette semaine',
+    'hero.sub': 'Livraison B2B en Suisse romande. Coursiers salariés, tarifs fixes, traçabilité complète — le partenaire logistique des entreprises suisses.',
+    'hero.cta1': 'Planifier un appel gratuit', 'hero.cta2': 'Commander une course',
+    'hero.stat1': 'Délai moyen', 'hero.stat2': 'vs plateformes', 'hero.stat3': 'Coursiers CDI', 'hero.stat4': 'Courses / an',
+    'partners.headline': 'entreprises nous font confiance',
+    'zoom.h2': 'La livraison pro, <span class="accent">sans les galères</span>',
+    'zoom.p': 'Tarifs fixes, coursiers salariés CDI, suivi en temps réel. Chaskis est le partenaire B2B conçu pour les entreprises de Suisse romande qui veulent de la fiabilité — pas des mauvaises surprises.',
+    'bento.label': 'Nos services', 'bento.h2': 'Tout ce dont votre logistique a <span class="ac">besoin</span>',
+    'bento1.h3': 'Coursiers & chauffeurs salariés', 'bento1.p': 'Vélo pour la zone urbaine, voiture pour les colis lourds ou longues distances. 800 employés CDI, formés & assurés. Pas d\'auto-entrepreneurs.',
+    'bento2.h3': 'Import CSV & API', 'bento2.p': 'Connectez votre POS, WooCommerce ou Shopify. Commandes en masse par CSV. Zéro ressaisie.',
+    'bento3.h3': 'Tournées multi-stops', 'bento3.p': 'Optimisez vos tournées de livraison. Ajoutez autant de points que nécessaire, l\'itinéraire est recalculé en temps réel.',
+    'bento4.h3': 'Dashboard & analytics', 'bento4.p': 'Tableau de bord en temps réel, historique des courses, rapports mensuels, KPIs de performance.',
+    'bento5.h3': 'Proof of Delivery', 'bento5.p': 'Photo ou signature électronique à chaque remise. Horodaté, géolocalisé, stocké dans votre espace client. Litige? Vous avez la preuve.',
+    'testi.label': 'Témoignages', 'testi.h2': 'Ce qu\'en disent nos <span class="ac">clients</span>',
+    'sec.label': 'Pour qui', 'sec.h2': 'Vos secteurs, <span class="ac">nos spécialités</span>', 'sec.p': 'Chaque secteur a ses contraintes. Nos livreurs sont formés aux protocoles spécifiques de chaque industrie.',
+    'sec1.h3': 'Médical & Pharma', 'sec1.tag': 'Délai critique · Chaîne du froid',
+    'sec1.uses': '<li>Ordonnances &amp; médicaments urgents</li><li>Résultats d\'analyses &amp; prélèvements</li><li>Matériel médical entre cliniques</li><li>Transport température contrôlée</li>',
+    'sec2.h3': 'Luxe & Bijouterie', 'sec2.tag': 'Remise en main propre · Discrétion',
+    'sec2.uses': '<li>Bijoux &amp; montres (assurance incluse)</li><li>Colis luxe avec signature obligatoire</li><li>Livraison en tenue professionnelle</li><li>Proof of delivery photo systématique</li>',
+    'sec3.h3': 'Juridique & Notarial', 'sec3.tag': 'Confidentialité · Preuve de remise',
+    'sec3.uses': '<li>Documents confidentiels &amp; actes notariés</li><li>Contrats signés entre études</li><li>Plis recommandés urgents</li><li>Tournées quotidiennes planifiées</li>',
+    'sec4.h3': 'E-commerce & Retail', 'sec4.tag': 'Volume · CSV · API',
+    'sec4.uses': '<li>Import CSV de commandes en masse</li><li>Intégration API Shopify / WooCommerce</li><li>Tournées multi-colis optimisées</li><li>Notifications clients automatiques</li>',
+    'sec.cta.discuss': 'Discuter de vos besoins', 'sec.cta.order': 'Commander maintenant',
+    'why.label': 'Pourquoi Chaskis', 'why.h2': 'Vos livraisons méritent <span class="ac">mieux</span> qu\'une plateforme', 'why.p': 'Les plateformes prennent 30% de commission. Nous proposons un tarif fixe avec une équipe dédiée et zéro appel de dispatch.',
+    'vpc1.h3': '-40% sur vos coûts', 'vpc1.p': 'Tarif fixe dès CHF 8/course. Sans commission, sans frais cachés. Vos marges restent vos marges.', 'vpc1.big': '-40%',
+    'vpc2.h3': 'Zéro gestion manuelle', 'vpc2.p': 'Paiement Stripe → course créée → livreur assigné → SMS envoyé. Tout en automatique, sans intervention humaine.', 'vpc2.big': '0 appel',
+    'vpc3.h3': 'Fiabilité suisse', 'vpc3.p': '800 coursiers salariés (pas auto-entrepreneurs), formation interne, assurance complète et preuve de livraison sur chaque course.', 'vpc3.big': 'CDI',
+    'pipe.label': 'Le flux automatisé', 'pipe.h2': 'De la commande à la <span style="color:var(--teal-light)">livraison</span> — sans vous', 'pipe.p': 'Voici ce qui se passe quand un client passe commande. Zéro intervention humaine côté Chaskis, 100% traçable.',
+    'pipe.auto': 'Automatique',
+    'pipe1.n': 'Étape 1', 'pipe1.h3': 'Client commande', 'pipe1.p': 'Via le formulaire web, votre API ou un import CSV. Référence marchand obligatoire pour identifier le colis.',
+    'pipe2.n': 'Étape 2', 'pipe2.h3': 'Stripe confirme', 'pipe2.p': 'Paiement chiffré. Dès validation, un webhook déclenche automatiquement le process en backend.',
+    'pipe3.n': 'Étape 3', 'pipe3.h3': 'Dispatch automatique', 'pipe3.p': 'Onfleet crée la tâche et assigne le coursier disponible le plus proche. Zéro appel, zéro coordination manuelle.',
+    'pipe4.n': 'Étape 4', 'pipe4.h3': 'Livreur s\'identifie', 'pipe4.p': 'Le coursier utilise la référence marchand pour s\'identifier au point de retrait. Le commerçant reçoit un SMS d\'annonce.',
+    'pipe5.n': 'Étape 5', 'pipe5.h3': 'Suivi GPS en direct', 'pipe5.p': 'Client et expéditeur reçoivent un lien de tracking en temps réel. Notifications automatiques à chaque étape clé.',
+    'pipe6.n': 'Étape 6', 'pipe6.h3': 'Proof of Delivery', 'pipe6.p': 'L\'app livreur exige une photo ou signature pour clôturer la course. Preuve horodatée disponible dans votre dashboard.',
+    'how.label': 'Comment démarrer', 'how.h2': 'Opérationnel en <span class="ac">48 heures</span>', 'how.p': 'De l\'appel découverte à votre première livraison automatisée.',
+    'how1.h3': 'Appel découverte (20 min)', 'how1.p': 'On comprend votre volume, vos secteurs, vos contraintes. On propose le bon plan : Express, Flex ou Dédié.',
+    'how2.h3': 'Setup technique', 'how2.p': 'Création du compte, config API ou import CSV, connexion Stripe, parametrage Onfleet/Make.com. On gère tout.',
+    'how3.h3': 'Première course test', 'how3.p': 'On effectue une course en conditions réelles pour valider le flux complet : commande → dispatch → POD.',
+    'how4.h3': 'Go live & optimisation', 'how4.p': 'Dashboard actif, coursiers dédiés assignés, analytics hebdomadaires. Vous n\'avez plus à penser à la logistique.',
+    'recruit.h2': 'Rejoignez les <span class="purple">800+ coursiers</span> qui ont choisi Chaskis',
+    'recruit.p': 'CDI, horaires flexibles, matériel fourni, assurance complète. Un vrai job, pas une mission freelance.',
+    'recruit.b1': 'CDI', 'recruit.b2': 'Horaires flex', 'recruit.b3': 'Assuré', 'recruit.b4': 'Matériel fourni',
+    'recruit.cta': 'Découvrir les postes',
+    'booking.label': 'Démarrer avec Chaskis', 'booking.h2': 'Planifiez votre appel <span class="sa">gratuit</span>', 'booking.p': '20 minutes pour comprendre votre activité et proposer le bon plan logistique. Sans engagement.',
+    'perk1.h4': '20 min chrono', 'perk1.p': 'On respecte votre temps.',
+    'perk2.h4': 'Sans engagement', 'perk2.p': 'On discute, vous décidez.',
+    'perk3.h4': 'Tarif sur mesure', 'perk3.p': 'Adapté à votre volume et secteur.',
+    'bk.step1.t': 'Choisissez une date', 'bk.step1.s': 'Avril 2026',
+    'bk.next': 'Suivant',
+    'bk.step2.t': 'Quelques infos', 'bk.step2.s': 'Pour préparer l\'appel',
+    'bk.f.first': 'Prénom', 'bk.f.first.ph': 'Jean', 'bk.f.last': 'Nom', 'bk.f.last.ph': 'Dupont',
+    'bk.f.email': 'Email pro', 'bk.f.company': 'Entreprise', 'bk.f.company.ph': 'Pharmacie du Lac',
+    'bk.f.vol': 'Volume estimé / jour',
+    'bk.f.vol.opts': '<option>Moins de 10</option><option>10 à 30</option><option>30 à 100</option><option>Plus de 100</option>',
+    'bk.f.sector': 'Votre secteur',
+    'bk.f.sector.opts': '<option>E-commerce / Retail</option><option>Médical / Pharma</option><option>Luxe / Bijouterie</option><option>Juridique / Notarial</option><option>Restauration</option><option>Autre</option>',
+    'bk.back': 'Retour', 'bk.confirm': 'Confirmer',
+    'bk.step3.h3': 'C\'est réservé !', 'bk.step3.p': 'Confirmation par email. À très vite !',
+    'faq.h2': 'Vos questions, nos <span class="ac">réponses</span>',
+    'faq.sd': 'Pas trouvé ? <a href="#booking" style="color:var(--teal);font-weight:700">Planifiez un appel</a>.',
+    'faq1.q': 'En quoi c\'est différent d\'Uber Eats ou Stuart ?', 'faq1.a': 'Pas de commission à 30%. Tarif fixe. Coursiers salariés CDI, pas auto-entrepreneurs. Et surtout : coursiers salariés CDI, tarif fixe garanti, suivi en temps réel inclus.',
+    'faq2.q': 'Express, Flex, Dédié — quelle différence ?', 'faq2.a': '<strong>Express</strong> : course unique, CHF 16, sans compte, paiement en ligne. <strong>Flex</strong> : compte pro, ~CHF 10, tableau de bord, besoins variables. <strong>Dédié</strong> : contrat + flotte attitrée, CHF 8, import CSV, API, tornées automatisées.',
+    'faq3.q': 'C\'est quoi la "référence commande marchand" ?', 'faq3.a': 'C\'est le code que le livreur présente au commerçant pour récupérer la bonne commande. Ça évite les erreurs de colis et permet de notifier le commerçant automatiquement à l\'arrivée du coursier.',
+    'faq4.q': 'C\'est rapide à mettre en place ?', 'faq4.a': '48h entre l\'appel découverte et votre première livraison. On s\'occupe de la config complète : API, Make.com, Onfleet, Stripe.',
+    'faq5.q': 'Quelles zones de livraison ?', 'faq5.a': 'Lausanne, Genève, Neuchâtel, Fribourg, Montreux, Vevey et environs. Extension prévue vers Berne et Bâle en 2026.',
+    'foot.tag': 'Infrastructure logistique pour les entreprises de Suisse romande.',
+    'foot.svc.h': 'Services', 'foot.svc.1': 'Commander', 'foot.svc.2': 'Tableau de bord', 'foot.svc.3': 'Nos secteurs', 'foot.svc.4': 'Planifier un appel',
+    'foot.co.h': 'Entreprise', 'foot.co.1': 'Postuler',
+    'foot.leg.h': 'Légal', 'foot.leg.1': 'Mentions légales', 'foot.leg.2': 'Confidentialité', 'foot.leg.3': 'CGV',
+    'foot.made': 'Fait en Suisse romande',
+    'float.cta': 'Planifier un appel',
+  },
+  en: {
+    'nav.order': 'Order', 'nav.join': 'Join us',
+    'hero.overline': '6 slots available this week',
+    'hero.sub': 'B2B delivery across French-speaking Switzerland. Employed couriers, fixed rates, full tracking — the logistics partner for Swiss businesses.',
+    'hero.cta1': 'Schedule a free call', 'hero.cta2': 'Place an order',
+    'hero.stat1': 'Avg. delivery', 'hero.stat2': 'vs platforms', 'hero.stat3': 'Employed couriers', 'hero.stat4': 'Deliveries / yr',
+    'partners.headline': 'companies trust us',
+    'zoom.h2': 'Professional delivery, <span class="accent">without the headaches</span>',
+    'zoom.p': 'Fixed rates, full-time employed couriers, real-time tracking. Chaskis is the B2B partner built for Swiss businesses that need reliability — not surprises.',
+    'bento.label': 'Our services', 'bento.h2': 'Everything your logistics <span class="ac">needs</span>',
+    'bento1.h3': 'Employed couriers & drivers', 'bento1.p': 'Bike for urban zones, car for heavy parcels or longer distances. 800 full-time employees, trained & insured. No freelancers.',
+    'bento2.h3': 'CSV import & API', 'bento2.p': 'Connect your POS, WooCommerce or Shopify. Bulk orders via CSV. Zero manual re-entry.',
+    'bento3.h3': 'Multi-stop routes', 'bento3.p': 'Optimise your delivery rounds. Add as many stops as needed — the route is recalculated in real time.',
+    'bento4.h3': 'Dashboard & analytics', 'bento4.p': 'Real-time dashboard, delivery history, monthly reports, performance KPIs.',
+    'bento5.h3': 'Proof of Delivery', 'bento5.p': 'Photo or electronic signature at every handover. Time-stamped, geolocated, stored in your client portal. Dispute? You have the proof.',
+    'testi.label': 'Testimonials', 'testi.h2': 'What our <span class="ac">clients</span> say',
+    'sec.label': 'Who it\'s for', 'sec.h2': 'Your sectors, <span class="ac">our specialities</span>', 'sec.p': 'Every sector has its own constraints. Our couriers are trained in the specific protocols of each industry.',
+    'sec1.h3': 'Medical & Pharma', 'sec1.tag': 'Critical timing · Cold chain',
+    'sec1.uses': '<li>Urgent prescriptions &amp; medication</li><li>Lab results &amp; biological samples</li><li>Medical equipment between clinics</li><li>Temperature-controlled transport</li>',
+    'sec2.h3': 'Luxury & Jewellery', 'sec2.tag': 'In-person handover · Discretion',
+    'sec2.uses': '<li>Jewellery &amp; watches (insurance included)</li><li>Luxury parcels with mandatory signature</li><li>Delivery in professional attire</li><li>Systematic photo proof of delivery</li>',
+    'sec3.h3': 'Legal & Notarial', 'sec3.tag': 'Confidentiality · Proof of handover',
+    'sec3.uses': '<li>Confidential documents &amp; notarial deeds</li><li>Signed contracts between firms</li><li>Urgent registered letters</li><li>Planned daily rounds</li>',
+    'sec4.h3': 'E-commerce & Retail', 'sec4.tag': 'Volume · CSV · API',
+    'sec4.uses': '<li>Bulk CSV order imports</li><li>Shopify / WooCommerce API integration</li><li>Optimised multi-parcel rounds</li><li>Automated client notifications</li>',
+    'sec.cta.discuss': 'Discuss your needs', 'sec.cta.order': 'Order now',
+    'why.label': 'Why Chaskis', 'why.h2': 'Your deliveries deserve <span class="ac">better</span> than a platform', 'why.p': 'Platforms take 30% commission. We offer a fixed rate with a dedicated team and zero dispatch calls.',
+    'vpc1.h3': '-40% on your costs', 'vpc1.p': 'Fixed rate from CHF 8/delivery. No commission, no hidden fees. Your margins stay yours.', 'vpc1.big': '-40%',
+    'vpc2.h3': 'Zero manual management', 'vpc2.p': 'Stripe payment → delivery created → courier assigned → SMS sent. Fully automated, no human intervention.', 'vpc2.big': '0 call',
+    'vpc3.h3': 'Swiss reliability', 'vpc3.p': '800 employed couriers (not freelancers), in-house training, full insurance and proof of delivery on every order.', 'vpc3.big': 'CDI',
+    'pipe.label': 'The automated flow', 'pipe.h2': 'From order to <span style="color:var(--teal-light)">delivery</span> — hands-free', 'pipe.p': 'Here\'s what happens when a client places an order. Zero manual intervention on the Chaskis side, 100% traceable.',
+    'pipe.auto': 'Automatic',
+    'pipe1.n': 'Step 1', 'pipe1.h3': 'Client orders', 'pipe1.p': 'Via the web form, your API or a CSV import. Merchant reference required to identify the parcel.',
+    'pipe2.n': 'Step 2', 'pipe2.h3': 'Stripe confirms', 'pipe2.p': 'Encrypted payment. Once validated, a webhook automatically triggers the backend process.',
+    'pipe3.n': 'Step 3', 'pipe3.h3': 'Automatic dispatch', 'pipe3.p': 'Onfleet creates the task and assigns the nearest available courier. Zero calls, zero manual coordination.',
+    'pipe4.n': 'Step 4', 'pipe4.h3': 'Courier checks in', 'pipe4.p': 'The courier uses the merchant reference to identify themselves at the pickup point. The merchant receives an SMS notification.',
+    'pipe5.n': 'Step 5', 'pipe5.h3': 'Live GPS tracking', 'pipe5.p': 'Client and sender receive a real-time tracking link. Automatic notifications at each key stage.',
+    'pipe6.n': 'Step 6', 'pipe6.h3': 'Proof of Delivery', 'pipe6.p': 'The courier app requires a photo or signature to close the delivery. Time-stamped proof available in your dashboard.',
+    'how.label': 'Getting started', 'how.h2': 'Up and running in <span class="ac">48 hours</span>', 'how.p': 'From discovery call to your first automated delivery.',
+    'how1.h3': 'Discovery call (20 min)', 'how1.p': 'We understand your volume, sectors and constraints. We propose the right plan: Express, Flex or Dedicated.',
+    'how2.h3': 'Technical setup', 'how2.p': 'Account creation, API config or CSV import, Stripe connection, Onfleet/Make.com setup. We handle everything.',
+    'how3.h3': 'First test delivery', 'how3.p': 'We run a live delivery to validate the full flow: order → dispatch → POD.',
+    'how4.h3': 'Go live & optimisation', 'how4.p': 'Dashboard active, dedicated couriers assigned, weekly analytics. You no longer have to think about logistics.',
+    'recruit.h2': 'Join the <span class="purple">800+ couriers</span> who chose Chaskis',
+    'recruit.p': 'Permanent contract, flexible hours, equipment provided, full insurance. A real job, not a freelance gig.',
+    'recruit.b1': 'Full-time', 'recruit.b2': 'Flex hours', 'recruit.b3': 'Insured', 'recruit.b4': 'Equipment provided',
+    'recruit.cta': 'See open positions',
+    'booking.label': 'Get started with Chaskis', 'booking.h2': 'Schedule your <span class="sa">free</span> call', 'booking.p': '20 minutes to understand your business and propose the right logistics plan. No commitment.',
+    'perk1.h4': '20 min max', 'perk1.p': 'We respect your time.',
+    'perk2.h4': 'No commitment', 'perk2.p': 'We talk, you decide.',
+    'perk3.h4': 'Custom pricing', 'perk3.p': 'Adapted to your volume and sector.',
+    'bk.step1.t': 'Choose a date', 'bk.step1.s': 'April 2026',
+    'bk.next': 'Next',
+    'bk.step2.t': 'A few details', 'bk.step2.s': 'To prepare the call',
+    'bk.f.first': 'First name', 'bk.f.first.ph': 'John', 'bk.f.last': 'Last name', 'bk.f.last.ph': 'Smith',
+    'bk.f.email': 'Work email', 'bk.f.company': 'Company', 'bk.f.company.ph': 'My Company Ltd',
+    'bk.f.vol': 'Est. volume / day',
+    'bk.f.vol.opts': '<option>Less than 10</option><option>10 to 30</option><option>30 to 100</option><option>Over 100</option>',
+    'bk.f.sector': 'Your sector',
+    'bk.f.sector.opts': '<option>E-commerce / Retail</option><option>Medical / Pharma</option><option>Luxury / Jewellery</option><option>Legal / Notarial</option><option>Restaurants</option><option>Other</option>',
+    'bk.back': 'Back', 'bk.confirm': 'Confirm',
+    'bk.step3.h3': 'You\'re booked!', 'bk.step3.p': 'Confirmation by email. See you soon!',
+    'faq.h2': 'Your questions, our <span class="ac">answers</span>',
+    'faq.sd': 'Can\'t find it? <a href="#booking" style="color:var(--teal);font-weight:700">Schedule a call</a>.',
+    'faq1.q': 'How is this different from Uber Eats or Stuart?', 'faq1.a': 'No 30% commission. Fixed rate. Employed couriers on permanent contracts, not freelancers. Real-time tracking included, guaranteed fixed price.',
+    'faq2.q': 'Express, Flex, Dedicated — what\'s the difference?', 'faq2.a': '<strong>Express</strong>: single delivery, CHF 16, no account needed, online payment. <strong>Flex</strong>: pro account, ~CHF 10, dashboard, variable needs. <strong>Dedicated</strong>: contract + assigned fleet, CHF 8, CSV import, API, automated rounds.',
+    'faq3.q': 'What is the "merchant order reference"?', 'faq3.a': 'It\'s the code the courier shows the merchant to collect the right order. It prevents parcel mix-ups and automatically notifies the merchant when the courier arrives.',
+    'faq4.q': 'Is it quick to set up?', 'faq4.a': '48h from discovery call to your first delivery. We handle the full setup: API, Make.com, Onfleet, Stripe.',
+    'faq5.q': 'What are the delivery zones?', 'faq5.a': 'Lausanne, Geneva, Neuchâtel, Fribourg, Montreux, Vevey and surroundings. Expansion planned to Bern and Basel in 2026.',
+    'foot.tag': 'Logistics infrastructure for French-speaking Swiss businesses.',
+    'foot.svc.h': 'Services', 'foot.svc.1': 'Order', 'foot.svc.2': 'Dashboard', 'foot.svc.3': 'Our sectors', 'foot.svc.4': 'Schedule a call',
+    'foot.co.h': 'Company', 'foot.co.1': 'Join us',
+    'foot.leg.h': 'Legal', 'foot.leg.1': 'Legal notice', 'foot.leg.2': 'Privacy', 'foot.leg.3': 'T&C',
+    'foot.made': 'Made in Switzerland',
+    'float.cta': 'Schedule a call',
+  }
+};
+
+function movePill(lang) {
+  const sw = document.getElementById('langSw');
+  const pill = document.getElementById('langPill');
+  const btn = sw.querySelector(`button[data-lang="${lang}"]`);
+  if (!pill || !btn) return;
+  // pill anchored at left:3px — translate to button position
+  pill.style.width = btn.offsetWidth + 'px';
+  pill.style.transform = `translateX(${btn.offsetLeft - 3}px)`;
+}
+
+function setLang(lang) {
+  const dict = T[lang] || T.fr;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = dict[el.dataset.i18n];
+    if (v !== undefined) el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const v = dict[el.dataset.i18nHtml];
+    if (v !== undefined) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const v = dict[el.dataset.i18nPlaceholder];
+    if (v !== undefined) el.placeholder = v;
+  });
+  document.querySelectorAll('#langSw button').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+    b.setAttribute('aria-checked', b.dataset.lang === lang ? 'true' : 'false');
+  });
+  document.documentElement.lang = lang;
+  movePill(lang);
+}
+
+// Init pill position on load
+window.addEventListener('load', () => movePill('fr'));
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
 }
+
+// ===== DELIVERY CANVAS ANIMATION =====
+(function() {
+  const canvas = document.getElementById('delivery-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resize() {
+    const hero = canvas.parentElement;
+    W = canvas.width = hero.offsetWidth;
+    H = canvas.height = hero.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const TEAL = [75, 179, 164];
+  const MAX = 1;          // one route at a time
+  const SPAWN_F = 90;     // frames the origin dot pulses before tracing (~1.5s)
+  const FADE_F  = 60;     // frames to fade out after completion
+
+  let couriers = [];
+  let raf;
+
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+
+  function makeRoute() {
+    let sx, sy, ex, ey, dist, att = 0;
+    do {
+      // Bias toward edges — avoid central zone on desktop
+      const edgeX = () => Math.random() < 0.5 ? rnd(0.04, 0.32) * W : rnd(0.68, 0.96) * W;
+      const anyX  = () => rnd(0.04, 0.96) * W;
+      const edgeY = () => rnd(0.05, 0.95) * H;
+      sx = W > 768 ? edgeX() : anyX(); sy = edgeY();
+      ex = W > 768 ? edgeX() : anyX(); ey = edgeY();
+      dist = Math.hypot(ex-sx, ey-sy);
+      att++;
+    } while ((dist < 200 || dist > 540) && att < 40);
+
+    const pts = [{x:sx, y:sy}];
+    const r = Math.random();
+    if (r < 0.42) {
+      pts.push({x:ex, y:sy});                              // horizontal → vertical
+    } else if (r < 0.84) {
+      pts.push({x:sx, y:ey});                              // vertical → horizontal
+    } else {
+      const mx = (sx + ex) / 2 + rnd(-40, 40);
+      pts.push({x:mx, y:sy}, {x:mx, y:ey});               // Z
+    }
+    pts.push({x:ex, y:ey});
+
+    let segs = [], total = 0;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const l = Math.hypot(pts[i+1].x - pts[i].x, pts[i+1].y - pts[i].y);
+      segs.push(l); total += l;
+    }
+
+    return {
+      pts, segs, total,
+      pos: 0,
+      speed: rnd(0.8, 1.4),
+      phase: 'spawn',         // spawn → trace → fade
+      timer: 0,
+      alpha: 1
+    };
+  }
+
+  function getAt(c, d) {
+    let rem = Math.min(d, c.total);
+    for (let i = 0; i < c.segs.length; i++) {
+      if (rem <= c.segs[i]) {
+        const t = c.segs[i] > 0 ? rem / c.segs[i] : 0;
+        return { x: c.pts[i].x + (c.pts[i+1].x - c.pts[i].x) * t,
+                 y: c.pts[i].y + (c.pts[i+1].y - c.pts[i].y) * t };
+      }
+      rem -= c.segs[i];
+    }
+    return {...c.pts[c.pts.length - 1]};
+  }
+
+  // Draw entire traced portion (0 → c.pos) as dashes at given alpha
+  function drawRoute(c, alpha) {
+    if (c.pos <= 0) return;
+    const [r, g, b] = TEAL;
+    const N = Math.ceil(c.pos / 5);
+    ctx.beginPath();
+    ctx.setLineDash([5, 9]);
+    ctx.lineWidth = 1;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = `rgba(${r},${g},${b},${0.13 * alpha})`;
+    for (let i = 0; i <= N; i++) {
+      const pt = getAt(c, c.pos * i / N);
+      i === 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Init: one starts now, one is delayed
+  couriers.push(makeRoute());
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    const [r, g, b] = TEAL;
+
+    couriers = couriers.filter(c => c.phase !== 'dead');
+    while (couriers.length < MAX) couriers.push(makeRoute());
+
+    for (const c of couriers) {
+      c.timer++;
+      if (c.timer <= 0) continue; // pre-delay: invisible
+
+      if (c.phase === 'spawn') {
+        // Pulsing origin dot — visible and prominent
+        // Single ring — ease-out cubic, time-based (smooth, no restart jump)
+        const t = (performance.now() % 2400) / 2400; // 2.4s period
+        const eased = 1 - Math.pow(1 - t, 3);        // ease-out cubic
+        // Core dot — small and calm
+        ctx.beginPath();
+        ctx.arc(c.pts[0].x, c.pts[0].y, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${b},0.45)`;
+        ctx.fill();
+        // Single expanding ring
+        ctx.beginPath();
+        ctx.arc(c.pts[0].x, c.pts[0].y, 3.5 + eased * 18, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${r},${g},${b},${(1 - eased) * 0.18})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        if (c.timer >= SPAWN_F) c.phase = 'trace';
+
+      } else if (c.phase === 'trace') {
+        c.pos += c.speed;
+
+        drawRoute(c, 1);
+
+        // Keep origin dot visible — smooth spawn→trace transition
+        ctx.beginPath();
+        ctx.arc(c.pts[0].x, c.pts[0].y, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${b},0.35)`;
+        ctx.fill();
+
+        // Moving dot at head
+        const cur = getAt(c, c.pos);
+        ctx.beginPath();
+        ctx.arc(cur.x, cur.y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${b},0.6)`;
+        ctx.fill();
+
+        // Pulse ring at head
+        const pulse = (performance.now() % 1600) / 1600;
+        ctx.beginPath();
+        ctx.arc(cur.x, cur.y, 2.5 + pulse * 10, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${r},${g},${b},${(1 - pulse) * 0.18})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        if (c.pos >= c.total) { c.pos = c.total; c.phase = 'fade'; }
+
+      } else if (c.phase === 'fade') {
+        c.alpha -= 1 / FADE_F;
+        if (c.alpha <= 0) { c.phase = 'dead'; continue; }
+        drawRoute(c, c.alpha);
+      }
+    }
+
+    raf = requestAnimationFrame(frame);
+  }
+
+  frame();
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) cancelAnimationFrame(raf);
+    else frame();
+  });
+})();
 </script>
 </body>
 </html>

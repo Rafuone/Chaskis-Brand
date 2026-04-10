@@ -9,12 +9,12 @@ img,svg{display:block;max-width:100%}a{text-decoration:none;color:inherit}button
 
 /* ===== TOKENS ===== */
 :root{
-  --teal:#3AAFA9;--teal-light:#5BC5C0;--teal-x-light:#B8E8E5;--teal-bg:#EFF9F8;--teal-dark:#2A8A85;--teal-deep:#1A5C59;
+  --teal:#4BB3A4;--teal-light:#6DC4B8;--teal-x-light:#C2EBE7;--teal-bg:#EFF9F8;--teal-dark:#35938A;--teal-deep:#1F6660;
   --yellow:#F5B800;--yellow-light:#FFD54F;--yellow-bg:#FFFAED;
   --accent:#6B4FA0;--accent-light:#8B73B8;--accent-bg:#F3F0F8;--accent-dark:#5a3d8f;
   --purple:#6B4FA0;--purple-light:#8B73B8;--purple-bg:#F3F0F8;
   --white:#FFFFFF;--bg:#FAFAF7;--cream:#F5F3EE;--sand:#EDE9E0;--warm-gray:#D6CFC2;
-  --ink:#191C1A;--ink-mid:#3B403D;--ink-light:#6B736E;--ink-muted:#9EA69F;
+  --ink:#2C2052;--ink-mid:#4A3B6F;--ink-light:#7066A0;--ink-muted:#A89EC0;
   --r:12px;--rl:20px;--rxl:28px;--pill:100px;
   --sh-sm:0 1px 3px rgba(0,0,0,.04),0 1px 2px rgba(0,0,0,.06);
   --sh-md:0 4px 16px rgba(0,0,0,.06),0 1px 4px rgba(0,0,0,.04);
@@ -51,16 +51,29 @@ img,svg{display:block;max-width:100%}a{text-decoration:none;color:inherit}button
 .arrow-r{width:18px;height:18px}
 
 /* ===== NAV ===== */
-.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:12px 0;transition:all .4s var(--ease)}
-.nav.scrolled{background:rgba(250,250,247,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 1px 0 rgba(0,0,0,.04);padding:8px 0}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:26px 0;transition:background .4s var(--ease),box-shadow .4s var(--ease),backdrop-filter .4s var(--ease)}
+.nav.scrolled{background:rgba(250,250,247,.73);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.nav.scrolled .nav-mid a{color:var(--ink-mid)}
+.nav.scrolled .nav-mid a:hover,.nav.scrolled .nav-mid a.active{color:var(--ink)}
+.nav.scrolled .lang-sw{background:rgba(0,0,0,.07)}
+.nav.scrolled .lang-sw button.active{background:var(--white)}
+/* Over dark section */
+.nav.over-dark{background:rgba(20,16,38,.72) !important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.nav.over-dark .nav-mid a{color:rgba(255,255,255,.65)}
+.nav.over-dark .nav-mid a:hover,.nav.over-dark .nav-mid a.active{color:#fff}
+.nav.over-dark .nav-mid a::after{background:#fff}
+.nav.over-dark .nav-logo img{filter:brightness(0) invert(1)}
+.nav.over-dark .lang-sw{background:rgba(255,255,255,.12)}
+.nav.over-dark .lang-sw button{color:rgba(255,255,255,.5);opacity:.55}
+.nav.over-dark .lang-sw button.active{background:rgba(255,255,255,.18);color:#fff;opacity:1}
 .nav-in{display:flex;align-items:center;justify-content:space-between;gap:16px}
 .nav-logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.12rem;letter-spacing:-.03em;flex-shrink:0}
 .nav-logo svg{width:30px;height:30px}
-.nav-mid{display:flex;align-items:center;gap:24px}
-.nav-mid a{font-size:.83rem;font-weight:600;color:var(--ink-mid);transition:color .3s;position:relative}
-.nav-mid a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:2px;background:var(--teal);border-radius:1px;transition:width .3s var(--ease)}
-.nav-mid a:hover{color:var(--ink)}
-.nav-mid a:hover::after{width:100%}
+.nav-mid{display:flex;align-items:center;gap:28px}
+.nav-mid a{font-size:.72rem;font-weight:600;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.07em;transition:color .3s;position:relative}
+.nav-mid a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--teal);border-radius:1px;transition:width .3s var(--ease)}
+.nav-mid a:hover,.nav-mid a.active{color:var(--ink)}
+.nav-mid a:hover::after,.nav-mid a.active::after{width:100%}
 .nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .nav-login{font-size:.82rem;font-weight:600;color:var(--ink-mid);display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--pill);transition:all .3s var(--ease)}
 .nav-login:hover{background:var(--teal-bg);color:var(--teal)}
@@ -98,6 +111,7 @@ section{padding:clamp(64px,8vw,100px) 0}
 
 /* ===== PARTNERS ===== */
 .partners{padding:32px 0;border-top:1px solid rgba(0,0,0,.04);overflow:hidden}
+
 .p-label{text-align:center;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-muted);margin-bottom:14px}
 .mq-w{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .mq{display:flex;gap:44px;animation:mqx 26s linear infinite;width:max-content}

@@ -35,7 +35,7 @@ img,svg{display:block;max-width:100%}a{text-decoration:none;color:inherit}button
 .btn-p{background:var(--teal);color:#fff;box-shadow:0 4px 20px rgba(58,175,169,.25)}
 .btn-p::before{background:linear-gradient(135deg,var(--teal-dark),var(--teal))}
 .btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(58,175,169,.35)}
-.btn-o{border:2px solid var(--sand);color:var(--ink);background:var(--white)}
+.btn-o{border:1px solid var(--sand);color:var(--ink);background:var(--white)}
 .btn-o:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-2px)}
 .btn-g{color:var(--teal);font-weight:700;padding:0;gap:8px}
 .btn-g:hover{gap:12px}
@@ -64,8 +64,14 @@ img,svg{display:block;max-width:100%}a{text-decoration:none;color:inherit}button
 .nav.over-dark .nav-mid a::after{background:#fff}
 .nav.over-dark .nav-logo img{filter:brightness(0) invert(1)}
 .nav.over-dark .lang-sw{background:rgba(255,255,255,.12)}
-.nav.over-dark .lang-sw button{color:rgba(255,255,255,.5);opacity:.55}
-.nav.over-dark .lang-sw button.active{background:rgba(255,255,255,.18);color:#fff;opacity:1}
+.nav.over-dark .lang-sw .lang-pill{background:rgba(255,255,255,.22)}
+.nav.over-dark .lang-sw button{color:rgba(255,255,255,.6);opacity:.6}
+.nav.over-dark .lang-sw button.active{color:#fff;opacity:1}
+/* Lang toggle base */
+.lang-sw{display:flex;align-items:center;gap:1px;background:rgba(44,32,82,.08);border-radius:var(--pill);padding:3px;margin-left:14px;position:relative}
+.lang-sw button{padding:4px 9px;border-radius:var(--pill);font-family:inherit;font-size:.65rem;font-weight:700;letter-spacing:.06em;color:var(--ink-light);background:transparent;border:none;cursor:pointer;transition:color .25s var(--ease),opacity .25s var(--ease);line-height:1;opacity:.55;position:relative;z-index:1}
+.lang-sw button.active{color:var(--ink);opacity:1}
+.lang-pill{position:absolute;top:3px;bottom:3px;left:3px;background:var(--white);border-radius:var(--pill);box-shadow:var(--sh-sm);transition:transform .28s var(--ease),width .28s var(--ease);pointer-events:none;z-index:0;will-change:transform}
 .nav-in{display:flex;align-items:center;justify-content:space-between;gap:16px}
 .nav-logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.12rem;letter-spacing:-.03em;flex-shrink:0}
 .nav-logo svg{width:30px;height:30px}

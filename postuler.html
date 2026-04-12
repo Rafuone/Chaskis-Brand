@@ -8,6 +8,15 @@
 <link rel="canonical" href="https://www.chaskis.ch/postuler">
 <link rel="stylesheet" href="styles.css">
 <style>
+/* Nav transparent initial — texte blanc sur hero sombre */
+#nav:not(.scrolled):not(.over-dark) .nav-mid a{color:rgba(255,255,255,.75)}
+#nav:not(.scrolled):not(.over-dark) .nav-mid a:hover{color:#fff}
+#nav:not(.scrolled):not(.over-dark) .nav-logo img{filter:brightness(0) invert(1)}
+#nav:not(.scrolled):not(.over-dark) .lang-sw{background:rgba(255,255,255,.12)}
+#nav:not(.scrolled):not(.over-dark) .lang-pill{background:rgba(255,255,255,.22)}
+#nav:not(.scrolled):not(.over-dark) .lang-sw button{color:rgba(255,255,255,.6);opacity:.6}
+#nav:not(.scrolled):not(.over-dark) .lang-sw button.active{color:#fff;opacity:1}
+
 /* Recruit hero */
 .rec-hero{padding:100px 0 60px;background:linear-gradient(135deg,var(--ink) 0%,#1e2926 100%);color:#fff;position:relative;overflow:hidden;min-height:480px;display:flex;align-items:center}
 .rec-hero::before{content:'';position:absolute;top:-40%;right:-15%;width:600px;height:600px;background:radial-gradient(circle,rgba(107,79,160,.15),transparent 65%);border-radius:50%;animation:float 10s ease-in-out infinite}
@@ -83,25 +92,25 @@
 <body>
 
 <div class="mob-m" id="mm">
-  <a href="/" onclick="cm()">Accueil</a>
-  <a href="/#services" onclick="cm()">Nos services</a>
-  <a href="/commander" onclick="cm()">Commander</a>
+  <a href="index-v7.html" onclick="cm()">Accueil</a>
+  <a href="index-v7.html#services" onclick="cm()">Nos services</a>
+  <a href="commander-v7.html" onclick="cm()">Commander</a>
   <a href="postuler.html" onclick="cm()">Postuler</a>
-  <a href="/#faq" onclick="cm()">FAQ</a>
+  <a href="index-v7.html#booking" onclick="cm()">Planifier un appel</a>
+  <a href="index-v7.html#faq" onclick="cm()">FAQ</a>
 </div>
 
-<nav class="nav scrolled" id="nav">
+<nav class="nav" id="nav">
   <div class="ct nav-in">
-    <a href="/" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a>
-    <div class="nav-mid">
-      <a href="/#services">Nos services</a>
-      <a href="/commander">Commander</a>
+    <a href="index-v7.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
+    <div class="nav-mid" style="margin-left:auto">
+      <a href="commander-v7.html">Commander</a>
       <a href="postuler.html">Postuler</a>
-      <a href="/#faq">FAQ</a>
     </div>
-    <div class="nav-right">
-      <a href="#" class="nav-login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Connexion</span></a>
-      <a href="/#booking" class="btn btn-p nav-cta btn-sm"><span>Réserver un appel</span></a>
+    <div class="lang-sw" id="langSw" role="radiogroup" aria-label="Langue / Language">
+      <span class="lang-pill" id="langPill" aria-hidden="true"></span>
+      <button class="active" role="radio" aria-checked="true" data-lang="fr" onclick="movePill('fr')" aria-label="Français">FR</button>
+      <button role="radio" aria-checked="false" data-lang="en" onclick="movePill('en')" aria-label="English">EN</button>
     </div>
     <button class="mob-t" id="mt" aria-label="Menu"><span></span></button>
   </div>
@@ -221,9 +230,9 @@
 <footer class="footer">
   <div class="ct">
     <div class="ft">
-      <div class="fb"><a href="/" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg3" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg3)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a><p>Gestion de livraison en Suisse romande.</p></div>
-      <div class="fc"><h4>Services</h4><a href="/commander">Commander</a><a href="/#services">Nos services</a><a href="/#booking">Réserver un appel</a></div>
-      <div class="fc"><h4>Entreprise</h4><a href="postuler.html">Postuler</a><a href="/#faq">FAQ</a><a href="mailto:contact@chaskis.ch">Contact</a></div>
+      <div class="fb"><a href="index-v7.html" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg3" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg3)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a><p>Gestion de livraison en Suisse romande.</p></div>
+      <div class="fc"><h4>Services</h4><a href="commander-v7.html">Commander</a><a href="index-v7.html#services">Nos services</a><a href="index-v7.html#booking">Planifier un appel gratuit</a></div>
+      <div class="fc"><h4>Entreprise</h4><a href="postuler.html">Postuler</a><a href="index-v7.html#faq">FAQ</a><a href="mailto:contact@chaskis.ch">Contact</a></div>
       <div class="fc"><h4>Légal</h4><a href="#">Mentions légales</a><a href="#">Confidentialité</a></div>
     </div>
     <div class="f-btm"><span>&copy; 2026 Chaskis SA — Lausanne</span><span>Fait en Suisse romande</span></div>
@@ -232,5 +241,36 @@
 
 <script src="shared.js"></script>
 <script src="auth.js"></script>
+<script>
+function movePill(lang) {
+  const sw = document.getElementById('langSw');
+  const pill = document.getElementById('langPill');
+  const btn = sw && sw.querySelector(`button[data-lang="${lang}"]`);
+  if (!pill || !btn) return;
+  pill.style.width = btn.offsetWidth + 'px';
+  pill.style.transform = `translateX(${btn.offsetLeft - 3}px)`;
+  sw.querySelectorAll('button').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+    b.setAttribute('aria-checked', b.dataset.lang === lang ? 'true' : 'false');
+  });
+}
+window.addEventListener('DOMContentLoaded', () => movePill('fr'));
+
+(function(){
+  const nav = document.getElementById('nav');
+  const darkSections = document.querySelectorAll('.rec-hero, .rec-cta');
+  if (!nav) return;
+  function updateNav() {
+    if (scrollY <= 40) { nav.classList.remove('over-dark'); return; }
+    const navMid = nav.getBoundingClientRect().bottom;
+    const overDark = [...darkSections].some(s => {
+      const r = s.getBoundingClientRect();
+      return r.top < navMid && r.bottom > navMid;
+    });
+    nav.classList.toggle('over-dark', overDark);
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+})();
+</script>
 </body>
 </html>

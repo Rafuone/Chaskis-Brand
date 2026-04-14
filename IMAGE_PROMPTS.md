@@ -1,5 +1,12 @@
 # Image Prompts for Chaskis Website
 
+> **Dernière mise à jour :** avril 2026
+> **État actuel des sections :**
+> - `diff-sec` (Pourquoi Chaskis) — utilise des icônes Lucide pour le moment. Des illustrations dans un style "dessiné / Notion" sont prévues pour chaque card (voir section dédiée ci-dessous).
+> - `feat-sec` (Tout est inclus) — mockup UI codé, pas d'image. La carte GPS a été remplacée par un écran "Livraison confirmée" avec preuve photo.
+
+---
+
 Use these prompts in Midjourney, DALL-E, or Ideogram to generate photos for the site. Style: authentic, warm, diverse, urban Swiss setting (Lausanne/Geneva vibes). Shot on professional camera, natural light, shallow depth of field.
 
 ---
@@ -67,12 +74,27 @@ No photos needed — uses avatars, icons, and data visualizations.
 
 ---
 
+## Section "Pourquoi Chaskis" — diff-sec (illustrations futures)
+
+> Ces 3 cards utilisent actuellement des icônes Lucide. Quand on passera aux illustrations, voici les prompts cibles. Style souhaité : dessiné, coloré, proche de Notion / Linear — pas de style undraw ou vecteur plat générique.
+
+### Card 1 — Coursiers salariés, toujours au rendez-vous
+**Prompt:** Illustration in a hand-drawn editorial style (similar to Notion or Linear blog illustrations), showing a confident bike courier in a teal uniform checking off a delivery on a phone screen, urban Swiss street in the background, warm earthy tones with teal accent, slightly playful but professional, white or transparent background, square format
+
+### Card 2 — Tarif fixe, coût maîtrisé
+**Prompt:** Hand-drawn editorial illustration of a simple price tag or receipt showing a clean fixed amount in Swiss Francs (CHF), with a satisfied business owner in the background, teal and purple accent tones, no hidden fees metaphor (e.g., no fine print, no asterisks), square format, white or transparent background
+
+### Card 3 — Zéro coordination de votre côté
+**Prompt:** Hand-drawn editorial illustration of a relaxed shop owner at their counter, phone in hand, while in the background a courier seamlessly picks up a package — no stress, no calls, no coordination shown, teal accents, warm tones, square format, white or transparent background
+
+---
+
 ## General brand photos (reusable)
 
 ### Courier action shots (3 variants)
 **1.** Courier on bike crossing a bridge in Lausanne, side view, motion, teal bag
 **2.** Courier handing over a food delivery bag at a restaurant entrance, warm interior glow
-**3.** Courier checking phone GPS at an intersection, urban setting, focused expression
+**3.** Courier confirming a delivery at a doorstep, scanning or photographing the package for proof of delivery, urban Swiss setting, focused and professional expression
 
 ### Driver action shots (2 variants)
 **1.** Driver loading boxes into a branded van trunk, careful handling, parking area

@@ -103,27 +103,54 @@
 .zoom-counter strong{font-size:clamp(2.2rem,4vw,3.5rem);font-weight:700;letter-spacing:-.04em;display:block;line-height:1}
 .zoom-counter span{font-size:.72rem;color:rgba(255,255,255,.4);font-weight:500;margin-top:4px;display:block}
 
-/* ===== CE QU'ON FAIT (dark) ===== */
-/* ===== POURQUOI CHASKIS (dark — problème + réponse) ===== */
-.why-sec{background:var(--ink);color:#fff;overflow:hidden;position:relative;padding:clamp(80px,10vw,120px) 0}
-.why-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% -10%,rgba(75,179,164,.12),transparent 55%),radial-gradient(ellipse at 70% 110%,rgba(107,79,160,.1),transparent 55%);pointer-events:none}
-.why-sec::after{content:'';position:absolute;top:50%;left:50%;width:800px;height:800px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(255,255,255,.02);pointer-events:none}
-.why-sec .ct{position:relative;z-index:1}
-.why-pains{display:flex;justify-content:center;gap:clamp(24px,3vw,48px);margin-bottom:clamp(56px,7vw,80px);flex-wrap:wrap}
-.why-pain{display:flex;align-items:flex-start;gap:14px;max-width:300px}
-.why-pain-ic{width:36px;height:36px;flex-shrink:0;border-radius:10px;background:rgba(75,179,164,.12);display:flex;align-items:center;justify-content:center}
-.why-pain-ic svg{width:18px;height:18px;color:var(--teal-light)}
-.why-pain p{font-size:.88rem;color:rgba(255,255,255,.5);line-height:1.55}
-.why-pain strong{color:rgba(255,255,255,.85);font-weight:600}
-.why-head{text-align:center;max-width:680px;margin:0 auto clamp(48px,6vw,72px)}
-.why-head h2{font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-.04em;line-height:1.12;margin:0 0 20px}
-.why-head h2 .ac{color:var(--teal-light)}
-.why-head>p{font-size:1.05rem;color:rgba(255,255,255,.5);line-height:1.7}
-.why-stats{display:flex;justify-content:center;gap:clamp(36px,5vw,72px);flex-wrap:wrap}
-.why-stat{text-align:center}
-.why-stat strong{font-size:clamp(2.2rem,4vw,3.2rem);font-weight:700;letter-spacing:-.04em;display:block;line-height:1;background:linear-gradient(135deg,var(--teal-light),#B8B6E2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.why-stat span{font-size:.82rem;color:rgba(255,255,255,.4);font-weight:500;margin-top:8px;display:block}
-@media(max-width:600px){.why-pains{flex-direction:column;align-items:center}.why-pain{max-width:400px}.why-stats{flex-direction:column;gap:28px;align-items:center}}
+/* ===== PROOF BAR ===== */
+.proof-sec{background:var(--white);padding:clamp(56px,7vw,88px) 0;border-bottom:1px solid var(--sand)}
+.proof-grid{display:flex;justify-content:center;gap:clamp(48px,8vw,120px);flex-wrap:wrap}
+.proof-stat{text-align:center}
+.proof-stat strong{font-size:clamp(3.2rem,7vw,5.5rem);font-weight:800;letter-spacing:-.06em;line-height:1;display:block;background:linear-gradient(135deg,var(--teal-dark),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.proof-stat span{font-size:.88rem;color:var(--ink-light);font-weight:500;margin-top:10px;display:block;letter-spacing:.01em}
+@media(max-width:520px){.proof-grid{gap:36px}.proof-stat strong{font-size:clamp(2.8rem,14vw,4rem)}}
+/* ===== DIFFÉRENCIATEURS (dark) ===== */
+.diff-sec{background:var(--ink);color:#fff;overflow:hidden;position:relative;padding:clamp(80px,10vw,120px) 0}
+.diff-sec::before{content:'';position:absolute;top:-20%;left:-8%;width:65vw;height:65vw;max-width:760px;background:radial-gradient(ellipse at 50% 50%,rgba(75,179,164,.11) 0%,rgba(75,179,164,.04) 50%,transparent 70%);pointer-events:none;animation:blob-a 26s ease-in-out infinite}
+.diff-sec::after{content:'';position:absolute;bottom:-15%;right:-6%;width:55vw;height:55vw;max-width:640px;background:radial-gradient(ellipse at 50% 50%,rgba(107,79,160,.09) 0%,rgba(107,79,160,.03) 50%,transparent 70%);pointer-events:none;animation:blob-b 33s ease-in-out infinite}
+.diff-sec .ct{position:relative;z-index:1}
+.diff-head{text-align:center;max-width:660px;margin:0 auto clamp(48px,6vw,72px)}
+.diff-head h2{font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-.04em;line-height:1.12;margin:0}
+.diff-head p{font-size:.95rem;color:rgba(255,255,255,.45);line-height:1.65;margin:14px 0 0}
+.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:clamp(52px,7vw,80px)}
+@media(max-width:860px){.diff-grid{grid-template-columns:1fr;max-width:480px;margin-left:auto;margin-right:auto}}
+.diff-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:clamp(28px,3vw,40px);position:relative;overflow:hidden;transition:border-color .35s,background .35s,box-shadow .35s,transform .35s;transform-style:preserve-3d;will-change:transform}
+.diff-card:hover{background:rgba(255,255,255,.07);border-color:rgba(75,179,164,.4);box-shadow:0 0 0 1px rgba(75,179,164,.25),0 8px 32px rgba(75,179,164,.18),0 24px 56px rgba(0,0,0,.35)}
+.diff-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 0%,rgba(75,179,164,.07),transparent 55%);pointer-events:none;z-index:0}
+.diff-card::after{content:'';position:absolute;inset:0;border-radius:inherit;opacity:0;transition:opacity .4s;background:radial-gradient(circle 260px at var(--mx,50%) var(--my,50%),rgba(75,179,164,.12),transparent);pointer-events:none;z-index:0}
+.diff-card:hover::after{opacity:1}
+.diff-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px}
+.diff-ic{width:52px;height:52px;border-radius:14px;background:rgba(75,179,164,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.diff-num{font-size:2rem;font-weight:800;letter-spacing:-.06em;line-height:1;color:rgba(255,255,255,.14);font-variant-numeric:tabular-nums}
+.diff-ic svg{width:26px;height:26px;color:var(--teal-light)}
+.diff-card h3{font-size:clamp(1.1rem,1.7vw,1.3rem);font-weight:700;letter-spacing:-.03em;margin:0 0 12px;line-height:1.25;color:#fff}
+.diff-card>p{font-size:.9rem;color:rgba(255,255,255,.5);line-height:1.65;margin:0}
+.diff-card>p strong{color:rgba(255,255,255,.82);font-weight:600}
+.diff-contrast{display:inline-block;margin-top:14px;font-size:.78rem;color:rgba(75,179,164,.65);font-weight:600;letter-spacing:.01em}
+.diff-lead{font-size:1rem;font-weight:600;color:rgba(255,255,255,.82);line-height:1.45;margin:0 0 16px}
+.diff-list{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:8px}
+.diff-list li{display:flex;align-items:center;gap:10px;font-size:.88rem;color:rgba(255,255,255,.78);font-weight:500;line-height:1.4}
+.diff-check{width:22px;height:22px;border-radius:50%;border:1px solid rgba(75,179,164,.35);background:rgba(75,179,164,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.diff-check svg{color:var(--teal-light)}
+.diff-price-line{font-size:.9rem;color:rgba(255,255,255,.55);margin:10px 0;padding:12px 0;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07)}
+.diff-price-line strong{font-size:1.45rem;font-weight:800;letter-spacing:-.04em;color:var(--teal-light);display:block;line-height:1.1;margin-bottom:2px}
+.diff-chain{padding-left:18px;border-left:2px solid rgba(75,179,164,.2);margin:14px 0;display:flex;flex-direction:column;gap:12px}
+.diff-chain-step{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.4;position:relative}
+.diff-chain-step::before{content:'';width:8px;height:8px;background:rgba(75,179,164,.35);border-radius:50%;position:absolute;left:-23px;top:5px}
+.diff-chain-step:first-child{color:rgba(255,255,255,.85);font-weight:500}
+.diff-chain-step:first-child::before{background:var(--teal-light);box-shadow:0 0 0 3px rgba(75,179,164,.15)}
+.diff-ic-chf{font-size:.95rem;font-weight:800;letter-spacing:-.02em;color:var(--teal-light)}
+.diff-stats{display:flex;justify-content:center;gap:clamp(36px,5vw,72px);flex-wrap:wrap;padding-top:clamp(40px,5vw,60px);border-top:1px solid rgba(255,255,255,.07)}
+.diff-stat{text-align:center}
+.diff-stat strong{font-size:clamp(2.2rem,4vw,3.2rem);font-weight:700;letter-spacing:-.04em;display:block;line-height:1;background:linear-gradient(135deg,var(--teal-light),#B8B6E2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.diff-stat span{font-size:.82rem;color:rgba(255,255,255,.4);font-weight:500;margin-top:8px;display:block}
+@media(max-width:600px){.diff-stats{flex-direction:column;gap:28px;align-items:center}}
 
 /* ===== CE QUE ÇA CHANGE (light — features + photo) ===== */
 .feat-sec{padding:clamp(72px,9vw,112px) 0;background:var(--white);position:relative;overflow:hidden}
@@ -142,6 +169,28 @@
 .feat-photo::before{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(44,32,82,.06)}
 .feat-photo-placeholder{color:var(--ink-muted);font-size:.82rem;text-align:center;padding:24px;line-height:1.5}
 .feat-photo-placeholder svg{width:48px;height:48px;color:var(--teal-xlight);margin-bottom:12px;display:block;margin-left:auto;margin-right:auto}
+.feat-mockup{width:100%;height:100%;background:#fff;border-radius:var(--rxl);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(44,32,82,.1)}
+.fm-bar{background:var(--ink);padding:10px 16px;display:flex;gap:6px;align-items:center}
+.fm-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2)}
+.fm-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;border-bottom:1px solid var(--sand)}
+.fm-label{font-size:.78rem;font-weight:700;color:var(--ink);letter-spacing:.02em}
+.fm-badge{font-size:.68rem;font-weight:700;background:rgba(75,179,164,.12);color:var(--teal-dark);padding:3px 10px;border-radius:20px}
+.fm-proof{margin:12px 16px 0;border-radius:12px;background:rgba(75,179,164,.06);border:1px dashed rgba(75,179,164,.28);display:flex;align-items:center;gap:12px;padding:14px 16px}
+.fm-proof-ic{width:40px;height:40px;border-radius:10px;background:rgba(75,179,164,.14);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fm-proof-ic svg{width:20px;height:20px;color:var(--teal)}
+.fm-proof-label{font-size:.76rem;color:var(--ink-mid);line-height:1.4}
+.fm-proof-label strong{color:var(--teal-dark);font-weight:700}
+.fm-done{background:rgba(75,179,164,.15)!important;color:var(--teal-dark)!important}
+.fm-steps{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.fm-step{display:flex;align-items:center;gap:10px;font-size:.8rem;color:var(--ink-light)}
+.fm-step.done{color:var(--ink-mid)}
+.fm-step.done .fm-step-ic{color:var(--teal);font-weight:700}
+.fm-step.active{color:var(--ink);font-weight:600}
+.fm-step-ic{width:18px;text-align:center;font-size:.75rem;flex-shrink:0}
+.pulse-dot{display:inline-block;width:8px;height:8px;background:var(--teal);border-radius:50%;animation:pdot 1.4s ease-in-out infinite}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+.fm-footer{display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid var(--sand);font-size:.75rem;color:var(--ink-muted);background:var(--bg)}
+.fm-footer svg{width:14px;height:14px;color:var(--teal);flex-shrink:0}
 @media(max-width:768px){.feat-layout{grid-template-columns:1fr}.feat-photo{aspect-ratio:16/9;max-height:320px}}
 
 /* ===== SECTEURS ===== */
@@ -323,10 +372,15 @@
 section{padding:clamp(56px,7vw,96px) 0}
 
 /* ===== PARTNERS ===== */
-.partners{padding:clamp(32px,3.5vw,48px) 0 clamp(88px,10vw,128px);background:var(--white);border-top:1px solid rgba(0,0,0,.04);border-bottom:1px solid rgba(0,0,0,.04);overflow:hidden}
-.partners-head{text-align:center;margin-bottom:64px}
+.partners{padding:clamp(32px,3.5vw,48px) 0 0;background:var(--white);border-top:1px solid rgba(0,0,0,.04);border-bottom:1px solid rgba(0,0,0,.04);overflow:hidden}
+.partners-head{text-align:center;margin-bottom:clamp(32px,4vw,56px)}
 .partners-head p{font-size:1.05rem;font-weight:600;letter-spacing:.01em;color:var(--ink)}
 .partners-head p em{font-style:normal;font-weight:800;color:var(--teal)}
+.partners-stats{display:flex;justify-content:center;gap:clamp(48px,8vw,120px);flex-wrap:wrap;padding:clamp(40px,5vw,64px) 0;border-top:1px solid rgba(0,0,0,.06);margin-top:clamp(32px,4vw,52px)}
+.partners-stat{text-align:center}
+.partners-stat strong{font-size:clamp(3.2rem,7vw,5.5rem);font-weight:800;letter-spacing:-.06em;line-height:1;display:block;background:linear-gradient(135deg,var(--teal-light),#B8B6E2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.partners-stat span{font-size:.88rem;color:var(--ink-light);font-weight:500;margin-top:10px;display:block}
+@media(max-width:520px){.partners-stats{gap:36px}.partners-stat strong{font-size:clamp(2.8rem,14vw,4rem)}}
 .mq-w{overflow:hidden;position:relative}
 .mq-w::before,.mq-w::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:1;pointer-events:none}
 .mq-w::before{left:0;background:linear-gradient(90deg,var(--white),transparent)}
@@ -489,13 +543,6 @@ span.ast{color:#e53e3e!important;font-weight:700}
 .sim-disclaimer{font-size:.72rem;color:var(--ink-muted);text-align:center;margin-bottom:20px;line-height:1.55;font-style:italic}
 @media(max-width:1024px){.sim-grid{grid-template-columns:1fr}}
 
-/* ===== CUSTOM CURSOR ===== */
-*{cursor:none!important}
-.cursor-dot{position:fixed;top:0;left:0;width:5px;height:5px;background:var(--ink);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform .2s var(--ease),opacity .25s,background .2s}
-.cursor-ring{position:fixed;top:0;left:0;width:32px;height:32px;border:1px solid rgba(44,32,82,.18);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width .3s var(--ease),height .3s var(--ease),border-color .3s,background .3s,opacity .25s}
-.cursor-dot.hovering{transform:translate(-50%,-50%) scale(.6);background:var(--teal)}
-.cursor-ring.hovering{width:48px;height:48px;border-color:var(--teal);background:rgba(75,179,164,.06)}
-@media(max-width:1024px){*{cursor:auto!important}.cursor-dot,.cursor-ring{display:none}}
 </style>
 </head>
 <body class="page-home">
@@ -588,36 +635,67 @@ span.ast{color:#e53e3e!important;font-weight:700}
       <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
     </div>
   </div></div>
+  <div class="ct">
+    <div class="partners-stats">
+      <div class="partners-stat rv"><strong data-count="800" data-suffix="+">0</strong><span>Coursiers en CDI</span></div>
+      <div class="partners-stat rv d1"><strong data-count="1.5" data-suffix="M" data-decimal="true">0</strong><span>Livraisons par an</span></div>
+      <div class="partners-stat rv d2"><strong data-count="6">0</strong><span>Villes en Suisse romande</span></div>
+    </div>
+  </div>
 </div>
 
-<!-- ===== POURQUOI CHASKIS ===== -->
-<section class="why-sec">
+<!-- ===== DIFFÉRENCIATEURS ===== -->
+<section class="diff-sec">
   <div class="ct">
-    <!-- Les 3 frictions réelles -->
-    <div class="why-pains rv">
-      <div class="why-pain">
-        <div class="why-pain-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-        <p><strong>Des heures perdues</strong> à coordonner des livreurs qui ne se présentent pas, rappeler des clients qui attendent.</p>
-      </div>
-      <div class="why-pain">
-        <div class="why-pain-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-        <p><strong>Jusqu'à 30 % de commissions</strong> prélevées par les plateformes — sans visibilité ni contrôle sur le service.</p>
-      </div>
-      <div class="why-pain">
-        <div class="why-pain-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
-        <p><strong>Votre réputation en jeu</strong> à chaque livraison ratée — et aucun moyen de garantir la qualité côté client.</p>
-      </div>
+    <div class="diff-head rv">
+      <span class="sl" style="color:var(--teal-light)">Pourquoi Chaskis</span>
+      <h2>La livraison professionnelle,<br><span class="ac">sans les compromis habituels</span></h2>
+      <p>Pour toute entreprise qui veut externaliser ses livraisons à un partenaire fiable — sans commission, sans mauvaise surprise.</p>
     </div>
-    <!-- La réponse -->
-    <div class="why-head rv">
-      <h2>On a créé Chaskis pour <span class="ac">régler ça</span></h2>
-      <p>Pas une plateforme de plus. Votre propre équipe de livraison — des coursiers salariés, formés et équipés à votre image. Zéro commission, zéro surprise.</p>
-    </div>
-    <div class="why-stats rv">
-      <div class="why-stat"><strong data-count="800" data-suffix="+">0</strong><span>Coursiers en CDI</span></div>
-      <div class="why-stat"><strong data-count="1.5" data-suffix="M" data-decimal="true">0</strong><span>Livraisons par an</span></div>
-      <div class="why-stat"><strong data-count="6">0</strong><span>Villes en Suisse</span></div>
-      <div class="why-stat"><strong data-count="98" data-suffix="%">0</strong><span>Livrées dans les temps</span></div>
+    <div class="diff-grid">
+
+      <div class="diff-card rv">
+        <div class="diff-card-top">
+          <div class="diff-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <span class="diff-num">01</span>
+        </div>
+        <h3>Coursiers salariés,<br>toujours au rendez-vous</h3>
+        <p>Formés à votre image, équipés à vos couleurs.</p>
+        <ul class="diff-list">
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Remplacement garanti en cas d'absence</li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Pas de freelances ni de turnover</li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Assurés et encadrés en interne</li>
+        </ul>
+      </div>
+
+      <div class="diff-card rv d1">
+        <div class="diff-card-top">
+          <div class="diff-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21V3h8"/><path d="M6 16h9"/><path d="M10 9.5h6"/></svg></div>
+          <span class="diff-num">02</span>
+        </div>
+        <h3>Tarif fixe,<br>coût maîtrisé</h3>
+        <p>Un coût que vous contrôlez — pas un pourcentage prélevé sur chaque vente.</p>
+        <ul class="diff-list">
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span><span style="color:var(--teal-light);font-weight:600">Jusqu'à CHF 8 / livraison, dégressif selon volume</span></li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Tarif fixe, défini à l'avance</li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Zéro commission sur vos ventes</li>
+        </ul>
+      </div>
+
+      <div class="diff-card rv d2">
+        <div class="diff-card-top">
+          <div class="diff-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <span class="diff-num">03</span>
+        </div>
+        <h3>Zéro coordination<br>de votre côté</h3>
+        <p class="diff-lead">Passez une commande.<br>On s'occupe du reste.</p>
+        <ul class="diff-list">
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Dispatch pris en charge à chaque commande</li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Un interlocuteur dédié à votre compte</li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Confirmation de livraison à chaque course</li>
+        </ul>
+      </div>
+
     </div>
   </div>
 </section>
@@ -630,33 +708,51 @@ span.ast{color:#e53e3e!important;font-weight:700}
         <div class="feat-head rv">
           <span class="sl">Ce que ça change pour vous</span>
           <h2 class="st">Tout est <span class="ac">inclus</span></h2>
-          <p class="sd">Une seule solution, du dispatch à la preuve de livraison.</p>
+          <p class="sd">Pas de logiciel, pas de coordinateur — tout est compris dès la première commande.</p>
         </div>
         <div class="feat-item rv">
-          <div class="feat-item-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <div class="feat-item-text"><h4>Coursiers dédiés en CDI</h4><p>Formés en interne, assurés, fidèles à votre enseigne. Pas de freelances, pas de turnover.</p></div>
+          <div class="feat-item-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <div class="feat-item-text"><h4>Dispatch automatique</h4><p>Commande transmise → coursier assigné → destinataire notifié par SMS. Sans un appel, sans une relance.</p></div>
         </div>
         <div class="feat-item rv d1">
-          <div class="feat-item-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-          <div class="feat-item-text"><h4>Dispatch automatique</h4><p>Commande reçue → coursier assigné → client notifié par SMS. Sans un seul appel.</p></div>
+          <div class="feat-item-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div>
+          <div class="feat-item-text"><h4>Preuve de livraison systématique</h4><p>Photo horodatée après chaque dépôt. Vous avez une trace irréfutable — zéro contestation possible.</p></div>
         </div>
         <div class="feat-item rv d2">
-          <div class="feat-item-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div>
-          <div class="feat-item-text"><h4>Multi-stops & sur-mesure</h4><p>Tournées optimisées, créneau planifié ou express — adapté à votre rythme.</p></div>
+          <div class="feat-item-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg></div>
+          <div class="feat-item-text"><h4>Multi-stops & créneaux sur-mesure</h4><p>Express ou planifié, une adresse ou vingt — on s'adapte à votre volume et à vos horaires.</p></div>
         </div>
         <div class="feat-item rv d3">
-          <div class="feat-item-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9m-9 9a9 9 0 0 1 9-9"/></svg></div>
-          <div class="feat-item-text"><h4>Traçabilité en temps réel</h4><p>GPS live, preuve photo, notification destinataire, reporting mensuel.</p></div>
-        </div>
-        <div class="feat-item rv d4">
-          <div class="feat-item-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></div>
-          <div class="feat-item-text"><h4>Emploi responsable</h4><p>Tous nos livreurs sont en CDI, avec les meilleures conditions du secteur en Suisse.</p></div>
+          <div class="feat-item-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg></div>
+          <div class="feat-item-text"><h4>Votre marque, pas Chaskis</h4><p>Tenue, matériel et communication à vos couleurs. Vos clients vivent une expérience à votre image.</p></div>
         </div>
       </div>
       <div class="feat-photo rv d2">
-        <div class="feat-photo-placeholder">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-          Photo coursier Chaskis en livraison
+        <div class="feat-mockup">
+          <div class="fm-bar">
+            <span class="fm-dot"></span><span class="fm-dot"></span><span class="fm-dot"></span>
+          </div>
+          <div class="fm-header">
+            <span class="fm-label">Suivi de livraison</span>
+            <span class="fm-badge fm-done">✓ Confirmée</span>
+          </div>
+          <div class="fm-proof">
+            <div class="fm-proof-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div>
+            <div>
+              <div class="fm-proof-label">Preuve photo enregistrée</div>
+              <div class="fm-proof-label"><strong>Aujourd'hui · 14:32</strong></div>
+            </div>
+          </div>
+          <div class="fm-steps">
+            <div class="fm-step done"><span class="fm-step-ic">✓</span><span>Commande reçue</span></div>
+            <div class="fm-step done"><span class="fm-step-ic">✓</span><span>Coursier assigné</span></div>
+            <div class="fm-step done"><span class="fm-step-ic">✓</span><span>Livraison effectuée — <strong>14h32</strong></span></div>
+            <div class="fm-step done"><span class="fm-step-ic">✓</span><span>Preuve photo envoyée</span></div>
+          </div>
+          <div class="fm-footer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.99 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.9 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            SMS envoyé au destinataire
+          </div>
         </div>
       </div>
     </div>
@@ -1581,6 +1677,39 @@ if ('serviceWorker' in navigator) {
 })();
 
 
+/* ===== DIFF CARDS — 3D TILT + TEAL GLOW ===== */
+(function(){
+  if(window.matchMedia('(max-width:1024px)').matches||'ontouchstart' in window) return;
+  var cards=document.querySelectorAll('.diff-card');
+  if(!cards.length) return;
+  var MAX_TILT=7;
+  for(var i=0;i<cards.length;i++){
+    (function(card){
+      card.addEventListener('mouseenter',function(){
+        card.style.transition='box-shadow .4s ease, border-color .4s ease';
+      });
+      card.addEventListener('mousemove',function(e){
+        var r=card.getBoundingClientRect();
+        var x=(e.clientX-r.left)/r.width;
+        var y=(e.clientY-r.top)/r.height;
+        var tiltX=(y-.5)*-MAX_TILT;
+        var tiltY=(x-.5)*MAX_TILT;
+        card.style.transform='perspective(800px) rotateX('+tiltX+'deg) rotateY('+tiltY+'deg) translateY(-6px) scale(1.02)';
+        card.style.boxShadow='0 0 0 1px rgba(75,179,164,.4), 0 12px 40px rgba(75,179,164,.25), 0 24px 56px rgba(0,0,0,.45)';
+        card.style.setProperty('--mx',(x*100)+'%');
+        card.style.setProperty('--my',(y*100)+'%');
+      });
+      card.addEventListener('mouseleave',function(){
+        card.style.transition='transform .5s cubic-bezier(.19,1,.22,1), box-shadow .5s ease, border-color .5s ease';
+        card.style.transform='';
+        card.style.boxShadow='';
+        card.style.setProperty('--mx','50%');
+        card.style.setProperty('--my','50%');
+      });
+    })(cards[i]);
+  }
+})();
+
 /* ===== OFFRE CARDS — 3D TILT + SPOTLIGHT ===== */
 (function(){
   if(window.matchMedia('(max-width:1024px)').matches||'ontouchstart' in window) return;
@@ -1614,21 +1743,6 @@ if ('serviceWorker' in navigator) {
   }
 })();
 
-/* ===== CUSTOM CURSOR — RADAR ===== */
-(function(){
-  if(window.matchMedia('(max-width:1024px)').matches||'ontouchstart' in window) return;
-  const dot=document.createElement('div');dot.className='cursor-dot';
-  const ring=document.createElement('div');ring.className='cursor-ring';
-  document.body.append(dot,ring);
-  let mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
-  (function move(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(move);})();
-  const hoverables='a,button,[role="button"],input,textarea,select,label,.offre-card,.sec-card,.bento-item';
-  document.addEventListener('mouseover',e=>{if(e.target.closest(hoverables)){dot.classList.add('hovering');ring.classList.add('hovering');}});
-  document.addEventListener('mouseout',e=>{if(e.target.closest(hoverables)){dot.classList.remove('hovering');ring.classList.remove('hovering');}});
-  document.addEventListener('mouseleave',()=>{dot.style.opacity='0';ring.style.opacity='0';});
-  document.addEventListener('mouseenter',()=>{dot.style.opacity='1';ring.style.opacity='1';});
-})();
 </script>
 </body>
 </html>

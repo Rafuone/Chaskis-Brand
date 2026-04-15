@@ -3,7 +3,7 @@
 > **Dernière mise à jour :** avril 2026
 > **État actuel des sections :**
 > - `diff-sec` (Pourquoi Chaskis) — utilise des icônes Lucide pour le moment. Des illustrations dans un style "dessiné / Notion" sont prévues pour chaque card (voir section dédiée ci-dessous).
-> - `feat-sec` (Tout est inclus) — mockup UI codé, pas d'image. La carte GPS a été remplacée par un écran "Livraison confirmée" avec preuve photo.
+> - `feat-sec` (Tout est inclus) — mockup UI codé à droite (suivi de livraison avec preuve photo), bénéfices listés à gauche avec icônes sur fond pastel (teal-bg, accent-bg). Copy adapté B2B : intégration outils (Shipday/API), pas "pas de logiciel". Sémantique SEO : h3, article, JSON-LD DeliveryService.
 
 ---
 

@@ -10,6 +10,38 @@
 <link rel="icon" href="icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "DeliveryService",
+  "name": "Chaskis",
+  "description": "Service de livraison B2B en Suisse romande. Coursiers salariés, dispatch automatique, preuve photo, livraison express et planifiée.",
+  "url": "https://chaskis.ch",
+  "areaServed": {
+    "@type": "Place",
+    "name": "Suisse romande"
+  },
+  "serviceType": ["Livraison express", "Livraison planifiée", "Livraison multi-stops", "Livraison en marque blanche"],
+  "provider": {
+    "@type": "Organization",
+    "name": "Chaskis",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Genève",
+      "addressCountry": "CH"
+    }
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Formules de livraison",
+    "itemListElement": [
+      {"@type": "Offer", "name": "Express", "description": "Livraison à la demande en moins de 90 minutes"},
+      {"@type": "Offer", "name": "Flex", "description": "Service régulier adapté à votre rythme"},
+      {"@type": "Offer", "name": "Dédié", "description": "Coursier attitré à temps plein pour votre entreprise"}
+    ]
+  }
+}
+</script>
 <style>
 /* ===== HERO v7 — B2B REFRAME ===== */
 .hero{display:flex;align-items:flex-start;padding:156px 0 140px;position:relative;overflow:hidden;background:var(--bg)}
@@ -153,18 +185,26 @@
 @media(max-width:600px){.diff-stats{flex-direction:column;gap:28px;align-items:center}}
 
 /* ===== CE QUE ÇA CHANGE (light — features + photo) ===== */
-.feat-sec{padding:clamp(72px,9vw,112px) 0;background:var(--white);position:relative;overflow:hidden}
+.feat-sec{padding:clamp(80px,10vw,120px) 0;background:var(--white);position:relative;overflow:hidden}
 .feat-sec::before{content:'';position:absolute;top:-120px;right:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(75,179,164,.05),transparent 70%);pointer-events:none}
-.feat-head{margin-bottom:8px}
-.feat-head .st{margin-bottom:8px}
-.feat-head .sd{font-size:.95rem;color:var(--ink-light)}
-.feat-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,5vw,72px);align-items:center}
-.feat-list{display:flex;flex-direction:column;gap:24px}
-.feat-item{display:flex;gap:16px;align-items:flex-start}
-.feat-item-ic{width:40px;height:40px;flex-shrink:0;border-radius:12px;background:var(--teal-xlight);display:flex;align-items:center;justify-content:center}
-.feat-item-ic svg{width:20px;height:20px;color:var(--teal)}
-.feat-item-text h4{font-size:.95rem;font-weight:700;margin-bottom:4px;color:var(--ink)}
-.feat-item-text p{font-size:.86rem;color:var(--ink-light);line-height:1.6}
+.feat-head{margin-bottom:clamp(20px,2.5vw,28px)}
+.feat-head .st{margin-bottom:10px}
+.feat-head .sd{font-size:.95rem;color:var(--ink-light);line-height:1.65;max-width:420px}
+.feat-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,5vw,64px);align-items:center}
+.feat-list{display:flex;flex-direction:column;gap:0}
+.feat-item{display:flex;gap:14px;align-items:flex-start;padding:clamp(14px,1.6vw,18px) 0;border-bottom:1px solid rgba(44,32,82,.05)}
+.feat-item:first-of-type{padding-top:0}
+.feat-item:last-child{border-bottom:none;padding-bottom:0}
+.feat-item-ic{width:36px;height:36px;flex-shrink:0;border-radius:10px;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;margin-top:1px}
+.feat-item:nth-child(3) .feat-item-ic{background:var(--accent-bg)}
+.feat-item:nth-child(4) .feat-item-ic{background:rgba(53,147,138,.08)}
+.feat-item:nth-child(5) .feat-item-ic{background:rgba(44,32,82,.06)}
+.feat-item-ic svg{width:18px;height:18px;color:var(--teal)}
+.feat-item:nth-child(3) .feat-item-ic svg{color:var(--accent)}
+.feat-item:nth-child(4) .feat-item-ic svg{color:var(--teal-dark)}
+.feat-item:nth-child(5) .feat-item-ic svg{color:var(--ink-mid)}
+.feat-item-text h3,.feat-item-text h4{font-size:.95rem;font-weight:700;margin-bottom:4px;color:var(--ink);line-height:1.3;letter-spacing:-.01em}
+.feat-item-text p{font-size:.84rem;color:var(--ink-light);line-height:1.6;margin:0}
 .feat-photo{border-radius:var(--rxl);overflow:hidden;aspect-ratio:4/5;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative}
 .feat-photo::before{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(44,32,82,.06)}
 .feat-photo-placeholder{color:var(--ink-muted);font-size:.82rem;text-align:center;padding:24px;line-height:1.5}
@@ -700,32 +740,32 @@ span.ast{color:#e53e3e!important;font-weight:700}
   </div>
 </section>
 
-<!-- ===== CE QUE ÇA CHANGE ===== -->
-<section class="feat-sec">
+<!-- ===== CE QUE ÇA CHANGE — Service de livraison professionnel tout-inclus ===== -->
+<section class="feat-sec" id="avantages" aria-labelledby="feat-heading">
   <div class="ct">
     <div class="feat-layout">
-      <div class="feat-list">
+      <div class="feat-list" role="list">
         <div class="feat-head rv">
           <span class="sl">Ce que ça change pour vous</span>
-          <h2 class="st">Tout est <span class="ac">inclus</span></h2>
-          <p class="sd">Pas de logiciel, pas de coordinateur — tout est compris dès la première commande.</p>
+          <h2 class="st" id="feat-heading">Tout est <span class="ac">inclus</span></h2>
+          <p class="sd">On se connecte à vos outils, on gère la logistique.<br>Tout est compris dès la première commande.</p>
         </div>
-        <div class="feat-item rv">
-          <div class="feat-item-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-          <div class="feat-item-text"><h4>Dispatch automatique</h4><p>Commande transmise → coursier assigné → destinataire notifié par SMS. Sans un appel, sans une relance.</p></div>
-        </div>
-        <div class="feat-item rv d1">
-          <div class="feat-item-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div>
-          <div class="feat-item-text"><h4>Preuve de livraison systématique</h4><p>Photo horodatée après chaque dépôt. Vous avez une trace irréfutable — zéro contestation possible.</p></div>
-        </div>
-        <div class="feat-item rv d2">
-          <div class="feat-item-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg></div>
-          <div class="feat-item-text"><h4>Multi-stops & créneaux sur-mesure</h4><p>Express ou planifié, une adresse ou vingt — on s'adapte à votre volume et à vos horaires.</p></div>
-        </div>
-        <div class="feat-item rv d3">
-          <div class="feat-item-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg></div>
-          <div class="feat-item-text"><h4>Votre marque, pas Chaskis</h4><p>Tenue, matériel et communication à vos couleurs. Vos clients vivent une expérience à votre image.</p></div>
-        </div>
+        <article class="feat-item rv" role="listitem">
+          <div class="feat-item-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <div class="feat-item-text"><h3>Dispatch automatique</h3><p>Commande transmise → coursier assigné → destinataire notifié par SMS.<br>Sans un appel, sans une relance.</p></div>
+        </article>
+        <article class="feat-item rv d1" role="listitem">
+          <div class="feat-item-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div>
+          <div class="feat-item-text"><h3>Preuve de livraison systématique</h3><p>Photo horodatée après chaque dépôt.<br>Trace irréfutable, zéro contestation possible.</p></div>
+        </article>
+        <article class="feat-item rv d2" role="listitem">
+          <div class="feat-item-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg></div>
+          <div class="feat-item-text"><h3>Multi-stops et créneaux sur-mesure</h3><p>Express ou planifié, une adresse ou vingt.<br>On s'adapte à votre volume et à vos horaires.</p></div>
+        </article>
+        <article class="feat-item rv d3" role="listitem">
+          <div class="feat-item-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg></div>
+          <div class="feat-item-text"><h3>Votre marque, pas Chaskis</h3><p>Tenue, matériel et communication à vos couleurs.<br>Vos clients vivent une expérience à votre image.</p></div>
+        </article>
       </div>
       <div class="feat-photo rv d2">
         <div class="feat-mockup">
@@ -746,7 +786,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
           <div class="fm-steps">
             <div class="fm-step done"><span class="fm-step-ic">✓</span><span>Commande reçue</span></div>
             <div class="fm-step done"><span class="fm-step-ic">✓</span><span>Coursier assigné</span></div>
-            <div class="fm-step done"><span class="fm-step-ic">✓</span><span>Livraison effectuée — <strong>14h32</strong></span></div>
+            <div class="fm-step done"><span class="fm-step-ic">✓</span><span>Livraison effectuée · <strong>14h32</strong></span></div>
             <div class="fm-step done"><span class="fm-step-ic">✓</span><span>Preuve photo envoyée</span></div>
           </div>
           <div class="fm-footer">

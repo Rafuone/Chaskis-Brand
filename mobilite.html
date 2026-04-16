@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobilit&eacute; — Chauffeur priv&eacute; et transferts | Chaskis</title>
+<meta name="description" content="Service de chauffeur priv&eacute; en Suisse romande. Transferts a&eacute;roport, &eacute;v&eacute;nements, conciergerie et transport adapt&eacute; &agrave; mobilit&eacute; r&eacute;duite. R&eacute;servez avec Chaskis.">
+<link rel="canonical" href="https://www.chaskis.ch/mobilite">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Nav transparent initial */
+#nav:not(.scrolled):not(.over-dark) .nav-mid a{color:rgba(255,255,255,.75)}
+#nav:not(.scrolled):not(.over-dark) .nav-mid a:hover{color:#fff}
+#nav:not(.scrolled):not(.over-dark) .nav-logo img{filter:brightness(0) invert(1)}
+#nav:not(.scrolled):not(.over-dark) .lang-sw{background:rgba(255,255,255,.12)}
+#nav:not(.scrolled):not(.over-dark) .lang-pill{background:rgba(255,255,255,.22)}
+#nav:not(.scrolled):not(.over-dark) .lang-sw button{color:rgba(255,255,255,.6);opacity:.6}
+#nav:not(.scrolled):not(.over-dark) .lang-sw button.active{color:#fff;opacity:1}
+
+/* Mobility hero */
+.mob-hero{padding:100px 0 60px;background:linear-gradient(135deg,var(--ink) 0%,#1a2530 100%);color:#fff;position:relative;overflow:hidden;min-height:480px;display:flex;align-items:center}
+.mob-hero::before{content:'';position:absolute;top:-40%;right:-15%;width:600px;height:600px;background:radial-gradient(circle,rgba(58,175,169,.15),transparent 65%);border-radius:50%;animation:float 10s ease-in-out infinite}
+.mob-hero::after{content:'';position:absolute;bottom:-30%;left:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(107,79,160,.08),transparent 65%);border-radius:50%;animation:float 12s ease-in-out infinite reverse}
+.mob-hero-inner{position:relative;z-index:1;max-width:640px}
+.mob-hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1.1;letter-spacing:-.04em;margin-bottom:16px}
+.mob-hero h1 .ac{color:var(--teal)}
+.mob-hero p{font-size:1.05rem;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:28px;max-width:500px}
+
+/* Services grid */
+.mob-services{background:var(--bg)}
+.mob-srv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:-40px;position:relative;z-index:2}
+.mob-srv{background:var(--white);border-radius:var(--rxl);box-shadow:var(--sh-lg);padding:32px 28px;text-align:center;transition:all .5s var(--ease);border:2px solid transparent}
+.mob-srv:hover{transform:translateY(-6px);border-color:var(--teal);box-shadow:var(--sh-xl)}
+.mob-srv-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;background:rgba(58,175,169,.1);color:var(--teal)}
+.mob-srv-icon svg{width:28px;height:28px}
+.mob-srv h3{font-size:1rem;font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
+.mob-srv p{font-size:.82rem;color:var(--ink-light);line-height:1.55}
+
+/* Why Chaskis section */
+.mob-why{background:var(--white)}
+.mob-why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.mob-why-card{padding:28px 24px;background:var(--bg);border-radius:var(--rxl);border:1.5px solid rgba(0,0,0,.04);transition:all .5s var(--ease);text-align:center}
+.mob-why-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:rgba(58,175,169,.12)}
+.mob-why-icon{width:48px;height:48px;border-radius:14px;background:rgba(58,175,169,.08);color:var(--teal);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.mob-why-icon svg{width:22px;height:22px}
+.mob-why-card h4{font-size:.95rem;font-weight:800;margin-bottom:4px}
+.mob-why-card p{font-size:.8rem;color:var(--ink-light);line-height:1.55}
+
+/* CTA */
+.mob-cta{background:linear-gradient(135deg,#2A8A85,var(--teal),#3fc1bb);color:#fff;text-align:center;position:relative;overflow:hidden}
+.mob-cta::before{content:'';position:absolute;top:-50%;left:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(255,255,255,.08),transparent 60%);border-radius:50%}
+.mob-cta-inner{position:relative;z-index:1;max-width:520px;margin:0 auto}
+.mob-cta h2{font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:12px}
+.mob-cta p{font-size:.92rem;color:rgba(255,255,255,.7);margin-bottom:28px;line-height:1.6}
+
+@media(max-width:1024px){
+  .mob-srv-grid{grid-template-columns:repeat(2,1fr)}
+  .mob-why-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .mob-srv-grid{grid-template-columns:1fr;max-width:400px;margin-left:auto;margin-right:auto}
+  .mob-why-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="mob-m" id="mm">
+  <a href="index-v7.html" onclick="cm()">Accueil</a>
+  <a href="index-v7.html#services" onclick="cm()">Nos services</a>
+  <a href="commander-v7.html" onclick="cm()">Commander</a>
+  <a href="mobilite.html" onclick="cm()">Mobilit&eacute;</a>
+  <a href="postuler.html" onclick="cm()">Postuler</a>
+  <a href="index-v7.html#booking" onclick="cm()">Planifier un appel</a>
+  <a href="index-v7.html#faq" onclick="cm()">FAQ</a>
+</div>
+
+<nav class="nav" id="nav">
+  <div class="ct nav-in">
+    <a href="index-v7.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
+    <div class="nav-mid" style="margin-left:auto">
+      <a href="commander-v7.html">Commander</a>
+      <a href="mobilite.html">Mobilit&eacute;</a>
+      <a href="postuler.html">Postuler</a>
+    </div>
+    <div class="lang-sw" id="langSw" role="radiogroup" aria-label="Langue / Language">
+      <span class="lang-pill" id="langPill" aria-hidden="true"></span>
+      <button class="active" role="radio" aria-checked="true" data-lang="fr" onclick="movePill('fr')" aria-label="Fran&ccedil;ais">FR</button>
+      <button role="radio" aria-checked="false" data-lang="en" onclick="movePill('en')" aria-label="English">EN</button>
+    </div>
+    <button class="mob-t" id="mt" aria-label="Menu"><span></span></button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="mob-hero">
+  <div class="ct mob-hero-inner">
+    <div class="rv">
+      <div class="sl" style="color:var(--teal)"><span style="width:20px;height:2px;background:var(--teal);display:inline-block;border-radius:1px;margin-right:8px"></span>Mobilit&eacute;</div>
+      <h1>Votre <span class="ac">chauffeur priv&eacute;</span> en Suisse romande</h1>
+      <p>Transferts a&eacute;roport, &eacute;v&eacute;nements, conciergerie ou transport adapt&eacute; : Chaskis vous conduit partout, en toute s&eacute;r&eacute;nit&eacute;.</p>
+      <a href="index-v7.html#booking" class="btn btn-p"><span>R&eacute;server un trajet</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<!-- Services -->
+<section class="mob-services sec">
+  <div class="ct">
+    <div class="mob-srv-grid stg">
+
+      <div class="mob-srv tilt-3d rv">
+        <div class="mob-srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0"/><path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0"/><path d="M5 17H3v-6l2-5h9l4 5h1a2 2 0 0 1 2 2v4h-2M9 17h6"/></svg></div>
+        <h3>Chauffeur priv&eacute;</h3>
+        <p>Un chauffeur professionnel &agrave; votre disposition pour tous vos d&eacute;placements en Suisse romande. Ponctualit&eacute; et discr&eacute;tion garanties.</p>
+      </div>
+
+      <div class="mob-srv tilt-3d rv d2">
+        <div class="mob-srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 17l1.5-4.5h17L22 17"/><path d="M6 17v1a1 1 0 001 1h2a1 1 0 001-1v-1M14 17v1a1 1 0 001 1h2a1 1 0 001-1v-1"/><path d="M5 12.5V7a2 2 0 012-2h10a2 2 0 012 2v5.5"/><path d="M8 2h8"/></svg></div>
+        <h3>Transferts a&eacute;roport</h3>
+        <p>Gen&egrave;ve, B&acirc;le, Zurich ou ailleurs : on vous d&eacute;pose et on vous r&eacute;cup&egrave;re &agrave; l'heure, sans stress ni surco&ucirc;t cach&eacute;.</p>
+      </div>
+
+      <div class="mob-srv tilt-3d rv d3">
+        <div class="mob-srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14l-5-4.87 6.91-1.01z"/></svg></div>
+        <h3>&Eacute;v&eacute;nements &amp; conciergerie</h3>
+        <p>Mariages, s&eacute;minaires, soir&eacute;es ou roadshows : un service sur-mesure pour vos invit&eacute;s et collaborateurs.</p>
+      </div>
+
+      <div class="mob-srv tilt-3d rv d4">
+        <div class="mob-srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/><path d="M8 21h8"/><path d="M12 21v-3"/></svg></div>
+        <h3>Mobilit&eacute; r&eacute;duite</h3>
+        <p>V&eacute;hicules adapt&eacute;s et chauffeurs form&eacute;s pour accompagner les personnes &agrave; mobilit&eacute; r&eacute;duite en toute s&eacute;curit&eacute;.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Why Chaskis -->
+<section class="mob-why sec">
+  <div class="ct">
+    <div class="sh c rv">
+      <span class="sl" style="color:var(--teal)"><span style="width:20px;height:2px;background:var(--teal);display:inline-block;border-radius:1px;margin-right:8px"></span>Pourquoi Chaskis</span>
+      <h2 class="st">Un service de <span style="color:var(--teal)">mobilit&eacute; premium</span></h2>
+      <p class="sd">Fiabilit&eacute;, ponctualit&eacute; et s&eacute;r&eacute;nit&eacute; pour chaque trajet.</p>
+    </div>
+    <div class="mob-why-grid stg">
+      <div class="mob-why-card tilt-3d">
+        <div class="mob-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h4>Ponctualit&eacute; absolue</h4>
+        <p>Suivi en temps r&eacute;el et arriv&eacute;e confirm&eacute;e. Jamais de retard.</p>
+      </div>
+      <div class="mob-why-card tilt-3d">
+        <div class="mob-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h4>S&eacute;curit&eacute; &amp; assurance</h4>
+        <p>Chauffeurs v&eacute;rifi&eacute;s, v&eacute;hicules assur&eacute;s, trajets trac&eacute;s.</p>
+      </div>
+      <div class="mob-why-card tilt-3d">
+        <div class="mob-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <h4>Service humain</h4>
+        <p>Des chauffeurs CDI, form&eacute;s et &agrave; l'&eacute;coute de vos besoins.</p>
+      </div>
+      <div class="mob-why-card tilt-3d">
+        <div class="mob-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <h4>Tarifs transparents</h4>
+        <p>Prix fix&eacute; avant le trajet. Pas de surprise &agrave; l'arriv&eacute;e.</p>
+      </div>
+      <div class="mob-why-card tilt-3d">
+        <div class="mob-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <h4>R&eacute;servation en ligne</h4>
+        <p>R&eacute;servez en quelques clics depuis notre site ou notre application.</p>
+      </div>
+      <div class="mob-why-card tilt-3d">
+        <div class="mob-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <h4>Entreprises &amp; groupes</h4>
+        <p>Forfaits d&eacute;di&eacute;s pour vos &eacute;quipes, s&eacute;minaires et &eacute;v&eacute;nements.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="mob-cta sec">
+  <div class="ct mob-cta-inner rv">
+    <h2>Planifiez votre prochain trajet</h2>
+    <p>R&eacute;servez un chauffeur en quelques clics. Nous vous recontactons pour confirmer les d&eacute;tails de votre d&eacute;placement.</p>
+    <a href="index-v7.html#booking" class="btn" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(8px)"><span>R&eacute;server maintenant</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="ct">
+    <div class="ft">
+      <div class="fb"><a href="index-v7.html" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg3" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg3)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a><p>Gestion de livraison en Suisse romande.</p></div>
+      <div class="fc"><h4>Services</h4><a href="commander-v7.html">Commander</a><a href="mobilite.html">Mobilit&eacute;</a><a href="index-v7.html#services">Nos services</a><a href="index-v7.html#booking">Planifier un appel gratuit</a></div>
+      <div class="fc"><h4>Entreprise</h4><a href="postuler.html">Postuler</a><a href="index-v7.html#faq">FAQ</a><a href="mailto:contact@chaskis.ch">Contact</a></div>
+      <div class="fc"><h4>L&eacute;gal</h4><a href="#">Mentions l&eacute;gales</a><a href="#">Confidentialit&eacute;</a></div>
+    </div>
+    <div class="f-btm"><span>&copy; 2026 Chaskis SA &mdash; Lausanne</span><span>Fait en Suisse romande</span></div>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script src="auth.js"></script>
+<script>
+function movePill(lang) {
+  const sw = document.getElementById('langSw');
+  const pill = document.getElementById('langPill');
+  const btn = sw && sw.querySelector(`button[data-lang="${lang}"]`);
+  if (!pill || !btn) return;
+  pill.style.width = btn.offsetWidth + 'px';
+  pill.style.transform = `translateX(${btn.offsetLeft - 3}px)`;
+  sw.querySelectorAll('button').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+    b.setAttribute('aria-checked', b.dataset.lang === lang ? 'true' : 'false');
+  });
+}
+window.addEventListener('DOMContentLoaded', () => movePill('fr'));
+
+(function(){
+  const nav = document.getElementById('nav');
+  const darkSections = document.querySelectorAll('.mob-hero, .mob-cta');
+  if (!nav) return;
+  function updateNav() {
+    if (scrollY <= 40) { nav.classList.remove('over-dark'); return; }
+    const navMid = nav.getBoundingClientRect().bottom;
+    const overDark = [...darkSections].some(s => {
+      const r = s.getBoundingClientRect();
+      return r.top < navMid && r.bottom > navMid;
+    });
+    nav.classList.toggle('over-dark', overDark);
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+})();
+</script>
+</body>
+</html>

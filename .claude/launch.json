@@ -6,7 +6,7 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "-l", "3000", "--no-clipboard"],
       "port": 3000,
-      "openPath": "/index-v7.html"
+      "openPath": "/index.html"
     }
   ]
 }

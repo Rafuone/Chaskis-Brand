@@ -349,10 +349,9 @@
 .testi .mq-w::before{background:linear-gradient(90deg,var(--bg),transparent)}
 .testi .mq-w::after{background:linear-gradient(-90deg,var(--bg),transparent)}
 .testi-mq{display:flex;overflow:hidden}
-.testi-set{flex-shrink:0;display:flex;animation:testi-scroll 180s linear infinite}
-.testi-set .tc{margin-right:20px}
-.testi-mq:hover .testi-set{animation-play-state:paused}
-@keyframes testi-scroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+.testi-set{flex-shrink:0;display:flex;gap:20px;will-change:transform}
+.testi-mq:hover #testiSet0{animation-play-state:paused}
+#testiSet1{display:none}
 .tc{flex:0 0 340px;background:var(--white);border-radius:var(--rxl);padding:28px;border:1.5px solid rgba(0,0,0,.04);transition:all .4s var(--ease)}
 .tc:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:rgba(107,79,160,.06)}
 .tc-stars{display:flex;gap:2px;margin-bottom:14px}
@@ -2110,25 +2109,40 @@ if ('serviceWorker' in navigator) {
       '<div class="tc-info"><h4>' + c.name + '</h4><p>' + c.role + '</p></div></div></article>';
   }
 
-  const set0 = document.getElementById('testiSet0');
-  const set1 = document.getElementById('testiSet1');
-  if (!set0 || !set1) return;
+  const track = document.getElementById('testiSet0');
+  if (!track) return;
 
-  // Just enough cards so each set >= viewport + a buffer. No more.
-  const ROUND_W = 1440; // 4 cards × 360px (card + margin)
-  const vw = window.innerWidth;
-  const reps = Math.max(3, Math.ceil((vw + 800) / ROUND_W));
+  const GAP = 20;              // must match CSS gap
+  const CARD_W = 340;          // must match .tc flex-basis
+  const CARD_STEP = CARD_W + GAP;
+  // One "unit" = CARDS.length cards. The track shifts by exactly one unit per cycle.
+  // Because the content is periodic with this unit, the reset is mathematically seamless.
+  const UNIT_STEP = CARDS.length * CARD_STEP;   // e.g. 4 * 360 = 1440
+  const SPEED = 60;            // px per second
+  let styleEl = null;
 
-  const html = Array.from({length: reps}, () => CARDS.map(makeCard).join('')).join('');
-  set0.innerHTML = html;
-  set1.innerHTML = html;
+  function build() {
+    const vw = window.innerWidth;
+    // Track must be >= viewport + UNIT_STEP so during the entire cycle the viewport is covered.
+    const unitsNeeded = Math.ceil((vw + UNIT_STEP) / UNIT_STEP) + 1; // +1 safety buffer
+    const html = Array.from({length: unitsNeeded}, () => CARDS.map(makeCard).join('')).join('');
+    track.innerHTML = html;
+    const duration = Math.max(20, Math.round(UNIT_STEP / SPEED));
 
-  // Speed ~60 px/s → one card passes every 6s. Duration scales with set width.
-  requestAnimationFrame(() => {
-    const setW = set0.offsetWidth;
-    const duration = Math.max(30, Math.round(setW / 60));
-    set0.style.animationDuration = duration + 's';
-    set1.style.animationDuration = duration + 's';
+    // Single element, single animation, explicit pixel travel = zero drift, zero ambiguity.
+    if (!styleEl) { styleEl = document.createElement('style'); document.head.appendChild(styleEl); }
+    styleEl.textContent =
+      '@keyframes testi-scroll-dyn{from{transform:translate3d(0,0,0)}to{transform:translate3d(-' + UNIT_STEP + 'px,0,0)}}' +
+      '#testiSet0{animation:testi-scroll-dyn ' + duration + 's linear infinite}';
+  }
+
+  build();
+
+  // Rebuild on resize (debounced) so track always covers viewport.
+  let rzT;
+  window.addEventListener('resize', () => {
+    clearTimeout(rzT);
+    rzT = setTimeout(build, 200);
   });
 })();
 

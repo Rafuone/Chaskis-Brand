@@ -10,6 +10,7 @@
 <link rel="icon" href="icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -104,9 +105,9 @@
 .lang-sw button.active{color:var(--ink);opacity:1}
 .lang-pill{position:absolute;top:3px;bottom:3px;left:3px;background:var(--white);border-radius:var(--pill);box-shadow:var(--sh-sm);transition:transform .28s var(--ease),width .28s var(--ease);pointer-events:none;z-index:0;will-change:transform}
 .nav.over-dark .lang-sw{background:rgba(255,255,255,.12)}
-.nav.over-dark .lang-sw .lang-pill{background:rgba(255,255,255,.22)}
-.nav.over-dark .lang-sw button{color:rgba(255,255,255,.6);opacity:.6}
-.nav.over-dark .lang-sw button.active{color:#fff;opacity:1}
+.nav.over-dark .lang-sw .lang-pill{background:rgba(255,255,255,.92)}
+.nav.over-dark .lang-sw button{color:rgba(255,255,255,.7);opacity:.7}
+.nav.over-dark .lang-sw button.active{color:var(--ink);opacity:1}
 
 /* Floating CTA — fixed bottom-right */
 .nav-cta-float{position:fixed;bottom:28px;right:28px;z-index:200;box-shadow:0 8px 32px rgba(58,175,169,.3);opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .4s var(--ease),transform .4s var(--ease)}
@@ -190,27 +191,60 @@
 .feat-head{margin-bottom:clamp(20px,2.5vw,28px)}
 .feat-head .st{margin-bottom:10px}
 .feat-head .sd{font-size:.95rem;color:var(--ink-light);line-height:1.65;max-width:420px}
-.feat-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,5vw,64px);align-items:center}
+.feat-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,5vw,64px);align-items:stretch}
 .feat-list{display:flex;flex-direction:column;gap:0}
 .feat-item{display:flex;gap:14px;align-items:flex-start;padding:clamp(14px,1.6vw,18px) 0;border-bottom:1px solid rgba(44,32,82,.05)}
 .feat-item:first-of-type{padding-top:0}
 .feat-item:last-child{border-bottom:none;padding-bottom:0}
 .feat-item-ic{width:36px;height:36px;flex-shrink:0;border-radius:10px;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;margin-top:1px}
-.feat-item:nth-child(3) .feat-item-ic{background:var(--accent-bg)}
-.feat-item:nth-child(4) .feat-item-ic{background:rgba(53,147,138,.08)}
-.feat-item:nth-child(5) .feat-item-ic{background:rgba(44,32,82,.06)}
 .feat-item-ic svg{width:18px;height:18px;color:var(--teal)}
-.feat-item:nth-child(3) .feat-item-ic svg{color:var(--accent)}
-.feat-item:nth-child(4) .feat-item-ic svg{color:var(--teal-dark)}
-.feat-item:nth-child(5) .feat-item-ic svg{color:var(--ink-mid)}
 .feat-item-text h3,.feat-item-text h4{font-size:.95rem;font-weight:700;margin-bottom:4px;color:var(--ink);line-height:1.3;letter-spacing:-.01em}
 .feat-item-text p{font-size:.84rem;color:var(--ink-light);line-height:1.6;margin:0}
-.feat-photo{border-radius:var(--rxl);overflow:hidden;aspect-ratio:4/5;background:var(--bg);display:flex;align-items:center;justify-content:center;position:relative}
-.feat-photo::before{content:'';position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(44,32,82,.06)}
+.feat-tags{font-size:.82rem;color:var(--ink-light);line-height:1.8;display:block}
+.feat-tag-more{color:var(--teal);font-weight:700;letter-spacing:.08em}
+.feat-photo{border-radius:var(--rxl);overflow:hidden;background:var(--bg);display:flex;align-items:stretch;justify-content:center;position:relative;min-height:420px}
+.feat-photo::before{content:'';position:absolute;inset:0;border-radius:inherit;border:1.5px solid rgba(44,32,82,.08);z-index:2;pointer-events:none}
 .feat-photo-placeholder{color:var(--ink-muted);font-size:.82rem;text-align:center;padding:24px;line-height:1.5}
 .feat-photo-placeholder svg{width:48px;height:48px;color:var(--teal-xlight);margin-bottom:12px;display:block;margin-left:auto;margin-right:auto}
-.feat-mockup{width:100%;height:100%;background:#fff;border-radius:var(--rxl);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(44,32,82,.1)}
+.feat-mockup{width:100%;height:100%;background:#fff;border-radius:var(--rxl);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(44,32,82,.1);isolation:isolate}
 .fm-bar{background:var(--ink);padding:10px 16px;display:flex;gap:6px;align-items:center}
+.fm-map{flex:1;min-height:220px;position:relative;overflow:hidden}
+.fm-map-inner{width:100%;height:100%;position:absolute;inset:0;transition:transform 2.5s ease-out;transform-origin:60% 40%}
+.leaflet-container{font-family:inherit;cursor:default!important;background:#f2efe9}
+/* Coursier */
+.fm-courier-marker{position:relative;width:34px;height:34px}
+.fm-courier-icon{width:28px;height:28px;border-radius:50%;background:#4BB3A4;border:none;box-shadow:0 2px 10px rgba(75,179,164,.4);position:absolute;top:3px;left:3px;display:flex;align-items:center;justify-content:center;transition:background .4s,transform .4s}
+.fm-courier-icon svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fm-courier-pulse{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle,rgba(75,179,164,.3) 0%,rgba(75,179,164,0) 70%);position:absolute;top:0;left:0;animation:fm-pulse 2s ease-out infinite}
+@keyframes fm-pulse{0%{transform:scale(.5);opacity:1}50%{opacity:.6}100%{transform:scale(2.2);opacity:0}}
+.fm-courier-marker.delivered .fm-courier-icon{background:#22C55E;transform:scale(1.1);box-shadow:0 2px 12px rgba(34,197,94,.45)}
+.fm-courier-marker.delivered .fm-courier-icon svg{stroke-dasharray:30;stroke-dashoffset:30;animation:fm-draw .5s .15s ease-out forwards}
+.fm-courier-marker.delivered .fm-courier-pulse{animation:fm-delivered-pop .6s ease-out forwards}
+@keyframes fm-delivered-pop{0%{transform:scale(.5);opacity:1;background:rgba(34,197,94,.35)}100%{transform:scale(2.8);opacity:0;background:rgba(34,197,94,0)}}
+/* Badge */
+.fm-badge{font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px;transition:all .4s ease;display:inline-flex;align-items:center;gap:4px}
+.fm-badge.waiting{background:rgba(44,32,82,.06);color:var(--ink-mid)}
+.fm-badge.in-progress{background:rgba(245,158,11,.1);color:#B45309}
+.fm-badge.delivered{background:rgba(34,197,94,.12);color:#16A34A}
+.fm-badge svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+/* Steps */
+.fm-step{transition:opacity .3s,color .3s}
+.fm-step.pending{opacity:.35}
+.fm-step.done{color:var(--ink)}
+.fm-step.active{color:var(--ink);font-weight:600}
+.fm-step-ic{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fm-step-ic svg.fm-check{width:15px;height:15px;fill:none;stroke:#22C55E;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.fm-step-ic svg.fm-check.anim{stroke-dasharray:30;stroke-dashoffset:30;animation:fm-draw .4s ease-out forwards}
+@keyframes fm-draw{to{stroke-dashoffset:0}}
+.fm-step-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);display:block;animation:pdot 1.4s ease-in-out infinite}
+.fm-step-circle{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--sand);display:block}
+/* Pins */
+.fm-dest-pin{width:20px;height:20px;position:relative}
+.fm-dest-pin svg{width:20px;height:20px;fill:var(--ink);stroke:none;opacity:.7;filter:drop-shadow(0 1px 3px rgba(44,32,82,.25))}
+.fm-start-pin{width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--teal);box-shadow:0 1px 5px rgba(0,0,0,.12)}
+.fm-stop{width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;color:var(--ink);box-shadow:0 1px 5px rgba(0,0,0,.12);transition:all .4s ease}
+.fm-stop.done{border-color:#22C55E;color:#22C55E}
+.fm-stop.done::after{content:'';position:absolute;inset:-3px;border-radius:50%;background:rgba(34,197,94,.15);z-index:-1;animation:fm-stop-pop .4s ease-out}
 .fm-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2)}
 .fm-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;border-bottom:1px solid var(--sand)}
 .fm-label{font-size:.78rem;font-weight:700;color:var(--ink);letter-spacing:.02em}
@@ -221,17 +255,11 @@
 .fm-proof-label{font-size:.76rem;color:var(--ink-mid);line-height:1.4}
 .fm-proof-label strong{color:var(--teal-dark);font-weight:700}
 .fm-done{background:rgba(75,179,164,.15)!important;color:var(--teal-dark)!important}
-.fm-steps{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.fm-steps{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
 .fm-step{display:flex;align-items:center;gap:10px;font-size:.8rem;color:var(--ink-light)}
-.fm-step.done{color:var(--ink-mid)}
-.fm-step.done .fm-step-ic{color:var(--teal);font-weight:700}
-.fm-step.active{color:var(--ink);font-weight:600}
-.fm-step-ic{width:18px;text-align:center;font-size:.75rem;flex-shrink:0}
-.pulse-dot{display:inline-block;width:8px;height:8px;background:var(--teal);border-radius:50%;animation:pdot 1.4s ease-in-out infinite}
-@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
-.fm-footer{display:flex;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid var(--sand);font-size:.75rem;color:var(--ink-muted);background:var(--bg)}
-.fm-footer svg{width:14px;height:14px;color:var(--teal);flex-shrink:0}
-@media(max-width:768px){.feat-layout{grid-template-columns:1fr}.feat-photo{aspect-ratio:16/9;max-height:320px}}
+@media(max-width:768px){.feat-layout{grid-template-columns:1fr}.feat-photo{min-height:auto}.fm-map{min-height:260px}}
+@media(min-width:769px) and (max-width:1024px){.fm-map{min-height:200px}}
+@media(min-width:1025px){.fm-map{min-height:240px}}
 
 /* ===== SECTEURS ===== */
 .secteurs{background:var(--white);overflow:hidden}
@@ -358,11 +386,25 @@
 .cta-booking{background:var(--white);position:relative;overflow:hidden}
 .cta-booking::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--teal-bg),transparent 60%);pointer-events:none}
 .cta-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(28px,4vw,56px);align-items:start;position:relative;z-index:1}
-.cta-perks{margin-top:20px}
-.cta-perk{display:flex;gap:10px;margin-bottom:14px}
-.cta-perk-ic{width:30px;height:30px;border-radius:8px;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.cta-perk-ic svg{width:14px;height:14px;color:var(--teal)}
-.cta-perk h4{font-size:.82rem;font-weight:700;margin-bottom:1px}.cta-perk p{font-size:.7rem;color:var(--ink-muted)}
+.bk-urgency{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:600;color:var(--teal-dark);background:var(--teal-bg);padding:6px 14px;border-radius:var(--pill);margin-bottom:16px}
+.bk-urgency-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2);animation:bk-pulse 2s infinite}
+@keyframes bk-pulse{0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,.2)}50%{box-shadow:0 0 0 6px rgba(34,197,94,.1)}}
+.cta-checks{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.cta-check{display:flex;align-items:center;gap:10px;font-size:.82rem;font-weight:500;color:var(--ink)}
+.cta-check svg{width:18px;height:18px;color:var(--teal);flex-shrink:0}
+.bk-testi{margin-top:24px;padding:18px;background:var(--white);border-radius:var(--r);border:1px solid var(--sand)}
+.bk-testi-stars{display:flex;gap:2px;margin-bottom:8px}
+.bk-testi-stars svg{width:14px;height:14px;fill:#f59e0b;stroke:none}
+.bk-testi-text{font-size:.8rem;color:var(--ink);font-style:italic;line-height:1.55;margin-bottom:10px}
+.bk-testi-author{display:flex;align-items:center;gap:8px}
+.bk-testi-av{width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;flex-shrink:0}
+.bk-testi-author strong{font-size:.72rem;display:block;color:var(--ink)}
+.bk-testi-author span{font-size:.65rem;color:var(--ink-muted)}
+.bk-trust{margin-top:20px}
+.bk-trust-label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-muted);display:block;margin-bottom:8px}
+.bk-trust-logos{display:flex;align-items:center;gap:20px;opacity:.5}
+.bk-trust-logos img{height:18px;filter:brightness(0);opacity:.7}
+.bk-trust-logos span{font-size:.75rem;font-weight:700;color:var(--ink-light)}
 .bk-w{background:var(--bg);border-radius:var(--rxl);padding:28px;box-shadow:var(--sh-lg);border:1px solid rgba(0,0,0,.04)}
 .bk-prog{display:flex;gap:5px;margin-bottom:20px}
 .bk-prog span{flex:1;height:3px;border-radius:2px;background:var(--sand);transition:background .4s var(--ease)}
@@ -370,19 +412,40 @@
 .bk-step{display:none}.bk-step.active{display:block}
 .bk-t{font-size:.95rem;font-weight:800;letter-spacing:-.02em;margin-bottom:3px}
 .bk-s{font-size:.72rem;color:var(--ink-muted);margin-bottom:16px}
-.bk-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:14px}
-.bk-d{width:100%;aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;color:var(--ink-light);cursor:default;transition:all .25s var(--ease)}
-.bk-d.hd{font-size:.55rem;font-weight:700;color:var(--ink-muted);text-transform:uppercase}
-.bk-d.av{color:var(--teal-dark);cursor:pointer;background:var(--teal-bg)}
-.bk-d.av:hover{background:var(--teal);color:#fff;transform:scale(1.1)}
-.bk-d.pk{background:var(--teal);color:#fff;box-shadow:0 4px 12px rgba(58,175,169,.2)}
-.bk-d.past{color:var(--warm-gray)}
-.bk-slots{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
-.bk-sl{padding:7px 12px;border-radius:var(--pill);font-size:.74rem;font-weight:600;border:1.5px solid var(--sand);color:var(--ink-mid);cursor:pointer;transition:all .3s var(--ease)}
-.bk-sl:hover,.bk-sl.pk{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
-.bk-nav{display:flex;gap:8px;margin-top:16px}
+.bk-container{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:start}
+.bk-cal-wrap{display:flex;flex-direction:column}
+.bk-cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px}
+.bk-cal-header h3{font-size:.9rem;font-weight:700;color:var(--ink);margin:0}
+.bk-cal-header button{background:none;border:none;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;color:var(--ink-mid);transition:all .2s}
+.bk-cal-header button:hover{background:var(--teal-bg);color:var(--teal)}
+.bk-cal-header button svg{width:18px;height:18px}
+.bk-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.bk-d{width:100%;aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;color:var(--ink-light);cursor:default;transition:all .25s var(--ease)}
+.bk-d.hd{font-size:.65rem;font-weight:700;color:var(--ink-muted);text-transform:uppercase;aspect-ratio:auto;padding:8px}
+.bk-d.av{color:var(--ink);cursor:pointer;background:var(--sand);border:1.5px solid transparent}
+.bk-d.av:hover{background:rgba(107,91,204,.08);color:var(--ink);border-color:rgba(107,91,204,.15)}
+.bk-d.pk{background:linear-gradient(135deg, #6B5BCC, #7B68D9);color:#fff;box-shadow:0 4px 12px rgba(107,91,204,.25);border-color:transparent}
+.bk-d.past{color:var(--warm-gray);background:transparent}
+.bk-slots-wrap{display:flex;flex-direction:column}
+.bk-slots-title{font-size:.85rem;font-weight:700;color:var(--ink-mid);margin-bottom:12px;display:none}
+.bk-slots-title.active{display:block}
+.bk-slots{display:flex;flex-direction:column;gap:8px}
+.bk-sl{padding:12px 14px;border-radius:8px;font-size:.85rem;font-weight:600;border:1.5px solid var(--sand);color:var(--ink);cursor:pointer;transition:all .3s var(--ease);text-align:center;background:var(--white)}
+.bk-sl:hover{border-color:#6B5BCC;background:rgba(107,91,204,.04);color:var(--ink)}
+.bk-sl.pk{border-color:#6B5BCC;background:linear-gradient(135deg, #6B5BCC, #7B68D9);color:#fff;font-weight:700;box-shadow:0 2px 8px rgba(107,91,204,.2)}
+.bk-slots{display:none}.bk-slots.active{display:flex}
+.bk-nav{display:flex;gap:8px;margin-top:24px}
 .bk-nav .btn{flex:1;justify-content:center;padding:11px 16px;font-size:.84rem}
 .bk-back{background:var(--white);color:var(--ink-mid);font-weight:600}
+.bk-savings{text-align:center;padding:24px;background:var(--white);border-radius:var(--r);border:1.5px solid var(--sand);margin-bottom:8px}
+.bk-savings-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(107,91,204,.1),rgba(123,104,217,.06));display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.bk-savings-icon svg{width:24px;height:24px;color:#6B5BCC}
+.bk-savings-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-mid);margin-bottom:8px}
+.bk-savings-amount{font-size:2.2rem;font-weight:800;letter-spacing:-.05em;line-height:1;margin-bottom:10px;background:linear-gradient(135deg,#6B5BCC,var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.bk-savings-detail{font-size:.78rem;color:var(--ink-light);line-height:1.5;margin-bottom:12px}
+.bk-savings-note{font-size:.68rem;color:var(--ink-muted);font-style:italic;line-height:1.5}
+.bk-skip{background:var(--white);color:var(--ink-muted);font-weight:600;border:1.5px solid var(--sand)}
+.bk-skip:hover{border-color:var(--ink-light);color:var(--ink-mid)}
 .bk-confirm{text-align:center;padding:20px 0}
 .bk-confirm svg{width:48px;height:48px;color:var(--teal);margin:0 auto 12px}
 .bk-confirm h3{font-size:1.1rem;font-weight:800;margin-bottom:5px}
@@ -442,7 +505,7 @@ section{padding:clamp(56px,7vw,96px) 0}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:1024px){
-  .hero-grid{grid-template-columns:1fr}.hero-vis{max-width:400px;margin:0 auto;height:340px}.hv-stat{display:none}
+  .hero-grid{grid-template-columns:1fr}.hero-vis{display:none}.hv-stat{display:none}
   .sec-grid{grid-template-columns:1fr 1fr}
   .vp-g{grid-template-columns:1fr}
   .pipeline-grid{grid-template-columns:1fr 1fr}
@@ -456,6 +519,8 @@ section{padding:clamp(56px,7vw,96px) 0}
   .hv-booking{left:-4px;right:4px}
   .sec-grid{grid-template-columns:1fr}
   .pipeline-grid{grid-template-columns:1fr}
+  .bk-container{grid-template-columns:1fr}
+  .bk-slots{flex-direction:row;flex-wrap:wrap}.bk-sl{flex:1;min-width:70px}
 }
 /* ===== FOOTER ===== */
 .footer{background:var(--ink);color:rgba(255,255,255,.6);padding:clamp(40px,5vw,64px) 0 24px}
@@ -569,17 +634,22 @@ span.ast{color:#e53e3e!important;font-weight:700}
 .sim-sec{padding:clamp(64px,8vw,100px) 0;background:var(--bg)}
 .sim-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(40px,6vw,80px);align-items:center}
 .sim-l .sd{max-width:400px;margin-top:16px}
-.sim-widget{background:var(--white);border-radius:var(--rxl);padding:36px 32px;box-shadow:var(--sh-lg);border:1.5px solid rgba(0,0,0,.04)}
+.sim-widget{background:var(--white);border-radius:var(--rxl);padding:32px;box-shadow:0 4px 24px rgba(44,32,82,.06);border:1.5px solid var(--sand)}
 .sim-field{margin-bottom:24px}
-.sim-label{display:block;font-size:.78rem;font-weight:600;color:var(--ink-mid);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em}
-.sim-range{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--teal-x-light);outline:none;cursor:pointer}
-.sim-range::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--teal);cursor:pointer;box-shadow:0 2px 8px rgba(75,179,164,.4);transition:transform .2s}
-.sim-range::-webkit-slider-thumb:hover{transform:scale(1.15)}
-.sim-val{font-size:1.1rem;font-weight:700;color:var(--ink);margin-top:8px;letter-spacing:-.02em}
-.sim-result{background:var(--ink);border-radius:var(--rl);padding:24px;margin:8px 0 16px;text-align:center}
-.sim-result-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.45);margin-bottom:8px}
-.sim-result-amount{font-size:2.4rem;font-weight:700;color:#F5B800;letter-spacing:-.05em;line-height:1;margin-bottom:8px}
-.sim-result-detail{font-size:.72rem;color:rgba(255,255,255,.45);line-height:1.5}
+.sim-label{display:block;font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em}
+.sim-range{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:var(--sand);outline:none;cursor:pointer;background-image:linear-gradient(var(--teal),var(--teal));background-size:var(--fill,0%) 100%;background-repeat:no-repeat}
+.sim-range::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--white);border:2.5px solid var(--teal);cursor:pointer;box-shadow:0 2px 8px rgba(75,179,164,.3);transition:transform .2s,box-shadow .2s}
+.sim-range::-webkit-slider-thumb:hover{transform:scale(1.15);box-shadow:0 3px 12px rgba(75,179,164,.45)}
+.sim-range::-moz-range-track{height:6px;border-radius:3px;background:var(--sand);border:none}
+.sim-range::-moz-range-progress{height:6px;border-radius:3px;background:var(--teal)}
+.sim-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--white);border:2.5px solid var(--teal);cursor:pointer;box-shadow:0 2px 8px rgba(75,179,164,.3)}
+.sim-range::-moz-range-thumb:hover{transform:scale(1.15);box-shadow:0 3px 12px rgba(75,179,164,.45)}
+.sim-range:focus-visible{outline:2px solid var(--teal);outline-offset:4px}
+.sim-val{font-size:.78rem;font-weight:700;color:var(--teal-dark);margin-top:8px;letter-spacing:-.02em}
+.sim-result{background:var(--teal-bg);border:1px solid rgba(75,179,164,.18);border-radius:var(--r);padding:24px;margin:8px 0 16px;text-align:center}
+.sim-result-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-mid);margin-bottom:8px;font-variant:small-caps}
+.sim-result-amount{font-size:2rem;font-weight:700;color:var(--teal-dark);letter-spacing:-.05em;line-height:1;margin-bottom:8px}
+.sim-result-detail{font-size:.72rem;color:var(--ink-light);line-height:1.5}
 .sim-disclaimer{font-size:.72rem;color:var(--ink-muted);text-align:center;margin-bottom:20px;line-height:1.55;font-style:italic}
 @media(max-width:1024px){.sim-grid{grid-template-columns:1fr}}
 
@@ -591,6 +661,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
   <a href="index-v7.html" onclick="cm()">Accueil</a>
   <a href="#services" onclick="cm()">Nos services</a>
   <a href="commander-v7.html" onclick="cm()">Commander</a>
+  <a href="mobilite.html" onclick="cm()">Mobilit&eacute;</a>
   <a href="postuler.html" onclick="cm()">Postuler</a>
   <a href="#booking" onclick="cm()">Planifier un appel</a>
   <a href="#faq" onclick="cm()">FAQ</a>
@@ -601,6 +672,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
     <a href="index-v7.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
     <div class="nav-mid" style="margin-left:auto">
       <a href="commander-v7.html" data-i18n="nav.order">Commander</a>
+      <a href="mobilite.html">Mobilit&eacute;</a>
       <a href="postuler.html" data-i18n="nav.join">Postuler</a>
     </div>
     <div class="lang-sw" id="langSw" role="radiogroup" aria-label="Langue / Language">
@@ -636,7 +708,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
     </div>
     <div class="hero-vis" id="heroVis">
       <div class="hv-photo-wrap">
-        <img src="hero-courier.jpg" alt="Coursier Chaskis remettant un colis en ville" class="hv-photo">
+        <img src="hero-courier.png" alt="Coursier Chaskis remettant un colis en ville" class="hv-photo">
       </div>
     </div>
   </div>
@@ -756,7 +828,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
         </article>
         <article class="feat-item rv d1" role="listitem">
           <div class="feat-item-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div>
-          <div class="feat-item-text"><h3>Preuve de livraison systématique</h3><p>Photo horodatée après chaque dépôt.<br>Trace irréfutable, zéro contestation possible.</p></div>
+          <div class="feat-item-text"><h3>Preuve de livraison systématique</h3><p>Photo de livraison après chaque course.<br>Trace irréfutable, zéro contestation possible.</p></div>
         </article>
         <article class="feat-item rv d2" role="listitem">
           <div class="feat-item-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg></div>
@@ -764,35 +836,27 @@ span.ast{color:#e53e3e!important;font-weight:700}
         </article>
         <article class="feat-item rv d3" role="listitem">
           <div class="feat-item-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg></div>
-          <div class="feat-item-text"><h3>Votre marque, pas Chaskis</h3><p>Tenue, matériel et communication à vos couleurs.<br>Vos clients vivent une expérience à votre image.</p></div>
+          <div class="feat-item-text"><h3>Votre marque, pas Chaskis</h3><p>Tenue, matériel et communication à vos couleurs.<br>Disponible dans l'offre Dédiée.</p></div>
+        </article>
+        <article class="feat-item rv d4" role="listitem">
+          <div class="feat-item-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="feat-item-text"><h3>Tous secteurs d'activité</h3><p><span class="feat-tags">Pharmacies · Médical · Retail · E-commerce · Industrie · Luxe · <span class="feat-tag-more">et plus</span></span></p></div>
         </article>
       </div>
       <div class="feat-photo rv d2">
         <div class="feat-mockup">
-          <div class="fm-bar">
-            <span class="fm-dot"></span><span class="fm-dot"></span><span class="fm-dot"></span>
-          </div>
+          <div class="fm-map"><div class="fm-map-inner" id="fmDeliveryMap"></div></div>
           <div class="fm-header">
             <span class="fm-label">Suivi de livraison</span>
-            <span class="fm-badge fm-done">✓ Confirmée</span>
+            <span class="fm-badge" id="fmBadge">⏳ En attente</span>
           </div>
-          <div class="fm-proof">
-            <div class="fm-proof-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div>
-            <div>
-              <div class="fm-proof-label">Preuve photo enregistrée</div>
-              <div class="fm-proof-label"><strong>Aujourd'hui · 14:32</strong></div>
-            </div>
+          <div class="fm-steps" id="fmSteps">
+            <div class="fm-step" data-phase="0"><span class="fm-step-ic"></span><span class="fm-step-txt">Commande reçue · <strong>14:08</strong></span></div>
+            <div class="fm-step" data-phase="1"><span class="fm-step-ic"></span><span class="fm-step-txt">Coursier assigné · <strong>14:10</strong></span></div>
+            <div class="fm-step" data-phase="2"><span class="fm-step-ic"></span><span class="fm-step-txt">Point A — en attente</span></div>
+            <div class="fm-step" data-phase="3"><span class="fm-step-ic"></span><span class="fm-step-txt">Point B — en attente</span></div>
           </div>
-          <div class="fm-steps">
-            <div class="fm-step done"><span class="fm-step-ic">✓</span><span>Commande reçue</span></div>
-            <div class="fm-step done"><span class="fm-step-ic">✓</span><span>Coursier assigné</span></div>
-            <div class="fm-step done"><span class="fm-step-ic">✓</span><span>Livraison effectuée · <strong>14h32</strong></span></div>
-            <div class="fm-step done"><span class="fm-step-ic">✓</span><span>Preuve photo envoyée</span></div>
-          </div>
-          <div class="fm-footer">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.99 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.9 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            SMS envoyé au destinataire
-          </div>
+          <!-- footer supprimé -->
         </div>
       </div>
     </div>
@@ -902,60 +966,35 @@ span.ast{color:#e53e3e!important;font-weight:700}
   </div>
 </section>
 
-<!-- ===== SECTEURS CIBLES ===== -->
-<section class="secteurs" id="services">
-  <div class="ct">
-    <div class="sh rv"><span class="sl" data-i18n="sec.label">Pour qui</span><h2 class="st" data-i18n-html="sec.h2">Vos secteurs, <span class="ac">nos spécialités</span></h2><p class="sd" data-i18n="sec.p">Chaque secteur a ses contraintes. Nos livreurs sont formés aux protocoles spécifiques de chaque industrie.</p></div>
-    <div class="sec-grid stg">
-      <div class="sec-card tilt-3d">
-        <span class="sec-emoji">🏥</span>
-        <h3 data-i18n="sec1.h3">Médical &amp; Pharma</h3>
-        <span class="sec-tag" data-i18n="sec1.tag">Délai critique · Chaîne du froid</span>
-        <ul class="sec-uses" data-i18n-html="sec1.uses">
-          <li>Ordonnances &amp; médicaments urgents</li>
-          <li>Résultats d'analyses &amp; prélèvements</li>
-          <li>Matériel médical entre cliniques</li>
-          <li>Transport température contrôlée</li>
-        </ul>
-        <a href="#booking" class="sec-cta-link"><span data-i18n="sec.cta.discuss">Discuter de vos besoins</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-      </div>
-      <div class="sec-card tilt-3d">
-        <span class="sec-emoji">💎</span>
-        <h3 data-i18n="sec2.h3">Luxe &amp; Bijouterie</h3>
-        <span class="sec-tag" data-i18n="sec2.tag">Remise en main propre · Discrétion</span>
-        <ul class="sec-uses" data-i18n-html="sec2.uses">
-          <li>Bijoux &amp; montres (assurance incluse)</li>
-          <li>Colis luxe avec signature obligatoire</li>
-          <li>Livraison en tenue professionnelle</li>
-          <li>Proof of delivery photo systématique</li>
-        </ul>
-        <a href="#booking" class="sec-cta-link"><span data-i18n="sec.cta.discuss">Discuter de vos besoins</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-      </div>
-      <div class="sec-card tilt-3d">
-        <span class="sec-emoji">⚖️</span>
-        <h3 data-i18n="sec3.h3">Juridique &amp; Notarial</h3>
-        <span class="sec-tag" data-i18n="sec3.tag">Confidentialité · Preuve de remise</span>
-        <ul class="sec-uses" data-i18n-html="sec3.uses">
-          <li>Documents confidentiels &amp; actes notariés</li>
-          <li>Contrats signés entre études</li>
-          <li>Plis recommandés urgents</li>
-          <li>Tournées quotidiennes planifiées</li>
-        </ul>
-        <a href="#booking" class="sec-cta-link"><span data-i18n="sec.cta.discuss">Discuter de vos besoins</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-      </div>
-      <div class="sec-card tilt-3d">
-        <span class="sec-emoji">📦</span>
-        <h3 data-i18n="sec4.h3">E-commerce &amp; Retail</h3>
-        <span class="sec-tag" data-i18n="sec4.tag">Volume · CSV · API</span>
-        <ul class="sec-uses" data-i18n-html="sec4.uses">
-          <li>Import CSV de commandes en masse</li>
-          <li>Intégration API Shopify / WooCommerce</li>
-          <li>Tournées multi-colis optimisées</li>
-          <li>Notifications clients automatiques</li>
-        </ul>
-        <a href="commander-v7.html" class="sec-cta-link" style="color:var(--accent)"><span data-i18n="sec.cta.order">Commander maintenant</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-      </div>
+<!-- ===== TESTIMONIALS ===== -->
+<section class="testi">
+  <div class="ct"><div class="sh c rv"><span class="sl" data-i18n="testi.label">Témoignages</span><h2 class="st" data-i18n-html="testi.h2">Ce qu'en disent nos <span class="ac">clients</span></h2></div></div>
+  <div class="mq-w">
+    <div class="testi-track">
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">On est passé de 30% de commission à un tarif fixe. En 3 mois, marge récupérée sur chaque commande.</p><div class="tc-author"><div class="tc-av" style="background:var(--teal)">ML</div><div class="tc-info"><h4>Marie Laurent</h4><p>Pharmacie du Lac, Genève</p></div></div></article>
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">L'import CSV a tout changé. On envoie nos 40 commandes du matin en un clic, les livreurs reçoivent tout automatiquement.</p><div class="tc-author"><div class="tc-av" style="background:var(--accent)">PD</div><div class="tc-info"><h4>Pierre Dupont</h4><p>Swiss E-Shop, Neuchâtel</p></div></div></article>
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">Le livreur connaît notre protocole discrétion. Pour la bijouterie, c'est crucial. Et la preuve de remise en photo est irréprochable.</p><div class="tc-author"><div class="tc-av" style="background:var(--teal-dark)">SB</div><div class="tc-info"><h4>Sophie Berthier</h4><p>Maison Bulgari, Genève</p></div></div></article>
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">Notaire, on a des délais légaux stricts. Chaskis livre nos actes à temps, avec preuve électronique. Zéro litige depuis 6 mois.</p><div class="tc-author"><div class="tc-av" style="background:var(--accent-light)">FR</div><div class="tc-info"><h4>François Riviera</h4><p>Étude Notariale Riviera, Lausanne</p></div></div></article>
+      <!-- duplicate for loop -->
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">On est passé de 30% de commission à un tarif fixe. En 3 mois, marge récupérée sur chaque commande.</p><div class="tc-author"><div class="tc-av" style="background:var(--teal)">ML</div><div class="tc-info"><h4>Marie Laurent</h4><p>Pharmacie du Lac, Genève</p></div></div></article>
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">L'import CSV a tout changé. On envoie nos 40 commandes du matin en un clic, les livreurs reçoivent tout automatiquement.</p><div class="tc-author"><div class="tc-av" style="background:var(--accent)">PD</div><div class="tc-info"><h4>Pierre Dupont</h4><p>Swiss E-Shop, Neuchâtel</p></div></div></article>
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">Le livreur connaît notre protocole discrétion. Pour la bijouterie, c'est crucial. Et la preuve de remise en photo est irréprochable.</p><div class="tc-author"><div class="tc-av" style="background:var(--teal-dark)">SB</div><div class="tc-info"><h4>Sophie Berthier</h4><p>Maison Bulgari, Genève</p></div></div></article>
+      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">Notaire, on a des délais légaux stricts. Chaskis livre nos actes à temps, avec preuve électronique. Zéro litige depuis 6 mois.</p><div class="tc-author"><div class="tc-av" style="background:var(--accent-light)">FR</div><div class="tc-info"><h4>François Riviera</h4><p>Étude Notariale Riviera, Lausanne</p></div></div></article>
     </div>
+  </div>
+</section>
+
+<!-- ===== HOW TO START ===== -->
+<section class="how">
+  <div class="ct">
+    <div class="sh rv"><span class="sl" data-i18n="how.label">Comment démarrer</span><h2 class="st" data-i18n-html="how.h2">Un onboarding <span class="ac">clé en main</span></h2><p class="sd" data-i18n="how.p">De l'appel découverte à votre première livraison — on gère tout le setup.</p></div>
+    <div class="how-track">
+      <article class="how-s tilt-3d"><div class="how-n">01</div><h3 data-i18n="how1.h3">Appel découverte (20 min)</h3><p data-i18n="how1.p">On comprend votre volume, vos secteurs, vos contraintes. On propose le bon plan : Express, Flex ou Dédié.</p></article>
+      <article class="how-s tilt-3d"><div class="how-n">02</div><h3 data-i18n="how2.h3">Setup technique</h3><p data-i18n="how2.p">Création du compte, config API ou import CSV, connexion Stripe, parametrage Onfleet/Make.com. On gère tout.</p></article>
+      <article class="how-s tilt-3d"><div class="how-n">03</div><h3 data-i18n="how3.h3">Première course test</h3><p data-i18n="how3.p">On effectue une course en conditions réelles pour valider le flux complet : commande → dispatch → POD.</p></article>
+      <article class="how-s tilt-3d"><div class="how-n">04</div><h3 data-i18n="how4.h3">Go live &amp; optimisation</h3><p data-i18n="how4.p">Dashboard actif, coursiers dédiés assignés, analytics hebdomadaires. Vous n'avez plus à penser à la logistique.</p></article>
+    </div>
+    <div class="how-scroll-hint rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Swipez pour voir toutes les étapes</div>
   </div>
 </section>
 
@@ -975,114 +1014,12 @@ span.ast{color:#e53e3e!important;font-weight:700}
           <span class="mob-tag">Excursions</span>
           <span class="mob-tag">Conciergerie</span>
         </div>
-        <a href="#booking" class="mob-cta">Discuter de vos besoins <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#booking" class="mob-cta">Discuter de vos besoins <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a><br>
+        <a href="mobilite.html" class="mob-cta" style="margin-top:8px">En savoir plus sur la Mobilité → </a>
       </div>
       <div class="mob-visual">
         <span class="mob-visual-placeholder">🚗</span>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== PIPELINE AUTOMATISÉ ===== -->
-<section class="pipeline" data-nav-dark>
-  <div class="ct pipeline-inner">
-    <div class="sh rv"><span class="sl" style="color:var(--teal-light)" data-i18n="pipe.label">Le flux automatisé</span><h2 class="st" style="color:#fff" data-i18n-html="pipe.h2">De la commande à la <span style="color:var(--teal-light)">livraison</span> — sans vous</h2><p class="sd" style="color:rgba(255,255,255,.45)" data-i18n="pipe.p">Voici ce qui se passe quand un client passe commande. Zéro intervention humaine côté Chaskis, 100% traçable.</p></div>
-    <div class="pipeline-grid stg">
-      <div class="pipe-step tilt-3d">
-        <div class="pipe-n t" data-i18n="pipe1.n">Étape 1</div>
-        <span class="pipe-icon">🧾</span>
-        <h3 data-i18n="pipe1.h3">Client commande</h3>
-        <p data-i18n="pipe1.p">Via le formulaire web, votre API ou un import CSV. Référence marchand obligatoire pour identifier le colis.</p>
-        <span class="pipe-tag human">Web · API · CSV</span>
-      </div>
-      <div class="pipe-step tilt-3d">
-        <div class="pipe-n t" data-i18n="pipe2.n">Étape 2</div>
-        <span class="pipe-icon">💳</span>
-        <h3 data-i18n="pipe2.h3">Stripe confirme</h3>
-        <p data-i18n="pipe2.p">Paiement chiffré. Dès validation, un webhook déclenche automatiquement le process en backend.</p>
-        <span class="pipe-tag auto" data-i18n="pipe.auto">Automatique</span>
-      </div>
-      <div class="pipe-step tilt-3d">
-        <div class="pipe-n t" data-i18n="pipe3.n">Étape 3</div>
-        <span class="pipe-icon">🤖</span>
-        <h3 data-i18n="pipe3.h3">Dispatch automatique</h3>
-        <p data-i18n="pipe3.p">Onfleet crée la tâche et assigne le coursier disponible le plus proche. Zéro appel, zéro coordination manuelle.</p>
-        <span class="pipe-tag auto" data-i18n="pipe.auto">Automatique</span>
-      </div>
-      <div class="pipe-step tilt-3d">
-        <div class="pipe-n p" data-i18n="pipe4.n">Étape 4</div>
-        <span class="pipe-icon">🔑</span>
-        <h3 data-i18n="pipe4.h3">Livreur s'identifie</h3>
-        <p data-i18n="pipe4.p">Le coursier utilise la référence marchand pour s'identifier au point de retrait. Le commerçant reçoit un SMS d'annonce.</p>
-        <span class="pipe-tag trigger">Make.com trigger</span>
-      </div>
-      <div class="pipe-step tilt-3d">
-        <div class="pipe-n p" data-i18n="pipe5.n">Étape 5</div>
-        <span class="pipe-icon">📍</span>
-        <h3 data-i18n="pipe5.h3">Suivi GPS en direct</h3>
-        <p data-i18n="pipe5.p">Client et expéditeur reçoivent un lien de tracking en temps réel. Notifications automatiques à chaque étape clé.</p>
-        <span class="pipe-tag auto" data-i18n="pipe.auto">Automatique</span>
-      </div>
-      <div class="pipe-step tilt-3d">
-        <div class="pipe-n p" data-i18n="pipe6.n">Étape 6</div>
-        <span class="pipe-icon">✅</span>
-        <h3 data-i18n="pipe6.h3">Proof of Delivery</h3>
-        <p data-i18n="pipe6.p">L'app livreur exige une photo ou signature pour clôturer la course. Preuve horodatée disponible dans votre dashboard.</p>
-        <span class="pipe-tag trigger">POD · Dashboard</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== HOW TO START ===== -->
-<section class="how">
-  <div class="ct">
-    <div class="sh rv"><span class="sl" data-i18n="how.label">Comment démarrer</span><h2 class="st" data-i18n-html="how.h2">Un onboarding <span class="ac">clé en main</span></h2><p class="sd" data-i18n="how.p">De l'appel découverte à votre première livraison — on gère tout le setup.</p></div>
-    <div class="how-track">
-      <article class="how-s tilt-3d"><div class="how-n">01</div><h3 data-i18n="how1.h3">Appel découverte (20 min)</h3><p data-i18n="how1.p">On comprend votre volume, vos secteurs, vos contraintes. On propose le bon plan : Express, Flex ou Dédié.</p></article>
-      <article class="how-s tilt-3d"><div class="how-n">02</div><h3 data-i18n="how2.h3">Setup technique</h3><p data-i18n="how2.p">Création du compte, config API ou import CSV, connexion Stripe, parametrage Onfleet/Make.com. On gère tout.</p></article>
-      <article class="how-s tilt-3d"><div class="how-n">03</div><h3 data-i18n="how3.h3">Première course test</h3><p data-i18n="how3.p">On effectue une course en conditions réelles pour valider le flux complet : commande → dispatch → POD.</p></article>
-      <article class="how-s tilt-3d"><div class="how-n">04</div><h3 data-i18n="how4.h3">Go live &amp; optimisation</h3><p data-i18n="how4.p">Dashboard actif, coursiers dédiés assignés, analytics hebdomadaires. Vous n'avez plus à penser à la logistique.</p></article>
-    </div>
-    <div class="how-scroll-hint rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Swipez pour voir toutes les étapes</div>
-  </div>
-</section>
-
-
-<!-- ===== TESTIMONIALS ===== -->
-<section class="testi">
-  <div class="ct"><div class="sh c rv"><span class="sl" data-i18n="testi.label">Témoignages</span><h2 class="st" data-i18n-html="testi.h2">Ce qu'en disent nos <span class="ac">clients</span></h2></div></div>
-  <div class="mq-w">
-    <div class="testi-track">
-      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">On est passé de 30% de commission à un tarif fixe. En 3 mois, marge récupérée sur chaque commande.</p><div class="tc-author"><div class="tc-av" style="background:var(--teal)">ML</div><div class="tc-info"><h4>Marie Laurent</h4><p>Pharmacie du Lac, Genève</p></div></div></article>
-      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">L'import CSV a tout changé. On envoie nos 40 commandes du matin en un clic, les livreurs reçoivent tout automatiquement.</p><div class="tc-author"><div class="tc-av" style="background:var(--accent)">PD</div><div class="tc-info"><h4>Pierre Dupont</h4><p>Swiss E-Shop, Neuchâtel</p></div></div></article>
-      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">Le livreur connaît notre protocole discrétion. Pour la bijouterie, c'est crucial. Et la preuve de remise en photo est irréprochable.</p><div class="tc-author"><div class="tc-av" style="background:var(--teal-dark)">SB</div><div class="tc-info"><h4>Sophie Berthier</h4><p>Maison Bulgari, Genève</p></div></div></article>
-      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">Notaire, on a des délais légaux stricts. Chaskis livre nos actes à temps, avec preuve électronique. Zéro litige depuis 6 mois.</p><div class="tc-author"><div class="tc-av" style="background:var(--accent-light)">FR</div><div class="tc-info"><h4>François Riviera</h4><p>Étude Notariale Riviera, Lausanne</p></div></div></article>
-      <!-- duplicate for loop -->
-      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">On est passé de 30% de commission à un tarif fixe. En 3 mois, marge récupérée sur chaque commande.</p><div class="tc-author"><div class="tc-av" style="background:var(--teal)">ML</div><div class="tc-info"><h4>Marie Laurent</h4><p>Pharmacie du Lac, Genève</p></div></div></article>
-      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">L'import CSV a tout changé. On envoie nos 40 commandes du matin en un clic.</p><div class="tc-author"><div class="tc-av" style="background:var(--accent)">PD</div><div class="tc-info"><h4>Pierre Dupont</h4><p>Swiss E-Shop, Neuchâtel</p></div></div></article>
-      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">Zéro litige depuis 6 mois. La preuve de remise photo est irréprochable pour notre étude.</p><div class="tc-author"><div class="tc-av" style="background:var(--accent-light)">FR</div><div class="tc-info"><h4>François Riviera</h4><p>Étude Notariale, Lausanne</p></div></div></article>
-      <article class="tc"><div class="tc-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div><p class="tc-text">Le livreur connaît notre protocole discrétion. Pour la bijouterie, c'est crucial.</p><div class="tc-author"><div class="tc-av" style="background:var(--teal-dark)">SB</div><div class="tc-info"><h4>Sophie Berthier</h4><p>Maison Bulgari, Genève</p></div></div></article>
-    </div>
-  </div>
-</section>
-
-<!-- ===== RECRUIT ===== -->
-<section class="recruit" id="recruit">
-  <div class="ct recruit-inner">
-    <div class="recruit-text rv">
-      <h2 data-i18n-html="recruit.h2">Rejoignez les <span class="purple">800+ coursiers</span> qui ont choisi Chaskis</h2>
-      <p data-i18n="recruit.p">CDI, horaires flexibles, matériel fourni, assurance complète. Un vrai job, pas une mission freelance.</p>
-      <div class="recruit-badges">
-        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg><span data-i18n="recruit.b1">CDI</span></span>
-        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span data-i18n="recruit.b2">Horaires flex</span></span>
-        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span data-i18n="recruit.b3">Assuré</span></span>
-        <span class="recruit-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg><span data-i18n="recruit.b4">Matériel fourni</span></span>
-      </div>
-    </div>
-    <div class="recruit-cta rv d2">
-      <a href="postuler.html" class="btn btn-purple"><span data-i18n="recruit.cta">Découvrir les postes</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
     </div>
   </div>
 </section>
@@ -1114,7 +1051,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
             <div class="sim-result-detail" id="simDetail">Basé sur 20 livraisons/jour × 22 jours, avec un tarif Chaskis de CHF 10/livraison (offre Flex)</div>
           </div>
           <p class="sim-disclaimer">Estimation indicative. Votre tarif exact dépend de votre volume et contrat — on vous le calcule en 20 min.</p>
-          <a href="#booking" class="btn btn-p btn-full"><span>Obtenir mon tarif exact</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          <a href="#booking" class="btn btn-p btn-full"><span>Planifier mon appel gratuit</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
         </div>
       </div>
     </div>
@@ -1125,28 +1062,47 @@ span.ast{color:#e53e3e!important;font-weight:700}
 <section class="cta-booking" id="booking">
   <div class="ct cta-layout">
     <div class="rl">
-      <span class="sl" data-i18n="booking.label">Démarrer avec Chaskis</span>
-      <h2 class="st" data-i18n-html="booking.h2">Planifiez votre appel <span class="sa">gratuit</span></h2>
-      <p class="sd" data-i18n="booking.p">20 minutes pour comprendre votre activité et proposer le bon plan logistique. Sans engagement.</p>
-      <div class="cta-perks">
-        <div class="cta-perk"><div class="cta-perk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><h4 data-i18n="perk1.h4">20 min chrono</h4><p data-i18n="perk1.p">On respecte votre temps.</p></div></div>
-        <div class="cta-perk"><div class="cta-perk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4 data-i18n="perk2.h4">Sans engagement</h4><p data-i18n="perk2.p">On discute, vous décidez.</p></div></div>
-        <div class="cta-perk"><div class="cta-perk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div><h4 data-i18n="perk3.h4">Tarif sur mesure</h4><p data-i18n="perk3.p">Adapté à votre volume et secteur.</p></div></div>
+      <div class="bk-urgency"><span class="bk-urgency-dot"></span>Prochain créneau : <strong id="bkNextSlot">mercredi 9 avril</strong></div>
+      <h2 class="st" data-i18n-html="booking.h2">Votre consultation logistique <span class="sa">offerte</span></h2>
+      <p class="sd" data-i18n="booking.p">20 minutes de conseil stratégique avec un expert. On audite vos flux, on identifie les leviers d'optimisation, on vous livre un plan d'action concret.</p>
+      <div class="cta-checks">
+        <div class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span>Audit complet de vos coûts de livraison</span></div>
+        <div class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span>Recommandation tarifaire personnalisée</span></div>
+        <div class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span>Plan de déploiement clé en main (API, Shipday, Stripe)</span></div>
+      </div>
+      <div class="bk-testi">
+        <div class="bk-testi-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div>
+        <p class="bk-testi-text">"En 20 min, on avait un plan clair. 2 semaines plus tard, tout était live."</p>
+        <div class="bk-testi-author"><div class="bk-testi-av">ML</div><div><strong>Marie Laurent</strong><span>Pharmacie du Lac, Genève</span></div></div>
       </div>
     </div>
     <div class="bk-w rr" id="bkW">
-      <div class="bk-prog"><span class="done"></span><span></span><span></span></div>
+      <div class="bk-prog"><span class="done"></span><span></span><span></span><span></span></div>
       <div class="bk-step active" id="bkS1">
         <div class="bk-t" data-i18n="bk.step1.t">Choisissez une date</div><div class="bk-s" data-i18n="bk.step1.s">Avril 2026</div>
-        <div class="bk-cal" id="bkCal">
-          <div class="bk-d hd">L</div><div class="bk-d hd">M</div><div class="bk-d hd">M</div><div class="bk-d hd">J</div><div class="bk-d hd">V</div><div class="bk-d hd">S</div><div class="bk-d hd">D</div>
-          <div class="bk-d"></div><div class="bk-d"></div><div class="bk-d past">1</div><div class="bk-d past">2</div><div class="bk-d past">3</div><div class="bk-d past">4</div><div class="bk-d past">5</div>
-          <div class="bk-d past">6</div><div class="bk-d past">7</div><div class="bk-d past">8</div><div class="bk-d av" data-d="9">9</div><div class="bk-d av" data-d="10">10</div><div class="bk-d">11</div><div class="bk-d">12</div>
-          <div class="bk-d av" data-d="14">14</div><div class="bk-d av" data-d="15">15</div><div class="bk-d av" data-d="16">16</div><div class="bk-d av" data-d="17">17</div><div class="bk-d av" data-d="18">18</div><div class="bk-d">19</div><div class="bk-d">20</div>
-          <div class="bk-d av" data-d="21">21</div><div class="bk-d av" data-d="22">22</div><div class="bk-d av" data-d="23">23</div><div class="bk-d av" data-d="24">24</div><div class="bk-d av" data-d="25">25</div><div class="bk-d">26</div><div class="bk-d">27</div>
-          <div class="bk-d av" data-d="28">28</div><div class="bk-d av" data-d="29">29</div><div class="bk-d av" data-d="30">30</div>
+        <div class="bk-container">
+          <div class="bk-cal-wrap">
+            <div class="bk-cal-header">
+              <h3 id="bkMonth">Avril 2026</h3>
+              <div style="display:flex;gap:4px">
+                <button id="bkPrev" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+                <button id="bkNext" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+              </div>
+            </div>
+            <div class="bk-cal" id="bkCal">
+              <div class="bk-d hd">L</div><div class="bk-d hd">M</div><div class="bk-d hd">M</div><div class="bk-d hd">J</div><div class="bk-d hd">V</div><div class="bk-d hd">S</div><div class="bk-d hd">D</div>
+              <div class="bk-d"></div><div class="bk-d"></div><div class="bk-d past">1</div><div class="bk-d past">2</div><div class="bk-d past">3</div><div class="bk-d past">4</div><div class="bk-d past">5</div>
+              <div class="bk-d past">6</div><div class="bk-d past">7</div><div class="bk-d past">8</div><div class="bk-d av" data-d="9">9</div><div class="bk-d av" data-d="10">10</div><div class="bk-d">11</div><div class="bk-d">12</div>
+              <div class="bk-d av" data-d="14">14</div><div class="bk-d av" data-d="15">15</div><div class="bk-d av" data-d="16">16</div><div class="bk-d av" data-d="17">17</div><div class="bk-d av" data-d="18">18</div><div class="bk-d">19</div><div class="bk-d">20</div>
+              <div class="bk-d av" data-d="21">21</div><div class="bk-d av" data-d="22">22</div><div class="bk-d av" data-d="23">23</div><div class="bk-d av" data-d="24">24</div><div class="bk-d av" data-d="25">25</div><div class="bk-d">26</div><div class="bk-d">27</div>
+              <div class="bk-d av" data-d="28">28</div><div class="bk-d av" data-d="29">29</div><div class="bk-d av" data-d="30">30</div>
+            </div>
+          </div>
+          <div class="bk-slots-wrap">
+            <div class="bk-slots-title" id="bkSTitle">Créneaux disponibles</div>
+            <div class="bk-slots" id="bkSl"><div class="bk-sl" data-t="09:00">09:00</div><div class="bk-sl" data-t="10:00">10:00</div><div class="bk-sl" data-t="14:00">14:00</div><div class="bk-sl" data-t="15:30">15:30</div><div class="bk-sl" data-t="16:30">16:30</div></div>
+          </div>
         </div>
-        <div class="bk-slots" id="bkSl" style="display:none"><div class="bk-sl" data-t="09:00">09:00</div><div class="bk-sl" data-t="10:00">10:00</div><div class="bk-sl" data-t="14:00">14:00</div><div class="bk-sl" data-t="15:30">15:30</div><div class="bk-sl" data-t="16:30">16:30</div></div>
         <div class="bk-nav"><button class="btn btn-p" id="bkN1" disabled><span data-i18n="bk.next">Suivant</span></button></div>
       </div>
       <div class="bk-step" id="bkS2">
@@ -1156,9 +1112,20 @@ span.ast{color:#e53e3e!important;font-weight:700}
         <div class="field"><label data-i18n="bk.f.company">Entreprise</label><input data-i18n-placeholder="bk.f.company.ph" placeholder="Pharmacie du Lac"></div>
         <div class="field"><label data-i18n="bk.f.vol">Volume estimé / jour</label><select data-i18n-html="bk.f.vol.opts"><option>Moins de 10</option><option>10 à 30</option><option>30 à 100</option><option>Plus de 100</option></select></div>
         <div class="field"><label data-i18n="bk.f.sector">Votre secteur</label><select data-i18n-html="bk.f.sector.opts"><option>E-commerce / Retail</option><option>Médical / Pharma</option><option>Luxe / Bijouterie</option><option>Juridique / Notarial</option><option>Restauration</option><option>Autre</option></select></div>
-        <div class="bk-nav"><button class="btn bk-back" id="bkB2"><span data-i18n="bk.back">Retour</span></button><button class="btn btn-p" id="bkN2"><span data-i18n="bk.confirm">Confirmer</span></button></div>
+        <div class="bk-nav"><button class="btn bk-back" id="bkB2"><span data-i18n="bk.back">Retour</span></button><button class="btn btn-p" id="bkN2"><span data-i18n="bk.next">Suivant</span></button></div>
       </div>
-      <div class="bk-step" id="bkS3"><div class="bk-confirm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><h3 data-i18n="bk.step3.h3">C'est réservé !</h3><p data-i18n="bk.step3.p">Confirmation par email. À très vite !</p></div></div>
+      <div class="bk-step" id="bkS3">
+        <div class="bk-t">Vos économies estimées</div><div class="bk-s">Basé sur votre volume</div>
+        <div class="bk-savings">
+          <div class="bk-savings-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <div class="bk-savings-label">Économie mensuelle estimée</div>
+          <div class="bk-savings-amount" id="bkSavingsAmt">CHF 0</div>
+          <div class="bk-savings-detail" id="bkSavingsDetail"></div>
+          <div class="bk-savings-note">Estimation indicative basée sur le coût moyen du marché (CHF 20/livraison). Votre tarif exact sera calculé lors de l'appel.</div>
+        </div>
+        <div class="bk-nav"><button class="btn bk-back" id="bkB3"><span>Retour</span></button><button class="btn bk-skip" id="bkSkip3"><span>Passer</span></button><button class="btn btn-p" id="bkN3"><span>Confirmer</span></button></div>
+      </div>
+      <div class="bk-step" id="bkS4"><div class="bk-confirm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><h3 data-i18n="bk.step3.h3">C'est réservé !</h3><p data-i18n="bk.step3.p">Confirmation par email. À très vite !</p></div></div>
     </div>
   </div>
 </section>
@@ -1192,6 +1159,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
 
 <a href="#booking" class="btn btn-p pulse nav-cta-float"><span data-i18n="float.cta">Planifier un appel</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="shared.js"></script>
 <script src="auth.js"></script>
 <script>
@@ -1222,6 +1190,106 @@ span.ast{color:#e53e3e!important;font-weight:700}
   });
 })();
 
+// ===== BOOKING CALENDAR =====
+(function() {
+  const bkCal = document.getElementById('bkCal');
+  const bkSl = document.getElementById('bkSl');
+  const bkSTitle = document.getElementById('bkSTitle');
+  const bkN1 = document.getElementById('bkN1');
+  const bkN2 = document.getElementById('bkN2');
+  const bkN3 = document.getElementById('bkN3');
+  const bkB2 = document.getElementById('bkB2');
+  const bkB3 = document.getElementById('bkB3');
+  const bkSkip3 = document.getElementById('bkSkip3');
+  const bkS1 = document.getElementById('bkS1');
+  const bkS2 = document.getElementById('bkS2');
+  const bkS3 = document.getElementById('bkS3');
+  const bkS4 = document.getElementById('bkS4');
+  const bkProg = document.querySelector('.bk-prog');
+  const progSpans = bkProg ? bkProg.querySelectorAll('span') : [];
+
+  if (!bkCal || !bkSl) return;
+
+  let selectedDate = null;
+  let selectedTime = null;
+
+  function setStep(n) {
+    [bkS1, bkS2, bkS3, bkS4].forEach(s => s.classList.remove('active'));
+    [bkS1, bkS2, bkS3, bkS4][n - 1].classList.add('active');
+    progSpans.forEach((s, i) => s.classList.toggle('done', i < n));
+  }
+
+  function fmtCHF(n) {
+    return "CHF " + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+  }
+
+  function getChaskisRate(v) {
+    if (v < 10) return { rate: 16, plan: 'Express' };
+    if (v < 40) return { rate: 12, plan: 'Flex' };
+    return { rate: 8, plan: 'Dédié' };
+  }
+
+  function calcSavings() {
+    const volSelect = bkS2.querySelector('[data-i18n="bk.f.vol"]')?.closest('.field')?.querySelector('select');
+    if (!volSelect) return;
+    const volMap = { 0: 5, 1: 20, 2: 65, 3: 150 };
+    const v = volMap[volSelect.selectedIndex] || 20;
+    const marketCost = 20;
+    const { rate, plan } = getChaskisRate(v);
+    const days = 22;
+    const saving = Math.max(0, (marketCost - rate) * v * days);
+    document.getElementById('bkSavingsAmt').textContent = fmtCHF(saving);
+    document.getElementById('bkSavingsDetail').textContent =
+      `Avec vos ${v} livraisons/jour × ${days} jours ouvrés, au tarif ${plan} de CHF ${rate}/livraison vs CHF ${marketCost} en moyenne marché.`;
+  }
+
+  function selectDate(day) {
+    bkCal.querySelectorAll('.bk-d.pk').forEach(d => d.classList.remove('pk'));
+    day.classList.add('pk');
+    selectedDate = day.dataset.d;
+    bkSl.classList.add('active');
+    bkSTitle.classList.add('active');
+    selectedTime = null;
+    bkSl.querySelectorAll('.bk-sl.pk').forEach(s => s.classList.remove('pk'));
+    bkN1.disabled = true;
+  }
+
+  // Date selection
+  bkCal.querySelectorAll('.bk-d.av').forEach(day => {
+    day.addEventListener('click', () => selectDate(day));
+  });
+
+  // Pre-select first available date
+  const firstAv = bkCal.querySelector('.bk-d.av');
+  if (firstAv) selectDate(firstAv);
+
+  // Time selection
+  bkSl.querySelectorAll('.bk-sl').forEach(slot => {
+    slot.addEventListener('click', () => {
+      bkSl.querySelectorAll('.bk-sl.pk').forEach(s => s.classList.remove('pk'));
+      slot.classList.add('pk');
+      selectedTime = slot.dataset.t;
+      bkN1.disabled = false;
+    });
+  });
+
+  // Step 1 → 2
+  bkN1.addEventListener('click', () => { if (selectedDate && selectedTime) setStep(2); });
+
+  // Step 2 → 3 (calculate savings)
+  bkN2.addEventListener('click', () => { calcSavings(); setStep(3); });
+
+  // Step 3 → 4 (confirm)
+  bkN3.addEventListener('click', () => setStep(4));
+
+  // Step 3 skip → 4
+  bkSkip3.addEventListener('click', () => setStep(4));
+
+  // Back buttons
+  bkB2.addEventListener('click', () => setStep(1));
+  bkB3.addEventListener('click', () => setStep(2));
+})();
+
 // ===== SIMULATEUR D'ÉCONOMIES =====
 (function() {
   const vol = document.getElementById('simVol');
@@ -1250,6 +1318,12 @@ span.ast{color:#e53e3e!important;font-weight:700}
     costVal.textContent = 'CHF ' + c;
     amount.textContent = fmtCHF(saving);
     detail.textContent = `Basé sur ${v} livraison${v>1?'s':''}/jour × ${days} jours, avec un tarif Chaskis de CHF ${rate}/livraison (offre ${plan})`;
+    updateFill(vol);
+    updateFill(cost);
+  }
+  function updateFill(el) {
+    const pct = ((el.value - el.min) / (el.max - el.min)) * 100;
+    el.style.setProperty('--fill', pct + '%');
   }
   vol.addEventListener('input', update);
   cost.addEventListener('input', update);
@@ -1273,7 +1347,7 @@ if (heroVis) {
       const rect = heroVis.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
-      photoWrap.style.transform = `rotateY(${x * 4}deg) rotateX(${y * -2.5}deg) scale(1.02)`;
+      photoWrap.style.transform = `rotateY(${x * 10}deg) rotateX(${y * -6}deg) scale(1.03)`;
     });
     heroVis.addEventListener('mouseleave', () => { photoWrap.style.transform = ''; });
   }
@@ -1781,6 +1855,339 @@ if ('serviceWorker' in navigator) {
       });
     })(cards[i]);
   }
+})();
+
+// ===== DELIVERY MAP — Leaflet + Genève (vue GPS) =====
+(function initDeliveryMap() {
+  const el = document.getElementById('fmDeliveryMap');
+  if (!el || !window.L) return;
+
+  // Route OSRM réelle — vélo, rues de Genève (Plainpalais → nord)
+  const ROUTE = [
+    [46.199004,6.142012],[46.199120,6.141927],[46.199174,6.141872],
+    [46.199232,6.141810],[46.199298,6.141767],[46.199465,6.141647],
+    [46.199606,6.141547],[46.199665,6.141506],[46.199818,6.141396],
+    [46.199927,6.141326],[46.200017,6.141268],[46.200071,6.141233],
+    [46.200141,6.141179],[46.200169,6.141277],[46.200519,6.142282],
+    [46.200594,6.142502],[46.200728,6.142893],[46.200748,6.142960],
+    [46.200775,6.143110],[46.200877,6.143325],[46.200949,6.143432],
+    [46.201160,6.143675],[46.201186,6.143704],[46.201239,6.143758],
+    [46.201273,6.143792],[46.201382,6.143885],[46.201417,6.143915],
+    [46.201489,6.143884],[46.201578,6.143908],[46.201612,6.143917],
+    [46.201753,6.143950],[46.201946,6.143992],[46.202028,6.144003],
+    [46.202200,6.144018],[46.202290,6.144045],[46.202329,6.144069],
+    [46.202358,6.144101],[46.202403,6.144174],[46.202516,6.144414],
+    [46.202530,6.144456],[46.202528,6.144489],[46.202501,6.144560],
+    [46.202438,6.144683],[46.202264,6.145032],[46.202224,6.145112],
+    [46.202028,6.145422],[46.201979,6.145510],[46.201942,6.145589],
+    [46.201910,6.145673],[46.201874,6.145778],[46.201849,6.145854],
+    [46.201824,6.145914],[46.201715,6.146111],[46.201491,6.146488],
+  ];
+
+  // Carte fixe — le zoom sera fait en CSS transform (pas d'appel Leaflet)
+  const bounds = L.latLngBounds(ROUTE);
+  const center = bounds.getCenter();
+  const map = L.map('fmDeliveryMap', {
+    center: center,
+    zoom: 16,
+    zoomControl: false,
+    dragging: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    boxZoom: false,
+    keyboard: false,
+    attributionControl: false,
+    tap: false,
+  });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd',
+    maxZoom: 19,
+  }).addTo(map);
+
+  // Attribution masquée (CARTO TOS respecté via mention dans le footer du site)
+
+  // Route prévue en pointillés fins
+  L.polyline(ROUTE, {
+    color: 'rgba(75,179,164,0.2)',
+    weight: 2.5,
+    dashArray: '4 6',
+    lineCap: 'round',
+  }).addTo(map);
+
+  // === Traînée avec dégradé SVG (bleu → teal) ===
+  const trail = L.polyline([], {
+    color: '#4BB3A4',
+    weight: 4,
+    opacity: 1,
+    lineCap: 'round',
+    lineJoin: 'round',
+  }).addTo(map);
+
+  // Glow subtil derrière la tête
+  const trailGlow = L.polyline([], {
+    color: '#4BB3A4',
+    weight: 10,
+    opacity: 0.12,
+    lineCap: 'round',
+    lineJoin: 'round',
+  }).addTo(map);
+
+  // Setup du gradient SVG (bleu #3B82F6 → teal #4BB3A4)
+  let gradEl = null;
+  function setupGradient() {
+    const renderer = map.getRenderer(trail);
+    if (!renderer) return;
+    const svg = renderer._container;
+    let defs = svg.querySelector('defs');
+    if (!defs) { defs = document.createElementNS('http://www.w3.org/2000/svg','defs'); svg.insertBefore(defs, svg.firstChild); }
+    gradEl = document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
+    gradEl.id = 'fmTrailGrad';
+    gradEl.setAttribute('gradientUnits','userSpaceOnUse');
+    const s1 = document.createElementNS('http://www.w3.org/2000/svg','stop');
+    s1.setAttribute('offset','0%'); s1.setAttribute('stop-color','#3B82F6'); s1.setAttribute('stop-opacity','0.5');
+    const s2 = document.createElementNS('http://www.w3.org/2000/svg','stop');
+    s2.setAttribute('offset','100%'); s2.setAttribute('stop-color','#4BB3A4'); s2.setAttribute('stop-opacity','0.95');
+    gradEl.appendChild(s1); gradEl.appendChild(s2);
+    defs.appendChild(gradEl);
+  }
+
+  // Pin départ (cercle creux teal)
+  L.marker(ROUTE[0], {
+    icon: L.divIcon({
+      html: '<div class="fm-start-pin"></div>',
+      iconSize: [12, 12], iconAnchor: [6, 6], className: '',
+    }),
+  }).addTo(map);
+
+  // Multi-stop : A au milieu, B à la fin
+  const STOP_A_IDX = Math.floor(ROUTE.length / 2);
+  const stopAEl = document.createElement('div');
+  stopAEl.className = 'fm-stop'; stopAEl.id = 'fmStopA'; stopAEl.textContent = 'A';
+  const markerA = L.marker(ROUTE[STOP_A_IDX], {
+    icon: L.divIcon({ html: stopAEl.outerHTML, iconSize: [22,22], iconAnchor: [11,11], className: '' }),
+  }).addTo(map);
+
+  const stopBEl = document.createElement('div');
+  stopBEl.className = 'fm-stop'; stopBEl.id = 'fmStopB'; stopBEl.textContent = 'B';
+  const markerB = L.marker(ROUTE[ROUTE.length-1], {
+    icon: L.divIcon({ html: stopBEl.outerHTML, iconSize: [22,22], iconAnchor: [11,11], className: '' }),
+  }).addTo(map);
+
+  // Icônes coursier
+  const BIKE_SVG = '<svg viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></svg>';
+  const CHECK_SVG = '<svg viewBox="0 0 24 24" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+
+  function makeCourierIcon(svg, extra) {
+    return L.divIcon({
+      html: '<div class="fm-courier-marker' + (extra||'') + '"><div class="fm-courier-pulse"></div><div class="fm-courier-icon">' + svg + '</div></div>',
+      iconSize: [34, 34], iconAnchor: [17, 17], className: '',
+    });
+  }
+  const bikeIcon = makeCourierIcon(BIKE_SVG);
+  const deliveredIcon = makeCourierIcon(CHECK_SVG, ' delivered');
+
+  const courierMarker = L.marker(ROUTE[0], { icon: bikeIcon, zIndexOffset: 1000 }).addTo(map);
+
+  // Segments
+  const segLens = ROUTE.slice(1).map((p, i) =>
+    Math.hypot(p[0] - ROUTE[i][0], p[1] - ROUTE[i][1])
+  );
+  const totalLen = segLens.reduce((s, v) => s + v, 0);
+
+  function getPosAt(t) {
+    const dist = t * totalLen;
+    let acc = 0;
+    for (let i = 0; i < segLens.length; i++) {
+      if (acc + segLens[i] >= dist) {
+        const f = segLens[i] > 0 ? (dist - acc) / segLens[i] : 0;
+        return {
+          latlng: [
+            ROUTE[i][0] + (ROUTE[i+1][0] - ROUTE[i][0]) * f,
+            ROUTE[i][1] + (ROUTE[i+1][1] - ROUTE[i][1]) * f,
+          ],
+          seg: i,
+        };
+      }
+      acc += segLens[i];
+    }
+    return { latlng: ROUTE[ROUTE.length - 1], seg: ROUTE.length - 2 };
+  }
+
+  // === Références DOM du mockup ===
+  const badge = document.getElementById('fmBadge');
+  const stepsEl = document.querySelectorAll('#fmSteps .fm-step');
+  const CHECK_HTML = '<svg class="fm-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+  const CHECK_ANIM_HTML = '<svg class="fm-check anim" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+  const DOT_HTML = '<span class="fm-step-dot"></span>';
+  const CIRCLE_HTML = '<span class="fm-step-circle"></span>';
+  const BADGE_CHECK = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+
+  // Textes dynamiques pour les steps A et B
+  const STEP_TEXTS = {
+    2: { pending: 'Point A — en attente', active: 'Point A — en cours', done: 'Point A — livré · <strong>14:18</strong>' },
+    3: { pending: 'Point B — en attente', active: 'Point B — en cours', done: 'Point B — livré · <strong>14:24</strong>' },
+  };
+
+  function setMockupPhase(phase, aIsDone, bIsDone) {
+    stepsEl.forEach((s) => {
+      const p = parseInt(s.dataset.phase);
+      const wasDone = s.classList.contains('done');
+      s.classList.remove('done','active','pending');
+      const ic = s.querySelector('.fm-step-ic');
+      const txt = s.querySelector('.fm-step-txt');
+      // Check animé seulement si le step vient de passer en done
+      const chk = (justChanged) => justChanged ? CHECK_ANIM_HTML : CHECK_HTML;
+
+      if (p <= 1) {
+        if (p < phase) { s.classList.add('done'); ic.innerHTML = chk(!wasDone); }
+        else if (p === phase) { s.classList.add('active'); ic.innerHTML = DOT_HTML; }
+        else { s.classList.add('pending'); ic.innerHTML = CIRCLE_HTML; }
+      }
+      else if (p === 2) {
+        if (aIsDone) { s.classList.add('done'); ic.innerHTML = chk(!wasDone); txt.innerHTML = STEP_TEXTS[2].done; }
+        else if (phase >= 2) { s.classList.add('active'); ic.innerHTML = DOT_HTML; txt.innerHTML = STEP_TEXTS[2].active; }
+        else { s.classList.add('pending'); ic.innerHTML = CIRCLE_HTML; txt.innerHTML = STEP_TEXTS[2].pending; }
+      }
+      else if (p === 3) {
+        if (bIsDone) { s.classList.add('done'); ic.innerHTML = chk(!wasDone); txt.innerHTML = STEP_TEXTS[3].done; }
+        else if (aIsDone) { s.classList.add('active'); ic.innerHTML = DOT_HTML; txt.innerHTML = STEP_TEXTS[3].active; }
+        else { s.classList.add('pending'); ic.innerHTML = CIRCLE_HTML; txt.innerHTML = STEP_TEXTS[3].pending; }
+      }
+    });
+    if (phase <= 1) {
+      badge.className = 'fm-badge waiting';
+      badge.innerHTML = phase === 0 ? 'En attente' : 'Assigné';
+    } else if (!bIsDone) {
+      badge.className = 'fm-badge in-progress'; badge.innerHTML = 'En cours';
+    } else {
+      badge.className = 'fm-badge delivered'; badge.innerHTML = BADGE_CHECK + ' Livrée';
+    }
+  }
+
+  const CYCLE = 7000;
+  const PAUSE = 2500;
+  let startTs = null;
+  let rafId = null;
+  let lastPhase = -1;
+  let lastAState = false;
+  let lastBState = false;
+  let aMarked = false;
+  let bMarked = false;
+  let hasZoomed = false;
+  const mapEl = map.getContainer();
+
+  function updateStopMarker(marker, done) {
+    const el = marker.getElement();
+    if (!el) return;
+    const stop = el.querySelector('.fm-stop');
+    if (stop) stop.className = done ? 'fm-stop done' : 'fm-stop';
+  }
+
+  function animate(ts) {
+    if (!startTs) startTs = ts;
+    const elapsed = ts - startTs;
+
+    if (elapsed >= CYCLE + PAUSE) {
+      startTs = ts;
+      lastPhase = -1;
+      lastAState = false; lastBState = false;
+      aMarked = false; bMarked = false; hasZoomed = false;
+      // Reset sans transition visible (désactiver transition, reset, réactiver)
+      el.style.transition = 'none';
+      el.style.transform = 'scale(1)';
+      // Force reflow pour appliquer immédiatement
+      void el.offsetHeight;
+      el.style.transition = 'transform 2.5s ease-out';
+      trail.setLatLngs([]); trailGlow.setLatLngs([]);
+      courierMarker.setLatLng(ROUTE[0]);
+      courierMarker.setIcon(bikeIcon);
+      markerA.setIcon(L.divIcon({ html:'<div class="fm-stop">A</div>', iconSize:[22,22], iconAnchor:[11,11], className:'' }));
+      markerB.setIcon(L.divIcon({ html:'<div class="fm-stop">B</div>', iconSize:[22,22], iconAnchor:[11,11], className:'' }));
+      if (!map.hasLayer(markerB)) map.addLayer(markerB);
+      // zoom reset via map.setZoom ci-dessus
+      setMockupPhase(0, false, false);
+      rafId = requestAnimationFrame(animate);
+      return;
+    }
+
+    const t = Math.min(elapsed / CYCLE, 1);
+    // Mouvement fluide — easeInOut naturel, pas de pause
+    const eased = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2) / 2;
+    const { latlng, seg } = getPosAt(eased);
+
+    courierMarker.setLatLng(latlng);
+
+    // Traînée gradient
+    const pts = ROUTE.slice(0, seg + 1).concat([latlng]);
+    trail.setLatLngs(pts);
+
+    // Glow comète (derniers ~6 points)
+    const glowStart = Math.max(0, seg - 5);
+    trailGlow.setLatLngs(ROUTE.slice(glowStart, seg + 1).concat([latlng]));
+
+    // Appliquer le gradient SVG sur le path
+    if (!gradEl) setupGradient();
+    if (gradEl) {
+      const sp = map.latLngToLayerPoint(ROUTE[0]);
+      const ep = map.latLngToLayerPoint(latlng);
+      gradEl.setAttribute('x1', sp.x); gradEl.setAttribute('y1', sp.y);
+      gradEl.setAttribute('x2', ep.x); gradEl.setAttribute('y2', ep.y);
+      const pathEl = trail.getElement();
+      if (pathEl) pathEl.setAttribute('stroke', 'url(#fmTrailGrad)');
+    }
+
+    // Zoom + travelling CSS (transition gérée par CSS, pas JS chaque frame)
+    if (!hasZoomed && t > 0.15) {
+      hasZoomed = true;
+      el.style.transform = 'scale(1.15)';
+      // transform-origin biaise vers le point B (set dynamiquement)
+      const destPx = map.latLngToContainerPoint(ROUTE[ROUTE.length - 1]);
+      const w = el.offsetWidth, h = el.offsetHeight;
+      if (w && h) el.style.transformOrigin = `${(destPx.x/w)*100}% ${(destPx.y/h)*100}%`;
+    }
+
+    // Stop A livré (~50% du tracé)
+    if (!aMarked && eased >= 0.48) {
+      aMarked = true;
+      updateStopMarker(markerA, true);
+    }
+
+    // Stop B livré — seulement quand le coursier est vraiment arrivé
+    if (!bMarked && eased >= 0.99) {
+      bMarked = true;
+      courierMarker.setIcon(deliveredIcon);
+      if (map.hasLayer(markerB)) map.removeLayer(markerB);
+    }
+
+    // Phases mockup — MAJ seulement quand ça change (sinon l'animation check redémarre)
+    let phase;
+    if (t < 0.05) phase = 0;
+    else if (t < 0.10) phase = 1;
+    else if (t < 0.50) phase = 2;
+    else phase = 3;
+    if (phase !== lastPhase || aMarked !== lastAState || bMarked !== lastBState) {
+      lastPhase = phase; lastAState = aMarked; lastBState = bMarked;
+      setMockupPhase(phase, aMarked, bMarked);
+    }
+
+    rafId = requestAnimationFrame(animate);
+  }
+
+  map.whenReady(() => {
+    setMockupPhase(0, false, false);
+    mapEl.style.transform = 'scale(1)';
+    setTimeout(() => { rafId = requestAnimationFrame(animate); }, 600);
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      cancelAnimationFrame(rafId);
+    } else {
+      startTs = null;
+      rafId = requestAnimationFrame(animate);
+    }
+  });
 })();
 
 </script>

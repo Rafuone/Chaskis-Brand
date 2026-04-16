@@ -4,6 +4,27 @@
 > **État actuel des sections :**
 > - `diff-sec` (Pourquoi Chaskis) — utilise des icônes Lucide pour le moment. Des illustrations dans un style "dessiné / Notion" sont prévues pour chaque card (voir section dédiée ci-dessous).
 > - `feat-sec` (Tout est inclus) — mockup UI codé à droite (suivi de livraison avec preuve photo), bénéfices listés à gauche avec icônes sur fond pastel (teal-bg, accent-bg). Copy adapté B2B : intégration outils (Shipday/API), pas "pas de logiciel". Sémantique SEO : h3, article, JSON-LD DeliveryService.
+> - `sim-sec` (Simulateur d'économies) — repositionnée juste avant le booking pour renforcer le funnel de conversion. Dernier nudge avant le CTA.
+> - `cta-booking` (Booking) — refonte complète façon Calendly : layout 2 colonnes (calendrier + créneaux), gradient violet→teal pour les sélections (au lieu du vert pur, plus accessible), première date disponible pré-sélectionnée au chargement. Colonne gauche orientée conversion : badge urgence "Prochain créneau le…", h2 "Votre consultation logistique offerte" (mots forts : conseil stratégique, audit, expert), checklist valeur (audit coûts, reco tarifaire, plan de déploiement clé en main), mini témoignage. Flow 4 étapes : date/heure → infos → vos économies (optionnel, contextualisé) → confirmation.
+
+## Audit de l'ordre des sections (avril 2026)
+
+Ordre actuel du funnel :
+1. Hero — accroche + CTA
+2. Partners — crédibilité immédiate (60+ entreprises, stats)
+3. `diff-sec` — pourquoi Chaskis (3 cards 3D)
+4. `feat-sec` — ce que ça change (5 bénéfices + mockup map)
+5. `offres` — pricing (Flex / Dédié / Express)
+6. `testi` — témoignages (social proof)
+7. `how` — onboarding 4 étapes
+8. `mob-sec` — Mobilité ⚠️ casse le funnel, à déplacer après FAQ ou sur page dédiée
+9. `sim-sec` — simulateur d'économies
+10. `cta-booking` — réservation 4 étapes
+11. `faq` — objections
+12. Footer
+
+## Code mort à nettoyer
+CSS + i18n existants mais jamais rendus : `.zoom-section`, `.proof-sec`, `.secteurs`, `.vp`, `.pipeline`, `.bento`, `.recruit`. ~15-20KB de dead code à purger.
 
 ---
 

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>CSS Marquee Examples</h1>
+<p>An exploration of responsive marquee-style animations with HTML and CSS for the article <a href="https://ryanmulligan.dev/blog/css-marquee/" target="_blank">The Infinite Marquee</a>.
+
+<section>
+  <h2>Full-width (default)</h2>
+  <input id="enable-animation-1" type="checkbox" />
+  <label for="enable-animation-1">Enable animation</label>
+
+  <div class="marquee">
+    <ul class="marquee__content">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+    </ul>
+
+    <ul aria-hidden="true" class="marquee__content">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Reverse</h2>
+  <input id="enable-animation-2" type="checkbox" />
+  <label for="enable-animation-2">Enable animation</label>
+
+  <div class="marquee marquee--reverse">
+    <ul class="marquee__content">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+    </ul>
+
+    <ul aria-hidden="true" class="marquee__content">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Pause on hover</h2>
+  <input id="enable-animation-3" type="checkbox" />
+  <label for="enable-animation-3">Enable animation</label>
+
+  <div class="marquee marquee--hover-pause">
+    <ul class="marquee__content">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+    </ul>
+
+    <ul aria-hidden="true" class="marquee__content">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Fit content</h2>
+  <input id="enable-animation-4" type="checkbox" />
+  <label for="enable-animation-4">Enable animation</label>
+
+  <div class="marquee marquee--fit-content">
+    <ul class="marquee__content">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+    </ul>
+
+    <ul aria-hidden="true" class="marquee__content">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Fit content + position absolute :last-child</h2>
+  <input id="enable-animation-5" type="checkbox" />
+  <label for="enable-animation-5">Enable animation</label>
+
+  <div class="marquee marquee--fit-content marquee--pos-absolute">
+    <ul class="marquee__content">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+    </ul>
+
+    <ul aria-hidden="true" class="marquee__content">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+    </ul>
+  </div>
+</section>
+</body>
+</html>

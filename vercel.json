@@ -1,8 +1,8 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/index-v7.html" },
+    { "source": "/", "destination": "/index.html" },
     { "source": "/app", "destination": "/app.html" },
-    { "source": "/commander", "destination": "/commander-v7.html" },
+    { "source": "/commander", "destination": "/commander.html" },
     { "source": "/dashboard", "destination": "/dashboard.html" },
     { "source": "/postuler", "destination": "/postuler.html" }
   ],

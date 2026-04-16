@@ -95,18 +95,18 @@
 <body>
 
 <div class="mob-m" id="mm">
-  <a href="index-v7.html" onclick="cm()">Accueil</a>
-  <a href="commander-v7.html" onclick="cm()">Commander</a>
+  <a href="index.html" onclick="cm()">Accueil</a>
+  <a href="commander.html" onclick="cm()">Commander</a>
   <a href="postuler.html" onclick="cm()">Postuler</a>
-  <a href="index-v7.html#booking" onclick="cm()">Planifier un appel</a>
-  <a href="index-v7.html#faq" onclick="cm()">FAQ</a>
+  <a href="index.html#booking" onclick="cm()">Planifier un appel</a>
+  <a href="index.html#faq" onclick="cm()">FAQ</a>
 </div>
 
 <nav class="nav" id="nav">
   <div class="ct nav-in">
-    <a href="index-v7.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
+    <a href="index.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
     <div class="nav-mid" style="margin-left:auto">
-      <a href="commander-v7.html">Commander</a>
+      <a href="commander.html">Commander</a>
       <a href="postuler.html">Postuler</a>
     </div>
     <div class="lang-sw" id="langSw" role="radiogroup" aria-label="Langue / Language">
@@ -146,7 +146,7 @@
             <a href="#" data-sec="account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Mon compte</a>
             <a href="#" data-sec="billing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Facturation</a>
           </nav>
-          <a href="commander-v7.html" class="btn btn-p btn-sm" style="width:100%;justify-content:center;margin-top:16px"><span>Nouvelle commande</span></a>
+          <a href="commander.html" class="btn btn-p btn-sm" style="width:100%;justify-content:center;margin-top:16px"><span>Nouvelle commande</span></a>
         </aside>
 
         <!-- Main content -->
@@ -158,8 +158,8 @@
             <div class="dash-welcome-sub" id="welcomeSub"></div>
             <div class="dash-cards" id="overviewStats"></div>
             <div style="display:flex;gap:10px;margin-bottom:24px">
-              <a href="commander-v7.html" class="btn btn-p btn-sm"><span>Nouvelle commande</span></a>
-              <a href="index-v7.html#booking" class="btn btn-o btn-sm"><span>Planifier un appel gratuit</span></a>
+              <a href="commander.html" class="btn btn-p btn-sm"><span>Nouvelle commande</span></a>
+              <a href="index.html#booking" class="btn btn-o btn-sm"><span>Planifier un appel gratuit</span></a>
             </div>
             <div class="dash-card">
               <h4 style="font-size:.88rem;font-weight:800;margin-bottom:14px">Dernières commandes</h4>
@@ -262,8 +262,8 @@
   <div class="ct">
     <div class="ft">
       <div class="fb"><a href="/" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg3" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg3)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a><p>Gestion de livraison en Suisse romande.</p></div>
-      <div class="fc"><h4>Services</h4><a href="commander-v7.html">Commander</a><a href="index-v7.html#services">Pourquoi nous</a><a href="index-v7.html#booking">Réserver un appel</a></div>
-      <div class="fc"><h4>Entreprise</h4><a href="postuler.html">Devenir coursier</a><a href="index-v7.html#faq">FAQ</a><a href="mailto:contact@chaskis.ch">Contact</a></div>
+      <div class="fc"><h4>Services</h4><a href="commander.html">Commander</a><a href="index.html#services">Pourquoi nous</a><a href="index.html#booking">Réserver un appel</a></div>
+      <div class="fc"><h4>Entreprise</h4><a href="postuler.html">Devenir coursier</a><a href="index.html#faq">FAQ</a><a href="mailto:contact@chaskis.ch">Contact</a></div>
       <div class="fc"><h4>Légal</h4><a href="#">Mentions légales</a><a href="#">Confidentialité</a></div>
     </div>
     <div class="f-btm"><span>&copy; 2026 Chaskis SA — Lausanne</span><span>Fait en Suisse romande</span></div>
@@ -357,9 +357,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Upgrade CTA
   const upgradeEl = document.getElementById('upgradeCard');
   if (user.plan === 'express') {
-    upgradeEl.innerHTML = `<div class="dash-upgrade"><div><h4>Passez au Pro</h4><p>Réservez un appel découverte pour accéder aux tarifs Flex (CHF 10) ou Dédié (CHF 8).</p></div><a href="index-v7.html#booking" class="btn btn-w btn-sm"><span>Planifier un appel gratuit</span></a></div>`;
+    upgradeEl.innerHTML = `<div class="dash-upgrade"><div><h4>Passez au Pro</h4><p>Réservez un appel découverte pour accéder aux tarifs Flex (CHF 10) ou Dédié (CHF 8).</p></div><a href="index.html#booking" class="btn btn-w btn-sm"><span>Planifier un appel gratuit</span></a></div>`;
   } else if (user.plan === 'flex') {
-    upgradeEl.innerHTML = `<div class="dash-upgrade"><div><h4>Passez au Dédié — CHF 8/course</h4><p>Flotte dédiée à votre marque, account manager et SLA garanti.</p></div><a href="index-v7.html#booking" class="btn btn-w btn-sm"><span>Prendre rendez-vous</span></a></div>`;
+    upgradeEl.innerHTML = `<div class="dash-upgrade"><div><h4>Passez au Dédié — CHF 8/course</h4><p>Flotte dédiée à votre marque, account manager et SLA garanti.</p></div><a href="index.html#booking" class="btn btn-w btn-sm"><span>Prendre rendez-vous</span></a></div>`;
   } else {
     upgradeEl.innerHTML = `<div class="dash-upgrade" style="background:linear-gradient(135deg,var(--purple),var(--purple-light))"><div><h4>Plan Dédié actif</h4><p>Votre flotte dédiée est opérationnelle. Merci pour votre confiance.</p></div><span class="btn btn-w btn-sm" style="pointer-events:none;opacity:.7"><span>Actif</span></span></div>`;
   }
@@ -399,7 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
     activeEl.innerHTML = `<div class="dash-card" style="text-align:center;padding:48px 24px">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;color:var(--sand);margin:0 auto 12px"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
       <p style="font-size:.88rem;color:var(--ink-muted)">Aucune livraison en cours</p>
-      <a href="commander-v7.html" class="btn btn-p btn-sm" style="margin-top:16px"><span>Commander</span></a>
+      <a href="commander.html" class="btn btn-p btn-sm" style="margin-top:16px"><span>Commander</span></a>
     </div>`;
   } else {
     activeEl.innerHTML = activeOrders.map((o, i) => {

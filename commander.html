@@ -4,476 +4,1086 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Commander une livraison — Chaskis</title>
-<meta name="description" content="Commandez une livraison en Suisse romande. Express dès CHF 16, tarifs pro dès CHF 8. Formulaire rapide, suivi en temps réel.">
-<link rel="canonical" href="https://www.chaskis.ch/commander">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3AAFA9">
 <link rel="stylesheet" href="styles.css">
 <style>
-/* ===== ORDER PAGE ===== */
-.page{padding:88px 0 60px;min-height:100vh;background:var(--bg)}
-.page-header{text-align:center;margin-bottom:40px;animation:fade-up .5s var(--ease) both}
-.page-header h1{font-size:clamp(1.6rem,2.8vw,2.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:6px}
-.page-header h1 .ac{color:var(--teal)}
-.page-header p{font-size:.88rem;color:var(--ink-light);max-width:420px;margin:0 auto}
+/* ===== SCREEN SYSTEM ===== */
+.screen{display:none;min-height:100vh;animation:fade-up .4s var(--ease) both}
+.screen.active{display:block}
 
-/* Layout: form + sticky summary */
-.order-layout{display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start}
+/* ===== SEGMENTATION ===== */
+.seg-wrap{background:var(--bg);padding:96px 0 60px;display:flex;align-items:center}
+.seg-head{text-align:center;margin-bottom:40px}
+.seg-head h1{font-size:clamp(1.8rem,3.2vw,2.6rem);font-weight:800;letter-spacing:-.04em;margin-bottom:8px}
+.seg-head h1 em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--teal)}
+.seg-head p{font-size:.88rem;color:var(--ink-light)}
+.seg-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:820px;margin:0 auto}
+.seg-card{background:var(--white);border-radius:var(--rxl);padding:40px 36px;border:2px solid var(--sand);cursor:pointer;transition:all .4s var(--ease);position:relative;overflow:hidden}
+.seg-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--teal);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
+.seg-card:hover{border-color:var(--teal-light);transform:translateY(-6px);box-shadow:var(--sh-xl)}
+.seg-card:hover::before{transform:scaleX(1)}
+.seg-card.pro::before{background:var(--accent)}
+.seg-card.pro:hover{border-color:var(--accent-light)}
+.seg-ic{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;transition:transform .4s var(--ease-bounce)}
+.seg-card:hover .seg-ic{transform:scale(1.12) rotate(-5deg)}
+.seg-ic.t{background:var(--teal-bg);color:var(--teal)}
+.seg-ic.p{background:var(--accent-bg);color:var(--accent)}
+.seg-ic svg{width:26px;height:26px}
+.seg-card h2{font-size:1.3rem;font-weight:800;letter-spacing:-.03em;margin-bottom:4px}
+.seg-type{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted);margin-bottom:14px}
+.seg-price{font-size:2.4rem;font-weight:900;letter-spacing:-.05em;line-height:1;margin-bottom:3px}
+.seg-price sup{font-size:.9rem;font-weight:700;vertical-align:super}
+.seg-price small{font-size:.72rem;font-weight:600;color:var(--ink-muted)}
+.seg-price-note{font-size:.68rem;color:var(--ink-muted);margin-bottom:24px}
+.seg-feats{list-style:none;margin-bottom:28px}
+.seg-feats li{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--ink-mid);padding:5px 0;border-bottom:1px solid rgba(0,0,0,.04)}
+.seg-feats li svg{width:14px;height:14px;color:var(--teal);flex-shrink:0}
+.seg-card.pro .seg-feats li svg{color:var(--accent)}
+.seg-btn{width:100%;padding:14px;border-radius:var(--pill);font-weight:700;font-size:.88rem;background:var(--teal-bg);color:var(--teal-dark);border:none;cursor:pointer;transition:all .3s var(--ease);display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit}
+.seg-btn:hover{background:var(--teal);color:#fff;transform:translateY(-1px)}
+.seg-card.pro .seg-btn{background:var(--accent-bg);color:var(--accent)}
+.seg-card.pro .seg-btn:hover{background:var(--accent);color:#fff}
+.seg-btn svg{width:16px;height:16px}
+.seg-footnote{text-align:center;font-size:.75rem;color:var(--ink-muted);margin-top:20px}
+.seg-pro-badge{position:absolute;top:16px;right:16px;font-size:.55rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;padding:4px 10px;border-radius:var(--pill)}
 
-/* Stepper horizontal */
-.stepper{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding:0 4px;animation:fade-up .5s var(--ease) both .1s;max-width:540px;margin-left:auto;margin-right:auto}
+/* ===== B2B GATE ===== */
+.gate-wrap{background:var(--bg);padding:96px 0 60px;display:flex;align-items:center;justify-content:center;min-height:100vh}
+.gate-card{background:var(--white);border-radius:var(--rxl);padding:52px 44px;max-width:480px;width:100%;text-align:center;box-shadow:var(--sh-xl)}
+.gate-icon{width:68px;height:68px;border-radius:20px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:var(--accent)}
+.gate-icon svg{width:32px;height:32px}
+.gate-card h2{font-size:1.5rem;font-weight:800;letter-spacing:-.03em;margin-bottom:10px}
+.gate-card p{font-size:.86rem;color:var(--ink-light);line-height:1.65;margin-bottom:28px}
+.gate-actions{display:flex;flex-direction:column;gap:10px}
+.gate-or{font-size:.7rem;color:var(--ink-muted);margin:4px 0}
+.gate-demo{background:var(--bg);border-radius:var(--rl);padding:18px;margin-top:20px}
+.gate-demo p{font-size:.7rem;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.gate-accounts{display:flex;flex-direction:column;gap:6px}
+.gate-acc{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--white);border-radius:var(--r);cursor:pointer;transition:all .25s var(--ease);border:1.5px solid transparent}
+.gate-acc:hover{border-color:var(--teal);background:var(--teal-bg)}
+.gate-acc .ga-email{font-size:.76rem;font-weight:600;color:var(--ink-mid)}
+.ga-badge{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:var(--pill)}
+.gate-back{font-size:.78rem;color:var(--ink-muted);cursor:pointer;margin-top:16px;transition:color .3s;background:none;border:none;font-family:inherit;display:block;width:100%;text-align:center}
+.gate-back:hover{color:var(--teal)}
+
+/* ===== FORM SCREEN ===== */
+.form-wrap{background:var(--bg);padding:88px 0 60px}
+.form-hd{text-align:center;margin-bottom:32px}
+.form-hd h1{font-size:clamp(1.5rem,2.4vw,1.9rem);font-weight:800;letter-spacing:-.03em;margin-bottom:4px}
+.form-hd p{font-size:.82rem;color:var(--ink-light)}
+
+/* Stepper */
+.stp-bar{display:flex;align-items:center;justify-content:center;max-width:380px;margin:0 auto 32px;padding:0 4px}
 .stp{display:flex;align-items:center;gap:8px;position:relative;z-index:1}
 .stp-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;background:var(--sand);color:var(--ink-muted);transition:all .5s var(--ease);flex-shrink:0}
-.stp.active .stp-num{background:var(--teal);color:#fff;box-shadow:0 3px 12px rgba(58,175,169,.25);transform:scale(1.05)}
+.stp.active .stp-num{background:var(--teal);color:#fff;box-shadow:0 3px 12px rgba(58,175,169,.25)}
 .stp.done .stp-num{background:var(--teal);color:#fff}
-.stp-label{font-size:.72rem;font-weight:600;color:var(--ink-muted);transition:color .3s;white-space:nowrap}
-.stp.active .stp-label{color:var(--ink);font-weight:700}
-.stp.done .stp-label{color:var(--teal)}
+.stp-lbl{font-size:.72rem;font-weight:600;color:var(--ink-muted);white-space:nowrap;transition:color .3s}
+.stp.active .stp-lbl{color:var(--ink);font-weight:700}
+.stp.done .stp-lbl{color:var(--teal)}
 .stp-line{flex:1;height:2px;background:var(--sand);margin:0 8px;transition:background .5s var(--ease)}
 .stp-line.done{background:var(--teal)}
 
-/* Form card */
-.ocard{background:var(--white);border-radius:var(--rxl);box-shadow:var(--sh-lg);padding:36px;position:relative;overflow:hidden;animation:fade-up .5s var(--ease) both .15s}
-.ocard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--accent),var(--teal),var(--teal-light))}
+/* Layout */
+.order-layout{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start}
 
-/* Step containers */
-.ostep{display:none}
-.ostep.active{display:block;animation:fade-up .4s var(--ease) both}
-.ostep-badge{display:inline-flex;align-items:center;gap:6px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal);background:var(--teal-bg);padding:4px 12px;border-radius:var(--pill);margin-bottom:14px}
-.ostep-title{font-size:1.15rem;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
-.ostep-sub{font-size:.8rem;color:var(--ink-muted);margin-bottom:24px}
+/* Form card */
+.fcard{background:var(--white);border-radius:var(--rxl);overflow:hidden;box-shadow:var(--sh-md)}
+.fcard-bar{height:4px;background:linear-gradient(90deg,var(--accent),var(--teal),var(--teal-light))}
+.fcard-body{padding:36px}
+
+.fstep{display:none}
+.fstep.active{display:block;animation:fade-up .35s var(--ease) both}
+
+/* Section headers */
+.fsect{margin-bottom:28px}
+.fsect-hd{display:flex;align-items:center;gap:10px;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-muted);margin-bottom:16px;padding-bottom:8px;border-bottom:1.5px solid var(--sand)}
+.fsect-ic{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fsect-ic svg{width:13px;height:13px}
+.fsect-ic.pick{background:var(--teal-bg);color:var(--teal)}
+.fsect-ic.drop{background:var(--accent-bg);color:var(--accent)}
+.fsect-ic.pkg{background:var(--cream);color:var(--ink-mid)}
 
 /* Fields */
-.f{margin-bottom:16px}
-.f label{display:block;font-size:.75rem;font-weight:700;color:var(--ink-mid);margin-bottom:5px}
+.f{margin-bottom:14px}
+.f label{display:block;font-size:.73rem;font-weight:700;color:var(--ink-mid);margin-bottom:5px}
 .f label .req{color:var(--teal);margin-left:2px}
-.f input,.f select,.f textarea{width:100%;padding:12px 16px;border:1.5px solid var(--sand);border-radius:var(--r);font-family:inherit;font-size:.88rem;color:var(--ink);background:var(--white);outline:none;transition:all .3s var(--ease)}
+.f label .badge-req{display:inline-flex;align-items:center;gap:3px;font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);background:var(--accent-bg);padding:1px 7px;border-radius:var(--pill);margin-left:6px}
+.f input,.f select,.f textarea{width:100%;padding:11px 14px;border:1.5px solid var(--sand);border-radius:var(--r);font-family:inherit;font-size:.86rem;color:var(--ink);background:var(--white);outline:none;transition:all .3s var(--ease)}
 .f input:focus,.f select:focus,.f textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(58,175,169,.08)}
-.f textarea{resize:vertical;min-height:80px}
-.f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.f-hint{font-size:.7rem;color:var(--ink-muted);margin-top:4px}
+.f textarea{resize:vertical;min-height:72px}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f-hint{font-size:.68rem;color:var(--ink-muted);margin-top:4px}
 
-/* Phone field with flag */
-.f-phone{position:relative}
-.f-phone .flag{position:absolute;left:14px;top:38px;font-size:.9rem}
-.f-phone input{padding-left:42px}
+/* Reference merchant field — special */
+.ref-highlight input{border-color:rgba(107,79,160,.2)}
+.ref-highlight input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(107,79,160,.08)}
+.ref-info{display:flex;align-items:flex-start;gap:8px;background:var(--accent-bg);border:1px solid rgba(107,79,160,.12);border-radius:var(--r);padding:10px 12px;margin-top:6px}
+.ref-info svg{width:13px;height:13px;color:var(--accent);flex-shrink:0;margin-top:1px}
+.ref-info p{font-size:.73rem;color:var(--ink-mid);line-height:1.5}
 
-/* Toggle Oui/Non */
-.toggle-group{display:flex;gap:8px;margin-top:6px}
-.toggle-opt{padding:8px 20px;border-radius:var(--pill);font-size:.82rem;font-weight:600;border:1.5px solid var(--sand);color:var(--ink-mid);cursor:pointer;transition:all .3s var(--ease)}
-.toggle-opt:hover{border-color:var(--teal-light)}
-.toggle-opt.on{border-color:var(--teal);background:var(--teal-bg);color:var(--teal)}
+/* Multi-stop */
+.stops-list{margin-bottom:8px}
+.stop-item{display:grid;grid-template-columns:auto 1fr auto;align-items:start;gap:8px;padding:10px 12px;background:var(--bg);border-radius:var(--r);border:1.5px solid var(--sand);margin-bottom:8px;animation:fade-up .25s var(--ease) both}
+.stop-let{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;flex-shrink:0;margin-top:13px}
+.stop-let.pick{background:var(--teal-bg);color:var(--teal-dark)}
+.stop-let.drop{background:var(--accent-bg);color:var(--accent)}
+.stop-let.extra{background:var(--cream);color:var(--ink-mid)}
+.stop-item .f{margin-bottom:0;flex:1}
+.stop-rm{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--ink-muted);cursor:pointer;transition:all .2s;flex-shrink:0;margin-top:8px;background:none;border:none;font-family:inherit}
+.stop-rm:hover{background:rgba(239,68,68,.08);color:#ef4444}
+.stop-rm svg{width:14px;height:14px}
+.add-stop{display:flex;align-items:center;gap:7px;font-size:.82rem;font-weight:700;color:var(--teal);cursor:pointer;padding:6px 0;transition:all .25s;background:none;border:none;font-family:inherit}
+.add-stop:hover{gap:10px}
+.add-stop svg{width:16px;height:16px}
 
-/* Tier select (step 0 / integrated) */
-.tier-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
-.tier{padding:16px;border-radius:var(--rl);border:2px solid var(--sand);text-align:center;cursor:pointer;transition:all .4s var(--ease);position:relative}
-.tier:hover:not(.lk){border-color:var(--teal-light);transform:translateY(-2px)}
-.tier.on{border-color:var(--teal);background:var(--teal-bg);box-shadow:0 4px 16px rgba(58,175,169,.1)}
-.tier.lk{opacity:.4;cursor:not-allowed}
-.tier-tag{position:absolute;top:6px;right:6px;font-size:.5rem;font-weight:800;background:var(--purple-bg);color:var(--purple);padding:2px 6px;border-radius:var(--pill);text-transform:uppercase}
-.tier-name{font-size:.88rem;font-weight:800;display:block}
-.tier-price{font-size:1.3rem;font-weight:900;color:var(--teal);letter-spacing:-.03em;display:block;margin:4px 0 2px}
-.tier-desc{font-size:.65rem;color:var(--ink-muted)}
+/* Container picker */
+.cpk{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:6px}
+.cpk-card{padding:20px 12px;border-radius:var(--rl);border:2px solid var(--sand);cursor:pointer;transition:all .3s var(--ease);text-align:center;position:relative;overflow:hidden}
+.cpk-card:hover{border-color:var(--teal-light);transform:translateY(-3px);box-shadow:var(--sh-md)}
+.cpk-card.on{border-color:var(--teal);background:var(--teal-bg);box-shadow:0 4px 20px rgba(58,175,169,.12)}
+.cpk-emoji{font-size:1.8rem;margin-bottom:8px;display:block;transition:transform .35s var(--ease-bounce)}
+.cpk-card:hover .cpk-emoji,.cpk-card.on .cpk-emoji{transform:scale(1.2)}
+.cpk-name{font-size:.78rem;font-weight:800;display:block;margin-bottom:3px;letter-spacing:-.02em}
+.cpk-detail{font-size:.62rem;color:var(--ink-muted);line-height:1.4}
+.cpk-card.on .cpk-detail{color:var(--teal-dark)}
+.cpk-plus{position:absolute;top:6px;right:6px;font-size:.55rem;font-weight:800;color:var(--accent);background:var(--accent-bg);padding:2px 6px;border-radius:var(--pill)}
+.cpk-card.on .cpk-plus{background:rgba(107,79,160,.15)}
+
+/* Time picker */
+.tpk{margin-top:20px}
+.tpk-tabs{display:flex;gap:10px;margin-bottom:12px}
+.tpk-tab{flex:1;padding:14px 12px;border-radius:var(--r);border:2px solid var(--sand);cursor:pointer;transition:all .3s var(--ease);text-align:center;background:none;font-family:inherit}
+.tpk-tab:hover{border-color:var(--teal-light)}
+.tpk-tab.on{border-color:var(--teal);background:var(--teal-bg)}
+.tpk-tab .tpk-emoji{font-size:1.2rem;display:block;margin-bottom:5px}
+.tpk-tab h4{font-size:.82rem;font-weight:700;margin-bottom:2px;color:var(--ink)}
+.tpk-tab p{font-size:.62rem;color:var(--ink-muted)}
+.tpk-tab.on p{color:var(--teal-dark)}
+.tpk-asap-info{display:flex;align-items:center;gap:8px;background:rgba(58,175,169,.06);border:1px solid rgba(58,175,169,.15);border-radius:var(--r);padding:10px 14px;font-size:.75rem;color:var(--teal-dark);animation:fade-up .3s var(--ease) both}
+.tpk-asap-info svg{width:14px;height:14px;flex-shrink:0}
+.tpk-plan{display:none;animation:fade-up .3s var(--ease) both}
+.tpk-plan.show{display:block}
+
+/* Upload zone */
+.upload-zone{border:2px dashed var(--sand);border-radius:var(--r);padding:24px;text-align:center;cursor:pointer;transition:all .3s var(--ease);position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--teal);background:var(--teal-bg)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-zone svg{width:26px;height:26px;color:var(--ink-muted);margin:0 auto 8px}
+.upload-zone p{font-size:.78rem;color:var(--ink-muted);font-weight:600}
+.upload-zone span{font-size:.65rem;color:var(--ink-muted)}
+.upload-zone:hover svg,.upload-zone:hover p{color:var(--teal)}
 
 /* Nav buttons */
 .onav{display:flex;gap:10px;margin-top:28px;padding-top:20px;border-top:1px solid rgba(0,0,0,.04)}
 .onav .btn{flex:1;justify-content:center;padding:14px 20px}
-.o-back{background:var(--bg);color:var(--ink-mid);font-weight:600}
-.o-back:hover{background:var(--sand)}
+.btn-back-form{background:var(--bg);color:var(--ink-mid);font-weight:600}
+.btn-back-form:hover{background:var(--sand)}
 
 /* ===== STICKY SUMMARY ===== */
-.summary{position:sticky;top:100px;background:var(--white);border-radius:var(--rxl);box-shadow:var(--sh-md);padding:28px;animation:slide-in-right .6s var(--ease) both .2s;border:1.5px solid rgba(0,0,0,.04)}
-.summary h3{font-size:1rem;font-weight:800;letter-spacing:-.02em;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.summary h3 svg{width:20px;height:20px;color:var(--teal)}
-.sum-empty{text-align:center;padding:20px 0;color:var(--ink-muted);font-size:.82rem}
-.sum-empty svg{width:40px;height:40px;color:var(--sand);margin:0 auto 8px}
-.sum-section{margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(0,0,0,.04)}
-.sum-section:last-of-type{border:none;margin-bottom:8px}
-.sum-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-muted);margin-bottom:6px}
-.sum-row{display:flex;justify-content:space-between;align-items:flex-start;padding:3px 0;gap:8px}
-.sum-row .sk{font-size:.78rem;color:var(--ink-light)}.sum-row .sv{font-size:.78rem;font-weight:600;color:var(--ink);text-align:right;max-width:180px;word-break:break-word}
+.summary{position:sticky;top:100px;background:var(--white);border-radius:var(--rxl);box-shadow:var(--sh-md);padding:24px;border:1.5px solid rgba(0,0,0,.04);animation:slide-in-r .5s var(--ease) both .15s}
+@keyframes slide-in-r{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+.sum-head{font-size:.92rem;font-weight:800;letter-spacing:-.02em;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.sum-head svg{width:18px;height:18px;color:var(--teal)}
+.sum-sect{margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(0,0,0,.04)}
+.sum-sect:last-of-type{border:none;margin-bottom:6px}
+.sum-lbl{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-muted);margin-bottom:5px}
+.sum-row{display:flex;justify-content:space-between;align-items:flex-start;padding:2px 0;gap:8px}
+.sum-row .sk{font-size:.76rem;color:var(--ink-light)}
+.sum-row .sv{font-size:.76rem;font-weight:600;color:var(--ink);text-align:right;word-break:break-word;max-width:160px}
+.sum-container{display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--ink-mid);padding:3px 0}
+.sum-empty{text-align:center;padding:20px 0;color:var(--ink-muted);font-size:.8rem}
 .sum-total{background:var(--teal-bg);border-radius:var(--rl);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px}
-.sum-total .stl{font-size:.82rem;font-weight:600;color:var(--teal-dark)}
-.sum-total .stv{font-size:1.4rem;font-weight:900;color:var(--teal);letter-spacing:-.03em}
-.sum-cta{width:100%;margin-top:14px;padding:14px;border-radius:var(--r);background:var(--teal);color:#fff;font-weight:700;font-size:.9rem;cursor:pointer;border:none;transition:all .3s var(--ease);opacity:.4;pointer-events:none}
+.sum-total .stl{font-size:.8rem;font-weight:600;color:var(--teal-dark)}
+.sum-total .stv{font-size:1.5rem;font-weight:900;color:var(--teal);letter-spacing:-.04em}
+.sum-cta{width:100%;margin-top:12px;padding:14px;border-radius:var(--r);background:var(--teal);color:#fff;font-weight:700;font-size:.88rem;cursor:pointer;border:none;transition:all .3s var(--ease);opacity:.4;pointer-events:none;font-family:inherit}
 .sum-cta.ready{opacity:1;pointer-events:auto}
 .sum-cta.ready:hover{background:var(--teal-dark);transform:translateY(-1px)}
-.sum-note{text-align:center;font-size:.68rem;color:var(--ink-muted);margin-top:8px}
+.sum-note{text-align:center;font-size:.64rem;color:var(--ink-muted);margin-top:6px}
 
-/* Confirmation overlay */
-.confirm-overlay{position:fixed;inset:0;z-index:200;background:rgba(250,250,247,.95);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
+/* ===== CHECKOUT SCREEN ===== */
+.checkout-wrap{background:var(--bg);padding:88px 0 60px}
+.checkout-hd{text-align:center;margin-bottom:32px}
+.checkout-hd h1{font-size:clamp(1.5rem,2.4vw,1.9rem);font-weight:800;letter-spacing:-.03em;margin-bottom:4px}
+.checkout-hd p{font-size:.82rem;color:var(--ink-light)}
+.checkout-layout{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+.co-card{background:var(--white);border-radius:var(--rxl);overflow:hidden;box-shadow:var(--sh-md);animation:fade-up .4s var(--ease) both .1s}
+.co-card-bar{height:4px;background:linear-gradient(90deg,var(--teal),var(--accent))}
+.co-card-body{padding:36px}
+.co-sect-ttl{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-muted);margin-bottom:16px;padding-bottom:8px;border-bottom:1.5px solid var(--sand)}
+
+/* Stripe-like card inputs */
+.card-frame{background:var(--bg);border:1.5px solid var(--sand);border-radius:var(--r);overflow:hidden;transition:border-color .3s}
+.card-frame:focus-within{border-color:var(--teal);box-shadow:0 0 0 3px rgba(58,175,169,.08)}
+.card-row-f{display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:1px solid var(--sand)}
+.card-row-f:last-child{border-bottom:none}
+.card-row-f svg{width:18px;height:18px;color:var(--ink-muted);flex-shrink:0}
+.card-row-f input{flex:1;border:none;background:transparent;font-family:inherit;font-size:.86rem;color:var(--ink);outline:none}
+.card-row-f input::placeholder{color:var(--ink-muted)}
+.card-half{border-bottom:none !important}
+.card-half .card-row-f:first-child{border-right:1px solid var(--sand)}
+.card-logo{display:flex;gap:6px;margin-top:10px}
+.card-logo img{height:18px;opacity:.4}
+.card-logo-txt{font-size:.62rem;color:var(--ink-muted);letter-spacing:.04em;font-weight:600}
+
+/* Reassurance */
+.reasur{background:var(--bg);border-radius:var(--rl);padding:18px;margin-top:16px}
+.reasur-item{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:.76rem;color:var(--ink-mid)}
+.reasur-item svg{width:14px;height:14px;color:var(--teal);flex-shrink:0}
+
+/* Checkout summary panel */
+.co-summary{background:var(--white);border-radius:var(--rxl);box-shadow:var(--sh-md);padding:26px;position:sticky;top:100px;border:1.5px solid rgba(0,0,0,.04);animation:slide-in-r .5s var(--ease) both .2s}
+.co-order-id{display:inline-block;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--teal-dark);background:var(--teal-bg);padding:3px 10px;border-radius:var(--pill);margin-bottom:14px}
+.co-line{display:flex;justify-content:space-between;font-size:.8rem;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.04)}
+.co-line:last-of-type{border:none}
+.co-line .ck{color:var(--ink-light)}.co-line .cv{font-weight:600;color:var(--ink)}
+.co-total{background:var(--teal-bg);border-radius:var(--rl);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin:14px 0}
+.co-total .ctl{font-size:.82rem;font-weight:700;color:var(--teal-dark)}
+.co-total .ctv{font-size:1.6rem;font-weight:900;color:var(--teal);letter-spacing:-.04em}
+.co-pay-btn{width:100%;padding:15px;border-radius:var(--r);background:var(--teal);color:#fff;font-weight:800;font-size:.92rem;cursor:pointer;border:none;transition:all .3s var(--ease);font-family:inherit;position:relative;overflow:hidden}
+.co-pay-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--teal-dark),var(--teal));opacity:0;transition:opacity .3s}
+.co-pay-btn:hover::before{opacity:1}
+.co-pay-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(58,175,169,.35)}
+.co-pay-btn span{position:relative;z-index:1}
+.co-back{font-size:.76rem;color:var(--ink-muted);cursor:pointer;margin-top:12px;text-align:center;transition:color .3s;background:none;border:none;width:100%;font-family:inherit}
+.co-back:hover{color:var(--teal)}
+.co-secure{display:flex;align-items:center;justify-content:center;gap:5px;font-size:.66rem;color:var(--ink-muted);margin-top:8px}
+.co-secure svg{width:12px;height:12px}
+
+/* ===== CONFIRM OVERLAY ===== */
+.confirm-overlay{position:fixed;inset:0;z-index:200;background:rgba(250,250,247,.96);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
 .confirm-overlay.show{opacity:1;pointer-events:auto}
-.confirm-card{background:var(--white);border-radius:var(--rxl);box-shadow:var(--sh-xl);padding:48px;text-align:center;max-width:480px;width:90%}
-.confirm-card svg{width:60px;height:60px;color:var(--teal);margin:0 auto 16px}
-.confirm-card h2{font-size:1.4rem;font-weight:800;margin-bottom:8px;letter-spacing:-.02em}
-.confirm-card p{font-size:.9rem;color:var(--ink-light);margin-bottom:24px;line-height:1.6}
-.confirm-card .order-id{display:inline-block;background:var(--teal-bg);color:var(--teal-dark);font-weight:700;padding:10px 24px;border-radius:var(--pill);font-size:.92rem;margin-bottom:24px}
-.confirm-card .confirm-actions{display:flex;gap:10px;justify-content:center}
+.confirm-card{background:var(--white);border-radius:var(--rxl);box-shadow:var(--sh-xl);padding:52px 40px;text-align:center;max-width:460px;width:90%;animation:fade-up .5s var(--ease) both}
+.confirm-check{width:72px;height:72px;border-radius:50%;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:check-pop .6s var(--ease-bounce) both .1s}
+@keyframes check-pop{from{transform:scale(0)}to{transform:scale(1)}}
+.confirm-check svg{width:36px;height:36px;color:var(--teal)}
+.confirm-card h2{font-size:1.5rem;font-weight:800;letter-spacing:-.04em;margin-bottom:8px}
+.confirm-card p{font-size:.86rem;color:var(--ink-light);line-height:1.65;margin-bottom:20px}
+.confirm-id{display:inline-block;background:var(--teal-bg);color:var(--teal-dark);font-weight:700;padding:10px 24px;border-radius:var(--pill);font-size:.88rem;margin-bottom:24px;letter-spacing:-.01em}
+.confirm-track{display:flex;align-items:center;justify-content:center;gap:6px;font-size:.78rem;color:var(--teal-dark);background:var(--teal-bg);border-radius:var(--r);padding:10px 16px;margin-bottom:24px;cursor:pointer;transition:all .3s}
+.confirm-track:hover{background:var(--teal);color:#fff}
+.confirm-track svg{width:14px;height:14px}
+.confirm-actions{display:flex;gap:10px;justify-content:center}
 
+/* ===== APP BANNER ===== */
+.app-banner{position:fixed;bottom:0;left:0;right:0;z-index:90;background:linear-gradient(135deg,#6B4FA0,#8B6FC0);padding:16px 20px calc(16px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:14px;box-shadow:0 -4px 24px rgba(107,79,160,.3);animation:banner-up .5s cubic-bezier(.33,1,.68,1) both .5s;opacity:0}
+@keyframes banner-up{from{opacity:0;transform:translateY(100%)}to{opacity:1;transform:translateY(0)}}
+.app-banner-icon{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.app-banner-icon svg{width:22px;height:22px;color:#fff}
+.app-banner-text{flex:1;color:#fff}
+.app-banner-text strong{font-size:.88rem;font-weight:800;display:block}
+.app-banner-text span{font-size:.72rem;opacity:.75}
+.app-banner-btn{padding:10px 18px;background:#fff;color:#6B4FA0;font-weight:800;font-size:.82rem;border:none;border-radius:999px;cursor:pointer;white-space:nowrap;font-family:inherit;transition:transform .2s}
+.app-banner-btn:active{transform:scale(.95)}
+.app-banner-close{position:absolute;top:8px;right:12px;background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:1.2rem;line-height:1;padding:4px}
+@keyframes sheet-up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+/* ===== RESPONSIVE ===== */
 @media(max-width:1024px){
-  .order-layout{grid-template-columns:1fr}
-  .summary{position:relative;top:0;order:-1}
+  .order-layout,.checkout-layout{grid-template-columns:1fr}
+  .summary,.co-summary{position:relative;top:0}
 }
 @media(max-width:768px){
-  .stepper{overflow-x:auto;padding-bottom:8px}
-  .stp-label{display:none}
-  .f-row{grid-template-columns:1fr}
-  .tier-bar{grid-template-columns:1fr}
-  .ocard{padding:24px 20px}
+  .seg-grid,.cpk{grid-template-columns:1fr}
+  .fcard-body{padding:24px 20px}
+  .stp-lbl{display:none}
 }
 </style>
 </head>
 <body>
 
 <div class="mob-m" id="mm">
-  <a href="/" onclick="cm()">Accueil</a>
-  <a href="/#services" onclick="cm()">Nos services</a>
+  <a href="index.html" onclick="cm()">Accueil</a>
   <a href="commander.html" onclick="cm()">Commander</a>
+  <a href="mobilite.html" onclick="cm()">Mobilit&eacute;</a>
   <a href="postuler.html" onclick="cm()">Postuler</a>
-  <a href="/#booking" onclick="cm()">Réserver un appel</a>
+  <a href="index.html#booking" onclick="cm()">Planifier un appel</a>
+  <a href="index.html#faq" onclick="cm()">FAQ</a>
 </div>
 
 <nav class="nav scrolled" id="nav">
   <div class="ct nav-in">
-    <a href="/" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a>
-    <div class="nav-mid">
-      <a href="/#services">Nos services</a>
+    <a href="index.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
+    <div class="nav-mid" style="margin-left:auto">
       <a href="commander.html">Commander</a>
+      <a href="mobilite.html">Mobilit&eacute;</a>
       <a href="postuler.html">Postuler</a>
-      <a href="/#faq">FAQ</a>
     </div>
-    <div class="nav-right">
-      <a href="#" class="nav-login"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Connexion</span></a>
-      <a href="/#booking" class="btn btn-p nav-cta btn-sm"><span>Réserver un appel</span></a>
+    <div class="lang-sw" id="langSw" role="radiogroup" aria-label="Langue / Language">
+      <span class="lang-pill" id="langPill" aria-hidden="true"></span>
+      <button class="active" role="radio" aria-checked="true" data-lang="fr" onclick="movePill('fr')" aria-label="Français">FR</button>
+      <button role="radio" aria-checked="false" data-lang="en" onclick="movePill('en')" aria-label="English">EN</button>
     </div>
     <button class="mob-t" id="mt" aria-label="Menu"><span></span></button>
   </div>
 </nav>
 
-<main class="page">
-  <div class="ct">
-    <div class="page-header">
-      <h1>Demander une <span class="ac">livraison</span></h1>
-      <p>Remplissez les étapes ci-dessous. Résumé en temps réel sur la droite.</p>
-    </div>
+<!-- ================================ -->
+<!-- SCREEN 0 — SEGMENTATION         -->
+<!-- ================================ -->
+<div class="screen active" id="screenSeg">
+  <div class="seg-wrap">
+    <div class="ct">
+      <div class="seg-head">
+        <h1>Pour qui livrons-nous <em>aujourd'hui</em>&nbsp;?</h1>
+        <p>Choisissez votre profil pour accéder au bon formulaire et aux bons tarifs.</p>
+      </div>
+      <div class="seg-grid">
 
-    <div class="stepper" id="stepper">
-      <div class="stp active" data-s="0"><div class="stp-num">1</div><span class="stp-label">Formule</span></div>
-      <div class="stp-line"></div>
-      <div class="stp" data-s="1"><div class="stp-num">2</div><span class="stp-label">Prise en charge</span></div>
-      <div class="stp-line"></div>
-      <div class="stp" data-s="2"><div class="stp-num">3</div><span class="stp-label">Livraison</span></div>
-      <div class="stp-line"></div>
-      <div class="stp" data-s="3"><div class="stp-num">4</div><span class="stp-label">Colis & horaire</span></div>
-      <div class="stp-line"></div>
-      <div class="stp" data-s="4"><div class="stp-num">5</div><span class="stp-label">Récapitulatif</span></div>
-    </div>
-
-    <div class="order-layout">
-      <div class="ocard">
-
-        <!-- Step 1: Formule -->
-        <div class="ostep active" id="os0">
-          <span class="ostep-badge">Étape 1</span>
-          <div class="ostep-title">Choisissez votre formule</div>
-          <div class="ostep-sub">Connectez-vous pour accéder aux tarifs Pro</div>
-          <div class="tier-bar" id="tierBar">
-            <div class="tier on" data-tier="express" data-price="16">
-              <span class="tier-name">Express</span>
-              <span class="tier-price">CHF 16</span>
-              <span class="tier-desc">Course unique, sans compte</span>
-            </div>
-            <div class="tier lk" data-tier="flex" data-price="10">
-              <span class="tier-tag">Pro</span>
-              <span class="tier-name">Flex</span>
-              <span class="tier-price">~CHF 10</span>
-              <span class="tier-desc">Volume irrégulier</span>
-            </div>
-            <div class="tier lk" data-tier="dedie" data-price="8">
-              <span class="tier-tag">Pro</span>
-              <span class="tier-name">Dédié</span>
-              <span class="tier-price">CHF 8</span>
-              <span class="tier-desc">Flotte dédiée</span>
-            </div>
-          </div>
-          <div class="onav"><div style="flex:1"></div><button class="btn btn-p" onclick="goStep(1)"><span>Suivant</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+        <!-- Particulier -->
+        <div class="seg-card" onclick="selectSeg('particulier')">
+          <div class="seg-ic t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="seg-type">Particulier &amp; petits pros</div>
+          <h2>Express</h2>
+          <div class="seg-price"><sup>CHF</sup> 16<small>+</small></div>
+          <p class="seg-price-note">par course · tarif unique · sans abonnement</p>
+          <ul class="seg-feats">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Commande ponctuelle, sans compte</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Paiement sécurisé en ligne (Stripe)</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Suivi SMS en temps réel</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Disponible min. 3h à l'avance</li>
+          </ul>
+          <button class="seg-btn">
+            <span>Continuer en Express</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
         </div>
 
-        <!-- Step 2: Prise en charge -->
-        <div class="ostep" id="os1">
-          <span class="ostep-badge">Étape 2</span>
-          <div class="ostep-title">Lieu de prise en charge</div>
-          <div class="ostep-sub">Qui remet le colis et où le récupérer</div>
-          <div class="f-row">
-            <div class="f"><label>Prénom & Nom <span class="req">*</span></label><input id="pickName" placeholder="Jean Dupont" oninput="updateSum()"></div>
-            <div class="f f-phone"><label>Téléphone <span class="req">*</span></label><span class="flag">🇨🇭</span><input id="pickPhone" type="tel" placeholder="+41 79 000 00 00" oninput="updateSum()"></div>
-          </div>
-          <div class="f"><label>Adresse <span class="req">*</span></label><input id="pickAddr" placeholder="Rue du Pont 12, 1003 Lausanne" oninput="updateSum()"></div>
-          <div class="f"><label>Société</label><input id="pickCompany" placeholder="Nom de l'entreprise (optionnel)" oninput="updateSum()"></div>
-          <div class="f"><label>Informations supplémentaires</label><textarea id="pickNotes" placeholder="Code d'entrée, étage, instructions..."></textarea></div>
-          <div class="onav"><button class="btn o-back" onclick="goStep(0)"><span>Retour</span></button><button class="btn btn-p" onclick="goStep(2)"><span>Suivant</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
-        </div>
-
-        <!-- Step 3: Livraison -->
-        <div class="ostep" id="os2">
-          <span class="ostep-badge">Étape 3</span>
-          <div class="ostep-title">Lieu de la livraison</div>
-          <div class="ostep-sub">Qui reçoit le colis et où le livrer</div>
-          <div class="f-row">
-            <div class="f"><label>Prénom & Nom <span class="req">*</span></label><input id="delName" placeholder="Marie Laurent" oninput="updateSum()"></div>
-            <div class="f f-phone"><label>Téléphone <span class="req">*</span></label><span class="flag">🇨🇭</span><input id="delPhone" type="tel" placeholder="+41 79 000 00 00" oninput="updateSum()"></div>
-          </div>
-          <div class="f"><label>Adresse <span class="req">*</span></label><input id="delAddr" placeholder="Avenue de Cour 45, 1007 Lausanne" oninput="updateSum()"></div>
-          <div class="f"><label>Société</label><input id="delCompany" placeholder="Nom de l'entreprise (optionnel)" oninput="updateSum()"></div>
-          <div class="f"><label>Informations supplémentaires</label><textarea id="delNotes" placeholder="Interphone, étage, instructions de livraison..."></textarea></div>
-          <div class="onav"><button class="btn o-back" onclick="goStep(1)"><span>Retour</span></button><button class="btn btn-p" onclick="goStep(3)"><span>Suivant</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
-        </div>
-
-        <!-- Step 4: Colis & Horaire -->
-        <div class="ostep" id="os3">
-          <span class="ostep-badge">Étape 4</span>
-          <div class="ostep-title">Colis & horaires</div>
-          <div class="ostep-sub">Poids, volume et créneau de récupération</div>
-          <div class="f"><label>Poids estimé <span class="req">*</span></label>
-            <select id="weight" onchange="updateSum()">
-              <option value="">— Sélectionner —</option>
-              <option>Moins de 5 kg</option>
-              <option>5 à 10 kg</option>
-              <option>10 à 20 kg</option>
-              <option>Plus de 20 kg</option>
-            </select>
-          </div>
-          <div class="f">
-            <label>Connaissez-vous le volume du colis ? <span class="req">*</span></label>
-            <div class="toggle-group" id="volToggle">
-              <div class="toggle-opt" data-v="oui" onclick="toggleOpt(this,'volToggle')">Oui</div>
-              <div class="toggle-opt on" data-v="non" onclick="toggleOpt(this,'volToggle')">Non</div>
-            </div>
-          </div>
-          <div class="f" id="volField" style="display:none"><label>Dimensions (L x l x H en cm)</label><input id="volDims" placeholder="Ex: 40 x 30 x 20 cm"></div>
-          <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(0,0,0,.04)">
-            <div class="f">
-              <label>Besoin immédiat ? <span class="req">*</span></label>
-              <div class="toggle-group" id="urgentToggle">
-                <div class="toggle-opt" data-v="oui" onclick="toggleOpt(this,'urgentToggle');toggleUrgent()">Oui</div>
-                <div class="toggle-opt on" data-v="non" onclick="toggleOpt(this,'urgentToggle');toggleUrgent()">Non</div>
-              </div>
-            </div>
-            <div id="scheduleFields">
-              <div class="f-row">
-                <div class="f"><label>Date <span class="req">*</span></label><input type="date" id="pickDate" onchange="updateSum()"></div>
-                <div class="f"><label>Heure <span class="req">*</span></label><input type="time" id="pickTime" onchange="updateSum()"></div>
-              </div>
-              <p class="f-hint">Les commandes du jour même doivent être passées au moins 2 heures avant l'heure de récupération.</p>
-            </div>
-          </div>
-          <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(0,0,0,.04)">
-            <div class="f">
-              <label>Démarches à effectuer sur place ?</label>
-              <div class="toggle-group" id="onSiteToggle">
-                <div class="toggle-opt" data-v="oui" onclick="toggleOpt(this,'onSiteToggle');document.getElementById('onSiteNote').style.display='block'">Oui</div>
-                <div class="toggle-opt on" data-v="non" onclick="toggleOpt(this,'onSiteToggle');document.getElementById('onSiteNote').style.display='none'">Non</div>
-              </div>
-            </div>
-            <div class="f" id="onSiteNote" style="display:none"><label>Précisez les démarches</label><textarea placeholder="Ex: faire signer un bon de réception, payer un montant..."></textarea></div>
-          </div>
-          <div class="onav"><button class="btn o-back" onclick="goStep(2)"><span>Retour</span></button><button class="btn btn-p" onclick="goStep(4)"><span>Récapitulatif</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
-        </div>
-
-        <!-- Step 5: Recap -->
-        <div class="ostep" id="os4">
-          <span class="ostep-badge">Étape 5</span>
-          <div class="ostep-title">Récapitulatif</div>
-          <div class="ostep-sub">Vérifiez les informations avant de confirmer</div>
-          <div id="recapContent"></div>
-          <div class="f"><label>Email pour le suivi <span class="req">*</span></label><input type="email" id="orderEmail" placeholder="jean@example.ch"></div>
-          <div class="onav"><button class="btn o-back" onclick="goStep(3)"><span>Retour</span></button><button class="btn btn-p" onclick="confirmOrder()"><span>Confirmer la commande</span></button></div>
+        <!-- Entreprise -->
+        <div class="seg-card pro" onclick="selectSeg('entreprise')">
+          <div class="seg-pro-badge">Pro</div>
+          <div class="seg-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+          <div class="seg-type">Entreprise &amp; partenaire</div>
+          <h2>Flex &amp; Dédié</h2>
+          <div class="seg-price"><sup>CHF</sup> 8<small>–12</small></div>
+          <p class="seg-price-note">par course · tarifs dégressifs · contrat mensuel</p>
+          <ul class="seg-feats">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Tableau de bord & historique</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Import CSV &amp; intégration API</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Auto-dispatch &amp; optimisation tournées</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Proof of delivery (photo &amp; signature)</li>
+          </ul>
+          <button class="seg-btn">
+            <span>Accéder à l'espace Pro</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
         </div>
 
       </div>
-
-      <!-- Sticky Summary -->
-      <aside class="summary" id="summary">
-        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 9h20M8 21V9"/></svg>Résumé</h3>
-        <div id="sumBody">
-          <div class="sum-empty">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-            Rien à livrer pour le moment
-          </div>
-        </div>
-        <div class="sum-total" id="sumTotal" style="display:none">
-          <span class="stl">Total estimé</span>
-          <span class="stv" id="sumPrice">CHF 16</span>
-        </div>
-        <button class="sum-cta" id="sumCta" onclick="goStep(4)">C'est parti, je commande !</button>
-        <p class="sum-note">Paiement à la livraison ou par facture (Pro)</p>
-      </aside>
-    </div>
-  </div>
-</main>
-
-<!-- Confirm overlay -->
-<div class="confirm-overlay" id="confirmOverlay">
-  <div class="confirm-card">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-    <h2>Commande confirmée !</h2>
-    <p>Vous recevrez un email avec le lien de suivi en temps réel de votre livraison.</p>
-    <span class="order-id" id="orderId">CK-28471</span>
-    <div class="confirm-actions">
-      <a href="/" class="btn btn-o"><span>Accueil</span></a>
-      <a href="commander.html" class="btn btn-p"><span>Nouvelle commande</span></a>
+      <p class="seg-footnote">Besoin d'un devis sur mesure ? <a href="index.html#booking" style="color:var(--teal);font-weight:700">Réservez un appel découverte</a></p>
     </div>
   </div>
 </div>
 
-<script src="shared.js"></script>
-<script src="auth.js"></script>
-<script>
-let step = 0;
-let tierName = 'Express', tierPrice = 16;
-const steps = 5;
-const stpEls = document.querySelectorAll('.stp');
-const lineEls = document.querySelectorAll('.stp-line');
+<!-- ================================ -->
+<!-- SCREEN 1 — B2B GATE              -->
+<!-- ================================ -->
+<div class="screen" id="screenGate">
+  <div class="gate-wrap">
+    <div class="ct">
+      <div class="gate-card">
+        <div class="gate-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+        <h2>Espace Entreprise</h2>
+        <p>Cette section est réservée aux comptes Pro (Flex &amp; Dédié). Connectez-vous pour accéder aux tarifs dégressifs, à l'import CSV et à votre tableau de bord.</p>
+        <div class="gate-actions">
+          <button class="btn btn-purple" style="width:100%;justify-content:center" onclick="openLoginModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+            <span>Se connecter</span>
+          </button>
+          <p class="gate-or">ou</p>
+          <a href="index.html#booking" class="btn btn-o" style="justify-content:center">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span>Réserver un appel découverte</span>
+          </a>
+        </div>
+        <div class="gate-demo">
+          <p>Comptes de démonstration</p>
+          <div class="gate-accounts">
+            <div class="gate-acc" onclick="fillDemo('flex@chaskis.ch','flex');openLoginModal()">
+              <span class="ga-badge" style="background:var(--teal-bg);color:var(--teal-dark)">Flex</span>
+              <span class="ga-email">flex@chaskis.ch / flex</span>
+            </div>
+            <div class="gate-acc" onclick="fillDemo('dedie@chaskis.ch','dedie');openLoginModal()">
+              <span class="ga-badge" style="background:var(--purple-bg);color:var(--purple)">Dédié</span>
+              <span class="ga-email">dedie@chaskis.ch / dedie</span>
+            </div>
+          </div>
+        </div>
+        <button class="gate-back" onclick="showScreen('screenSeg')">← Retour au choix du profil</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-function goStep(n) {
-  step = n;
-  // Steps
-  document.querySelectorAll('.ostep').forEach((s, i) => s.classList.toggle('active', i === n));
-  // Stepper
-  stpEls.forEach((s, i) => {
-    s.classList.toggle('active', i === n);
-    s.classList.toggle('done', i < n);
-  });
-  lineEls.forEach((l, i) => l.classList.toggle('done', i < n));
-  // Scroll to top
-  document.querySelector('.ocard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  // Update summary
-  updateSum();
-  // Show recap on step 5
-  if (n === 4) buildRecap();
+<!-- ================================ -->
+<!-- SCREEN 2 — FORMULAIRE            -->
+<!-- ================================ -->
+<div class="screen" id="screenForm">
+  <div class="form-wrap">
+    <div class="ct">
+      <div class="form-hd">
+        <h1 id="formTitle">Détails de la <span style="color:var(--teal)">livraison</span></h1>
+        <p id="formSub">Remplissez les informations ci-dessous. Récapitulatif sur la droite.</p>
+      </div>
+
+      <!-- Stepper -->
+      <div class="stp-bar">
+        <div class="stp active" id="step1"><div class="stp-num">1</div><span class="stp-lbl">Adresses</span></div>
+        <div class="stp-line" id="line1"></div>
+        <div class="stp" id="step2"><div class="stp-num">2</div><span class="stp-lbl">Contenu &amp; Horaire</span></div>
+      </div>
+
+      <div class="order-layout">
+
+        <!-- LEFT: Form card -->
+        <div class="fcard">
+          <div class="fcard-bar"></div>
+          <div class="fcard-body">
+
+            <!-- STEP 1: ADRESSES -->
+            <div class="fstep active" id="fstep1">
+
+              <!-- Section A: Prise en charge -->
+              <div class="fsect">
+                <div class="fsect-hd">
+                  <div class="fsect-ic pick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg></div>
+                  Point de prise en charge (A)
+                </div>
+
+                <div class="f-row">
+                  <div class="f">
+                    <label>Prénom <span class="req">*</span></label>
+                    <input type="text" id="pickFirstName" placeholder="Marie" oninput="updateSum()">
+                  </div>
+                  <div class="f">
+                    <label>Nom <span class="req">*</span></label>
+                    <input type="text" id="pickLastName" placeholder="Dupont">
+                  </div>
+                </div>
+                <div class="f">
+                  <label>Adresse complète <span class="req">*</span></label>
+                  <input type="text" id="pickAddress" placeholder="Rue du Rhône 42, Genève" oninput="updateSum();calcPrice()">
+                  <p class="f-hint">Numéro, rue, ville, NPA</p>
+                </div>
+                <div class="f">
+                  <label>Téléphone contact <span class="req">*</span></label>
+                  <input type="tel" id="pickPhone" placeholder="+41 78 123 45 67">
+                </div>
+
+                <!-- Champ référence marchand -->
+                <div class="f ref-highlight">
+                  <label>
+                    Référence / code commande marchand
+                    <span class="badge-req">Obligatoire</span>
+                  </label>
+                  <input type="text" id="pickRef" placeholder="Ex: CMD-2847, #ORDER-991, Dupont" oninput="updateSum()">
+                  <div class="ref-info">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <p>Ce code permet à votre livreur de s'identifier auprès du commerçant et de récupérer la commande correcte. Il sera également affiché dans votre confirmation.</p>
+                  </div>
+                </div>
+
+                <div class="f">
+                  <label>Note pour le livreur (optionnel)</label>
+                  <textarea id="pickNote" placeholder="Code de porte : 1234A, sonner au 2e étage…"></textarea>
+                </div>
+              </div>
+
+              <!-- Section B: Livraison(s) -->
+              <div class="fsect">
+                <div class="fsect-hd">
+                  <div class="fsect-ic drop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                  Point(s) de livraison
+                </div>
+
+                <div class="stops-list" id="stopsList">
+                  <!-- B1 — always present -->
+                  <div class="stop-item" id="stop-b1">
+                    <div class="stop-let drop">B1</div>
+                    <div style="flex:1">
+                      <div class="f-row">
+                        <div class="f">
+                          <label>Prénom <span class="req">*</span></label>
+                          <input type="text" placeholder="Jean">
+                        </div>
+                        <div class="f">
+                          <label>Nom <span class="req">*</span></label>
+                          <input type="text" placeholder="Martin">
+                        </div>
+                      </div>
+                      <div class="f">
+                        <label>Adresse de livraison <span class="req">*</span></label>
+                        <input type="text" id="dropAddress" placeholder="Avenue de Cour 45, Lausanne" oninput="updateSum();calcPrice()">
+                      </div>
+                      <div class="f">
+                        <label>Téléphone destinataire</label>
+                        <input type="tel" placeholder="+41 76 987 65 43">
+                      </div>
+                      <div class="f">
+                        <label>Note livraison (optionnel)</label>
+                        <input type="text" placeholder="Déposer à la réception, demander Sophie">
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Extra stops injected by JS -->
+                </div>
+
+                <button class="add-stop" id="addStopBtn" onclick="addStop()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Ajouter un arrêt <span id="stopCountBadge" style="display:none;font-size:.65rem;font-weight:800;background:var(--teal-bg);color:var(--teal-dark);padding:1px 7px;border-radius:var(--pill);margin-left:4px"></span>
+                </button>
+              </div>
+
+              <div class="onav">
+                <button class="btn btn-back-form" onclick="showScreen('screenSeg')">← Retour</button>
+                <button class="btn btn-p" onclick="goStep(2)"><span>Suivant : Colis &amp; horaire</span><svg class="arrow-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+              </div>
+
+            </div><!-- /fstep1 -->
+
+            <!-- STEP 2: CONTENU & HORAIRE -->
+            <div class="fstep" id="fstep2">
+
+              <!-- Container picker -->
+              <div class="fsect">
+                <div class="fsect-hd">
+                  <div class="fsect-ic pkg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
+                  Format du colis
+                </div>
+
+                <div class="cpk">
+                  <div class="cpk-card on" onclick="selectContainer('sac',this)">
+                    <span class="cpk-emoji">🎒</span>
+                    <span class="cpk-name">Sac à Dos</span>
+                    <span class="cpk-detail">Documents, repas, pharmacie, petits colis</span>
+                    <span style="font-size:.62rem;color:var(--teal-dark);margin-top:6px;display:block;font-weight:700">🚴 Coursier vélo / cargo</span>
+                  </div>
+                  <div class="cpk-card" onclick="selectContainer('coffre',this)">
+                    <span class="cpk-plus">+5 CHF</span>
+                    <span class="cpk-emoji">🚗</span>
+                    <span class="cpk-name">Coffre Voiture</span>
+                    <span class="cpk-detail">Cartons, multiples sacs, objets encombrants</span>
+                    <span style="font-size:.62rem;color:var(--ink-muted);margin-top:6px;display:block;font-weight:700">🚗 Coursier voiture</span>
+                  </div>
+                </div>
+                <div id="tourneeBanner" style="display:none;margin-top:10px;background:rgba(58,175,169,.07);border:1px solid rgba(58,175,169,.15);border-radius:var(--r);padding:10px 14px;display:none;align-items:center;gap:8px">
+                  <span style="font-size:1rem">🗺️</span>
+                  <div style="flex:1"><strong style="font-size:.78rem;color:var(--teal-dark)">Mode Tournée activé</strong><span id="tourneePrice" style="font-size:.72rem;color:var(--teal-dark);margin-left:6px"></span></div>
+                </div>
+                <p class="f-hint" style="margin-top:8px">Le format est facturé selon le véhicule requis · Ajoutez des arrêts ci-dessous pour une tournée (+3 CHF/arrêt).</p>
+              </div>
+
+              <!-- Time picker -->
+              <div class="fsect">
+                <div class="fsect-hd">
+                  <div class="fsect-ic pkg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                  Quand souhaitez-vous la livraison ?
+                </div>
+
+                <div class="tpk-tabs">
+                  <button class="tpk-tab on" id="tabAsap" onclick="selectTime('asap')">
+                    <span class="tpk-emoji">⚡</span>
+                    <h4>Dès que possible</h4>
+                    <p>Minimum 3h à l'avance</p>
+                  </button>
+                  <button class="tpk-tab" id="tabPlan" onclick="selectTime('plan')">
+                    <span class="tpk-emoji">📅</span>
+                    <h4>Planifier</h4>
+                    <p>Choisir une date &amp; heure</p>
+                  </button>
+                </div>
+
+                <div class="tpk-asap-info" id="asapInfo">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  La livraison sera programmée dans les <strong>3 heures minimum</strong> suivant votre commande. Vous recevrez une confirmation SMS dès qu'un livreur est assigné.
+                </div>
+
+                <div class="tpk-plan" id="planInputs">
+                  <div class="f-row">
+                    <div class="f">
+                      <label>Date de livraison <span class="req">*</span></label>
+                      <input type="date" id="planDate" oninput="updateSum()">
+                    </div>
+                    <div class="f">
+                      <label>Heure souhaitée <span class="req">*</span></label>
+                      <input type="time" id="planTime" oninput="updateSum()">
+                    </div>
+                  </div>
+                  <p class="f-hint">Le livreur confirmera la disponibilité dans les 30 min suivant la commande.</p>
+                </div>
+              </div>
+
+              <!-- Upload & notes -->
+              <div class="fsect">
+                <div class="fsect-hd">
+                  <div class="fsect-ic pkg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg></div>
+                  Pièce jointe (optionnel)
+                </div>
+                <div class="upload-zone">
+                  <input type="file" accept="image/*,application/pdf">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <p>Déposer une photo ou un bon de commande</p>
+                  <span>PNG, JPG, PDF · max 5 Mo</span>
+                </div>
+                <div class="f" style="margin-top:12px">
+                  <label>Description du contenu (optionnel)</label>
+                  <textarea placeholder="Ex: 3 sacs de pharmacie, ordonnances incluses…"></textarea>
+                </div>
+              </div>
+
+              <div class="onav">
+                <button class="btn btn-back-form" onclick="goStep(1)">← Retour</button>
+                <button class="btn btn-p" onclick="goCheckout()"><span>Passer au paiement</span><svg class="arrow-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+              </div>
+
+            </div><!-- /fstep2 -->
+          </div>
+        </div><!-- /fcard -->
+
+        <!-- RIGHT: Sticky summary -->
+        <aside class="summary" id="summary">
+          <div class="sum-head">Récapitulatif <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+          <div id="sumContent">
+            <div class="sum-empty">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/></svg>
+              <p>Remplissez les adresses pour voir votre devis</p>
+            </div>
+          </div>
+          <button class="sum-cta" id="sumCta" onclick="goCheckout()">Passer au paiement →</button>
+          <p class="sum-note">
+            <svg style="display:inline;width:10px;height:10px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            Paiement sécurisé · Remboursé si annulation &gt;1h
+          </p>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div><!-- /screenForm -->
+
+<!-- ================================ -->
+<!-- SCREEN 3 — CHECKOUT              -->
+<!-- ================================ -->
+<div class="screen" id="screenCheckout">
+  <div class="checkout-wrap">
+    <div class="ct">
+      <div class="checkout-hd">
+        <h1>Finaliser la <span style="color:var(--teal)">commande</span></h1>
+        <p>Paiement sécurisé via Stripe · Confirmation SMS immédiate</p>
+      </div>
+      <div class="checkout-layout">
+
+        <!-- LEFT: Payment form -->
+        <div class="co-card">
+          <div class="co-card-bar"></div>
+          <div class="co-card-body">
+
+            <!-- Contact (if not logged in) -->
+            <div id="coContactSection">
+              <div class="co-sect-ttl">Vos coordonnées</div>
+              <div class="f-row">
+                <div class="f"><label>Prénom <span class="req">*</span></label><input type="text" id="coFirst" placeholder="Marie"></div>
+                <div class="f"><label>Nom <span class="req">*</span></label><input type="text" id="coLast" placeholder="Dupont"></div>
+              </div>
+              <div class="f"><label>Email <span class="req">*</span></label><input type="email" id="coEmail" placeholder="votre@email.ch"></div>
+              <div class="f"><label>Téléphone <span class="req">*</span></label><input type="tel" id="coPhone" placeholder="+41 78 123 45 67"></div>
+            </div>
+
+            <!-- Payment -->
+            <div style="margin-top:28px">
+              <div class="co-sect-ttl">Paiement par carte</div>
+              <div class="card-frame">
+                <div class="card-row-f">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                  <input type="text" placeholder="1234 5678 9012 3456" maxlength="19">
+                  <span class="card-logo-txt">VISA / MC / AMEX</span>
+                </div>
+                <div class="card-row-f card-half" style="display:flex;border-bottom:none">
+                  <div class="card-row-f" style="flex:1;border-bottom:none;border-right:1px solid var(--sand)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <input type="text" placeholder="MM / AA" maxlength="7">
+                  </div>
+                  <div class="card-row-f" style="flex:1;border-bottom:none">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                    <input type="text" placeholder="CVV" maxlength="4">
+                  </div>
+                </div>
+              </div>
+              <p class="f-hint" style="margin-top:8px;display:flex;align-items:center;gap:4px">
+                <svg style="width:11px;height:11px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                Paiement chiffré TLS 1.3 · Propulsé par Stripe
+              </p>
+            </div>
+
+            <!-- Reassurance -->
+            <div class="reasur">
+              <div class="reasur-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>SMS de suivi en temps réel envoyé à l'expéditeur et au destinataire</div>
+              <div class="reasur-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Proof of delivery : photo ou signature à la remise</div>
+              <div class="reasur-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Remboursement intégral si annulation &gt; 1h avant la course</div>
+              <div class="reasur-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Livreur identifié par votre référence marchand</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RIGHT: Order summary -->
+        <aside class="co-summary">
+          <div class="co-order-id" id="coOrderId">CMD-????</div>
+          <div id="coSumContent"></div>
+          <button class="co-pay-btn" onclick="confirmOrder()">
+            <span id="coPayBtnTxt">Payer CHF ?.— et confirmer</span>
+          </button>
+          <button class="co-back" onclick="showScreen('screenForm')">← Modifier la commande</button>
+          <div class="co-secure">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            Paiement 100% sécurisé via Stripe
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </div>
+</div><!-- /screenCheckout -->
+
+<!-- ================================ -->
+<!-- CONFIRMATION OVERLAY             -->
+<!-- ================================ -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-card">
+    <div class="confirm-check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2>Commande confirmée !</h2>
+    <p>Votre livreur a été notifié. Vous recevrez un SMS dès qu'il sera en route vers le point de prise en charge.</p>
+    <div class="confirm-id" id="confirmOrderId">CK-44128</div>
+    <div class="confirm-track" onclick="alert('En production, ce lien ouvre votre page de suivi en temps réel.')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Voir le lien de suivi en temps réel
+    </div>
+    <div class="confirm-actions">
+      <a href="commander.html" class="btn btn-o btn-sm"><span>Nouvelle commande</span></a>
+      <a href="dashboard.html" class="btn btn-p btn-sm"><span>Tableau de bord</span></a>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="shared.js"></script>
+<script>
+// ===== STATE =====
+let seg = null;
+let container = 'sac';
+let timeMode = 'asap';
+let stopCount = 0; // extra stops beyond B1
+let tierName = 'Express';
+let tierPrice = 16;
+let orderNum = 'CK-' + (40000 + Math.floor(Math.random() * 5000));
+
+// ===== SCREEN NAVIGATION =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const s = document.getElementById(id);
+  if (s) s.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Tier selection
-document.querySelectorAll('#tierBar .tier:not(.lk)').forEach(t => {
-  t.addEventListener('click', () => {
-    document.querySelectorAll('#tierBar .tier').forEach(x => x.classList.remove('on'));
-    t.classList.add('on');
-    tierName = t.querySelector('.tier-name').textContent;
-    tierPrice = parseInt(t.dataset.price);
-    updateSum();
+// ===== SEGMENTATION =====
+function selectSeg(type) {
+  seg = type;
+  if (type === 'entreprise') {
+    const user = typeof getUser === 'function' ? getUser() : null;
+    if (user && (user.plan === 'flex' || user.plan === 'dedie')) {
+      // Logged in as Pro — unlock tier and go straight to form
+      tierName = user.plan === 'dedie' ? 'Dédié' : 'Flex';
+      tierPrice = user.plan === 'dedie' ? 8 : 10;
+      document.getElementById('formTitle').innerHTML = 'Livraison <span style="color:var(--teal)">' + tierName + '</span>';
+      document.getElementById('formSub').textContent = 'Connecté en tant que ' + user.name + ' — ' + tierName;
+      showScreen('screenForm');
+    } else {
+      showScreen('screenGate');
+    }
+  } else {
+    tierName = 'Express';
+    tierPrice = 16;
+    showScreen('screenForm');
+  }
+}
+
+// ===== STEPPER =====
+function goStep(n) {
+  document.querySelectorAll('.fstep').forEach(s => s.classList.remove('active'));
+  document.getElementById('fstep' + n).classList.add('active');
+
+  document.querySelectorAll('.stp').forEach((s, i) => {
+    s.classList.remove('active', 'done');
+    if (i + 1 < n) s.classList.add('done');
+    if (i + 1 === n) s.classList.add('active');
   });
+  document.querySelectorAll('.stp-line').forEach((l, i) => {
+    l.classList.toggle('done', i + 1 < n);
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateSumCta();
+}
+
+// ===== CONTAINER PICKER =====
+function selectContainer(type, el) {
+  container = type;
+  document.querySelectorAll('.cpk-card').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  calcPrice();
+  updateSum();
+}
+
+// ===== TIME PICKER =====
+function selectTime(mode) {
+  timeMode = mode;
+  document.getElementById('tabAsap').classList.toggle('on', mode === 'asap');
+  document.getElementById('tabPlan').classList.toggle('on', mode === 'plan');
+  document.getElementById('asapInfo').style.display = mode === 'asap' ? 'flex' : 'none';
+  const p = document.getElementById('planInputs');
+  p.classList.toggle('show', mode === 'plan');
+  updateSum();
+}
+
+// ===== MULTI-STOP =====
+function addStop() {
+  stopCount++;
+  const letter = String.fromCharCode(65 + 1 + stopCount); // B2, B3…
+  const id = 'stop-extra-' + stopCount;
+  const html = `
+    <div class="stop-item" id="${id}">
+      <div class="stop-let extra">${letter}</div>
+      <div style="flex:1">
+        <div class="f">
+          <label>Adresse (arrêt ${stopCount + 1})</label>
+          <input type="text" placeholder="Avenue de la Gare 12, Neuchâtel" oninput="calcPrice();updateSum()">
+        </div>
+        <div class="f-row">
+          <div class="f"><label>Prénom</label><input type="text" placeholder="Contact"></div>
+          <div class="f"><label>Note</label><input type="text" placeholder="Laisser en boîte aux lettres"></div>
+        </div>
+      </div>
+      <button class="stop-rm" onclick="removeStop('${id}')" title="Supprimer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `;
+  document.getElementById('stopsList').insertAdjacentHTML('beforeend', html);
+  // Show tournée banner & badge
+  const banner = document.getElementById('tourneeBanner');
+  if (banner) { banner.style.display = 'flex'; }
+  const badge = document.getElementById('stopCountBadge');
+  if (badge) { badge.style.display = 'inline'; badge.textContent = stopCount + ' arrêt' + (stopCount > 1 ? 's' : '') + ' · +' + (stopCount * 3) + ' CHF'; }
+  calcPrice();
+  updateSum();
+}
+
+function removeStop(id) {
+  const el = document.getElementById(id);
+  if (el) { el.style.animation = 'fade-up .2s var(--ease) reverse'; setTimeout(() => el.remove(), 200); }
+  stopCount = Math.max(0, stopCount - 1);
+  // Hide banner + badge if no more extra stops
+  if (stopCount === 0) {
+    const banner = document.getElementById('tourneeBanner');
+    if (banner) banner.style.display = 'none';
+    const badge = document.getElementById('stopCountBadge');
+    if (badge) badge.style.display = 'none';
+  } else {
+    const badge = document.getElementById('stopCountBadge');
+    if (badge) { badge.textContent = stopCount + ' arrêt' + (stopCount > 1 ? 's' : '') + ' · +' + (stopCount * 3) + ' CHF'; }
+    const tPrice = document.getElementById('tourneePrice');
+    if (tPrice) tPrice.textContent = '+' + (stopCount * 3) + ' CHF';
+  }
+  setTimeout(() => { calcPrice(); updateSum(); }, 250);
+}
+
+// ===== PRICE CALC =====
+function calcPrice() {
+  let price = tierPrice;
+  if (container === 'coffre') price += 5;
+  if (stopCount > 0) price += stopCount * 3; // Tournée: +3 CHF par arrêt supplémentaire
+  return price;
+}
+
+// ===== SUMMARY UPDATE =====
+function updateSum() {
+  const pick = document.getElementById('pickAddress')?.value || '';
+  const drop = document.getElementById('dropAddress')?.value || '';
+  const ref = document.getElementById('pickRef')?.value || '';
+  const price = calcPrice();
+
+  if (!pick && !drop) return;
+
+  const timeLabel = timeMode === 'asap' ? 'Dès que possible (~3h)' : (() => {
+    const d = document.getElementById('planDate')?.value;
+    const t = document.getElementById('planTime')?.value;
+    return d && t ? d + ' à ' + t : 'Date à planifier';
+  })();
+
+  const containerEmoji = container === 'coffre' ? '🚗' : '🎒';
+  const containerName = container === 'coffre' ? 'Coffre voiture' : 'Sac à dos';
+
+  const extraStopsHtml = stopCount > 0 ? `
+    <div class="sum-row"><span class="sk">Arrêts supplémentaires</span><span class="sv">+${stopCount} (×3 CHF)</span></div>` : '';
+
+  const tourneeLineHtml = stopCount > 0 ? `
+    <div class="sum-row" style="margin-top:2px"><span class="sk" style="color:var(--teal)">🗺️ Tournée multi-stops</span><span class="sv" style="color:var(--teal);font-weight:700">+${stopCount * 3} CHF</span></div>` : '';
+
+  const containerExtra = container === 'coffre' ? '+5 CHF' : 'Inclus';
+
+  document.getElementById('sumContent').innerHTML = `
+    <div class="sum-sect">
+      <div class="sum-lbl">Formule</div>
+      <div class="sum-row"><span class="sk">Tarif</span><span class="sv">${tierName} · CHF ${tierPrice}/course</span></div>
+    </div>
+    ${pick || drop ? `
+    <div class="sum-sect">
+      <div class="sum-lbl">Trajet</div>
+      ${pick ? `<div class="sum-row"><span class="sk">Prise en charge</span><span class="sv">${pick.substring(0,28)}${pick.length>28?'…':''}</span></div>` : ''}
+      ${ref ? `<div class="sum-row"><span class="sk">Réf. commande</span><span class="sv" style="color:var(--accent);font-weight:700">${ref}</span></div>` : ''}
+      ${drop ? `<div class="sum-row"><span class="sk">Livraison B1</span><span class="sv">${drop.substring(0,28)}${drop.length>28?'…':''}</span></div>` : ''}
+      ${extraStopsHtml}
+    </div>` : ''}
+    <div class="sum-sect">
+      <div class="sum-lbl">Colis &amp; horaire</div>
+      <div class="sum-container">${containerEmoji} ${containerName} <span style="margin-left:auto;font-size:.7rem;color:var(--ink-muted)">${containerExtra}</span></div>
+      ${tourneeLineHtml}
+      <div class="sum-row"><span class="sk">Horaire</span><span class="sv">${timeLabel}</span></div>
+    </div>
+    <div class="sum-total"><span class="stl">Total estimé</span><span class="stv">CHF ${price}.—</span></div>
+  `;
+
+  updateSumCta();
+}
+
+function updateSumCta() {
+  const pick = document.getElementById('pickAddress')?.value || '';
+  const drop = document.getElementById('dropAddress')?.value || '';
+  const cta = document.getElementById('sumCta');
+  if (pick && drop) {
+    cta.classList.add('ready');
+    cta.textContent = 'Passer au paiement → CHF ' + calcPrice() + '.—';
+  } else {
+    cta.classList.remove('ready');
+    cta.textContent = 'Passer au paiement →';
+  }
+}
+
+// ===== GO TO CHECKOUT =====
+function goCheckout() {
+  const price = calcPrice();
+  const containerName = container === 'coffre' ? '🚗 Coffre voiture' : '🎒 Sac à dos';
+  const timeLabel = timeMode === 'asap' ? '⚡ Dès que possible (~3h)' : '📅 ' + (document.getElementById('planDate')?.value || '') + ' ' + (document.getElementById('planTime')?.value || '');
+  const pick = document.getElementById('pickAddress')?.value || '—';
+  const drop = document.getElementById('dropAddress')?.value || '—';
+  const ref = document.getElementById('pickRef')?.value || '';
+
+  document.getElementById('coOrderId').textContent = orderNum;
+  document.getElementById('coPayBtnTxt').textContent = 'Payer CHF ' + price + '.— et confirmer';
+
+  document.getElementById('coSumContent').innerHTML = `
+    <div class="co-line"><span class="ck">Formule</span><span class="cv">${tierName}</span></div>
+    <div class="co-line"><span class="ck">De</span><span class="cv">${pick.substring(0,24)}${pick.length>24?'…':''}</span></div>
+    ${ref ? `<div class="co-line"><span class="ck">Réf.</span><span class="cv" style="color:var(--accent)">${ref}</span></div>` : ''}
+    <div class="co-line"><span class="ck">À</span><span class="cv">${drop.substring(0,24)}${drop.length>24?'…':''}</span></div>
+    ${stopCount > 0 ? `<div class="co-line"><span class="ck">🗺️ Tournée</span><span class="cv" style="color:var(--teal)">+${stopCount} arrêt${stopCount>1?'s':''} (+${stopCount*3} CHF)</span></div>` : ''}
+    <div class="co-line"><span class="ck">Format</span><span class="cv">${containerName}</span></div>
+    <div class="co-line"><span class="ck">Horaire</span><span class="cv">${timeLabel}</span></div>
+    <div class="co-total"><span class="ctl">Total TTC</span><span class="ctv">CHF ${price}.—</span></div>
+  `;
+
+  // Hide contact section if logged in
+  const user = typeof getUser === 'function' ? getUser() : null;
+  if (user) {
+    const cs = document.getElementById('coContactSection');
+    if (cs) cs.innerHTML = `
+      <div class="co-sect-ttl">Compte connecté</div>
+      <div style="display:flex;align-items:center;gap:10px;background:var(--teal-bg);border-radius:var(--r);padding:12px 14px;margin-bottom:4px">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#fff">${user.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</div>
+        <div><strong style="font-size:.84rem">${user.name}</strong><br><span style="font-size:.72rem;color:var(--teal-dark)">${user.company} · ${user.plan}</span></div>
+      </div>
+    `;
+  }
+
+  showScreen('screenCheckout');
+}
+
+// ===== CONFIRM ORDER =====
+function confirmOrder() {
+  const orderId = 'CK-' + (40000 + Math.floor(Math.random() * 5000));
+  document.getElementById('confirmOrderId').textContent = orderId;
+  document.getElementById('confirmOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+}
+
+// ===== AUTH CALLBACK (after login from gate) =====
+document.addEventListener('DOMContentLoaded', () => {
+  // After login: check if we were in entreprise flow
+  const user = typeof getUser === 'function' ? getUser() : null;
+  if (user && document.getElementById('screenGate').classList.contains('active')) {
+    selectSeg('entreprise');
+  }
 });
 
-// Toggle helper
-function toggleOpt(el, groupId) {
-  document.querySelectorAll(`#${groupId} .toggle-opt`).forEach(o => o.classList.remove('on'));
-  el.classList.add('on');
-  // Volume field
-  if (groupId === 'volToggle') {
-    document.getElementById('volField').style.display = el.dataset.v === 'oui' ? 'block' : 'none';
-  }
-}
-function toggleUrgent() {
-  const isUrgent = document.querySelector('#urgentToggle .toggle-opt.on').dataset.v === 'oui';
-  document.getElementById('scheduleFields').style.display = isUrgent ? 'none' : 'block';
-  updateSum();
-}
+// Ne pas afficher si déjà en mode standalone (PWA installée)
+if (!window.matchMedia('(display-mode: standalone)').matches) {
+  document.addEventListener('DOMContentLoaded', () => {
+    const b = document.createElement('div');
+    b.className = 'app-banner';
+    b.id = 'appBanner';
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    b.innerHTML = `
+      <button class="app-banner-close" onclick="document.getElementById('appBanner').remove()">&times;</button>
+      <div class="app-banner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v13M8 11l4 4 4-4"/><path d="M20 17v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2"/></svg></div>
+      <div class="app-banner-text"><strong>Installer l'app Chaskis</strong><span>Accès direct, suivi en temps réel</span></div>
+      <button class="app-banner-btn" id="pwa-install-btn" onclick="triggerAppInstall()">Installer</button>
+    `;
+    document.body.appendChild(b);
 
-// Update summary sidebar
-function updateSum() {
-  const pickAddr = document.getElementById('pickAddr')?.value;
-  const delAddr = document.getElementById('delAddr')?.value;
-  const weight = document.getElementById('weight')?.value;
-  const date = document.getElementById('pickDate')?.value;
-  const time = document.getElementById('pickTime')?.value;
-  const isUrgent = document.querySelector('#urgentToggle .toggle-opt.on')?.dataset.v === 'oui';
-
-  let html = '';
-  let hasData = false;
-
-  // Formule
-  html += `<div class="sum-section"><div class="sum-label">Formule</div><div class="sum-row"><span class="sk">Type</span><span class="sv">${tierName}</span></div></div>`;
-
-  // Prise en charge
-  if (pickAddr) {
-    hasData = true;
-    html += `<div class="sum-section"><div class="sum-label">Prise en charge</div>`;
-    html += `<div class="sum-row"><span class="sk">Adresse</span><span class="sv">${pickAddr}</span></div>`;
-    const pickCo = document.getElementById('pickCompany')?.value;
-    if (pickCo) html += `<div class="sum-row"><span class="sk">Société</span><span class="sv">${pickCo}</span></div>`;
-    html += `</div>`;
-  }
-
-  // Livraison
-  if (delAddr) {
-    hasData = true;
-    html += `<div class="sum-section"><div class="sum-label">Livraison</div>`;
-    html += `<div class="sum-row"><span class="sk">Adresse</span><span class="sv">${delAddr}</span></div>`;
-    const delCo = document.getElementById('delCompany')?.value;
-    if (delCo) html += `<div class="sum-row"><span class="sk">Société</span><span class="sv">${delCo}</span></div>`;
-    html += `</div>`;
-  }
-
-  // Colis
-  if (weight) {
-    html += `<div class="sum-section"><div class="sum-label">Colis</div>`;
-    html += `<div class="sum-row"><span class="sk">Poids</span><span class="sv">${weight}</span></div>`;
-    html += `</div>`;
-  }
-
-  // Horaire
-  if (isUrgent) {
-    html += `<div class="sum-section"><div class="sum-label">Horaire</div><div class="sum-row"><span class="sk">Créneau</span><span class="sv">Dès que possible</span></div></div>`;
-  } else if (date) {
-    html += `<div class="sum-section"><div class="sum-label">Horaire</div>`;
-    html += `<div class="sum-row"><span class="sk">Date</span><span class="sv">${date}</span></div>`;
-    if (time) html += `<div class="sum-row"><span class="sk">Heure</span><span class="sv">${time}</span></div>`;
-    html += `</div>`;
-  }
-
-  if (!hasData && step < 1) {
-    document.getElementById('sumBody').innerHTML = `<div class="sum-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Rien à livrer pour le moment</div>`;
-  } else {
-    document.getElementById('sumBody').innerHTML = html;
-  }
-
-  // Total
-  document.getElementById('sumTotal').style.display = 'flex';
-  document.getElementById('sumPrice').textContent = `CHF ${tierPrice}`;
-
-  // CTA readiness
-  const ready = pickAddr && delAddr && step >= 3;
-  document.getElementById('sumCta').classList.toggle('ready', !!ready);
-}
-
-// Build recap for step 5
-function buildRecap() {
-  const fields = [
-    ['Formule', tierName + ' — CHF ' + tierPrice],
-    ['Retrait', document.getElementById('pickAddr').value],
-    ['Contact retrait', document.getElementById('pickName').value + ' — ' + document.getElementById('pickPhone').value],
-    ['Livraison', document.getElementById('delAddr').value],
-    ['Contact livraison', document.getElementById('delName').value + ' — ' + document.getElementById('delPhone').value],
-    ['Poids', document.getElementById('weight').value || '—'],
-  ];
-  const isUrgent = document.querySelector('#urgentToggle .toggle-opt.on')?.dataset.v === 'oui';
-  if (isUrgent) {
-    fields.push(['Horaire', 'Dès que possible']);
-  } else {
-    fields.push(['Date', document.getElementById('pickDate').value || '—']);
-    fields.push(['Heure', document.getElementById('pickTime').value || '—']);
-  }
-  let html = '<div style="background:var(--bg);border-radius:var(--rl);padding:20px;margin-bottom:20px">';
-  fields.forEach(([k, v]) => {
-    html += `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.04);font-size:.85rem"><span style="color:var(--ink-light)">${k}</span><span style="font-weight:700;text-align:right;max-width:220px">${v}</span></div>`;
+    // Si le prompt est déjà prêt (capturé par shared.js)
+    if (_pwaPrompt) {
+      document.getElementById('pwa-install-btn').dataset.ready = 'true';
+    }
   });
-  html += `<div style="display:flex;justify-content:space-between;padding:12px 0;font-size:1.05rem;font-weight:800"><span style="color:var(--teal-dark)">Total</span><span style="color:var(--teal)">CHF ${tierPrice}</span></div>`;
-  html += '</div>';
-  document.getElementById('recapContent').innerHTML = html;
 }
 
-function confirmOrder() {
-  const id = 'CK-' + Math.floor(10000 + Math.random() * 90000);
-  document.getElementById('orderId').textContent = id;
-  document.getElementById('confirmOverlay').classList.add('show');
+function triggerAppInstall() {
+  // Cas 1 : prompt natif disponible → install direct
+  if (_pwaPrompt) {
+    _pwaPrompt.prompt();
+    _pwaPrompt.userChoice.then(() => {
+      _pwaPrompt = null;
+      const b = document.getElementById('appBanner');
+      if (b) b.remove();
+    });
+    return;
+  }
+  // Cas 2 : pas de prompt → bottom sheet instructions
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const steps = isIOS
+    ? '<b>Partager ↑</b> en bas → <b>"Sur l\'écran d\'accueil"</b>'
+    : '<b>Menu ⋮</b> en haut à droite → <b>"Installer l\'application"</b>';
+  const sheet = document.createElement('div');
+  sheet.id = 'installSheet';
+  sheet.style.cssText = 'position:fixed;inset:0;z-index:1000;display:flex;align-items:flex-end;justify-content:center';
+  sheet.innerHTML = `
+    <div onclick="document.getElementById('installSheet').remove()" style="position:absolute;inset:0;background:rgba(0,0,0,.4)"></div>
+    <div style="position:relative;background:#fff;border-radius:24px 24px 0 0;padding:28px 24px calc(28px + env(safe-area-inset-bottom));width:100%;max-width:420px;animation:sheet-up .35s cubic-bezier(.33,1,.68,1) both">
+      <div style="width:36px;height:4px;background:#e5e5e5;border-radius:2px;margin:0 auto 20px"></div>
+      <h3 style="font-size:1.1rem;font-weight:900;margin-bottom:6px">Installer Chaskis</h3>
+      <p style="font-size:.84rem;color:#888;margin-bottom:20px;line-height:1.5">L'app s'installera sur votre écran d'accueil avec le login et la commande rapide.</p>
+      <div style="background:#f8f8f5;border-radius:14px;padding:16px;margin-bottom:12px;font-size:.88rem;line-height:1.6">${steps}</div>
+      <p style="font-size:.72rem;color:#aaa;text-align:center;margin-bottom:16px">L'app s'ouvrira toujours sur l'écran de connexion Chaskis.</p>
+      <button onclick="document.getElementById('installSheet').remove()" style="width:100%;padding:14px;border-radius:14px;background:#f0f0ed;border:none;font-family:inherit;font-size:.88rem;font-weight:700;color:#666;cursor:pointer">Compris</button>
+    </div>
+  `;
+  document.body.appendChild(sheet);
 }
 </script>
 </body>

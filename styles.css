@@ -188,10 +188,15 @@ section{padding:clamp(64px,8vw,100px) 0}
 }
 @media(max-width:768px){
   .nav-mid{display:none}.mob-t{display:flex}
+  .nav .lang-sw{display:none}
   .nav-login span{display:none}
   .field-row{grid-template-columns:1fr}
   .ft{grid-template-columns:1fr;gap:20px}
 }
+.mob-lang{margin-top:8px;margin-left:0}
+.mob-m .mob-lang{opacity:0;transform:translateY(16px);transition:all .4s var(--ease)}
+.mob-m.on .mob-lang{opacity:1;transform:translateY(0);transition-delay:.35s}
+.mob-m .mob-lang button{font-size:.85rem;padding:8px 18px}
 
 /* ===== LOGIN MODAL ===== */
 .login-overlay{position:fixed;inset:0;z-index:300;background:rgba(25,28,26,.4);backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}

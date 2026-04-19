@@ -458,11 +458,13 @@
 .faq-banner{margin-bottom:clamp(36px,4vw,52px);border-radius:var(--rxl);overflow:hidden}
 .faq-banner-img{width:100%;height:clamp(200px,22vw,300px);background:linear-gradient(135deg,rgba(75,179,164,.08),rgba(107,79,160,.06))}
 .faq-contact{display:flex;flex-direction:column;gap:14px;margin-top:28px}
-.faq-ci{display:flex;align-items:center;gap:14px;font-size:.92rem;line-height:1.5;color:var(--ink);font-weight:500}
+.faq-ci{display:flex;align-items:center;gap:14px;font-size:.92rem;line-height:1.5;color:var(--ink)}
 .faq-ci svg{width:16px;height:16px;color:var(--ink-muted);flex-shrink:0;stroke-width:2}
-.faq-ci a{color:inherit;text-decoration:none;transition:color .3s}
+.faq-ci a{color:inherit;text-decoration:none;transition:color .3s;font-weight:700}
 .faq-ci a:hover{color:var(--teal)}
-.faq-ci strong{font-weight:600;margin-right:4px}
+.faq-ci strong{font-weight:700;margin-right:6px;color:var(--ink)}
+.faq-ci.faq-ci-addr{opacity:.3;font-weight:400}
+.faq-ci.faq-ci-addr strong{font-weight:600}
 .faq-item.open .fi{background:var(--teal)}.faq-item.open .fi svg{color:#fff;transform:rotate(45deg)}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .5s var(--ease)}
 .faq-a p{padding:0 0 16px;font-size:.82rem;color:var(--ink-light);line-height:1.7}
@@ -524,7 +526,7 @@ section{padding:clamp(56px,7vw,96px) 0}
   .sec-grid{grid-template-columns:1fr}
   .pipeline-grid{grid-template-columns:1fr}
   .bk-container{grid-template-columns:1fr}
-  .bk-slots{flex-direction:row;flex-wrap:wrap}.bk-sl{flex:1;min-width:70px}
+  .bk-slots.active{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.bk-sl{flex:none;min-width:0}
 }
 /* ===== FOOTER ===== */
 .footer{background:var(--ink);color:rgba(255,255,255,.6);padding:clamp(40px,5vw,64px) 0 24px}
@@ -629,7 +631,8 @@ span.ast{color:#e53e3e!important;font-weight:700}
 .sim-dark .ct{position:relative;z-index:1}
 .sim-dark-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(40px,6vw,80px);align-items:center}
 .sim-dark-l .st{color:#fff;margin:8px 0 0}
-.sim-dark-l .sd{color:rgba(255,255,255,.5);max-width:420px;margin-top:16px}
+.sim-dark-l .sd{color:rgba(255,255,255,.5);max-width:420px;margin-top:16px;margin-bottom:14px}
+.sim-dark-cta{margin-top:32px}
 .sim-dark-widget{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--rxl);padding:clamp(24px,3vw,36px);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .sim-dark-field{margin-bottom:20px}
 .sim-dark-field:last-of-type{margin-bottom:24px}
@@ -642,9 +645,15 @@ span.ast{color:#e53e3e!important;font-weight:700}
 .sim-dark .sim-val{color:var(--teal-light)}
 .sim-dark-result{background:rgba(75,179,164,.1);border:1px solid rgba(75,179,164,.2);border-radius:var(--r);padding:clamp(20px,2.5vw,28px);text-align:center}
 .sim-dark .sim-result-label{color:rgba(255,255,255,.5)}
-.sim-dark .sim-result-amount{font-size:clamp(2rem,4vw,2.8rem);font-weight:700;color:var(--teal-light);letter-spacing:-.05em;line-height:1;margin-bottom:8px}
-.sim-dark .sim-result-detail{color:rgba(255,255,255,.4)}
-.sim-dark-points{list-style:none;padding:0;margin:20px 0 0;display:flex;flex-direction:column;gap:10px}
+.sim-dark .sim-result-amount{font-size:clamp(2rem,4vw,2.8rem);font-weight:700;color:var(--teal-light);letter-spacing:-.05em;line-height:1;margin-bottom:14px}
+.sim-result-offer{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:12px}
+.sim-offer-label{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.45)}
+.sim-offer-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--pill);font-size:.78rem;font-weight:700;letter-spacing:-.01em;background:rgba(75,179,164,.18);color:var(--teal-light);border:1px solid rgba(75,179,164,.35);transition:background .3s,border-color .3s,color .3s}
+.sim-offer-badge[data-plan="Dédié"]{background:rgba(34,197,94,.18);color:#4ADE80;border-color:rgba(74,222,128,.4)}
+.sim-offer-badge[data-plan="Flex"]{background:rgba(96,165,250,.16);color:#93C5FD;border-color:rgba(147,197,253,.4)}
+.sim-offer-badge[data-plan="Express"]{background:rgba(234,179,8,.16);color:#FDE047;border-color:rgba(253,224,71,.4)}
+.sim-dark .sim-result-detail{color:rgba(255,255,255,.4);font-size:.7rem;line-height:1.5}
+.sim-dark-points{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
 .sim-dark-points li{display:flex;align-items:center;gap:10px;font-size:.88rem;color:rgba(255,255,255,.78);font-weight:500;line-height:1.4}
 .sim-dark-points li svg{color:var(--teal-light);flex-shrink:0}
 .sim-dark-points li strong{color:var(--teal-light);font-weight:700}
@@ -662,6 +671,11 @@ span.ast{color:#e53e3e!important;font-weight:700}
   <a href="postuler.html" onclick="cm()">Postuler</a>
   <a href="#booking" onclick="cm()">Planifier un appel</a>
   <a href="#faq" onclick="cm()">FAQ</a>
+  <div class="lang-sw mob-lang" role="radiogroup" aria-label="Langue / Language">
+    <span class="lang-pill" aria-hidden="true"></span>
+    <button class="active" role="radio" aria-checked="true" data-lang="fr" onclick="setLang('fr')" aria-label="Français">FR</button>
+    <button role="radio" aria-checked="false" data-lang="en" onclick="setLang('en')" aria-label="English">EN</button>
+  </div>
 </div>
 
 <nav class="nav" id="nav">
@@ -880,13 +894,13 @@ span.ast{color:#e53e3e!important;font-weight:700}
       <div class="sim-dark-l rv">
         <span class="sl" style="color:var(--teal-light)">Simulateur d'économies</span>
         <h2 class="st">Quel est le vrai <span class="ac">coût</span> de vos livraisons ?</h2>
-        <p class="sd">Les entreprises suisses perdent en moyenne 30 % de marge avec les plateformes à commission. Comparez votre coût actuel avec nos tarifs fixes — sans frais cachés.</p>
+        <p class="sd">Entre commissions, frais cachés et majorations variables, vos livraisons coûtent plus cher qu'elles ne le laissent paraître. Comparez avec nos tarifs fixes — basés sur votre volume réel.</p>
         <ul class="sim-dark-points">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg><span>Tarif fixe dès <strong>CHF 8</strong> par livraison</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg><span>Zéro commission sur vos ventes</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg><span>Dégressif selon votre volume quotidien</span></li>
         </ul>
-        <a href="#booking" class="btn btn-p pulse" style="margin-top:24px"><span>Calculer mon tarif exact</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#booking" class="btn btn-p pulse sim-dark-cta"><span>Calculer mon tarif exact</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
       </div>
       <div class="sim-dark-r rv d2">
         <div class="sim-dark-widget">
@@ -903,7 +917,8 @@ span.ast{color:#e53e3e!important;font-weight:700}
           <div class="sim-dark-result">
             <div class="sim-result-label">Économie mensuelle estimée</div>
             <div class="sim-result-amount" id="simAmount">CHF 4'400</div>
-            <div class="sim-result-detail" id="simDetail">Basé sur 20 livraisons/jour × 22 jours, avec un tarif Chaskis de CHF 10/livraison (offre Flex)</div>
+            <div class="sim-result-offer" id="simOffer"><span class="sim-offer-label">Offre recommandée</span><span class="sim-offer-badge" data-plan="Flex">Flex · CHF 12/livraison</span></div>
+            <div class="sim-result-detail" id="simDetail">Basé sur 20 livraisons/jour × 22 jours ouvrés</div>
           </div>
         </div>
       </div>
@@ -1080,8 +1095,8 @@ span.ast{color:#e53e3e!important;font-weight:700}
         <div class="faq-contact">
           <div class="faq-ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg><a href="mailto:hello@chaskis.ch">hello@chaskis.ch</a></div>
           <div class="faq-ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><a href="tel:+41227000127">+41 22 700 01 27</a></div>
-          <div class="faq-ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span><strong>Genève</strong>69 rue des Vollandes, 1207</span></div>
-          <div class="faq-ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span><strong>Lausanne</strong>22 chemin de Pierrefleur, 1004</span></div>
+          <div class="faq-ci faq-ci-addr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span><strong>Genève</strong>69 rue des Vollandes, 1207</span></div>
+          <div class="faq-ci faq-ci-addr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span><strong>Lausanne</strong>22 chemin de Pierrefleur, 1004</span></div>
         </div>
       </div>
     <div class="faq-list rr">
@@ -1189,6 +1204,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
   const costVal = document.getElementById('simCostVal');
   const amount = document.getElementById('simAmount');
   const detail = document.getElementById('simDetail');
+  const offerBadge = document.querySelector('#simOffer .sim-offer-badge');
   if (!vol || !cost) return;
 
   function getChaskisRate(v) {
@@ -1208,7 +1224,11 @@ span.ast{color:#e53e3e!important;font-weight:700}
     volVal.textContent = v + ' livraison' + (v > 1 ? 's' : '') + '/jour';
     costVal.textContent = 'CHF ' + c;
     amount.textContent = fmtCHF(saving);
-    detail.textContent = `Basé sur ${v} livraison${v>1?'s':''}/jour × ${days} jours, avec un tarif Chaskis de CHF ${rate}/livraison (offre ${plan})`;
+    detail.textContent = `Basé sur ${v} livraison${v>1?'s':''}/jour × ${days} jours ouvrés`;
+    if (offerBadge) {
+      offerBadge.textContent = `${plan} · CHF ${rate}/livraison`;
+      offerBadge.dataset.plan = plan;
+    }
     updateFill(vol);
     updateFill(cost);
   }
@@ -1469,13 +1489,14 @@ const T = {
 };
 
 function movePill(lang) {
-  const sw = document.getElementById('langSw');
-  const pill = document.getElementById('langPill');
-  const btn = sw.querySelector(`button[data-lang="${lang}"]`);
-  if (!pill || !btn) return;
-  // pill anchored at left:3px — translate to button position
-  pill.style.width = btn.offsetWidth + 'px';
-  pill.style.transform = `translateX(${btn.offsetLeft - 3}px)`;
+  document.querySelectorAll('.lang-sw').forEach(sw => {
+    const pill = sw.querySelector('.lang-pill');
+    const btn = sw.querySelector(`button[data-lang="${lang}"]`);
+    if (!pill || !btn) return;
+    // pill anchored at left:3px — translate to button position
+    pill.style.width = btn.offsetWidth + 'px';
+    pill.style.transform = `translateX(${btn.offsetLeft - 3}px)`;
+  });
 }
 
 function setLang(lang) {
@@ -1492,7 +1513,7 @@ function setLang(lang) {
     const v = dict[el.dataset.i18nPlaceholder];
     if (v !== undefined) el.placeholder = v;
   });
-  document.querySelectorAll('#langSw button').forEach(b => {
+  document.querySelectorAll('.lang-sw button').forEach(b => {
     b.classList.toggle('active', b.dataset.lang === lang);
     b.setAttribute('aria-checked', b.dataset.lang === lang ? 'true' : 'false');
   });
@@ -1981,7 +2002,7 @@ if ('serviceWorker' in navigator) {
 
     if (elapsed >= CYCLE + PAUSE) {
       startTs = ts;
-      lastPhase = -1;
+      lastPhase = 1; // reset à 1 pour forcer setMockupPhase(2) au premier frame
       lastAState = false; lastBState = false;
       aMarked = false; bMarked = false; hasZoomed = false;
       // Reset sans transition visible (désactiver transition, reset, réactiver)
@@ -1997,7 +2018,7 @@ if ('serviceWorker' in navigator) {
       markerB.setIcon(L.divIcon({ html:'<div class="fm-stop">B</div>', iconSize:[22,22], iconAnchor:[11,11], className:'' }));
       if (!map.hasLayer(markerB)) map.addLayer(markerB);
       // zoom reset via map.setZoom ci-dessus
-      setMockupPhase(0, false, false);
+      setMockupPhase(2, false, false);
       rafId = requestAnimationFrame(animate);
       return;
     }
@@ -2063,10 +2084,9 @@ if ('serviceWorker' in navigator) {
     }
 
     // Phases mockup — MAJ seulement quand ça change (sinon l'animation check redémarre)
+    // Étapes 0 et 1 (Commande reçue, Coursier assigné) déjà cochées dès le début
     let phase;
-    if (t < 0.05) phase = 0;
-    else if (t < 0.10) phase = 1;
-    else if (t < 0.50) phase = 2;
+    if (t < 0.50) phase = 2;
     else phase = 3;
     if (phase !== lastPhase || aMarked !== lastAState || bMarked !== lastBState) {
       lastPhase = phase; lastAState = aMarked; lastBState = bMarked;
@@ -2077,7 +2097,7 @@ if ('serviceWorker' in navigator) {
   }
 
   map.whenReady(() => {
-    setMockupPhase(0, false, false);
+    setMockupPhase(2, false, false);
     mapEl.style.transform = 'scale(1)';
     setTimeout(() => { rafId = requestAnimationFrame(animate); }, 600);
   });

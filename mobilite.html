@@ -3,237 +3,1149 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mobilit&eacute; : Chauffeur priv&eacute; et transferts | Chaskis</title>
-<meta name="description" content="Service de chauffeur priv&eacute; en Suisse romande. Transferts a&eacute;roport, &eacute;v&eacute;nements, conciergerie et transport adapt&eacute; &agrave; mobilit&eacute; r&eacute;duite. R&eacute;servez avec Chaskis.">
+
+<!-- ===== SEO ===== -->
+<title>Chauffeur privé et transferts en Suisse romande | Chaskis Mobilité</title>
+<meta name="description" content="Chauffeur privé en Suisse romande : transferts aéroport Genève, événements, conciergerie et transport sécurisé d'objets de valeur (horlogerie, joaillerie, luxe). Service premium avec Chaskis Mobilité.">
+<meta name="keywords" content="chauffeur privé Genève, transfert aéroport Genève, chauffeur Lausanne, VTC Suisse romande, transport horlogerie, transport joaillerie, mobilité réduite Genève">
+<meta name="author" content="Chaskis SA">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="geo.region" content="CH-GE">
 <link rel="canonical" href="https://www.chaskis.ch/mobilite">
+<link rel="alternate" hreflang="fr-CH" href="https://www.chaskis.ch/mobilite">
+<link rel="alternate" hreflang="x-default" href="https://www.chaskis.ch/mobilite">
+
+<!-- ===== Open Graph ===== -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chaskis">
+<meta property="og:title" content="Chauffeur privé en Suisse romande | Chaskis Mobilité">
+<meta property="og:description" content="Transferts aéroport, événements, transport sécurisé d'objets de valeur. Service premium en Suisse romande.">
+<meta property="og:url" content="https://www.chaskis.ch/mobilite">
+<meta property="og:image" content="https://www.chaskis.ch/hero-courier.png">
+<meta property="og:locale" content="fr_CH">
+
+<!-- ===== Twitter ===== -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chauffeur privé en Suisse romande | Chaskis Mobilité">
+<meta name="twitter:description" content="Transferts aéroport, événements, transport sécurisé d'objets de valeur. Service premium en Suisse romande.">
+<meta name="twitter:image" content="https://www.chaskis.ch/hero-courier.png">
+
+<!-- ===== PWA & Assets ===== -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#F5B800">
+<link rel="icon" href="icon-192.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="styles.css">
-<style>
-/* Nav transparent initial */
-#nav:not(.scrolled):not(.over-dark) .nav-mid a{color:rgba(255,255,255,.75)}
-#nav:not(.scrolled):not(.over-dark) .nav-mid a:hover{color:#fff}
-#nav:not(.scrolled):not(.over-dark) .nav-logo img{filter:brightness(0) invert(1)}
-#nav:not(.scrolled):not(.over-dark) .lang-sw{background:rgba(255,255,255,.12)}
-#nav:not(.scrolled):not(.over-dark) .lang-pill{background:rgba(255,255,255,.22)}
-#nav:not(.scrolled):not(.over-dark) .lang-sw button{color:rgba(255,255,255,.6);opacity:.6}
-#nav:not(.scrolled):not(.over-dark) .lang-sw button.active{color:#fff;opacity:1}
 
-/* Mobility hero */
-.mob-hero{padding:100px 0 60px;background:linear-gradient(135deg,var(--ink) 0%,#1a2530 100%);color:#fff;position:relative;overflow:hidden;min-height:480px;display:flex;align-items:center}
-.mob-hero::before{content:'';position:absolute;top:-40%;right:-15%;width:600px;height:600px;background:radial-gradient(circle,rgba(58,175,169,.15),transparent 65%);border-radius:50%;animation:float 10s ease-in-out infinite}
-.mob-hero::after{content:'';position:absolute;bottom:-30%;left:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(107,79,160,.08),transparent 65%);border-radius:50%;animation:float 12s ease-in-out infinite reverse}
-.mob-hero-inner{position:relative;z-index:1;max-width:640px}
-.mob-hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1.1;letter-spacing:-.04em;margin-bottom:16px}
-.mob-hero h1 .ac{color:var(--teal)}
-.mob-hero p{font-size:1.05rem;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:28px;max-width:500px}
+<!-- ===== Performance ===== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
-/* Services grid */
-.mob-services{background:var(--bg)}
-.mob-srv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:-40px;position:relative;z-index:2}
-.mob-srv{background:var(--white);border-radius:var(--rxl);box-shadow:var(--sh-lg);padding:32px 28px;text-align:center;transition:all .5s var(--ease);border:2px solid transparent}
-.mob-srv:hover{transform:translateY(-6px);border-color:var(--teal);box-shadow:var(--sh-xl)}
-.mob-srv-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;background:rgba(58,175,169,.1);color:var(--teal)}
-.mob-srv-icon svg{width:28px;height:28px}
-.mob-srv h3{font-size:1rem;font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
-.mob-srv p{font-size:.82rem;color:var(--ink-light);line-height:1.55}
+<!-- ===== Animation libraries ===== -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
 
-/* Why Chaskis section */
-.mob-why{background:var(--white)}
-.mob-why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.mob-why-card{padding:28px 24px;background:var(--bg);border-radius:var(--rxl);border:1.5px solid rgba(0,0,0,.04);transition:all .5s var(--ease);text-align:center}
-.mob-why-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:rgba(58,175,169,.12)}
-.mob-why-icon{width:48px;height:48px;border-radius:14px;background:rgba(58,175,169,.08);color:var(--teal);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
-.mob-why-icon svg{width:22px;height:22px}
-.mob-why-card h4{font-size:.95rem;font-weight:800;margin-bottom:4px}
-.mob-why-card p{font-size:.8rem;color:var(--ink-light);line-height:1.55}
-
-/* CTA */
-.mob-cta{background:linear-gradient(135deg,#2A8A85,var(--teal),#3fc1bb);color:#fff;text-align:center;position:relative;overflow:hidden}
-.mob-cta::before{content:'';position:absolute;top:-50%;left:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(255,255,255,.08),transparent 60%);border-radius:50%}
-.mob-cta-inner{position:relative;z-index:1;max-width:520px;margin:0 auto}
-.mob-cta h2{font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:12px}
-.mob-cta p{font-size:.92rem;color:rgba(255,255,255,.7);margin-bottom:28px;line-height:1.6}
-
-@media(max-width:1024px){
-  .mob-srv-grid{grid-template-columns:repeat(2,1fr)}
-  .mob-why-grid{grid-template-columns:repeat(2,1fr)}
+<!-- ===== Structured Data ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TaxiService",
+  "name": "Chaskis Mobilité",
+  "description": "Service de chauffeur privé et transport sécurisé d'objets de valeur en Suisse romande. Transferts aéroport, événements, horlogerie et joaillerie.",
+  "url": "https://www.chaskis.ch/mobilite",
+  "provider": {
+    "@type": "Organization",
+    "name": "Chaskis",
+    "url": "https://www.chaskis.ch/"
+  },
+  "areaServed": [
+    {"@type": "City", "name": "Genève"},
+    {"@type": "City", "name": "Nyon"},
+    {"@type": "City", "name": "Lausanne"},
+    {"@type": "Place", "name": "Riviera vaudoise"}
+  ],
+  "serviceType": ["Chauffeur privé", "Transfert aéroport", "Transport événementiel", "Transport sécurisé horlogerie", "Transport joaillerie", "Transport mobilité réduite"]
 }
-@media(max-width:768px){
-  .mob-srv-grid{grid-template-columns:1fr;max-width:400px;margin-left:auto;margin-right:auto}
-  .mob-why-grid{grid-template-columns:1fr}
+</script>
+
+<style>
+/* ===== YELLOW MOBILITY THEME (override teal on this page) ===== */
+body.page-mobilite{
+  --my:#F5B800;--my-bright:#FFC821;--my-deep:#D99F00;--my-bg:#FFF8E1;--my-hover:#E6AA00;
+  --mi:#0A0A0F;--mi-2:#1A1A24;
+}
+
+/* Nav transparent initial (logo on dark + yellow accents) */
+body.page-mobilite #nav:not(.scrolled):not(.over-dark) .nav-mid a{color:rgba(255,255,255,.75)}
+body.page-mobilite #nav:not(.scrolled):not(.over-dark) .nav-mid a:hover,
+body.page-mobilite #nav:not(.scrolled):not(.over-dark) .nav-mid a.active{color:#fff}
+body.page-mobilite #nav:not(.scrolled):not(.over-dark) .nav-mid a.active::after{background:var(--my)}
+body.page-mobilite #nav:not(.scrolled):not(.over-dark) .nav-logo img{content:url('Chaskis-logo-ondark.svg')}
+
+/* Yellow-override for page buttons */
+body.page-mobilite .btn-p{background:var(--my);color:var(--mi);box-shadow:0 4px 20px rgba(245,184,0,.35)}
+body.page-mobilite .btn-p:hover{background:var(--my-bright);box-shadow:0 8px 32px rgba(245,184,0,.45)}
+body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-deep),var(--my))}
+
+/* ===== Hero (aligned with home hero sizing) ===== */
+.mob-hero{position:relative;background:linear-gradient(180deg,#0A0A0F 0%,#1A1A24 100%);color:#fff;overflow:hidden;padding:156px 0 140px;display:flex;align-items:flex-start}
+.mob-hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45;z-index:0}
+.mob-hero-canvas{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.7}
+.mob-hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(245,184,0,.15),transparent 50%),linear-gradient(180deg,rgba(10,10,15,.3) 0%,rgba(10,10,15,.85) 100%);z-index:2}
+.mob-hero-content{position:relative;z-index:3;width:100%}
+.mob-hero-overline{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 10px;background:rgba(245,184,0,.1);border:1px solid rgba(245,184,0,.25);border-radius:999px;color:var(--my-bright);font-size:.74rem;font-weight:600;letter-spacing:.02em;margin-bottom:20px}
+.mob-hero-overline::before{content:'';width:6px;height:6px;background:var(--my-bright);border-radius:50%;animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.mob-hero h1{font-size:clamp(2.6rem,5.2vw,4.2rem);font-weight:700;line-height:1.04;letter-spacing:-.05em;margin-bottom:18px;max-width:720px}
+.mob-hero h1 .line{display:block;overflow:hidden}
+.mob-hero h1 .line-inner{display:inline-block}
+.mob-hero h1 .ac{color:var(--my);font-family:'Instrument Serif',serif;font-weight:400;font-style:italic;font-size:1.05em;padding-right:.04em}
+.mob-hero-sub{font-size:clamp(.95rem,1.1vw,1.08rem);color:rgba(255,255,255,.7);line-height:1.65;max-width:480px;margin-bottom:24px}
+.mob-hero-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:32px}
+.mob-hero-btn-primary{background:var(--my);color:var(--mi);padding:14px 28px;border-radius:12px;font-weight:600;font-size:.92rem;display:inline-flex;align-items:center;gap:10px;transition:all .4s cubic-bezier(.22,.61,.36,1);box-shadow:0 4px 20px rgba(245,184,0,.3);position:relative;overflow:hidden;letter-spacing:-.01em}
+.mob-hero-btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(245,184,0,.45)}
+.mob-hero-btn-primary svg{width:16px;height:16px;transition:transform .3s ease}
+.mob-hero-btn-primary:hover svg{transform:translateX(4px)}
+.mob-hero-btn-secondary{color:#fff;padding:14px 26px;border:1px solid rgba(255,255,255,.22);border-radius:12px;font-weight:500;font-size:.92rem;transition:all .3s ease;display:inline-flex;align-items:center;gap:10px;letter-spacing:-.01em}
+.mob-hero-btn-secondary:hover{border-color:var(--my);color:var(--my)}
+.mob-hero-scroll-ind{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);font-size:.64rem;color:rgba(255,255,255,.4);letter-spacing:.14em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:10px;z-index:3}
+.mob-hero-scroll-ind::after{content:'';width:1px;height:40px;background:linear-gradient(to bottom,rgba(255,255,255,.5),transparent);animation:scroll-line 2.2s ease-in-out infinite}
+@keyframes scroll-line{0%,100%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1)}}
+
+/* ===== Proof strip (continuité visuelle avec hero) ===== */
+.mob-proof{background:var(--mi);color:#fff;padding:52px 0 72px;position:relative;overflow:hidden}
+.mob-proof::before{content:'';position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(to bottom,#1A1A24,transparent);pointer-events:none}
+.mob-proof::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to top,var(--bg),transparent);pointer-events:none}
+.mob-proof-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;align-items:center}
+.mob-proof-stat{text-align:center;border-right:1px solid rgba(255,255,255,.08);padding:8px 0}
+.mob-proof-stat:last-child{border-right:none}
+.mob-proof-stat strong{display:block;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800;color:var(--my);letter-spacing:-.03em;line-height:1;margin-bottom:6px;font-variant-numeric:tabular-nums}
+.mob-proof-stat span{font-size:.72rem;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.02em;text-transform:uppercase}
+
+/* ===== Two pillars ===== */
+.mob-pillars{background:var(--bg);padding:clamp(80px,10vw,120px) 0;position:relative;overflow:hidden}
+.mob-pillars-header{text-align:center;max-width:680px;margin:0 auto clamp(52px,6vw,80px)}
+.mob-pillars-label{display:inline-block;padding:4px 12px;background:var(--my-bg);color:var(--my-deep);border-radius:999px;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
+.mob-pillars h2{font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin-bottom:16px}
+.mob-pillars h2 .ac{color:var(--my-deep);font-family:'Instrument Serif',serif;font-style:italic;font-weight:400}
+.mob-pillars-desc{font-size:1rem;color:var(--ink-light);line-height:1.65;max-width:580px;margin:0 auto}
+.mob-pillars-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.mob-pillar{position:relative;border-radius:32px;overflow:hidden;padding:48px 40px;min-height:540px;display:flex;flex-direction:column;justify-content:flex-end;cursor:default;transition:transform .7s cubic-bezier(.22,.61,.36,1)}
+.mob-pillar:hover{transform:translateY(-8px)}
+.mob-pillar-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 1.4s cubic-bezier(.22,.61,.36,1)}
+.mob-pillar:hover .mob-pillar-bg{transform:scale(1.06)}
+.mob-pillar::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(10,10,15,.92) 100%);z-index:1}
+.mob-pillar-content{position:relative;z-index:2;color:#fff}
+.mob-pillar-type{display:inline-block;padding:4px 12px;background:var(--my);color:var(--mi);border-radius:999px;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
+.mob-pillar h3{font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:14px}
+.mob-pillar p{font-size:.95rem;color:rgba(255,255,255,.78);line-height:1.55;margin-bottom:22px;max-width:460px}
+.mob-pillar-uses{display:flex;flex-wrap:wrap;gap:8px}
+.mob-pillar-uses span{padding:5px 12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;font-size:.74rem;font-weight:600;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.mob-pillar-1 .mob-pillar-bg{background-image:linear-gradient(135deg,rgba(10,10,15,.4),rgba(30,30,40,.35)),url('hero-courier.png');background-position:center 30%}
+.mob-pillar-2 .mob-pillar-bg{background:radial-gradient(circle at 30% 30%,#2a2030 0%,#1a1a24 60%,#0a0a0f 100%)}
+.mob-pillar-2::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(245,184,0,.18),transparent 60%),radial-gradient(circle at 70% 70%,rgba(184,120,0,.08),transparent 50%);z-index:1}
+
+/* ===== Differentiators ===== */
+.mob-diff{background:var(--white);padding:clamp(80px,10vw,120px) 0}
+.mob-diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:60px}
+.mob-diff-card{padding:40px 32px;border-radius:24px;background:var(--bg);border:1.5px solid rgba(0,0,0,.04);position:relative;overflow:hidden;transition:all .6s cubic-bezier(.22,.61,.36,1)}
+.mob-diff-card:hover{transform:translateY(-8px);border-color:var(--my);box-shadow:0 24px 56px rgba(245,184,0,.15);background:var(--white)}
+.mob-diff-icon{width:56px;height:56px;border-radius:16px;background:var(--my-bg);color:var(--my-deep);display:flex;align-items:center;justify-content:center;margin-bottom:24px;transition:transform .5s cubic-bezier(.22,.61,.36,1),background .4s ease}
+.mob-diff-card:hover .mob-diff-icon{transform:scale(1.1) rotate(-5deg);background:var(--my)}
+.mob-diff-icon svg{width:26px;height:26px}
+.mob-diff-card h4{font-size:1.22rem;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+.mob-diff-card p{font-size:.92rem;color:var(--ink-light);line-height:1.65}
+.mob-diff-num{position:absolute;top:28px;right:32px;font-size:4.4rem;font-weight:900;color:rgba(0,0,0,.045);letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+
+/* ===== Prestige signature (scrollytelling stage) ===== */
+.mob-prestige{background:linear-gradient(180deg,#0A0A0F 0%,#1A1A24 100%);color:#fff;position:relative;overflow:hidden}
+.mob-prestige::before{content:'';position:absolute;top:-30%;right:-10%;width:800px;height:800px;background:radial-gradient(circle,rgba(245,184,0,.12),transparent 60%);animation:float-slow 18s ease-in-out infinite}
+.mob-prestige::after{content:'';position:absolute;bottom:-20%;left:-15%;width:700px;height:700px;background:radial-gradient(circle,rgba(184,120,0,.08),transparent 55%);animation:float-slow 22s ease-in-out infinite reverse}
+@keyframes float-slow{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(4%,-4%) scale(1.08)}}
+.mob-prestige-stage{position:relative;height:100vh;min-height:640px;display:flex;align-items:center;padding:80px 0;z-index:1}
+.mob-prestige-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:80px;align-items:center;width:100%}
+.mob-prestige-title .word{display:inline-block;overflow:hidden;vertical-align:bottom}
+.mob-prestige-title .word-inner{display:inline-block}
+.mob-prestige-progress{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);z-index:5}
+.mob-prestige-progress-track{position:relative;width:160px;height:2px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+.mob-prestige-progress-track::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--my),var(--my-bright));transform:scaleX(0);transform-origin:left center;will-change:transform}
+.mob-prestige-sparkle{position:absolute;inset:0;pointer-events:none;z-index:3}
+.mob-prestige-sparkle-dot{position:absolute;width:6px;height:6px;background:var(--my);border-radius:50%;box-shadow:0 0 16px rgba(245,184,0,.9),0 0 4px rgba(245,184,0,1);opacity:0}
+
+/* Scene opt-in : hide animatable elements at start of pinned scene */
+.scene-active .mob-prestige-badge{opacity:0;transform:translateY(20px)}
+.scene-active .mob-prestige-title .word-inner{transform:translateY(110%)}
+.scene-active .mob-prestige-lead{opacity:0;transform:translateY(20px)}
+.scene-active .mob-prestige-item{opacity:0;transform:translateX(-50px)}
+.scene-active .mob-prestige-cta{opacity:0;transform:scale(.85)}
+.scene-active .mob-watch{transform:scale(.12);opacity:0}
+.scene-active .mob-prestige-visual{box-shadow:0 40px 80px rgba(0,0,0,.2)}
+.scene-active .mob-prestige-sparkle-dot{opacity:1}
+.mob-prestige-badge{display:inline-block;padding:6px 14px;background:rgba(245,184,0,.12);color:var(--my);border:1px solid rgba(245,184,0,.25);border-radius:999px;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px}
+.mob-prestige h2{font-size:clamp(2.2rem,4vw,3.4rem);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin-bottom:20px}
+.mob-prestige h2 .ac{color:var(--my);font-family:'Instrument Serif',serif;font-style:italic;font-weight:400}
+.mob-prestige-lead{font-size:1.08rem;color:rgba(255,255,255,.78);line-height:1.7;margin-bottom:36px}
+.mob-prestige-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:18px;margin-bottom:40px}
+.mob-prestige-list li{display:flex;align-items:flex-start;gap:14px;font-size:.95rem;color:rgba(255,255,255,.85);line-height:1.5}
+.mob-prestige-list li svg{width:22px;height:22px;color:var(--my);flex-shrink:0;margin-top:2px}
+.mob-prestige-list li strong{color:#fff;font-weight:700;display:block;margin-bottom:2px}
+.mob-prestige-visual{position:relative;aspect-ratio:1/1.15;border-radius:24px;overflow:hidden;background:linear-gradient(135deg,#2a2030,#1a1a24);box-shadow:0 40px 80px rgba(0,0,0,.5),inset 0 0 120px rgba(245,184,0,.08)}
+.mob-prestige-visual-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;perspective:1000px}
+.mob-watch{width:min(72%,340px);aspect-ratio:1/1;position:relative;transform-style:preserve-3d;animation:watch-float 7s ease-in-out infinite}
+@keyframes watch-float{0%,100%{transform:translateY(0) rotateY(0deg)}50%{transform:translateY(-14px) rotateY(8deg)}}
+.mob-watch-body{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 30% 28%,#4a3a42 0%,#2a2030 45%,#0a0a0f 100%);box-shadow:0 30px 60px rgba(0,0,0,.6),inset 0 -25px 50px rgba(0,0,0,.5),inset 0 15px 35px rgba(245,184,0,.12)}
+.mob-watch-face{position:absolute;inset:14%;border-radius:50%;background:radial-gradient(circle at 40% 35%,#1e1a26,#08080c);border:2px solid rgba(245,184,0,.35);box-shadow:inset 0 0 30px rgba(0,0,0,.8)}
+.mob-watch-hand{position:absolute;left:50%;top:50%;transform-origin:left center;background:var(--my);border-radius:2px;box-shadow:0 0 14px rgba(245,184,0,.7)}
+.mob-watch-h{width:32%;height:3px;animation:watch-h 60s linear infinite}
+.mob-watch-m{width:42%;height:2.5px;animation:watch-m 5s linear infinite;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.6)}
+@keyframes watch-h{from{transform:translate(0,-50%) rotate(0deg)}to{transform:translate(0,-50%) rotate(360deg)}}
+@keyframes watch-m{from{transform:translate(0,-50%) rotate(0deg)}to{transform:translate(0,-50%) rotate(360deg)}}
+.mob-watch-center{position:absolute;left:50%;top:50%;width:10px;height:10px;background:var(--my);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 12px rgba(245,184,0,.8);z-index:2}
+.mob-watch-ticks{position:absolute;inset:16%;border-radius:50%}
+.mob-watch-tick{position:absolute;top:0;left:50%;width:2px;height:8px;background:rgba(245,184,0,.4);transform-origin:50% 148px;margin-left:-1px}
+
+/* ===== How it works (progress line drawn on scroll) ===== */
+.mob-how{background:var(--white);padding:clamp(80px,10vw,120px) 0;position:relative}
+.mob-how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:60px;position:relative}
+.mob-how-track{position:absolute;top:37px;left:12%;right:12%;height:3px;background:rgba(0,0,0,.06);border-radius:3px;z-index:0}
+.mob-how-track-fill{position:absolute;inset:0;background:linear-gradient(to right,var(--my),var(--my-bright));border-radius:3px;transform-origin:left center;transform:scaleX(0);will-change:transform}
+.mob-how-step{position:relative;text-align:center;padding:0 16px;z-index:1;opacity:.35;transition:opacity .5s ease}
+.mob-how-step.is-active{opacity:1}
+.mob-how-num{width:74px;height:74px;border-radius:50%;background:#eae5d8;color:var(--ink-light);display:flex;align-items:center;justify-content:center;font-size:1.9rem;font-weight:900;margin:0 auto 22px;position:relative;transition:all .45s cubic-bezier(.22,.61,.36,1)}
+.mob-how-step.is-active .mob-how-num{background:var(--my);color:var(--mi);box-shadow:0 12px 32px rgba(245,184,0,.35)}
+.mob-how-step h4{font-size:1.08rem;font-weight:800;margin-bottom:8px;letter-spacing:-.02em;color:var(--ink)}
+.mob-how-step p{font-size:.86rem;color:var(--ink-light);line-height:1.55}
+
+/* ===== Testimonials ===== */
+.mob-testi{background:var(--bg);padding:clamp(80px,10vw,120px) 0}
+.mob-testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:60px}
+.mob-testi-card{background:var(--white);border-radius:24px;padding:32px 28px;border:1.5px solid rgba(0,0,0,.04);transition:all .5s cubic-bezier(.22,.61,.36,1);position:relative}
+.mob-testi-card:hover{transform:translateY(-6px);box-shadow:0 24px 48px rgba(0,0,0,.08);border-color:var(--my)}
+.mob-testi-stars{display:flex;gap:2px;margin-bottom:16px;color:var(--my)}
+.mob-testi-stars svg{width:16px;height:16px;fill:currentColor}
+.mob-testi-text{font-size:.94rem;color:var(--ink);line-height:1.65;margin-bottom:20px}
+.mob-testi-author{display:flex;align-items:center;gap:12px;padding-top:18px;border-top:1px solid rgba(0,0,0,.05)}
+.mob-testi-avatar{width:44px;height:44px;border-radius:50%;background:var(--my-bg);color:var(--my-deep);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.88rem;flex-shrink:0}
+.mob-testi-info strong{display:block;font-size:.88rem;font-weight:700;margin-bottom:2px}
+.mob-testi-info span{font-size:.74rem;color:var(--ink-light)}
+
+/* ===== Request form ===== */
+.mob-form-sec{background:var(--mi);color:#fff;padding:clamp(80px,10vw,120px) 0;position:relative;overflow:hidden}
+.mob-form-sec::before{content:'';position:absolute;top:-30%;right:-20%;width:720px;height:720px;background:radial-gradient(circle,rgba(245,184,0,.1),transparent 60%);animation:float-slow 16s ease-in-out infinite}
+.mob-form-layout{display:grid;grid-template-columns:1fr 1.3fr;gap:80px;align-items:start;position:relative;z-index:1}
+.mob-form-left h2{font-size:clamp(2rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:22px}
+.mob-form-left h2 .ac{color:var(--my);font-family:'Instrument Serif',serif;font-style:italic;font-weight:400}
+.mob-form-left p{font-size:1rem;color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:36px}
+.mob-form-contact{display:flex;flex-direction:column;gap:12px}
+.mob-form-contact a{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;color:#fff;transition:all .3s ease;font-size:.92rem;font-weight:500}
+.mob-form-contact a:hover{background:rgba(245,184,0,.08);border-color:rgba(245,184,0,.3)}
+.mob-form-contact a svg{width:20px;height:20px;color:var(--my);flex-shrink:0}
+.mob-form-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:40px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.mob-form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.mob-form-group{margin-bottom:14px}
+.mob-form-group label{display:block;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:6px;letter-spacing:.01em}
+.mob-form-group input,.mob-form-group textarea,.mob-form-group select{width:100%;padding:12px 16px;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;color:#fff;font-family:inherit;font-size:.92rem;transition:all .3s ease}
+.mob-form-group input::placeholder,.mob-form-group textarea::placeholder{color:rgba(255,255,255,.35)}
+.mob-form-group input:focus,.mob-form-group textarea:focus,.mob-form-group select:focus{outline:none;border-color:var(--my);background:rgba(255,255,255,.06);box-shadow:0 0 0 4px rgba(245,184,0,.12)}
+.mob-form-group textarea{min-height:100px;resize:vertical;font-family:inherit}
+.mob-form-types{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.mob-form-type{padding:11px 12px;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;color:#fff;font-size:.8rem;font-weight:600;cursor:pointer;text-align:center;transition:all .25s ease;user-select:none}
+.mob-form-type:hover{border-color:rgba(245,184,0,.3)}
+.mob-form-type.active{border-color:var(--my);background:rgba(245,184,0,.08);color:var(--my)}
+.mob-form-submit{width:100%;padding:17px;background:var(--my);color:var(--mi);border:none;border-radius:12px;font-family:inherit;font-weight:700;font-size:.96rem;cursor:pointer;transition:all .3s ease;display:inline-flex;align-items:center;justify-content:center;gap:10px;margin-top:14px;box-shadow:0 8px 24px rgba(245,184,0,.25)}
+.mob-form-submit:hover{background:var(--my-bright);transform:translateY(-2px);box-shadow:0 14px 36px rgba(245,184,0,.45)}
+.mob-form-submit svg{width:16px;height:16px}
+.mob-form-promise{font-size:.78rem;color:rgba(255,255,255,.5);text-align:center;margin-top:16px;line-height:1.5}
+.mob-form-promise strong{color:var(--my);font-weight:700}
+
+/* ===== FAQ ===== */
+.mob-faq{background:var(--white);padding:clamp(80px,10vw,120px) 0}
+.mob-faq-list{max-width:820px;margin:60px auto 0}
+.mob-faq-item{border-bottom:1px solid rgba(0,0,0,.08)}
+.mob-faq-q{padding:22px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:20px;transition:color .3s ease}
+.mob-faq-q h3{font-size:1.06rem;font-weight:700;color:var(--ink);transition:color .3s ease}
+.mob-faq-q:hover h3{color:var(--my-deep)}
+.mob-faq-ic{width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.05);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .35s ease}
+.mob-faq-ic svg{width:14px;height:14px;color:var(--ink);transition:transform .35s ease}
+.mob-faq-item.open .mob-faq-ic{background:var(--my)}
+.mob-faq-item.open .mob-faq-ic svg{transform:rotate(180deg)}
+.mob-faq-a{max-height:0;overflow:hidden;transition:max-height .55s cubic-bezier(.22,.61,.36,1)}
+.mob-faq-a p{padding:0 0 22px;font-size:.94rem;color:var(--ink-light);line-height:1.7}
+
+/* ===== Reveal animations (progressive enhancement only, content visible by default) ===== */
+.js-reveal-ready .rev{opacity:0;transform:translateY(32px);transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1)}
+.js-reveal-ready .rev.in{opacity:1;transform:translateY(0)}
+
+/* ===== Responsive ===== */
+@media(max-width:1024px){
+  .mob-pillars-grid{grid-template-columns:1fr}
+  .mob-prestige-layout{grid-template-columns:1fr;gap:48px}
+  .mob-prestige-visual{max-width:440px;margin:0 auto}
+  .mob-diff-grid{grid-template-columns:1fr 1fr}
+  .mob-testi-grid{grid-template-columns:1fr}
+  .mob-form-layout{grid-template-columns:1fr;gap:40px}
+  .mob-how-steps{grid-template-columns:1fr 1fr;gap:40px}
+  .mob-how-connector{display:none}
+}
+@media(max-width:640px){
+  .mob-proof-grid{grid-template-columns:1fr 1fr;gap:24px}
+  .mob-proof-stat{border-right:none}
+  .mob-diff-grid{grid-template-columns:1fr}
+  .mob-how-steps{grid-template-columns:1fr;gap:32px}
+  .mob-form-row{grid-template-columns:1fr}
+  .mob-form-types{grid-template-columns:1fr 1fr}
+  .mob-pillar{min-height:420px;padding:32px 28px}
+  .mob-form-card{padding:28px 22px}
 }
 </style>
 </head>
-<body>
+<body class="page-mobilite">
 
 <div class="mob-m" id="mm">
   <a href="index.html" onclick="cm()">Accueil</a>
-  <a href="index.html#services" onclick="cm()">Nos services</a>
-  <a href="commander.html" onclick="cm()">Commander</a>
   <a href="mobilite.html" onclick="cm()">Mobilit&eacute;</a>
   <a href="postuler.html" onclick="cm()">Postuler</a>
+  <a href="commander.html" onclick="cm()">Commander une course</a>
   <a href="index.html#booking" onclick="cm()">Planifier un appel</a>
   <a href="index.html#faq" onclick="cm()">FAQ</a>
+  <div class="mob-lang-opts">
+    <button class="mob-lang-btn active" data-lang="fr" onclick="setLang('fr');cm()"><span class="mob-lang-flag"><img src="flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
+    <button class="mob-lang-btn" data-lang="en" onclick="setLang('en');cm()"><span class="mob-lang-flag"><img src="flag-gb.svg" alt="" width="18" height="13"></span> English</button>
+  </div>
 </div>
 
 <nav class="nav" id="nav">
   <div class="ct nav-in">
     <a href="index.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
     <div class="nav-mid" style="margin-left:auto">
-      <a href="commander.html">Commander</a>
-      <a href="mobilite.html">Mobilit&eacute;</a>
+      <a href="mobilite.html" class="active">Mobilit&eacute;</a>
       <a href="postuler.html">Postuler</a>
     </div>
-    <div class="lang-sw" id="langSw" role="radiogroup" aria-label="Langue / Language">
-      <span class="lang-pill" id="langPill" aria-hidden="true"></span>
-      <button class="active" role="radio" aria-checked="true" data-lang="fr" onclick="movePill('fr')" aria-label="Fran&ccedil;ais">FR</button>
-      <button role="radio" aria-checked="false" data-lang="en" onclick="movePill('en')" aria-label="English">EN</button>
+    <a href="commander.html" class="btn btn-o nav-cta-btn"><span>Commander une course</span></a>
+    <div class="lang-drop" id="langDrop">
+      <button class="lang-drop-trigger" id="langTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Changer de langue">
+        <span class="lang-drop-flag" id="langFlag"><img src="flag-fr.svg" alt="Français" width="18" height="13"></span>
+        <svg class="lang-drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="lang-drop-menu" id="langMenu" role="listbox" aria-label="Langue">
+        <button class="lang-drop-item active" role="option" data-lang="fr" data-flag="fr" data-code="FR" aria-selected="true">
+          <span class="lang-drop-item-flag"><img src="flag-fr.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">Français</span>
+        </button>
+        <button class="lang-drop-item" role="option" data-lang="en" data-flag="gb" data-code="EN" aria-selected="false">
+          <span class="lang-drop-item-flag"><img src="flag-gb.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">English</span>
+        </button>
+      </div>
     </div>
-    <button class="mob-t" id="mt" aria-label="Menu"><span></span></button>
+    <button class="mob-t" id="mt" aria-label="Menu">
+      <svg class="mob-icon mob-ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+      <svg class="mob-icon mob-ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5L19 19M5 19L19 5"/></svg>
+    </button>
   </div>
 </nav>
 
-<!-- Hero -->
-<header class="mob-hero">
-  <div class="ct mob-hero-inner">
-    <div class="rv">
-      <div class="sl" style="color:var(--teal)"><span style="width:20px;height:2px;background:var(--teal);display:inline-block;border-radius:1px;margin-right:8px"></span>Mobilit&eacute;</div>
-      <h1>Votre <span class="ac">chauffeur priv&eacute;</span> en Suisse romande</h1>
-      <p>Transferts a&eacute;roport, &eacute;v&eacute;nements, conciergerie ou transport adapt&eacute; : Chaskis vous conduit partout, en toute s&eacute;r&eacute;nit&eacute;.</p>
-      <a href="index.html#booking" class="btn btn-p"><span>R&eacute;server un trajet</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+<!-- ===== HERO ===== -->
+<header class="mob-hero" id="mobHero">
+  <video class="mob-hero-video" id="mobHeroVideo" autoplay muted loop playsinline poster="hero-courier.png" preload="none">
+    <!-- Placeholder : remplacer par la vidéo IA générée. Source commentée pour l'instant. -->
+    <!-- <source src="mobilite-hero.mp4" type="video/mp4"> -->
+  </video>
+  <canvas class="mob-hero-canvas" id="mobHeroCanvas" aria-hidden="true"></canvas>
+  <div class="mob-hero-overlay"></div>
+
+  <div class="mob-hero-content">
+    <div class="ct">
+      <div class="mob-hero-overline">Chaskis Mobilité</div>
+      <h1>
+        <span class="line"><span class="line-inner">Des chauffeurs d'exception,</span></span>
+        <span class="line"><span class="line-inner">pour vos trajets et vos</span></span>
+        <span class="line"><span class="line-inner"><span class="ac">objets de valeur</span>.</span></span>
+      </h1>
+      <p class="mob-hero-sub">Transferts aéroport, événements, mise à disposition, transport sécurisé d'horlogerie et de joaillerie. Des chauffeurs salariés, des véhicules premium, une facturation pensée pour les pros.</p>
+      <div class="mob-hero-actions">
+        <a href="#mobForm" class="mob-hero-btn-primary">
+          <span>Demander un chauffeur</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#mobPillars" class="mob-hero-btn-secondary">
+          <span>Découvrir nos services</span>
+        </a>
+      </div>
     </div>
   </div>
+
 </header>
 
-<!-- Services -->
-<section class="mob-services sec">
+<!-- ===== PROOF STRIP ===== -->
+<section class="mob-proof">
   <div class="ct">
-    <div class="mob-srv-grid stg">
-
-      <div class="mob-srv tilt-3d rv">
-        <div class="mob-srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0"/><path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0"/><path d="M5 17H3v-6l2-5h9l4 5h1a2 2 0 0 1 2 2v4h-2M9 17h6"/></svg></div>
-        <h3>Chauffeur priv&eacute;</h3>
-        <p>Un chauffeur professionnel &agrave; votre disposition pour tous vos d&eacute;placements en Suisse romande. Ponctualit&eacute; et discr&eacute;tion garanties.</p>
-      </div>
-
-      <div class="mob-srv tilt-3d rv d2">
-        <div class="mob-srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 17l1.5-4.5h17L22 17"/><path d="M6 17v1a1 1 0 001 1h2a1 1 0 001-1v-1M14 17v1a1 1 0 001 1h2a1 1 0 001-1v-1"/><path d="M5 12.5V7a2 2 0 012-2h10a2 2 0 012 2v5.5"/><path d="M8 2h8"/></svg></div>
-        <h3>Transferts a&eacute;roport</h3>
-        <p>Gen&egrave;ve, B&acirc;le, Zurich ou ailleurs : on vous d&eacute;pose et on vous r&eacute;cup&egrave;re &agrave; l'heure, sans stress ni surco&ucirc;t cach&eacute;.</p>
-      </div>
-
-      <div class="mob-srv tilt-3d rv d3">
-        <div class="mob-srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14l-5-4.87 6.91-1.01z"/></svg></div>
-        <h3>&Eacute;v&eacute;nements &amp; conciergerie</h3>
-        <p>Mariages, s&eacute;minaires, soir&eacute;es ou roadshows : un service sur-mesure pour vos invit&eacute;s et collaborateurs.</p>
-      </div>
-
-      <div class="mob-srv tilt-3d rv d4">
-        <div class="mob-srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/><path d="M8 21h8"/><path d="M12 21v-3"/></svg></div>
-        <h3>Mobilit&eacute; r&eacute;duite</h3>
-        <p>V&eacute;hicules adapt&eacute;s et chauffeurs form&eacute;s pour accompagner les personnes &agrave; mobilit&eacute; r&eacute;duite en toute s&eacute;curit&eacute;.</p>
-      </div>
-
+    <div class="mob-proof-grid">
+      <div class="mob-proof-stat rev"><strong data-count="120">0</strong><span>Chauffeurs salariés</span></div>
+      <div class="mob-proof-stat rev"><strong data-count="40000">0</strong><span>Trajets par an</span></div>
+      <div class="mob-proof-stat rev"><strong data-count="15" data-suffix="+">0</strong><span>Maisons de luxe partenaires</span></div>
+      <div class="mob-proof-stat rev"><strong data-count="24" data-suffix="/7">0</strong><span>Service disponible</span></div>
     </div>
   </div>
 </section>
 
-<!-- Why Chaskis -->
-<section class="mob-why sec">
+<!-- ===== TWO PILLARS ===== -->
+<section class="mob-pillars" id="mobPillars">
   <div class="ct">
-    <div class="sh c rv">
-      <span class="sl" style="color:var(--teal)"><span style="width:20px;height:2px;background:var(--teal);display:inline-block;border-radius:1px;margin-right:8px"></span>Pourquoi Chaskis</span>
-      <h2 class="st">Un service de <span style="color:var(--teal)">mobilit&eacute; premium</span></h2>
-      <p class="sd">Fiabilit&eacute;, ponctualit&eacute; et s&eacute;r&eacute;nit&eacute; pour chaque trajet.</p>
+    <div class="mob-pillars-header rev">
+      <span class="mob-pillars-label">Deux métiers, une seule exigence</span>
+      <h2>Notre <span class="ac">expertise voiture</span>,<br>appliquée à l'humain et à l'objet précieux.</h2>
+      <p class="mob-pillars-desc">Qu'il s'agisse de conduire des personnes ou de transporter un objet de grande valeur, Chaskis Mobilité mobilise la même rigueur : chauffeurs formés, véhicules premium, confidentialité absolue.</p>
     </div>
-    <div class="mob-why-grid stg">
-      <div class="mob-why-card tilt-3d">
-        <div class="mob-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-        <h4>Ponctualit&eacute; absolue</h4>
-        <p>Suivi en temps r&eacute;el et arriv&eacute;e confirm&eacute;e. Jamais de retard.</p>
+
+    <div class="mob-pillars-grid">
+      <!-- Pillar 1: Personnes -->
+      <article class="mob-pillar mob-pillar-1 rev">
+        <div class="mob-pillar-bg"></div>
+        <div class="mob-pillar-content">
+          <span class="mob-pillar-type">Transport de personnes</span>
+          <h3>Chauffeur privé, à la carte ou à la journée.</h3>
+          <p>Transferts aéroport, événements professionnels, mise à disposition horaire, mobilité adaptée. Chaque trajet est préparé en amont, votre chauffeur vous connaît.</p>
+          <div class="mob-pillar-uses">
+            <span>Transfert aéroport</span>
+            <span>Mise à disposition</span>
+            <span>Événementiel</span>
+            <span>Mobilité réduite</span>
+            <span>Cadres & dirigeants</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Pillar 2: Objets de valeur -->
+      <article class="mob-pillar mob-pillar-2 rev">
+        <div class="mob-pillar-bg"></div>
+        <div class="mob-pillar-content">
+          <span class="mob-pillar-type">Transport d'objets de valeur</span>
+          <h3>Vos pièces d'exception, entre de bonnes mains.</h3>
+          <p>Horlogerie, joaillerie, haute couture, grands crus. Chauffeurs formés aux standards maison, véhicules sécurisés, assurance haute valeur, discrétion totale.</p>
+          <div class="mob-pillar-uses">
+            <span>Horlogerie</span>
+            <span>Joaillerie</span>
+            <span>Haute couture</span>
+            <span>Grands crus</span>
+            <span>Pièces uniques</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DIFFERENTIATORS ===== -->
+<section class="mob-diff">
+  <div class="ct">
+    <div class="mob-pillars-header rev">
+      <span class="mob-pillars-label">Pourquoi Chaskis Mobilité</span>
+      <h2>Trois raisons de <span class="ac">nous choisir</span>.</h2>
+      <p class="mob-pillars-desc">Ce qui nous distingue des plateformes VTC classiques et des services de livraison standards.</p>
+    </div>
+
+    <div class="mob-diff-grid">
+      <div class="mob-diff-card rev">
+        <div class="mob-diff-num">01</div>
+        <div class="mob-diff-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h4>Chauffeurs salariés CDI</h4>
+        <p>Aucun freelance, aucune rotation. Des chauffeurs formés aux standards des hôtels 5 étoiles et des maisons horlogères.</p>
       </div>
-      <div class="mob-why-card tilt-3d">
-        <div class="mob-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <h4>S&eacute;curit&eacute; &amp; assurance</h4>
-        <p>Chauffeurs v&eacute;rifi&eacute;s, v&eacute;hicules assur&eacute;s, trajets trac&eacute;s.</p>
+
+      <div class="mob-diff-card rev">
+        <div class="mob-diff-num">02</div>
+        <div class="mob-diff-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h4>Véhicules premium, standards hôtel</h4>
+        <p>Berlines classe affaires et vans VIP, eau fraîche, chargeurs, climatisation ajustée. Une expérience soignée dans chaque détail.</p>
       </div>
-      <div class="mob-why-card tilt-3d">
-        <div class="mob-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
-        <h4>Service humain</h4>
-        <p>Des chauffeurs CDI, form&eacute;s et &agrave; l'&eacute;coute de vos besoins.</p>
-      </div>
-      <div class="mob-why-card tilt-3d">
-        <div class="mob-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-        <h4>Tarifs transparents</h4>
-        <p>Prix fix&eacute; avant le trajet. Pas de surprise &agrave; l'arriv&eacute;e.</p>
-      </div>
-      <div class="mob-why-card tilt-3d">
-        <div class="mob-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-        <h4>R&eacute;servation en ligne</h4>
-        <p>R&eacute;servez en quelques clics depuis notre site ou notre application.</p>
-      </div>
-      <div class="mob-why-card tilt-3d">
-        <div class="mob-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
-        <h4>Entreprises &amp; groupes</h4>
-        <p>Forfaits d&eacute;di&eacute;s pour vos &eacute;quipes, s&eacute;minaires et &eacute;v&eacute;nements.</p>
+
+      <div class="mob-diff-card rev">
+        <div class="mob-diff-num">03</div>
+        <div class="mob-diff-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+        </div>
+        <h4>Facturation B2B native</h4>
+        <p>Factures mensuelles consolidées, TVA détaillée, export comptable, notes de frais intégrées. Adapté aux cadres, RH et PDG.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CTA -->
-<section class="mob-cta sec">
-  <div class="ct mob-cta-inner rv">
-    <h2>Planifiez votre prochain trajet</h2>
-    <p>R&eacute;servez un chauffeur en quelques clics. Nous vous recontactons pour confirmer les d&eacute;tails de votre d&eacute;placement.</p>
-    <a href="index.html#booking" class="btn" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(8px)"><span>R&eacute;server maintenant</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+<!-- ===== PRESTIGE SIGNATURE (scrollytelling pinned stage) ===== -->
+<section class="mob-prestige" id="mobPrestige">
+  <div class="mob-prestige-stage" id="mobPrestigeStage">
+    <div class="ct">
+      <div class="mob-prestige-layout">
+        <div class="mob-prestige-text">
+          <span class="mob-prestige-badge">Signature Prestige</span>
+          <h2 class="mob-prestige-title">
+            <span class="word"><span class="word-inner">Pour</span></span>
+            <span class="word"><span class="word-inner">les</span></span>
+            <span class="word"><span class="word-inner ac">maisons</span></span>
+            <span class="word"><span class="word-inner ac">d'exception</span></span>,
+            <br>
+            <span class="word"><span class="word-inner">une</span></span>
+            <span class="word"><span class="word-inner">logistique</span></span>
+            <span class="word"><span class="word-inner">à</span></span>
+            <span class="word"><span class="word-inner">la</span></span>
+            <span class="word"><span class="word-inner">hauteur</span></span>.
+          </h2>
+          <p class="mob-prestige-lead">Quand une montre compliquée, un collier unique ou une pièce de haute couture doit être déplacée, il ne s'agit plus simplement de livrer. Il s'agit de préserver une valeur et de respecter une tradition.</p>
+
+          <ul class="mob-prestige-list">
+            <li class="mob-prestige-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <div><strong>Chauffeurs formés aux standards maison</strong>Protocoles d'accueil, tenue, langue, gestes précis.</div>
+            </li>
+            <li class="mob-prestige-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <div><strong>Véhicules sécurisés et climatisés</strong>Coffres renforcés, contrôle de température, géolocalisation chiffrée.</div>
+            </li>
+            <li class="mob-prestige-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <div><strong>Assurance haute valeur</strong>Couverture jusqu'à plusieurs millions de CHF, attestation fournie au départ.</div>
+            </li>
+            <li class="mob-prestige-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <div><strong>Confidentialité absolue</strong>NDA systématique, traçabilité interne, aucun sous-traitant.</div>
+            </li>
+          </ul>
+
+          <a href="#mobForm" class="mob-hero-btn-primary mob-prestige-cta">
+            <span>Parler à un account manager</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <div class="mob-prestige-visual">
+          <div class="mob-prestige-visual-inner">
+            <div class="mob-watch">
+              <div class="mob-watch-body"></div>
+              <div class="mob-watch-ticks" id="watchTicks"></div>
+              <div class="mob-watch-face"></div>
+              <div class="mob-watch-hand mob-watch-h"></div>
+              <div class="mob-watch-hand mob-watch-m"></div>
+              <div class="mob-watch-center"></div>
+            </div>
+          </div>
+          <div class="mob-prestige-sparkle" id="mobPrestigeSparkle"></div>
+        </div>
+      </div>
+    </div>
+    <div class="mob-prestige-progress">
+      <span>Scroll</span>
+      <div class="mob-prestige-progress-track"></div>
+    </div>
   </div>
 </section>
 
-<!-- Footer -->
-<footer class="footer">
+<!-- ===== HOW IT WORKS ===== -->
+<section class="mob-how">
+  <div class="ct">
+    <div class="mob-pillars-header rev">
+      <span class="mob-pillars-label">Comment ça marche</span>
+      <h2>De la demande au trajet, <span class="ac">quatre étapes</span>.</h2>
+      <p class="mob-pillars-desc">Tout se fait en ligne ou par téléphone. Un account manager reprend la main pour les demandes complexes.</p>
+    </div>
+
+    <div class="mob-how-steps" id="mobHowSteps">
+      <div class="mob-how-track"><div class="mob-how-track-fill" id="mobHowFill"></div></div>
+      <div class="mob-how-step"><div class="mob-how-num">1</div><h4>Vous demandez</h4><p>Formulaire en ligne, email ou téléphone. Quelques informations suffisent.</p></div>
+      <div class="mob-how-step"><div class="mob-how-num">2</div><h4>On vous rappelle</h4><p>Sous une heure (heures ouvrées), avec un devis précis et des options.</p></div>
+      <div class="mob-how-step"><div class="mob-how-num">3</div><h4>On exécute</h4><p>Chauffeur assigné, véhicule préparé, suivi temps réel partagé avec vous.</p></div>
+      <div class="mob-how-step"><div class="mob-how-num">4</div><h4>On facture</h4><p>Facture au nom de l'entreprise, TVA détaillée, export comptable fourni.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="mob-testi">
+  <div class="ct">
+    <div class="mob-pillars-header rev">
+      <span class="mob-pillars-label">Ils nous font confiance</span>
+      <h2>Hôtels, maisons horlogères, <span class="ac">entreprises</span>.</h2>
+    </div>
+
+    <div class="mob-testi-grid">
+      <div class="mob-testi-card rev">
+        <div class="mob-testi-stars">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="mob-testi-text">Chaskis a pris en charge les transferts de nos clients VIP pendant la semaine horlogère. Aucun retard, aucun faux pas. Nous les avons intégrés à notre programme de concierge.</p>
+        <div class="mob-testi-author">
+          <div class="mob-testi-avatar">HG</div>
+          <div class="mob-testi-info">
+            <strong>Hélène G.</strong>
+            <span>Concierge, hôtel 5 étoiles à Genève</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mob-testi-card rev">
+        <div class="mob-testi-stars">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="mob-testi-text">Pour nos transferts de pièces entre ateliers et salons, nous avions besoin d'un partenaire qui comprenne nos contraintes. Protocoles respectés au millimètre, documentation parfaite.</p>
+        <div class="mob-testi-author">
+          <div class="mob-testi-avatar">TM</div>
+          <div class="mob-testi-info">
+            <strong>Thomas M.</strong>
+            <span>Responsable sécurité, maison horlogère</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mob-testi-card rev">
+        <div class="mob-testi-stars">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="mob-testi-text">Nous avons 40 cadres en déplacement chaque semaine en Suisse romande. Avec Chaskis, une seule facture mensuelle, note de frais automatique. Nos équipes finance adorent.</p>
+        <div class="mob-testi-author">
+          <div class="mob-testi-avatar">SP</div>
+          <div class="mob-testi-info">
+            <strong>Sarah P.</strong>
+            <span>Office Manager, cabinet d'avocats</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== REQUEST FORM ===== -->
+<section class="mob-form-sec" id="mobForm">
+  <div class="ct">
+    <div class="mob-form-layout">
+      <div class="mob-form-left rev">
+        <span class="mob-prestige-badge">Prendre contact</span>
+        <h2>Demander un <span class="ac">chauffeur</span>.</h2>
+        <p>Remplissez le formulaire. Un membre de notre équipe vous recontacte sous une heure avec un devis et les options adaptées à votre besoin.</p>
+
+        <div class="mob-form-contact">
+          <a href="tel:+41227000127">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>+41 22 700 01 27</span>
+          </a>
+          <a href="mailto:mobilite@chaskis.ch">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>
+            <span>mobilite@chaskis.ch</span>
+          </a>
+        </div>
+      </div>
+
+      <form class="mob-form-card rev" id="mobRequestForm" onsubmit="submitMobRequest(event)">
+        <div class="mob-form-group">
+          <label>Type de besoin</label>
+          <div class="mob-form-types">
+            <div class="mob-form-type active" data-type="personnes">Transport de personnes</div>
+            <div class="mob-form-type" data-type="prestige">Transport d'objets de valeur</div>
+            <div class="mob-form-type" data-type="evenement">Événement</div>
+            <div class="mob-form-type" data-type="autre">Autre</div>
+          </div>
+          <input type="hidden" name="type" id="mobRequestType" value="personnes">
+        </div>
+
+        <div class="mob-form-row">
+          <div class="mob-form-group">
+            <label for="mobName">Nom complet</label>
+            <input type="text" id="mobName" name="name" placeholder="Jean Dupont" required>
+          </div>
+          <div class="mob-form-group">
+            <label for="mobCompany">Entreprise</label>
+            <input type="text" id="mobCompany" name="company" placeholder="Votre société (optionnel)">
+          </div>
+        </div>
+
+        <div class="mob-form-row">
+          <div class="mob-form-group">
+            <label for="mobEmail">Email</label>
+            <input type="email" id="mobEmail" name="email" placeholder="jean@exemple.ch" required>
+          </div>
+          <div class="mob-form-group">
+            <label for="mobPhone">Téléphone</label>
+            <input type="tel" id="mobPhone" name="phone" placeholder="+41 78 123 45 67" required>
+          </div>
+        </div>
+
+        <div class="mob-form-row">
+          <div class="mob-form-group">
+            <label for="mobDate">Date souhaitée</label>
+            <input type="date" id="mobDate" name="date">
+          </div>
+          <div class="mob-form-group">
+            <label for="mobTime">Heure</label>
+            <input type="time" id="mobTime" name="time">
+          </div>
+        </div>
+
+        <div class="mob-form-group">
+          <label for="mobDetails">Détails du besoin</label>
+          <textarea id="mobDetails" name="details" placeholder="Départ, arrivée, nombre de passagers ou nature des objets, besoins particuliers..."></textarea>
+        </div>
+
+        <button type="submit" class="mob-form-submit">
+          <span>Envoyer ma demande</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+
+        <p class="mob-form-promise"><strong>Réponse sous 1 heure</strong> en jours ouvrés. Confidentialité garantie.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="mob-faq">
+  <div class="ct">
+    <div class="mob-pillars-header rev">
+      <span class="mob-pillars-label">Questions fréquentes</span>
+      <h2>Tout ce que vous voulez savoir.</h2>
+    </div>
+
+    <div class="mob-faq-list">
+      <div class="mob-faq-item rev">
+        <div class="mob-faq-q" role="button" tabindex="0">
+          <h3>Quel délai minimum pour réserver ?</h3>
+          <span class="mob-faq-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="mob-faq-a"><p>Nous traitons les demandes dès 2 heures d'anticipation. Pour les trajets prestige (horlogerie, joaillerie) ou événements, comptez 24 à 48 heures pour que tout soit calibré au millimètre.</p></div>
+      </div>
+
+      <div class="mob-faq-item rev">
+        <div class="mob-faq-q" role="button" tabindex="0">
+          <h3>Comment fonctionne la facturation entreprise ?</h3>
+          <span class="mob-faq-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="mob-faq-a"><p>Factures mensuelles consolidées au nom de l'entreprise, avec détail par passager et par trajet. TVA séparée, export CSV et intégration directe à vos outils comptables (SAP, Sage, Bexio).</p></div>
+      </div>
+
+      <div class="mob-faq-item rev">
+        <div class="mob-faq-q" role="button" tabindex="0">
+          <h3>Vos véhicules sont-ils adaptés à la mobilité réduite ?</h3>
+          <span class="mob-faq-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="mob-faq-a"><p>Oui. Nous disposons de véhicules aménagés pour les personnes à mobilité réduite, avec chauffeurs formés à l'accompagnement. Précisez le besoin à la réservation, on prépare tout en amont.</p></div>
+      </div>
+
+      <div class="mob-faq-item rev">
+        <div class="mob-faq-q" role="button" tabindex="0">
+          <h3>Quelle est votre politique d'annulation ?</h3>
+          <span class="mob-faq-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="mob-faq-a"><p>Annulation gratuite jusqu'à 4 heures avant le trajet pour les transports de personnes, 24 heures avant pour les missions prestige. Au-delà, une part du forfait reste due pour couvrir la préparation du chauffeur.</p></div>
+      </div>
+
+      <div class="mob-faq-item rev">
+        <div class="mob-faq-q" role="button" tabindex="0">
+          <h3>Êtes-vous assurés pour les objets de grande valeur ?</h3>
+          <span class="mob-faq-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="mob-faq-a"><p>Oui. Nos missions prestige sont couvertes par une assurance spécifique jusqu'à plusieurs millions de CHF. Attestation fournie systématiquement au départ, avec numéro de police et conditions.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer" data-nav-dark>
   <div class="ct">
     <div class="ft">
-      <div class="fb"><a href="index.html" class="nav-logo"><svg viewBox="0 0 36 36" fill="none"><defs><linearGradient id="lg3" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#3AAFA9"/><stop offset="1" stop-color="#2A8A85"/></linearGradient></defs><rect width="36" height="36" rx="10" fill="url(#lg3)"/><path d="M22.5 11.5C20.8 10.2 18.6 9.5 16.5 9.5C11.8 9.5 8 13.3 8 18C8 22.7 11.8 26.5 16.5 26.5C18.6 26.5 20.8 25.8 22.5 24.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/></svg>CHASKIS</a><p>Gestion de livraison en Suisse romande.</p></div>
-      <div class="fc"><h4>Services</h4><a href="commander.html">Commander</a><a href="mobilite.html">Mobilit&eacute;</a><a href="index.html#services">Nos services</a><a href="index.html#booking">Planifier un appel gratuit</a></div>
-      <div class="fc"><h4>Entreprise</h4><a href="postuler.html">Postuler</a><a href="index.html#faq">FAQ</a><a href="mailto:contact@chaskis.ch">Contact</a></div>
-      <div class="fc"><h4>L&eacute;gal</h4><a href="#">Mentions l&eacute;gales</a><a href="#">Confidentialit&eacute;</a></div>
+      <div class="fb">
+        <a href="index.html" class="nav-logo"><img src="Chaskis-logo-ondark.svg" alt="Chaskis" height="20"></a>
+        <p>Infrastructure logistique pour les entreprises de Suisse romande.</p>
+        <div class="fb-soc">
+          <a href="https://www.instagram.com/chaskisdelivery/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a>
+          <a href="https://www.linkedin.com/company/chaskis-sa/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          <a href="https://www.tiktok.com/@chaskisdelivery_" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg></a>
+        </div>
+      </div>
+      <div class="fc"><h4>Services</h4><a href="commander.html">Commander</a><a href="mobilite.html">Mobilité</a><a href="index.html#services">Nos secteurs</a><a href="index.html#booking">Planifier un appel</a></div>
+      <div class="fc"><h4>Entreprise</h4><a href="postuler.html">Postuler</a><a href="index.html#faq">FAQ</a><a href="mailto:contact@chaskis.ch">contact@chaskis.ch</a></div>
+      <div class="fc"><h4>Légal</h4><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">CGV</a></div>
     </div>
-    <div class="f-btm"><span>&copy; 2026 Chaskis SA · Lausanne</span><span>Fait en Suisse romande</span></div>
+    <div class="f-btm"><span>&copy; 2026 Chaskis SA · Genève</span><span>Fait en Suisse romande</span></div>
   </div>
 </footer>
 
 <script src="shared.js"></script>
 <script src="auth.js"></script>
-<script>
-function movePill(lang) {
-  const sw = document.getElementById('langSw');
-  const pill = document.getElementById('langPill');
-  const btn = sw && sw.querySelector(`button[data-lang="${lang}"]`);
-  if (!pill || !btn) return;
-  pill.style.width = btn.offsetWidth + 'px';
-  pill.style.transform = `translateX(${btn.offsetLeft - 3}px)`;
-  sw.querySelectorAll('button').forEach(b => {
-    b.classList.toggle('active', b.dataset.lang === lang);
-    b.setAttribute('aria-checked', b.dataset.lang === lang ? 'true' : 'false');
-  });
-}
-window.addEventListener('DOMContentLoaded', () => movePill('fr'));
 
-(function(){
-  const nav = document.getElementById('nav');
-  const darkSections = document.querySelectorAll('.mob-hero, .mob-cta');
-  if (!nav) return;
-  function updateNav() {
-    if (scrollY <= 40) { nav.classList.remove('over-dark'); return; }
-    const navMid = nav.getBoundingClientRect().bottom;
-    const overDark = [...darkSections].some(s => {
-      const r = s.getBoundingClientRect();
-      return r.top < navMid && r.bottom > navMid;
+<script>
+// ===== FORM TYPE TOGGLE =====
+document.querySelectorAll('.mob-form-type').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.mob-form-type').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('mobRequestType').value = t.dataset.type;
+  });
+});
+
+function submitMobRequest(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.innerHTML = '<span>Demande envoyée</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  btn.style.background = '#22C55E';
+  setTimeout(() => {
+    e.target.reset();
+    btn.innerHTML = '<span>Envoyer ma demande</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+    btn.style.background = '';
+  }, 2400);
+}
+
+// ===== FAQ ACCORDION =====
+document.querySelectorAll('.mob-faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const answer = item.querySelector('.mob-faq-a');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.mob-faq-item.open').forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.mob-faq-a').style.maxHeight = '0';
     });
-    nav.classList.toggle('over-dark', overDark);
+    if (!wasOpen) {
+      item.classList.add('open');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  });
+  q.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); q.click(); }
+  });
+});
+
+// ===== WATCH TICKS =====
+(function() {
+  const ticks = document.getElementById('watchTicks');
+  if (!ticks) return;
+  for (let i = 0; i < 12; i++) {
+    const t = document.createElement('div');
+    t.className = 'mob-watch-tick';
+    t.style.transform = `rotate(${i * 30}deg)`;
+    if (i % 3 === 0) { t.style.height = '12px'; t.style.width = '3px'; t.style.background = 'rgba(245,184,0,.7)'; }
+    ticks.appendChild(t);
   }
-  window.addEventListener('scroll', updateNav, { passive: true });
 })();
+
+// ===== HERO CANVAS : light streaks =====
+(function() {
+  const canvas = document.getElementById('mobHeroCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, streaks = [];
+
+  function resize() {
+    w = canvas.width = canvas.offsetWidth * devicePixelRatio;
+    h = canvas.height = canvas.offsetHeight * devicePixelRatio;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function spawn() {
+    streaks.push({
+      x: Math.random() * w,
+      y: h + 40,
+      speed: (1.5 + Math.random() * 2) * devicePixelRatio,
+      length: (80 + Math.random() * 220) * devicePixelRatio,
+      width: (1 + Math.random() * 2) * devicePixelRatio,
+      hue: 42 + Math.random() * 12,
+      alpha: .3 + Math.random() * .5,
+      angle: -Math.PI / 2 + (Math.random() - .5) * .3
+    });
+  }
+
+  function tick() {
+    ctx.clearRect(0, 0, w, h);
+    if (Math.random() < .12) spawn();
+    streaks = streaks.filter(s => s.y > -s.length);
+    streaks.forEach(s => {
+      s.x += Math.cos(s.angle) * s.speed;
+      s.y += Math.sin(s.angle) * s.speed;
+      const grad = ctx.createLinearGradient(s.x, s.y, s.x - Math.cos(s.angle) * s.length, s.y - Math.sin(s.angle) * s.length);
+      grad.addColorStop(0, `hsla(${s.hue}, 95%, 60%, ${s.alpha})`);
+      grad.addColorStop(1, `hsla(${s.hue}, 95%, 60%, 0)`);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = s.width;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(s.x, s.y);
+      ctx.lineTo(s.x - Math.cos(s.angle) * s.length, s.y - Math.sin(s.angle) * s.length);
+      ctx.stroke();
+    });
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+// ===== REVEAL ON SCROLL (progressive enhancement) =====
+// Content stays fully visible by default. Only if IntersectionObserver is available
+// do we opt-in to the reveal animation by adding js-reveal-ready on body.
+(function() {
+  if (!('IntersectionObserver' in window)) return;
+  // Check if we're in a top-level document (not throttled iframe) by testing scroll reactivity
+  let ioFired = false;
+  const io = new IntersectionObserver((entries) => {
+    ioFired = true;
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
+  // Opt-in : only hide elements if we're confident IO will fire
+  document.body.classList.add('js-reveal-ready');
+  document.querySelectorAll('.rev').forEach(el => io.observe(el));
+  // Safety net : after 2s, if IO never fired at all, reveal everything
+  setTimeout(() => {
+    if (!ioFired) {
+      document.body.classList.remove('js-reveal-ready');
+    }
+  }, 2000);
+  // Also reveal everything after 4s unconditionally as ultimate fallback
+  setTimeout(() => {
+    document.querySelectorAll('.rev:not(.in)').forEach(el => el.classList.add('in'));
+  }, 4000);
+})();
+
+// ===== COUNTER ANIMATION (pure JS, no GSAP dep) =====
+(function() {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.mob-proof-stat strong').forEach(el => {
+      const target = parseInt(el.dataset.count, 10);
+      const suffix = el.dataset.suffix || '';
+      el.textContent = target.toLocaleString('fr-CH') + suffix;
+    });
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.count, 10);
+      const suffix = el.dataset.suffix || '';
+      const dur = 2000;
+      const start = performance.now();
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(target * eased).toLocaleString('fr-CH') + suffix;
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      io.unobserve(el);
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.mob-proof-stat strong').forEach(el => io.observe(el));
+})();
+
+// ===== GSAP + LENIS : scroll-driven transitions only, no hidden states =====
+// IMPORTANT: elements MUST stay visible by default. Only animate enhancements on top.
+window.addEventListener('load', () => {
+  if (!window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Smooth scroll via Lenis
+  if (window.Lenis) {
+    const lenis = new Lenis({ duration: 1.15, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    lenis.on('scroll', ScrollTrigger.update);
+  }
+
+  // ===== HERO : cinematic exit on scroll (scale + fade + translate up) =====
+  gsap.to('.mob-hero-content', {
+    scale: .9, opacity: 0, y: -100, ease: 'none',
+    scrollTrigger: { trigger: '.mob-hero', start: 'top top', end: 'bottom 20%', scrub: .8 }
+  });
+  gsap.to('.mob-hero-canvas', {
+    opacity: 0, ease: 'none',
+    scrollTrigger: { trigger: '.mob-hero', start: 'top top', end: 'bottom top', scrub: .6 }
+  });
+  gsap.to('.mob-hero-overlay', {
+    opacity: .3, ease: 'none',
+    scrollTrigger: { trigger: '.mob-hero', start: 'top top', end: 'bottom top', scrub: 1 }
+  });
+
+  // ===== PILLARS : parallax background images (scrub continu) =====
+  gsap.utils.toArray('.mob-pillar-bg').forEach(bg => {
+    gsap.to(bg, {
+      y: -80, ease: 'none',
+      scrollTrigger: { trigger: bg, start: 'top bottom', end: 'bottom top', scrub: 1 }
+    });
+  });
+  // Slight tilt of each pillar as it enters/exits
+  gsap.utils.toArray('.mob-pillar').forEach((pillar, i) => {
+    gsap.fromTo(pillar,
+      { y: 60 },
+      { y: -60, ease: 'none',
+        scrollTrigger: { trigger: pillar, start: 'top bottom', end: 'bottom top', scrub: 1.4 }
+      }
+    );
+  });
+
+  // ===== DIFF CARDS : subtle 3D tilt on scroll (card shifts z/rotateX) =====
+  gsap.utils.toArray('.mob-diff-card').forEach((card, i) => {
+    gsap.fromTo(card,
+      { rotationX: 8, y: 40 },
+      { rotationX: 0, y: 0, ease: 'none',
+        scrollTrigger: { trigger: card, start: 'top 95%', end: 'top 55%', scrub: 1 }
+      }
+    );
+  });
+
+  // ===== PRESTIGE : scrollytelling pinned scene =====
+  (function() {
+    const section = document.querySelector('.mob-prestige');
+    const stage = document.getElementById('mobPrestigeStage');
+    if (!section || !stage) return;
+
+    // Generate sparkle dots (always, they're purely decorative)
+    const sparkle = document.getElementById('mobPrestigeSparkle');
+    if (sparkle) {
+      for (let i = 0; i < 14; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'mob-prestige-sparkle-dot';
+        dot.style.top = (20 + Math.random() * 60) + '%';
+        dot.style.left = (15 + Math.random() * 70) + '%';
+        sparkle.appendChild(dot);
+      }
+    }
+
+    // Probe : is requestAnimationFrame actually running?
+    let rafFired = false;
+    requestAnimationFrame(() => { rafFired = true; });
+    setTimeout(() => {
+      if (!rafFired) {
+        // RAF is throttled (likely iframe preview). Do not build scene.
+        // Leave content visible so user sees SOMETHING rather than a blank section.
+        return;
+      }
+      // RAF is alive, safe to build the pinned scrollytelling scene.
+      buildPrestigeScene();
+    }, 80);
+
+    function buildPrestigeScene() {
+      // Opt-in : hide animatable elements at start
+      section.classList.add('scene-active');
+
+    const progressFill = section.querySelector('.mob-prestige-progress-track::after');
+    const progressTrack = section.querySelector('.mob-prestige-progress-track');
+
+    // Master timeline (pinned)
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: '+=2400',
+        pin: stage,
+        pinSpacing: true,
+        scrub: 1,
+        anticipatePin: 1,
+        onUpdate: (self) => {
+          if (progressTrack) {
+            progressTrack.style.setProperty('--p', self.progress);
+            // use a pseudo via inline scaleX hack
+            progressTrack.style.background = `linear-gradient(to right, var(--my) ${self.progress * 100}%, rgba(255,255,255,.08) ${self.progress * 100}%)`;
+          }
+        }
+      }
+    });
+
+    // Phase 0-0.15 : sparkle dots appear, watch appears as tiny glowing point
+    tl.fromTo('.mob-prestige-sparkle-dot',
+      { scale: 0, opacity: 0 },
+      { scale: 1, opacity: 1, stagger: .02, duration: .3, ease: 'power2.out' },
+      0
+    );
+    tl.to('.mob-watch', { scale: .3, opacity: 1, duration: .4, ease: 'power2.out' }, 0);
+
+    // Phase 0.15-0.35 : badge + title words slide in one by one
+    tl.to('.mob-prestige-badge', { opacity: 1, y: 0, duration: .3, ease: 'power2.out' }, .15);
+    tl.to('.mob-prestige-title .word-inner', {
+      y: '0%', duration: .5, stagger: .04, ease: 'expo.out'
+    }, .18);
+
+    // Phase 0.35-0.5 : watch grows significantly + lead text appears
+    tl.to('.mob-watch', { scale: .7, duration: .3, ease: 'power2.out' }, .35);
+    tl.to('.mob-prestige-lead', { opacity: 1, y: 0, duration: .3, ease: 'power2.out' }, .38);
+
+    // Phase 0.5-0.75 : 4 bullet points cascade in from the left
+    tl.to('.mob-prestige-item', {
+      opacity: 1, x: 0, duration: .3, stagger: .06, ease: 'power3.out'
+    }, .5);
+
+    // Phase 0.75-0.9 : watch reaches full scale + sparkles pulse
+    tl.to('.mob-watch', { scale: 1, duration: .4, ease: 'power2.out' }, .72);
+    tl.to('.mob-prestige-sparkle-dot', {
+      scale: 1.6, opacity: .3, duration: .3, stagger: { each: .02, from: 'random' }, ease: 'power2.out'
+    }, .78);
+
+    // Phase 0.9-1 : CTA pops in with bounce
+    tl.to('.mob-prestige-cta', {
+      opacity: 1, scale: 1, duration: .3, ease: 'back.out(1.8)'
+    }, .88);
+    }  // end buildPrestigeScene
+  })();
+
+  // ===== HOW IT WORKS : scrub-driven progress line + active steps =====
+  const howFill = document.getElementById('mobHowFill');
+  const howSteps = gsap.utils.toArray('.mob-how-step');
+  if (howFill && howSteps.length) {
+    ScrollTrigger.create({
+      trigger: '.mob-how-steps',
+      start: 'top 80%',
+      end: 'bottom 55%',
+      scrub: .8,
+      onUpdate: (self) => {
+        const p = self.progress;
+        howFill.style.transform = `scaleX(${p})`;
+        const activeCount = Math.ceil(p * howSteps.length);
+        howSteps.forEach((step, i) => {
+          step.classList.toggle('is-active', i < activeCount || (i === 0 && p > 0.02));
+        });
+      }
+    });
+  }
+
+  // ===== SECTION HEADERS : subtle translate-y on scroll (breathing effect) =====
+  gsap.utils.toArray('.mob-pillars-header').forEach(header => {
+    gsap.fromTo(header,
+      { y: 40 },
+      { y: -40, ease: 'none',
+        scrollTrigger: { trigger: header, start: 'top bottom', end: 'bottom top', scrub: 1.2 }
+      }
+    );
+  });
+
+  // ===== MOUSE PARALLAX on hero (desktop only) =====
+  const heroEl = document.getElementById('mobHero');
+  if (heroEl && window.matchMedia('(pointer: fine)').matches) {
+    heroEl.addEventListener('mousemove', e => {
+      const rect = heroEl.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width - .5) * 2;
+      const y = ((e.clientY - rect.top) / rect.height - .5) * 2;
+      gsap.to('.mob-hero h1', { x: x * 10, y: y * 6, duration: 1.2, ease: 'power2.out' });
+      gsap.to('.mob-hero-sub', { x: x * 5, y: y * 3, duration: 1.2, ease: 'power2.out' });
+    });
+  }
+});
 </script>
+
 </body>
 </html>

@@ -3,9 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Commander une livraison | Chaskis</title>
+
+<!-- ===== SEO ===== -->
+<title>Commander une livraison en Suisse romande | Chaskis</title>
+<meta name="description" content="Commandez votre livraison en Suisse romande en quelques clics. Tarif fixe, coursiers salariés, suivi en temps réel. Genève, Nyon, Lausanne, Riviera.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://www.chaskis.ch/commander">
+<link rel="alternate" hreflang="fr-CH" href="https://www.chaskis.ch/commander">
+<link rel="alternate" hreflang="x-default" href="https://www.chaskis.ch/commander">
+
+<!-- ===== Open Graph ===== -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chaskis">
+<meta property="og:title" content="Commander une livraison | Chaskis">
+<meta property="og:description" content="Commandez votre livraison en Suisse romande en quelques clics. Tarif fixe, coursiers salariés, suivi en temps réel.">
+<meta property="og:url" content="https://www.chaskis.ch/commander">
+<meta property="og:image" content="https://www.chaskis.ch/hero-courier.png">
+<meta property="og:locale" content="fr_CH">
+
+<!-- ===== Twitter ===== -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Commander une livraison | Chaskis">
+<meta name="twitter:description" content="Commandez votre livraison en Suisse romande en quelques clics. Tarif fixe, coursiers salariés, suivi en temps réel.">
+<meta name="twitter:image" content="https://www.chaskis.ch/hero-courier.png">
+
+<!-- ===== PWA & Assets ===== -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#3AAFA9">
+<link rel="icon" href="icon-192.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="styles.css">
 <style>
 /* ===== SCREEN SYSTEM ===== */
@@ -263,9 +289,18 @@
 .confirm-card h2{font-size:1.5rem;font-weight:800;letter-spacing:-.04em;margin-bottom:8px}
 .confirm-card p{font-size:.86rem;color:var(--ink-light);line-height:1.65;margin-bottom:20px}
 .confirm-id{display:inline-block;background:var(--teal-bg);color:var(--teal-dark);font-weight:700;padding:10px 24px;border-radius:var(--pill);font-size:.88rem;margin-bottom:24px;letter-spacing:-.01em}
-.confirm-track{display:flex;align-items:center;justify-content:center;gap:6px;font-size:.78rem;color:var(--teal-dark);background:var(--teal-bg);border-radius:var(--r);padding:10px 16px;margin-bottom:24px;cursor:pointer;transition:all .3s}
+.confirm-track{display:flex;align-items:center;justify-content:center;gap:6px;font-size:.78rem;color:var(--teal-dark);background:var(--teal-bg);border-radius:var(--r);padding:10px 16px;margin-bottom:16px;cursor:pointer;transition:all .3s}
 .confirm-track:hover{background:var(--teal);color:#fff}
 .confirm-track svg{width:14px;height:14px}
+.confirm-install{display:flex;align-items:center;gap:12px;text-align:left;border:1px solid rgba(107,79,160,.18);background:linear-gradient(135deg,rgba(107,79,160,.05),rgba(107,79,160,.02));border-radius:var(--r);padding:14px;margin-bottom:24px}
+.confirm-install-ic{width:38px;height:38px;border-radius:10px;background:rgba(107,79,160,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.confirm-install-ic svg{width:18px;height:18px;color:var(--accent)}
+.confirm-install-text{flex:1;display:flex;flex-direction:column;gap:2px;line-height:1.4}
+.confirm-install-text strong{font-size:.82rem;font-weight:700;color:var(--ink)}
+.confirm-install-text span{font-size:.72rem;color:var(--ink-light);line-height:1.5}
+.confirm-install-btn{background:var(--accent);color:#fff;border:none;padding:8px 14px;border-radius:var(--r);font-family:inherit;font-size:.74rem;font-weight:700;cursor:pointer;transition:background .2s;white-space:nowrap;flex-shrink:0}
+.confirm-install-btn:hover{background:var(--accent-dark)}
+@media(display-mode:standalone){.confirm-install{display:none}}
 .confirm-actions{display:flex;gap:10px;justify-content:center}
 
 /* ===== APP BANNER ===== */
@@ -293,91 +328,49 @@
 }
 </style>
 </head>
-<body>
+<body class="page-commander">
 
 <div class="mob-m" id="mm">
   <a href="index.html" onclick="cm()">Accueil</a>
-  <a href="commander.html" onclick="cm()">Commander</a>
   <a href="mobilite.html" onclick="cm()">Mobilit&eacute;</a>
   <a href="postuler.html" onclick="cm()">Postuler</a>
+  <a href="commander.html" onclick="cm()">Commander une course</a>
   <a href="index.html#booking" onclick="cm()">Planifier un appel</a>
   <a href="index.html#faq" onclick="cm()">FAQ</a>
+  <div class="mob-lang-opts">
+    <button class="mob-lang-btn active" data-lang="fr" onclick="setLang('fr');cm()"><span class="mob-lang-flag"><img src="flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
+    <button class="mob-lang-btn" data-lang="en" onclick="setLang('en');cm()"><span class="mob-lang-flag"><img src="flag-gb.svg" alt="" width="18" height="13"></span> English</button>
+  </div>
 </div>
 
 <nav class="nav scrolled" id="nav">
   <div class="ct nav-in">
     <a href="index.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
     <div class="nav-mid" style="margin-left:auto">
-      <a href="commander.html">Commander</a>
       <a href="mobilite.html">Mobilit&eacute;</a>
-      <a href="postuler.html">Postuler</a>
+      <a href="postuler.html" data-i18n="nav.join">Postuler</a>
     </div>
-    <div class="lang-sw" id="langSw" role="radiogroup" aria-label="Langue / Language">
-      <span class="lang-pill" id="langPill" aria-hidden="true"></span>
-      <button class="active" role="radio" aria-checked="true" data-lang="fr" onclick="movePill('fr')" aria-label="Français">FR</button>
-      <button role="radio" aria-checked="false" data-lang="en" onclick="movePill('en')" aria-label="English">EN</button>
+    <a href="commander.html" class="btn btn-o nav-cta-btn"><span data-i18n="nav.order">Commander une course</span></a>
+    <div class="lang-drop" id="langDrop">
+      <button class="lang-drop-trigger" id="langTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Changer de langue">
+        <span class="lang-drop-flag" id="langFlag"><img src="flag-fr.svg" alt="Français" width="18" height="13"></span>
+        <svg class="lang-drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="lang-drop-menu" id="langMenu" role="listbox" aria-label="Langue">
+        <button class="lang-drop-item active" role="option" data-lang="fr" data-flag="fr" data-code="FR" aria-selected="true">
+          <span class="lang-drop-item-flag"><img src="flag-fr.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">Français</span>
+        </button>
+        <button class="lang-drop-item" role="option" data-lang="en" data-flag="gb" data-code="EN" aria-selected="false">
+          <span class="lang-drop-item-flag"><img src="flag-gb.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">English</span>
+        </button>
     </div>
     <button class="mob-t" id="mt" aria-label="Menu"><span></span></button>
   </div>
 </nav>
 
 <!-- ================================ -->
-<!-- SCREEN 0 : SEGMENTATION          -->
+<!-- SCREEN 0 : SEGMENTATION (deprecated, kept for back-navigation fallback) -->
 <!-- ================================ -->
-<div class="screen active" id="screenSeg">
-  <div class="seg-wrap">
-    <div class="ct">
-      <div class="seg-head">
-        <h1>Pour qui livrons-nous <em>aujourd'hui</em>&nbsp;?</h1>
-        <p>Choisissez votre profil pour accéder au bon formulaire et aux bons tarifs.</p>
-      </div>
-      <div class="seg-grid">
-
-        <!-- Particulier -->
-        <div class="seg-card" onclick="selectSeg('particulier')">
-          <div class="seg-promo">-10% sur votre 1<sup>re</sup> course</div>
-          <div class="seg-ic t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-          <div class="seg-type">Particulier &amp; petits pros</div>
-          <h2>Express</h2>
-          <div class="seg-price"><sup>CHF</sup> 16<small>+</small></div>
-          <p class="seg-price-note">par course · tarif unique · remise auto à la première commande</p>
-          <ul class="seg-feats">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Commande ponctuelle, sans compte</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Paiement sécurisé en ligne (Stripe)</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Suivi SMS en temps réel</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Disponible min. 3h à l'avance</li>
-          </ul>
-          <button class="seg-btn">
-            <span>Continuer en Express</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-        </div>
-
-        <!-- Entreprise -->
-        <div class="seg-card pro" onclick="selectSeg('entreprise')">
-          <div class="seg-pro-badge">Pro</div>
-          <div class="seg-ic p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
-          <div class="seg-type">Entreprise &amp; partenaire</div>
-          <h2>Flex &amp; Dédié</h2>
-          <div class="seg-price"><sup>CHF</sup> 8<small>–12</small></div>
-          <p class="seg-price-note">par course · tarifs dégressifs · contrat mensuel</p>
-          <ul class="seg-feats">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Tableau de bord & historique</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Import CSV &amp; intégration API</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Auto-dispatch &amp; optimisation tournées</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Proof of delivery (photo &amp; signature)</li>
-          </ul>
-          <button class="seg-btn">
-            <span>Accéder à l'espace Pro</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-        </div>
-
-      </div>
-      <p class="seg-footnote">Besoin d'un devis sur mesure ? <a href="index.html#booking" style="color:var(--teal);font-weight:700">Réservez un appel découverte</a></p>
-    </div>
-  </div>
-</div>
 
 <!-- ================================ -->
 <!-- SCREEN 1 : B2B GATE              -->
@@ -413,16 +406,16 @@
             </div>
           </div>
         </div>
-        <button class="gate-back" onclick="showScreen('screenSeg')">← Retour au choix du profil</button>
+        <button class="gate-back" onclick="showScreen('screenForm')">← Retour à la commande Express</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ================================ -->
-<!-- SCREEN 2 : FORMULAIRE            -->
+<!-- SCREEN 2 : FORMULAIRE (entrée par défaut) -->
 <!-- ================================ -->
-<div class="screen" id="screenForm">
+<div class="screen active" id="screenForm">
   <div class="form-wrap">
     <div class="ct">
       <div class="form-hd">
@@ -539,7 +532,7 @@
               </div>
 
               <div class="onav">
-                <button class="btn btn-back-form" onclick="showScreen('screenSeg')">← Retour</button>
+                <a href="index.html" class="btn btn-back-form">← Retour à l'accueil</a>
                 <button class="btn btn-p" onclick="goStep(2)"><span>Suivant : Colis &amp; horaire</span><svg class="arrow-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
               </div>
 
@@ -757,11 +750,19 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
     <h2>Commande confirmée !</h2>
-    <p>Votre livreur a été notifié. Vous recevrez un SMS dès qu'il sera en route vers le point de prise en charge.</p>
+    <p>Votre livreur a été notifié. Vous recevrez un email et un SMS dès qu'il sera en route vers le point de prise en charge.</p>
     <div class="confirm-id" id="confirmOrderId">CK-44128</div>
     <div class="confirm-track" onclick="alert('En production, ce lien ouvre votre page de suivi en temps réel.')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
       Voir le lien de suivi en temps réel
+    </div>
+    <div class="confirm-install" id="confirmInstall">
+      <div class="confirm-install-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+      <div class="confirm-install-text">
+        <strong>Suivez votre livraison en temps réel</strong>
+        <span>Installez l'app Chaskis pour un suivi live sans rafraîchir, et vos prochaines commandes en un clic.</span>
+      </div>
+      <button class="confirm-install-btn" onclick="triggerAppInstall()">Installer</button>
     </div>
     <div class="confirm-actions">
       <a href="commander.html" class="btn btn-o btn-sm"><span>Nouvelle commande</span></a>
@@ -1034,28 +1035,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Ne pas afficher si déjà en mode standalone (PWA installée)
-if (!window.matchMedia('(display-mode: standalone)').matches) {
-  document.addEventListener('DOMContentLoaded', () => {
-    const b = document.createElement('div');
-    b.className = 'app-banner';
-    b.id = 'appBanner';
-    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    b.innerHTML = `
-      <button class="app-banner-close" onclick="document.getElementById('appBanner').remove()">&times;</button>
-      <div class="app-banner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v13M8 11l4 4 4-4"/><path d="M20 17v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2"/></svg></div>
-      <div class="app-banner-text"><strong>Installer l'app Chaskis</strong><span>Accès direct, suivi en temps réel</span></div>
-      <button class="app-banner-btn" id="pwa-install-btn" onclick="triggerAppInstall()">Installer</button>
-    `;
-    document.body.appendChild(b);
-
-    // Si le prompt est déjà prêt (capturé par shared.js)
-    if (_pwaPrompt) {
-      document.getElementById('pwa-install-btn').dataset.ready = 'true';
-    }
-  });
-}
-
+// PWA install proposé uniquement depuis l'overlay de confirmation de commande
 function triggerAppInstall() {
   // Cas 1 : prompt natif disponible → install direct
   if (_pwaPrompt) {

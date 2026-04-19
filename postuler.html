@@ -3,15 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Postuler : Devenir coursier ou chauffeur chez Chaskis</title>
-<meta name="description" content="Rejoignez Chaskis en Suisse romande. CDI, horaires flexibles, matériel fourni, assurance complète. Postulez comme coursier à vélo ou chauffeur via notre app.">
+
+<!-- ===== SEO ===== -->
+<title>Devenir coursier ou chauffeur en Suisse romande | Chaskis recrute</title>
+<meta name="description" content="Rejoignez Chaskis en Suisse romande : CDI, horaires flexibles, matériel fourni, assurance complète. Postulez comme coursier à vélo ou chauffeur via notre app.">
+<meta name="keywords" content="emploi coursier Genève, devenir coursier Lausanne, job coursier vélo Suisse, chauffeur livraison CDI, recrutement livraison Suisse romande">
+<meta name="author" content="Chaskis SA">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://www.chaskis.ch/postuler">
+<link rel="alternate" hreflang="fr-CH" href="https://www.chaskis.ch/postuler">
+<link rel="alternate" hreflang="x-default" href="https://www.chaskis.ch/postuler">
+
+<!-- ===== Open Graph ===== -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chaskis">
+<meta property="og:title" content="Rejoignez Chaskis : coursier ou chauffeur en Suisse romande">
+<meta property="og:description" content="CDI, horaires flexibles, matériel fourni, assurance complète. Postulez comme coursier à vélo ou chauffeur.">
+<meta property="og:url" content="https://www.chaskis.ch/postuler">
+<meta property="og:image" content="https://www.chaskis.ch/hero-courier.png">
+<meta property="og:locale" content="fr_CH">
+
+<!-- ===== Twitter ===== -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rejoignez Chaskis : coursier ou chauffeur en Suisse romande">
+<meta name="twitter:description" content="CDI, horaires flexibles, matériel fourni, assurance complète. Postulez comme coursier à vélo ou chauffeur.">
+<meta name="twitter:image" content="https://www.chaskis.ch/hero-courier.png">
+
+<!-- ===== PWA & Assets ===== -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4BB3A4">
+<link rel="icon" href="icon-192.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="styles.css">
+
+<!-- ===== Structured Data ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "JobPosting",
+  "title": "Coursier et Chauffeur en Suisse romande",
+  "description": "Rejoignez Chaskis comme coursier à vélo ou chauffeur en Suisse romande. CDI, horaires flexibles, matériel fourni, assurance complète.",
+  "datePosted": "2026-01-01",
+  "validThrough": "2027-12-31",
+  "employmentType": ["FULL_TIME", "PART_TIME"],
+  "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Chaskis",
+    "sameAs": "https://www.chaskis.ch/",
+    "logo": "https://www.chaskis.ch/Chaskis-logo.svg"
+  },
+  "jobLocation": [
+    {"@type": "Place", "address": {"@type": "PostalAddress", "addressLocality": "Genève", "addressCountry": "CH"}},
+    {"@type": "Place", "address": {"@type": "PostalAddress", "addressLocality": "Lausanne", "addressCountry": "CH"}}
+  ],
+  "url": "https://www.chaskis.ch/postuler"
+}
+</script>
 <style>
 /* Nav transparent initial, texte blanc sur hero sombre */
 #nav:not(.scrolled):not(.over-dark) .nav-mid a{color:rgba(255,255,255,.75)}
 #nav:not(.scrolled):not(.over-dark) .nav-mid a:hover{color:#fff}
-#nav:not(.scrolled):not(.over-dark) .nav-logo img{filter:brightness(0) invert(1)}
+#nav:not(.scrolled):not(.over-dark) .nav-logo img{content:url('Chaskis-logo-ondark.svg')}
 #nav:not(.scrolled):not(.over-dark) .lang-sw{background:rgba(255,255,255,.12)}
 #nav:not(.scrolled):not(.over-dark) .lang-pill{background:rgba(255,255,255,.22)}
 #nav:not(.scrolled):not(.over-dark) .lang-sw button{color:rgba(255,255,255,.6);opacity:.6}
@@ -21,11 +73,12 @@
 .rec-hero{padding:100px 0 60px;background:linear-gradient(135deg,var(--ink) 0%,#1e2926 100%);color:#fff;position:relative;overflow:hidden;min-height:480px;display:flex;align-items:center}
 .rec-hero::before{content:'';position:absolute;top:-40%;right:-15%;width:600px;height:600px;background:radial-gradient(circle,rgba(107,79,160,.15),transparent 65%);border-radius:50%;animation:float 10s ease-in-out infinite}
 .rec-hero::after{content:'';position:absolute;bottom:-30%;left:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(58,175,169,.08),transparent 65%);border-radius:50%;animation:float 12s ease-in-out infinite reverse}
-.rec-hero-inner{position:relative;z-index:1;max-width:640px}
+.rec-hero-inner{position:relative;z-index:1;max-width:720px;margin:0 auto;text-align:center}
 .rec-hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1.1;letter-spacing:-.04em;margin-bottom:16px}
 .rec-hero h1 .ac{color:var(--accent-light)}
-.rec-hero p{font-size:1.05rem;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:28px;max-width:500px}
-.rec-hero-stats{display:flex;gap:32px;margin-bottom:32px}
+.rec-hero p{font-size:1.05rem;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:28px;max-width:560px;margin-left:auto;margin-right:auto}
+.rec-hero .sl{justify-content:center}
+.rec-hero-stats{display:flex;gap:32px;margin-bottom:32px;justify-content:center}
 .rec-hero-stat strong{font-size:1.5rem;font-weight:900;display:block;line-height:1.1}
 .rec-hero-stat span{font-size:.72rem;color:rgba(255,255,255,.4)}
 
@@ -89,32 +142,47 @@
 }
 </style>
 </head>
-<body>
+<body class="page-postuler">
 
 <div class="mob-m" id="mm">
   <a href="index.html" onclick="cm()">Accueil</a>
-  <a href="index.html#services" onclick="cm()">Nos services</a>
-  <a href="commander.html" onclick="cm()">Commander</a>
   <a href="mobilite.html" onclick="cm()">Mobilit&eacute;</a>
   <a href="postuler.html" onclick="cm()">Postuler</a>
+  <a href="commander.html" onclick="cm()">Commander une course</a>
   <a href="index.html#booking" onclick="cm()">Planifier un appel</a>
   <a href="index.html#faq" onclick="cm()">FAQ</a>
+  <div class="mob-lang-opts">
+    <button class="mob-lang-btn active" data-lang="fr" onclick="setLang('fr');cm()"><span class="mob-lang-flag"><img src="flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
+    <button class="mob-lang-btn" data-lang="en" onclick="setLang('en');cm()"><span class="mob-lang-flag"><img src="flag-gb.svg" alt="" width="18" height="13"></span> English</button>
+  </div>
 </div>
 
 <nav class="nav" id="nav">
   <div class="ct nav-in">
     <a href="index.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
     <div class="nav-mid" style="margin-left:auto">
-      <a href="commander.html">Commander</a>
       <a href="mobilite.html">Mobilit&eacute;</a>
-      <a href="postuler.html">Postuler</a>
+      <a href="postuler.html" data-i18n="nav.join" class="active">Postuler</a>
     </div>
-    <div class="lang-sw" id="langSw" role="radiogroup" aria-label="Langue / Language">
-      <span class="lang-pill" id="langPill" aria-hidden="true"></span>
-      <button class="active" role="radio" aria-checked="true" data-lang="fr" onclick="movePill('fr')" aria-label="Français">FR</button>
-      <button role="radio" aria-checked="false" data-lang="en" onclick="movePill('en')" aria-label="English">EN</button>
+    <a href="commander.html" class="btn btn-o nav-cta-btn"><span data-i18n="nav.order">Commander une course</span></a>
+    <div class="lang-drop" id="langDrop">
+      <button class="lang-drop-trigger" id="langTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Changer de langue">
+        <span class="lang-drop-flag" id="langFlag"><img src="flag-fr.svg" alt="Français" width="18" height="13"></span>
+        <svg class="lang-drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="lang-drop-menu" id="langMenu" role="listbox" aria-label="Langue">
+        <button class="lang-drop-item active" role="option" data-lang="fr" data-flag="fr" data-code="FR" aria-selected="true">
+          <span class="lang-drop-item-flag"><img src="flag-fr.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">Français</span>
+        </button>
+        <button class="lang-drop-item" role="option" data-lang="en" data-flag="gb" data-code="EN" aria-selected="false">
+          <span class="lang-drop-item-flag"><img src="flag-gb.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">English</span>
+        </button>
+      </div>
     </div>
-    <button class="mob-t" id="mt" aria-label="Menu"><span></span></button>
+    <button class="mob-t" id="mt" aria-label="Menu">
+      <svg class="mob-icon mob-ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+      <svg class="mob-icon mob-ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5L19 19M5 19L19 5"/></svg>
+    </button>
   </div>
 </nav>
 

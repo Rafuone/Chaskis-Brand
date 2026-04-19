@@ -3,44 +3,149 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chaskis : Livraisons express en Suisse romande</title>
-<meta name="description" content="Service de livraison B2B en Suisse romande. 800 coursiers salariés, tarifs fixes dès CHF 8, sans engagement. Express, Flex et Dédié. Depuis Genève.">
+
+<!-- ===== SEO ===== -->
+<title>Chaskis : Livraison B2B Suisse romande, coursiers salariés</title>
+<meta name="description" content="Livraison pro en Suisse romande. 800 coursiers salariés CDI, tarifs fixes dès CHF 8, zéro commission. Express, Flex, Dédié. Genève · Nyon · Lausanne · Riviera.">
+<meta name="keywords" content="livraison Genève, coursier Lausanne, livraison B2B Suisse romande, livreur professionnel, coursier salarié, livraison express Suisse, service de livraison entreprise, coursier Nyon, livraison Riviera">
+<meta name="author" content="Chaskis SA">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="geo.region" content="CH-GE">
+<meta name="geo.placename" content="Genève, Suisse">
+<link rel="canonical" href="https://www.chaskis.ch/">
+<link rel="alternate" hreflang="fr-CH" href="https://www.chaskis.ch/">
+<link rel="alternate" hreflang="en" href="https://www.chaskis.ch/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://www.chaskis.ch/">
+
+<!-- ===== Open Graph ===== -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chaskis">
+<meta property="og:title" content="Chaskis : Livraison B2B en Suisse romande">
+<meta property="og:description" content="800 coursiers salariés CDI, tarifs fixes dès CHF 8, zéro commission. Genève, Nyon, Lausanne, Riviera.">
+<meta property="og:url" content="https://www.chaskis.ch/">
+<meta property="og:image" content="https://www.chaskis.ch/hero-courier.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Coursier Chaskis qui remet une livraison en Suisse romande">
+<meta property="og:locale" content="fr_CH">
+<meta property="og:locale:alternate" content="en_US">
+
+<!-- ===== Twitter ===== -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chaskis : Livraison B2B en Suisse romande">
+<meta name="twitter:description" content="800 coursiers salariés CDI, tarifs fixes dès CHF 8, zéro commission. Genève, Nyon, Lausanne, Riviera.">
+<meta name="twitter:image" content="https://www.chaskis.ch/hero-courier.png">
+
+<!-- ===== Performance ===== -->
+<link rel="preload" as="image" href="hero-courier.png" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="dns-prefetch" href="https://unpkg.com">
+
+<!-- ===== PWA & Assets ===== -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#4BB3A4">
 <link rel="icon" href="icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+
+<!-- ===== Structured Data ===== -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "DeliveryService",
-  "name": "Chaskis",
-  "description": "Service de livraison B2B en Suisse romande. Coursiers salariés, dispatch automatique, preuve photo, livraison express et planifiée.",
-  "url": "https://chaskis.ch",
-  "areaServed": {
-    "@type": "Place",
-    "name": "Suisse romande"
-  },
-  "serviceType": ["Livraison express", "Livraison planifiée", "Livraison multi-stops", "Livraison en marque blanche"],
-  "provider": {
-    "@type": "Organization",
-    "name": "Chaskis",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Genève",
-      "addressCountry": "CH"
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.chaskis.ch/#organization",
+      "name": "Chaskis",
+      "legalName": "Chaskis SA",
+      "url": "https://www.chaskis.ch/",
+      "logo": "https://www.chaskis.ch/Chaskis-logo.svg",
+      "image": "https://www.chaskis.ch/hero-courier.png",
+      "description": "Infrastructure de livraison B2B pour les entreprises de Suisse romande. Coursiers salariés, dispatch automatique, preuve photo, tarifs fixes.",
+      "email": "hello@chaskis.ch",
+      "telephone": "+41227000127",
+      "areaServed": {"@type":"Place","name":"Suisse romande"},
+      "sameAs": [
+        "https://www.instagram.com/chaskisdelivery/",
+        "https://www.linkedin.com/company/chaskis-sa/",
+        "https://www.tiktok.com/@chaskisdelivery_"
+      ]
+    },
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://www.chaskis.ch/#localbusiness-geneve",
+      "name": "Chaskis Genève",
+      "parentOrganization": {"@id": "https://www.chaskis.ch/#organization"},
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "69 rue des Vollandes",
+        "postalCode": "1207",
+        "addressLocality": "Genève",
+        "addressCountry": "CH"
+      },
+      "telephone": "+41227000127",
+      "email": "hello@chaskis.ch",
+      "url": "https://www.chaskis.ch/"
+    },
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://www.chaskis.ch/#localbusiness-lausanne",
+      "name": "Chaskis Lausanne",
+      "parentOrganization": {"@id": "https://www.chaskis.ch/#organization"},
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "22 chemin de Pierrefleur",
+        "postalCode": "1004",
+        "addressLocality": "Lausanne",
+        "addressCountry": "CH"
+      },
+      "url": "https://www.chaskis.ch/"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.chaskis.ch/#website",
+      "url": "https://www.chaskis.ch/",
+      "name": "Chaskis",
+      "publisher": {"@id": "https://www.chaskis.ch/#organization"},
+      "inLanguage": "fr-CH"
+    },
+    {
+      "@type": "DeliveryService",
+      "name": "Chaskis",
+      "provider": {"@id": "https://www.chaskis.ch/#organization"},
+      "areaServed": [
+        {"@type": "City", "name": "Genève"},
+        {"@type": "City", "name": "Nyon"},
+        {"@type": "City", "name": "Lausanne"},
+        {"@type": "Place", "name": "Riviera vaudoise"}
+      ],
+      "serviceType": ["Livraison express", "Livraison planifiée", "Livraison dédiée", "Livraison multi-stops", "Livraison en marque blanche"],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Formules de livraison",
+        "itemListElement": [
+          {"@type": "Offer", "name": "Express", "description": "Livraison à la demande, commandée à l'unité depuis le site, sans compte."},
+          {"@type": "Offer", "name": "Flex", "description": "Service régulier adapté à votre rythme, sans engagement."},
+          {"@type": "Offer", "name": "Dédié", "description": "Coursier attitré à temps plein pour votre entreprise."}
+        ]
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "Quelle formule correspond à mes besoins ?", "acceptedAnswer": {"@type": "Answer", "text": "Ça dépend de la régularité de votre flux. Dédié : flux quotidien et stable, coursier attitré, coût par course le plus bas. Flex : volume qui fluctue, paiement à la commande, sans engagement. Express : besoin isolé, commandé à l'unité depuis notre site, sans compte."}},
+        {"@type": "Question", "name": "Comment mes clients passent-ils commande ?", "acceptedAnswer": {"@type": "Answer", "text": "Par vos canaux habituels : en boutique, par téléphone, sur votre site, votre app, WhatsApp, ou via les plateformes (Uber Eats, Smood, Just Eat). Chaskis ne remplace pas votre outil de commande, on prend le relais une fois la commande passée pour la livrer."}},
+        {"@type": "Question", "name": "Comment je vous transmets mes commandes ?", "acceptedAnswer": {"@type": "Answer", "text": "Trois options selon votre setup : API qui synchronise automatiquement vos commandes avec notre dispatch, import pour les flux groupés, ou saisie manuelle dans votre dashboard. On gère toute la mise en place technique au démarrage."}},
+        {"@type": "Question", "name": "Et si un coursier est malade ou indisponible ?", "acceptedAnswer": {"@type": "Answer", "text": "Remplacement garanti. Nos coursiers sont salariés, pas freelances, on gère les absences en interne. Si votre coursier dédié est en congé ou malade, un autre prend le relais le jour même, déjà formé à vos standards."}},
+        {"@type": "Question", "name": "Casse, perte, litige : comment vous gérez ?", "acceptedAnswer": {"@type": "Answer", "text": "Chaque livraison est tracée et assurée. À la prise en charge comme à la remise, le coursier fait une preuve horodatée (photo ou signature). Les livraisons sont couvertes par une assurance, avec un plafond rehaussé pour le luxe, le pharma et le juridique."}},
+        {"@type": "Question", "name": "Quelles zones et quels types de colis ?", "acceptedAnswer": {"@type": "Answer", "text": "Zones couvertes : Genève, Nyon, Lausanne et la Riviera. Formats : sac coursier (type Uber Eats) pour documents, plis et petits colis, ou coffre de voiture pour les livraisons plus volumineuses. Protocole adapté à votre secteur : pharma, alimentaire, luxe, juridique."}},
+        {"@type": "Question", "name": "Je peux changer de formule en cours de route ?", "acceptedAnswer": {"@type": "Answer", "text": "Oui, sans friction, entre Flex et Dédié. Vous démarrez en Flex et votre volume grandit, on bascule en Dédié dès que ça devient rentable. Si l'activité ralentit, on repasse en Flex sans pénalité. L'Express reste disponible en complément, commandé directement depuis notre site."}}
+      ]
     }
-  },
-  "hasOfferCatalog": {
-    "@type": "OfferCatalog",
-    "name": "Formules de livraison",
-    "itemListElement": [
-      {"@type": "Offer", "name": "Express", "description": "Livraison à la demande en moins de 90 minutes"},
-      {"@type": "Offer", "name": "Flex", "description": "Service régulier adapté à votre rythme"},
-      {"@type": "Offer", "name": "Dédié", "description": "Coursier attitré à temps plein pour votre entreprise"}
-    ]
-  }
+  ]
 }
 </script>
 <style>
@@ -103,8 +208,8 @@
 
 /* Floating CTA, fixed bottom-right */
 .nav-cta-btn{padding:8px 18px!important;font-size:.78rem!important;gap:0!important}
-.nav.over-dark .nav-cta-btn{border-color:rgba(255,255,255,.35)!important;color:#fff!important}
-.nav.over-dark .nav-cta-btn:hover{border-color:rgba(255,255,255,.7)!important;background:rgba(255,255,255,.08)!important}
+.nav.over-dark .nav-cta-btn{border-color:rgba(44,32,82,.35)!important;color:var(--ink)!important}
+.nav.over-dark .nav-cta-btn:hover{border-color:rgba(44,32,82,.7)!important;background:rgba(44,32,82,.08)!important}
 @media(max-width:767px){.nav-cta-btn{display:none}}
 .nav-cta-float{position:fixed;bottom:28px;right:28px;z-index:200;box-shadow:0 8px 32px rgba(58,175,169,.3);opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .4s var(--ease),transform .4s var(--ease)}
 .nav-cta-float.visible{opacity:1;transform:translateY(0);pointer-events:auto}
@@ -432,9 +537,13 @@
 .bk-d.pk{background:linear-gradient(135deg, #6B5BCC, #7B68D9);color:#fff;box-shadow:0 4px 12px rgba(107,91,204,.25);border-color:transparent}
 .bk-d.past{color:var(--warm-gray);background:transparent}
 .bk-d.full{color:var(--warm-gray);background:transparent;text-decoration:line-through;text-decoration-color:rgba(0,0,0,.15);cursor:not-allowed}
-.bk-d.av.almost{position:relative}
-.bk-d.av.almost::after{content:'';position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:#f59e0b;box-shadow:0 0 0 2px var(--white)}
+.bk-d.av.almost{position:relative;z-index:1}
+.bk-d.av.almost::after{content:'';position:absolute;top:-2px;right:-2px;width:7px;height:7px;border-radius:50%;background:#DC2626;box-shadow:0 0 0 2px var(--white);z-index:2}
 .bk-d.pk.almost::after{background:#fff;box-shadow:0 0 0 2px #6B5BCC}
+.bk-d.av[data-tooltip]{position:relative}
+.bk-d.av[data-tooltip]::before{content:attr(data-tooltip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--ink);color:#fff;padding:5px 9px;border-radius:6px;font-size:.65rem;font-weight:600;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .18s var(--ease),transform .18s var(--ease);z-index:20;letter-spacing:-.005em}
+.bk-d.av[data-tooltip]:hover::before{opacity:1;transform:translateX(-50%) translateY(0)}
+.bk-d.av.almost[data-tooltip]::before{background:#DC2626}
 .bk-cal-header button.disabled{opacity:.3;pointer-events:none}
 .bk-slots-wrap{display:flex;flex-direction:column}
 .bk-slots-title{font-size:.85rem;font-weight:700;color:var(--ink-mid);margin-bottom:12px;display:none}
@@ -469,25 +578,32 @@
 .faq-item{border-bottom:1px solid rgba(0,0,0,.06)}
 .faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 0;cursor:pointer;gap:12px;transition:color .3s}
 .faq-q:hover{color:var(--teal)}.faq-q h3{font-size:.9rem;font-weight:700}
-.fi{width:24px;height:24px;border-radius:6px;background:rgba(232,228,220,.7);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .4s var(--ease)}
-.fi svg{width:10px;height:10px;color:var(--ink);transition:transform .4s var(--ease)}
+.fi{width:26px;height:26px;border-radius:50%;background:rgba(44,32,82,.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .3s var(--ease)}
+.fi svg{width:11px;height:11px;color:var(--ink);transition:transform .35s var(--ease)}
 .faq-item.open .fi{background:var(--teal-bg)}
-.faq-item.open .fi svg{color:var(--teal);transform:rotate(180deg)}
+.faq-item.open .fi svg{color:var(--teal-dark);transform:rotate(180deg)}
 
 /* FAQ banner + left column */
 .faq-banner{margin-bottom:clamp(36px,4vw,52px);border-radius:var(--rxl);overflow:hidden}
 .faq-banner-img{width:100%;height:clamp(200px,22vw,300px);background:linear-gradient(135deg,rgba(75,179,164,.08),rgba(107,79,160,.06))}
-.faq-contact{display:flex;flex-direction:column;gap:14px;margin-top:28px}
-.faq-ci{display:flex;align-items:center;gap:14px;font-size:.92rem;line-height:1.5;color:var(--ink)}
-.faq-ci svg{width:16px;height:16px;color:var(--ink-muted);flex-shrink:0;stroke-width:2}
-.faq-ci a{color:inherit;text-decoration:none;transition:color .3s;font-weight:700}
+.faq-contact{display:flex;flex-direction:column;gap:16px;margin-top:28px}
+.faq-ci{display:flex;align-items:flex-start;gap:14px;font-size:.9rem;line-height:1.5;color:var(--ink)}
+.faq-ci svg{width:18px;height:18px;color:var(--ink);flex-shrink:0;stroke-width:1.8;margin-top:2px}
+.faq-ci a{color:inherit;text-decoration:none;transition:color .3s;font-weight:600}
 .faq-ci a:hover{color:var(--teal)}
-.faq-ci strong{font-weight:700;margin-right:6px;color:var(--ink)}
-.faq-ci.faq-ci-addr{color:var(--ink-light);font-weight:400}
-.faq-ci.faq-ci-addr strong{font-weight:600;color:var(--ink-mid)}
-.faq-item.open .fi{background:var(--teal)}.faq-item.open .fi svg{color:#fff;transform:rotate(45deg)}
+.faq-ci strong{font-weight:700;color:var(--ink);display:block;margin-bottom:2px}
+.faq-ci.faq-ci-addr{color:var(--ink-light);font-weight:400;align-items:center}
+.faq-ci.faq-ci-addr svg{color:var(--ink-mid);stroke-width:1.6;margin-top:0}
+.faq-ci.faq-ci-addr strong{font-weight:700;color:var(--ink);display:inline;margin-bottom:0;font-size:inherit}
+.faq-ci.faq-ci-addr strong::after{content:' · ';color:var(--ink-muted);font-weight:400;margin:0 2px}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .5s var(--ease)}
-.faq-a p{padding:0 0 16px;font-size:.82rem;color:var(--ink-light);line-height:1.7}
+.faq-a .faq-answer{padding-bottom:16px;font-size:.82rem;color:var(--ink-light);line-height:1.7;display:flex;flex-direction:column;gap:10px}
+.faq-a .faq-answer p{margin:0}
+.faq-a .faq-answer ul{list-style:none;padding:0;margin:2px 0;display:flex;flex-direction:column;gap:8px}
+.faq-a .faq-answer ul li{display:flex;gap:10px;align-items:flex-start}
+.faq-badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font-size:.68rem;font-weight:700;background:var(--teal-bg);color:var(--teal-dark);flex-shrink:0;white-space:nowrap;letter-spacing:.01em;margin-top:2px}
+.faq-badge.b-purple{background:var(--accent-bg);color:var(--accent-dark)}
+.faq-badge.b-ink{background:rgba(44,32,82,.08);color:var(--ink)}
 
 /* ===== SHARED SECTION HEADERS ===== */
 .sh{margin-bottom:clamp(28px,3.5vw,48px)}
@@ -580,9 +696,9 @@ section{padding:clamp(56px,7vw,96px) 0}
 
 /* ===== OFFRES ===== */
 .offres{padding:clamp(64px,8vw,100px) 0;background:var(--bg)}
-.offres-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
-.offres-header .sh{flex:1}
-.offres-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch;margin-top:48px;transition:all .5s var(--ease)}
+.offres-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:28px}
+.offres-header .sh{flex:1;margin-bottom:0}
+.offres-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch;margin-top:0;transition:all .5s var(--ease)}
 .offres-grid>*{opacity:0;transform:translateY(40px) scale(.96);transition:opacity 1s var(--ease),transform 1s var(--ease),box-shadow .4s var(--ease),max-height .5s var(--ease)}
 .offres-grid.v>*:nth-child(1){transition-delay:.1s!important}
 .offres-grid.v>*:nth-child(2){transition-delay:.28s!important}
@@ -697,7 +813,8 @@ span.ast{color:#e53e3e!important;font-weight:700}
 .lang-drop-trigger{display:flex;align-items:center;gap:5px;padding:5px 9px 5px 7px;border-radius:var(--pill);border:1.5px solid transparent;background:transparent;cursor:pointer;font-family:inherit;font-size:.72rem;font-weight:700;letter-spacing:.04em;color:var(--ink-mid);transition:background .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease);white-space:nowrap}
 .lang-drop-trigger:hover{background:rgba(44,32,82,.07);border-color:rgba(44,32,82,.12)}
 .lang-drop-trigger:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
-.lang-drop-flag{font-size:.9rem;line-height:1;display:flex;align-items:center}
+.lang-drop-flag{display:inline-flex;align-items:center;justify-content:center;width:18px;height:13px;border-radius:3px;overflow:hidden;flex-shrink:0;transition:box-shadow .2s var(--ease)}
+.lang-drop-flag img{width:100%;height:100%;display:block;object-fit:cover}
 .lang-drop-code{font-size:.68rem;font-weight:700;letter-spacing:.06em}
 .lang-drop-chevron{width:11px;height:11px;flex-shrink:0;transition:transform .2s var(--ease);color:var(--ink-muted)}
 .lang-drop[data-open] .lang-drop-chevron{transform:rotate(180deg)}
@@ -706,17 +823,21 @@ span.ast{color:#e53e3e!important;font-weight:700}
 .lang-drop-item{display:flex;align-items:center;gap:9px;width:100%;padding:10px 14px;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:500;color:var(--ink-mid);text-align:left;transition:background .15s var(--ease),color .15s var(--ease)}
 .lang-drop-item:hover{background:rgba(75,179,164,.07);color:var(--ink)}
 .lang-drop-item.active{color:var(--teal);font-weight:700;background:var(--teal-bg)}
-.lang-drop-item-flag{font-size:1rem;line-height:1;display:flex;align-items:center}
+.lang-drop-item-flag{display:inline-flex;align-items:center;justify-content:center;width:20px;height:14px;border-radius:3px;overflow:hidden;flex-shrink:0}
+.lang-drop-item-flag img{width:100%;height:100%;display:block;object-fit:cover}
 .lang-drop-item-name{letter-spacing:-.01em}
 /* Over-dark variant */
 .nav.over-dark .lang-drop-trigger{color:rgba(255,255,255,.75)}
 .nav.over-dark .lang-drop-trigger:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
+.nav.over-dark .lang-drop-flag{box-shadow:0 0 0 1px rgba(255,255,255,.55)}
 .nav.over-dark .lang-drop-chevron{color:rgba(255,255,255,.5)}
 /* Scrolled variant */
 .nav.scrolled .lang-drop-trigger:hover{background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.1)}
 /* Mobile lang opts */
 .mob-lang-opts{display:flex;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(44,32,82,.08)}
 .mob-lang-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 14px;border-radius:10px;border:1.5px solid rgba(44,32,82,.1);background:transparent;cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:600;color:var(--ink-mid);transition:all .2s var(--ease)}
+.mob-lang-flag{display:inline-flex;align-items:center;width:18px;height:13px;border-radius:3px;overflow:hidden;flex-shrink:0}
+.mob-lang-flag img{width:100%;height:100%;display:block;object-fit:cover}
 .mob-lang-btn:hover{background:rgba(75,179,164,.06);border-color:var(--teal);color:var(--teal)}
 .mob-lang-btn.active{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
 .mob-lang-btn span{font-size:1rem;line-height:1}
@@ -735,17 +856,22 @@ span.ast{color:#e53e3e!important;font-weight:700}
   <a href="mobilite.html" onclick="cm()">Mobilit&eacute;</a>
   <a href="postuler.html" onclick="cm()">Postuler</a>
   <div class="mob-lang-opts">
-    <button class="mob-lang-btn active" data-lang="fr" onclick="setLang('fr');cm()"><span>🇫🇷</span> Français</button>
-    <button class="mob-lang-btn" data-lang="en" onclick="setLang('en');cm()"><span>🇬🇧</span> English</button>
+    <button class="mob-lang-btn active" data-lang="fr" onclick="setLang('fr');cm()"><span class="mob-lang-flag"><img src="flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
+    <button class="mob-lang-btn" data-lang="en" onclick="setLang('en');cm()"><span class="mob-lang-flag"><img src="flag-gb.svg" alt="" width="18" height="13"></span> English</button>
   </div>
 </div>
 
 <div class="promo-bar" id="promoBar" role="region" aria-label="Offre promotionnelle">
-  <div class="promo-bar-inner">
-    <span class="promo-bar-badge">Nouveau site</span>
-    <span class="promo-bar-text"><strong>-15%</strong> sur votre premier mois avec Flex &amp; Dédié</span>
+  <div class="ct promo-bar-inner">
+    <div class="promo-bar-left">
+      <span class="promo-bar-badge">Nouveau site</span>
+      <span class="promo-bar-text"><strong>-15%</strong> sur votre premier mois avec Flex &amp; Dédié</span>
+    </div>
+    <div class="promo-bar-right">
+      <a href="#offres" class="promo-bar-cta">Découvrir nos offres</a>
+      <button class="promo-bar-close" id="promoBarClose" aria-label="Fermer la bannière"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
   </div>
-  <button class="promo-bar-close" id="promoBarClose" aria-label="Fermer la bannière"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
 </div>
 
 <nav class="nav" id="nav">
@@ -758,15 +884,15 @@ span.ast{color:#e53e3e!important;font-weight:700}
     <a href="commander.html" class="btn btn-o nav-cta-btn"><span data-i18n="nav.order">Commander une course</span></a>
     <div class="lang-drop" id="langDrop">
       <button class="lang-drop-trigger" id="langTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Changer de langue">
-        <span class="lang-drop-flag" id="langFlag">🇫🇷</span>
+        <span class="lang-drop-flag" id="langFlag"><img src="flag-fr.svg" alt="Français" width="18" height="13"></span>
         <svg class="lang-drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       <div class="lang-drop-menu" id="langMenu" role="listbox" aria-label="Langue">
-        <button class="lang-drop-item active" role="option" data-lang="fr" data-flag="🇫🇷" data-code="FR" aria-selected="true">
-          <span class="lang-drop-item-flag">🇫🇷</span><span class="lang-drop-item-name">Français</span>
+        <button class="lang-drop-item active" role="option" data-lang="fr" data-flag="fr" data-code="FR" aria-selected="true">
+          <span class="lang-drop-item-flag"><img src="flag-fr.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">Français</span>
         </button>
-        <button class="lang-drop-item" role="option" data-lang="en" data-flag="🇬🇧" data-code="EN" aria-selected="false">
-          <span class="lang-drop-item-flag">🇬🇧</span><span class="lang-drop-item-name">English</span>
+        <button class="lang-drop-item" role="option" data-lang="en" data-flag="gb" data-code="EN" aria-selected="false">
+          <span class="lang-drop-item-flag"><img src="flag-gb.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">English</span>
         </button>
       </div>
     </div>
@@ -805,7 +931,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
     </div>
     <div class="hero-vis" id="heroVis">
       <div class="hv-photo-wrap">
-        <img src="hero-courier.png" alt="Coursier Chaskis remettant un colis en ville" class="hv-photo">
+        <img src="hero-courier.png" alt="Coursier Chaskis remettant un colis en ville" class="hv-photo" fetchpriority="high" decoding="async" width="620" height="520">
       </div>
     </div>
   </div>
@@ -1046,7 +1172,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
 <section class="offres" id="offres">
   <div class="ct">
     <div class="offres-header">
-      <div class="sh rv"><span class="sl" data-i18n="offres.label">Nos offres</span><h2 class="st" data-i18n-html="offres.h2">Choisissez votre <span class="ac">formule</span></h2><p class="sd" data-i18n="offres.sd">Pas d'engagement initial. Commencez avec Express, évoluez vers Dédié quand votre volume le justifie.</p></div>
+      <div class="sh rv"><span class="sl" data-i18n="offres.label">Nos offres</span><h2 class="st" data-i18n-html="offres.h2">Choisissez votre <span class="ac">formule</span></h2><p class="sd" data-i18n="offres.sd">Sans engagement. Flex s'adapte à vos volumes qui fluctuent, Dédié prend le relais quand ils se stabilisent.</p></div>
     </div>
     <div class="offres-grid stg" data-mode="3">
 
@@ -1234,12 +1360,13 @@ span.ast{color:#e53e3e!important;font-weight:700}
         </div>
       </div>
     <div class="faq-list rr">
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq1.q">En quoi c'est différent d'Uber Eats ou Stuart ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n="faq1.a">Pas de commission à 30%. Tarif fixe. Coursiers salariés CDI, pas auto-entrepreneurs. Suivi en temps réel inclus.</p></div></div>
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq2.q">Express, Flex, Dédié : quelle différence ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n-html="faq2.a"><strong>Express</strong> : ponctuel, dès CHF 16, sans compte. <strong>Flex</strong> : régulier, dès CHF 12, sans engagement. <strong>Dédié</strong> : à l'heure, dès CHF 8, flotte attitrée.</p></div></div>
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq4.q">C'est rapide à mettre en place ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n="faq4.a">Express et Flex : quelques jours. Dédié : selon votre volume. On gère tout le setup.</p></div></div>
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq5.q">Quelles zones de livraison ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n="faq5.a">Genève, Lausanne, Neuchâtel, Fribourg, Montreux, Vevey. Extension vers Berne et Bâle en 2026.</p></div></div>
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq6.q">Quels types de colis transportez-vous ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n="faq6.a">Documents, colis jusqu'à 15 kg, pharma, luxe, alimentaire sous température. On adapte le protocole à chaque secteur.</p></div></div>
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq7.q">Puis-je tester avant de m'engager ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n="faq7.a">Oui. Express et Flex sans engagement : testez avec une seule course. Pour le Dédié, course test en conditions réelles avant contrat.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq1.q">Quelle formule correspond à mes besoins ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><div class="faq-answer" data-i18n-html="faq1.a"><p>Ça dépend de la régularité de votre flux, pas de votre taille.</p><ul><li><span class="faq-badge">Dédié</span><span>Flux quotidien et stable. Coursier attitré, coût par course le plus bas.</span></li><li><span class="faq-badge b-purple">Flex</span><span>Volume qui fluctue. Vous payez à la commande, sans engagement.</span></li><li><span class="faq-badge b-ink">Express</span><span>Besoin isolé. Commandé à l'unité depuis notre site, sans compte.</span></li></ul><p>Pas sûr ? Notre simulateur vous recommande la bonne formule en 30 secondes.</p></div></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq2.q">Comment mes clients passent-ils commande ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><div class="faq-answer" data-i18n-html="faq2.a"><p>Par vos canaux habituels. Vos clients continuent de commander comme avant : en boutique, par téléphone, sur votre site, votre app, WhatsApp, ou via les plateformes (Uber Eats, Smood, Just Eat…).</p><p>Chaskis ne remplace pas votre outil de commande. On prend le relais une fois la commande passée, pour la livrer. Vous gardez la main sur votre marque et votre relation client.</p></div></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq3.q">Comment je vous transmets mes commandes ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><div class="faq-answer" data-i18n-html="faq3.a"><p>Trois options selon votre setup.</p><ul><li><span class="faq-badge">API</span><span>Synchronisation automatique de vos commandes avec notre dispatch. Le cas le plus courant.</span></li><li><span class="faq-badge b-purple">Import</span><span>Pour les flux groupés, envoyés par fichier.</span></li><li><span class="faq-badge b-ink">Dashboard</span><span>Saisie manuelle pour les commandes exceptionnelles (appel, walk-in).</span></li></ul><p>On gère toute la mise en place technique au démarrage. Vous n'avez rien à coder.</p></div></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq4.q">Et si un coursier est malade ou indisponible ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><div class="faq-answer" data-i18n-html="faq4.a"><p><strong>Remplacement garanti.</strong> C'est notre problème, pas le vôtre.</p><p>Nos coursiers sont salariés, pas freelances. On gère les absences en interne. Si votre coursier dédié est en congé ou malade, un autre prend le relais le jour même, déjà formé à vos standards.</p><p>Contrairement aux plateformes freelance, vous ne subissez ni annulations de dernière minute, ni coursier introuvable.</p></div></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq5.q">Casse, perte, litige : comment vous gérez ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><div class="faq-answer" data-i18n-html="faq5.a"><p>Chaque livraison est tracée et assurée.</p><p>À la prise en charge comme à la remise, le coursier fait une preuve horodatée (photo ou signature). En cas de litige, on retrouve l'étape concernée en quelques minutes.</p><p>Les livraisons sont couvertes par une assurance, avec un plafond rehaussé pour le luxe, le pharma et le juridique. Tout est documenté dans votre dashboard.</p></div></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq6.q">Quelles zones et quels types de colis ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><div class="faq-answer" data-i18n-html="faq6.a"><p><strong>Zones couvertes :</strong> Genève, Nyon, Lausanne et la Riviera.</p><ul><li><span class="faq-badge">Sac coursier</span><span>Format standard, type Uber Eats. Pour documents, plis, petits colis.</span></li><li><span class="faq-badge b-purple">Coffre de voiture</span><span>Pour les livraisons plus volumineuses.</span></li></ul><p>On adapte le protocole (température, confidentialité, preuve renforcée) à votre secteur : pharma, alimentaire, luxe, juridique. Un besoin hors-standard ? On en discute à l'appel découverte.</p></div></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq7.q">Je peux changer de formule en cours de route ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><div class="faq-answer" data-i18n-html="faq7.a"><p>Oui, sans friction, entre <strong>Flex</strong> et <strong>Dédié</strong>.</p><p>Vous démarrez en Flex et votre volume grandit ? On bascule en Dédié dès que ça devient rentable pour vous. À l'inverse, si l'activité ralentit, on repasse en Flex sans pénalité.</p><p>L'Express n'est pas vraiment une formule : c'est le service de base, commandé directement depuis notre site, sans compte. Vous pouvez l'utiliser ponctuellement en complément, quelle que soit votre formule.</p></div></div></div>
     </div>
     </div>
   </div>
@@ -1249,7 +1376,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
 <footer class="footer" data-nav-dark>
   <div class="ct">
     <div class="ft">
-      <div class="fb"><a href="index.html" class="nav-logo"><img src="Chaskis-logo-ondark.svg" alt="Chaskis" height="20"></a><p data-i18n="foot.tag">Infrastructure logistique pour les entreprises de Suisse romande.</p><div class="fb-soc"><a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a><a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a><a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg></a></div></div>
+      <div class="fb"><a href="index.html" class="nav-logo"><img src="Chaskis-logo-ondark.svg" alt="Chaskis" height="20"></a><p data-i18n="foot.tag">Infrastructure logistique pour les entreprises de Suisse romande.</p><div class="fb-soc"><a href="https://www.instagram.com/chaskisdelivery/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a><a href="https://www.linkedin.com/company/chaskis-sa/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a><a href="https://www.tiktok.com/@chaskisdelivery_" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg></a></div></div>
       <div class="fc"><h4 data-i18n="foot.svc.h">Services</h4><a href="commander.html" data-i18n="foot.svc.1">Commander</a><a href="dashboard.html" data-i18n="foot.svc.2">Tableau de bord</a><a href="#services" data-i18n="foot.svc.3">Nos secteurs</a><a href="#booking" data-i18n="foot.svc.4">Réserver un appel</a></div>
       <div class="fc"><h4 data-i18n="foot.co.h">Entreprise</h4><a href="postuler.html" data-i18n="foot.co.1">Postuler</a><a href="#faq">FAQ</a><a href="mailto:contact@chaskis.ch">contact@chaskis.ch</a></div>
       <div class="fc"><h4 data-i18n="foot.leg.h">Légal</h4><a href="#" data-i18n="foot.leg.1">Mentions légales</a><a href="#" data-i18n="foot.leg.2">Confidentialité</a><a href="#" data-i18n="foot.leg.3">CGV</a></div>
@@ -1409,7 +1536,9 @@ span.ast{color:#e53e3e!important;font-weight:700}
       else if (slots.length === 0) el.classList.add('full');
       else {
         el.classList.add('av');
-        if (slots.length === 1) el.classList.add('almost');
+        if (slots.length === 1) { el.classList.add('almost'); el.dataset.tooltip = '1 créneau restant'; }
+        else { el.dataset.tooltip = slots.length + ' créneaux disponibles'; }
+        el.setAttribute('aria-label', (slots.length === 1 ? '1 créneau restant' : slots.length + ' créneaux disponibles') + ' le ' + d);
         el.dataset.y = viewY; el.dataset.m = viewM; el.dataset.d = d;
         el.addEventListener('click', () => selectDate(el));
       }
@@ -1711,7 +1840,7 @@ const T = {
     'sim.mode.fixed': 'Tarif fixe par course', 'sim.mode.comm': 'Commission sur ventes',
     'sim.neutral.title': 'Chaskis n\'est pas systématiquement plus avantageux.', 'sim.neutral.p': 'Vos conditions actuelles sont déjà serrées. Pour savoir si nos tarifs dégressifs peuvent changer la donne sur une partie de vos commandes, parlons-en 20 minutes.',
     'sim.neutral.cta': 'Réserver l\'analyse <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>',
-    'offres.label': 'Nos offres', 'offres.h2': 'Choisissez votre <span class="ac">formule</span>', 'offres.sd': 'Pas d\'engagement initial. Commencez avec Express, évoluez vers Dédié quand votre volume le justifie.',
+    'offres.label': 'Nos offres', 'offres.h2': 'Choisissez votre <span class="ac">formule</span>', 'offres.sd': 'Sans engagement. Flex s\'adapte à vos volumes qui fluctuent, Dédié prend le relais quand ils se stabilisent.',
     'offre.flex.ideal': 'Un service régulier qui s\'adapte à votre rythme',
     'offre.dedie.ideal': 'Fort volume quotidien : votre flotte, sans la gérer',
     'offre.express.ideal': 'Une course ponctuelle, sans compte ni engagement',
@@ -1797,13 +1926,13 @@ const T = {
     'faq.sl': 'FAQ',
     'faq.h2': 'Vos questions, nos <span class="ac">réponses</span>',
     'faq.sd': 'Pas trouvé ? <a href="#booking" style="color:var(--teal);font-weight:700">Planifiez un appel</a>.',
-    'faq1.q': 'En quoi c\'est différent d\'Uber Eats ou Stuart ?', 'faq1.a': 'Pas de commission sur vos ventes. Tarif fixe par course. Coursiers salariés CDI, pas auto-entrepreneurs. Suivi en temps réel inclus, sans frais cachés.',
-    'faq2.q': 'Express, Flex, Dédié : quelle différence ?', 'faq2.a': '<strong>Express</strong> : livraison ponctuelle, dès CHF 16, sans compte. <strong>Flex</strong> : à la commande, dès CHF 12, sans engagement, idéal pour les volumes variables. <strong>Dédié</strong> : tarification à l\'heure, dès CHF 8, contrat + flotte attitrée, account manager dédié.',
-    'faq3.q': 'C\'est quoi la "référence commande marchand" ?', 'faq3.a': 'C\'est le code que le livreur présente au commerçant pour récupérer la bonne commande. Ça évite les erreurs de colis et permet de notifier le commerçant automatiquement à l\'arrivée du coursier.',
-    'faq4.q': 'C\'est rapide à mettre en place ?', 'faq4.a': 'Express et Flex : démarrage en quelques jours après l\'appel découverte. Dédié : la mise en place dépend de votre volume et planning. Dans tous les cas, on gère l\'intégralité du setup.',
-    'faq5.q': 'Quelles zones de livraison ?', 'faq5.a': 'Lausanne, Genève, Neuchâtel, Fribourg, Montreux, Vevey et environs. Extension prévue vers Berne et Bâle en 2026.',
-    'faq6.q': 'Quels types de colis transportez-vous ?', 'faq6.a': 'Documents, colis jusqu\'à 15 kg, pharma, luxe, alimentaire sous température contrôlée. On adapte le protocole à chaque secteur.',
-    'faq7.q': 'Puis-je tester avant de m\'engager ?', 'faq7.a': 'Oui. Express et Flex sans engagement : testez avec une seule course. Pour le Dédié, on effectue une course test en conditions réelles avant tout contrat.',
+    'faq1.q': 'Quelle formule correspond à mes besoins ?', 'faq1.a': '<p>Ça dépend de la régularité de votre flux, pas de votre taille.</p><ul><li><span class="faq-badge">Dédié</span><span>Flux quotidien et stable. Coursier attitré, coût par course le plus bas.</span></li><li><span class="faq-badge b-purple">Flex</span><span>Volume qui fluctue. Vous payez à la commande, sans engagement.</span></li><li><span class="faq-badge b-ink">Express</span><span>Besoin isolé. Commandé à l\'unité depuis notre site, sans compte.</span></li></ul><p>Pas sûr ? Notre simulateur vous recommande la bonne formule en 30 secondes.</p>',
+    'faq2.q': 'Comment mes clients passent-ils commande ?', 'faq2.a': '<p>Par vos canaux habituels. Vos clients continuent de commander comme avant : en boutique, par téléphone, sur votre site, votre app, WhatsApp, ou via les plateformes (Uber Eats, Smood, Just Eat…).</p><p>Chaskis ne remplace pas votre outil de commande. On prend le relais une fois la commande passée, pour la livrer. Vous gardez la main sur votre marque et votre relation client.</p>',
+    'faq3.q': 'Comment je vous transmets mes commandes ?', 'faq3.a': '<p>Trois options selon votre setup.</p><ul><li><span class="faq-badge">API</span><span>Synchronisation automatique de vos commandes avec notre dispatch. Le cas le plus courant.</span></li><li><span class="faq-badge b-purple">Import</span><span>Pour les flux groupés, envoyés par fichier.</span></li><li><span class="faq-badge b-ink">Dashboard</span><span>Saisie manuelle pour les commandes exceptionnelles (appel, walk-in).</span></li></ul><p>On gère toute la mise en place technique au démarrage. Vous n\'avez rien à coder.</p>',
+    'faq4.q': 'Et si un coursier est malade ou indisponible ?', 'faq4.a': '<p><strong>Remplacement garanti.</strong> C\'est notre problème, pas le vôtre.</p><p>Nos coursiers sont salariés, pas freelances. On gère les absences en interne. Si votre coursier dédié est en congé ou malade, un autre prend le relais le jour même, déjà formé à vos standards.</p><p>Contrairement aux plateformes freelance, vous ne subissez ni annulations de dernière minute, ni coursier introuvable.</p>',
+    'faq5.q': 'Casse, perte, litige : comment vous gérez ?', 'faq5.a': '<p>Chaque livraison est tracée et assurée.</p><p>À la prise en charge comme à la remise, le coursier fait une preuve horodatée (photo ou signature). En cas de litige, on retrouve l\'étape concernée en quelques minutes.</p><p>Les livraisons sont couvertes par une assurance, avec un plafond rehaussé pour le luxe, le pharma et le juridique. Tout est documenté dans votre dashboard.</p>',
+    'faq6.q': 'Quelles zones et quels types de colis ?', 'faq6.a': '<p><strong>Zones couvertes :</strong> Genève, Nyon, Lausanne et la Riviera.</p><ul><li><span class="faq-badge">Sac coursier</span><span>Format standard, type Uber Eats. Pour documents, plis, petits colis.</span></li><li><span class="faq-badge b-purple">Coffre de voiture</span><span>Pour les livraisons plus volumineuses.</span></li></ul><p>On adapte le protocole (température, confidentialité, preuve renforcée) à votre secteur : pharma, alimentaire, luxe, juridique. Un besoin hors-standard ? On en discute à l\'appel découverte.</p>',
+    'faq7.q': 'Je peux changer de formule en cours de route ?', 'faq7.a': '<p>Oui, sans friction, entre <strong>Flex</strong> et <strong>Dédié</strong>.</p><p>Vous démarrez en Flex et votre volume grandit ? On bascule en Dédié dès que ça devient rentable pour vous. À l\'inverse, si l\'activité ralentit, on repasse en Flex sans pénalité.</p><p>L\'Express n\'est pas vraiment une formule : c\'est le service de base, commandé directement depuis notre site, sans compte. Vous pouvez l\'utiliser ponctuellement en complément, quelle que soit votre formule.</p>',
     'faq.sd.left': 'Une question ? On y répond ici. Sinon, appelez-nous ou passez nous voir.',
     'foot.tag': 'Infrastructure logistique pour les entreprises de Suisse romande.',
     'foot.svc.h': 'Services', 'foot.svc.1': 'Commander', 'foot.svc.2': 'Tableau de bord', 'foot.svc.3': 'Nos secteurs', 'foot.svc.4': 'Planifier un appel',
@@ -1815,10 +1944,10 @@ const T = {
   en: {
     'nav.order': 'Place an order', 'nav.join': 'Join us',
     'stat1': 'Employed couriers', 'stat2': 'Deliveries per year', 'stat3': 'Cities in French Switzerland',
-    'diff.label': 'Why Chaskis', 'diff.h2': 'Professional delivery,<br><span class="ac">without the usual trade-offs</span>', 'diff.p': 'For any business that wants to outsource its deliveries to a reliable partner — no commission, no surprises.',
+    'diff.label': 'Why Chaskis', 'diff.h2': 'Professional delivery,<br><span class="ac">without the usual trade-offs</span>', 'diff.p': 'For any business that wants to outsource its deliveries to a reliable partner. No commission, no surprises.',
     'diff1.h3': 'Employed couriers,<br>always on time', 'diff1.p': 'Trained to your standards, equipped in your brand.',
     'diff1.li1': 'Guaranteed replacement in case of absence', 'diff1.li2': 'No freelancers, no turnover', 'diff1.li3': 'Insured and managed in-house',
-    'diff2.h3': 'Fixed rate,<br>controlled costs', 'diff2.p': 'A cost you control — not a percentage taken from every sale.',
+    'diff2.h3': 'Fixed rate,<br>controlled costs', 'diff2.p': 'A cost you control, not a percentage taken from every sale.',
     'diff2.li1': 'From CHF 8 / delivery, tiered by volume', 'diff2.li2': 'Fixed rate, set in advance', 'diff2.li3': 'Zero commission on your sales',
     'diff3.h3': 'Zero coordination<br>on your end', 'diff3.lead': 'Place an order.<br>We handle the rest.',
     'diff3.li1': 'Dispatch handled on every order', 'diff3.li2': 'A dedicated contact for your account', 'diff3.li3': 'Delivery confirmation after every run',
@@ -1840,7 +1969,7 @@ const T = {
     'sim.mode.fixed': 'Fixed rate per delivery', 'sim.mode.comm': 'Commission on sales',
     'sim.neutral.title': 'Chaskis is not necessarily more competitive.', 'sim.neutral.p': 'Your current conditions are already tight. To find out whether our tiered pricing can make a difference on some of your orders, let\'s talk for 20 minutes.',
     'sim.neutral.cta': 'Book the analysis <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>',
-    'offres.label': 'Our plans', 'offres.h2': 'Choose your <span class="ac">plan</span>', 'offres.sd': 'No initial commitment. Start with Express, move to Dedicated when your volume justifies it.',
+    'offres.label': 'Our plans', 'offres.h2': 'Choose your <span class="ac">plan</span>', 'offres.sd': 'No commitment. Flex adapts to fluctuating volumes, Dedicated takes over once they stabilise.',
     'offre.flex.ideal': 'A regular service that adapts to your rhythm',
     'offre.dedie.ideal': 'High daily volume: your fleet, without managing it',
     'offre.express.ideal': 'A one-off delivery, no account needed',
@@ -1849,12 +1978,12 @@ const T = {
     'offre.spec.wait': 'Wait time', 'offre.spec.billing': 'Billing', 'offre.spec.degr': 'Tiered', 'offre.spec.commit': 'Commitment',
     'offre.val.no': 'No', 'offre.val.yes': 'Yes',
     'offre.cta.quote': 'Request a quote',
-    'flex.li1': 'No commitment, no minimum duration', 'flex.li2': 'Pickup within 5–15 min', 'flex.li3': 'Real-time tracking + client notifications', 'flex.li4': 'Tiered pricing based on your volume',
-    'flex.spec.wait': '5–15 min', 'flex.spec.billing': 'Per order', 'flex.spec.degr': 'Based on avg. volume', 'flex.note': 'For 3.5 orders per hour',
+    'flex.li1': 'No commitment, no minimum duration', 'flex.li2': 'Pickup within 5 to 15 min', 'flex.li3': 'Real-time tracking + client notifications', 'flex.li4': 'Tiered pricing based on your volume',
+    'flex.spec.wait': '5 to 15 min', 'flex.spec.billing': 'Per order', 'flex.spec.degr': 'Based on avg. volume', 'flex.note': 'For 3.5 orders per hour',
     'dedie.li1': 'Fleet and schedule dedicated to your business', 'dedie.li2': 'Dedicated account manager', 'dedie.li3': 'Courier equipped in your branding', 'dedie.li4': 'Guaranteed replacement in case of absence', 'dedie.li5': 'Immediate availability, zero wait',
     'dedie.spec.wait': 'None', 'dedie.spec.billing': 'Hourly', 'dedie.spec.degr': 'Based on hourly volume', 'dedie.note': 'For 6 orders per hour',
-    'express.li1': 'No contract, no commitment', 'express.li2': 'Online order, immediate payment', 'express.li3': 'Pickup within 30–45 min', 'express.li4': 'Real-time tracking included',
-    'express.spec.wait': '30–45 min', 'express.spec.billing': 'Per kilometre', 'express.spec.degr': 'Based on distance', 'express.btn': 'Order now', 'express.note': 'For a 1 km distance',
+    'express.li1': 'No contract, no commitment', 'express.li2': 'Online order, immediate payment', 'express.li3': 'Pickup within 30 to 45 min', 'express.li4': 'Real-time tracking included',
+    'express.spec.wait': '30 to 45 min', 'express.spec.billing': 'Per kilometre', 'express.spec.degr': 'Based on distance', 'express.btn': 'Order now', 'express.note': 'For a 1 km distance',
     'hero.w1': 'We', 'hero.w2': 'handle', 'hero.w3': 'your', 'hero.w4': 'deliveries,',
     'hero.w5': 'you', 'hero.w6': 'handle', 'hero.w7': 'your', 'hero.w8': 'business',
     'hero.overline': '6 slots available this week',
@@ -1907,7 +2036,7 @@ const T = {
     'bk.slots.avail': 'Available slots', 'bk.slots.full': 'Fully booked today', 'bk.slots.last': 'Last slot remaining', 'bk.slots.few': 'A few slots left',
     'bk.testi0.text': '"In 20 min we had a clear plan. Two weeks later, everything was live."', 'bk.testi0.co': 'Pharmacie du Lac, Geneva',
     'bk.testi1.text': '"The audit revealed costs we hadn\'t even noticed. We saved 22% from the very first month."', 'bk.testi1.co': 'Swiss E-Shop, Neuchâtel',
-    'bk.testi2.text': '"Clear call, no fluff. Concrete, costed recommendation — we knew exactly what to do."', 'bk.testi2.co': 'Maison Bulgari, Geneva',
+    'bk.testi2.text': '"Clear call, no fluff. Concrete, costed recommendation. We knew exactly what to do."', 'bk.testi2.co': 'Maison Bulgari, Geneva',
     'bk.check1': 'Full audit of your delivery costs', 'bk.check2': 'Personalised pricing recommendation', 'bk.check3': 'Turnkey deployment plan',
     'perk1.h4': '20 min max', 'perk1.p': 'We respect your time.',
     'perk2.h4': 'No commitment', 'perk2.p': 'We talk, you decide.',
@@ -1926,13 +2055,13 @@ const T = {
     'faq.sl': 'FAQ',
     'faq.h2': 'Your questions, our <span class="ac">answers</span>',
     'faq.sd': 'Can\'t find it? <a href="#booking" style="color:var(--teal);font-weight:700">Schedule a call</a>.',
-    'faq1.q': 'How is this different from Uber Eats or Stuart?', 'faq1.a': 'No commission on your sales. Fixed rate per delivery. Employed couriers on permanent contracts, not freelancers. Real-time tracking included, no hidden fees.',
-    'faq2.q': 'Express, Flex, Dedicated: what\'s the difference?', 'faq2.a': '<strong>Express</strong>: one-off delivery, from CHF 16, no account needed. <strong>Flex</strong>: per order, from CHF 12, no commitment, ideal for variable volumes. <strong>Dedicated</strong>: hourly rate, from CHF 8, contract + assigned fleet, dedicated account manager.',
-    'faq3.q': 'What is the "merchant order reference"?', 'faq3.a': 'It\'s the code the courier shows the merchant to collect the right order. It prevents parcel mix-ups and automatically notifies the merchant when the courier arrives.',
-    'faq4.q': 'Is it quick to set up?', 'faq4.a': 'Express and Flex: up and running within a few days of the discovery call. Dedicated: setup depends on your volume and schedule. Either way, we handle the full integration.',
-    'faq5.q': 'What are the delivery zones?', 'faq5.a': 'Lausanne, Geneva, Neuchâtel, Fribourg, Montreux, Vevey and surroundings. Expansion planned to Bern and Basel in 2026.',
-    'faq6.q': 'What types of parcels do you transport?', 'faq6.a': 'Documents, parcels up to 15 kg, pharma, luxury goods, temperature-controlled food. We adapt our protocol to each sector.',
-    'faq7.q': 'Can I try before committing?', 'faq7.a': 'Yes. Express and Flex are commitment-free: try with a single delivery. For Dedicated, we run a real-condition test delivery before any contract.',
+    'faq1.q': 'Which plan fits my needs?', 'faq1.a': '<p>It depends on the regularity of your flow, not your size.</p><ul><li><span class="faq-badge">Dedicated</span><span>Daily, steady flow. Assigned courier, lowest cost per delivery.</span></li><li><span class="faq-badge b-purple">Flex</span><span>Fluctuating volume. You pay per order, no commitment.</span></li><li><span class="faq-badge b-ink">Express</span><span>One-off need. Ordered per run from our site, no account needed.</span></li></ul><p>Unsure? Our simulator gives you a recommendation in 30 seconds.</p>',
+    'faq2.q': 'How do my customers place orders?', 'faq2.a': '<p>Through your existing channels. Your customers keep ordering the way they already do: in-store, by phone, on your website, your app, WhatsApp, or via platforms (Uber Eats, Smood, Just Eat…).</p><p>Chaskis does not replace your order tool. We take over once the order is placed, to deliver it. You stay in control of your brand and customer relationship.</p>',
+    'faq3.q': 'How do I send you my orders?', 'faq3.a': '<p>Three options depending on your setup.</p><ul><li><span class="faq-badge">API</span><span>Automatic sync of your orders with our dispatch. The most common case.</span></li><li><span class="faq-badge b-purple">Import</span><span>For grouped flows, sent as a file.</span></li><li><span class="faq-badge b-ink">Dashboard</span><span>Manual entry for exceptional orders (phone call, walk-in).</span></li></ul><p>We handle the full technical setup at launch. No coding on your side.</p>',
+    'faq4.q': 'What if a courier is sick or unavailable?', 'faq4.a': '<p><strong>Replacement guaranteed.</strong> That\'s our problem, not yours.</p><p>Our couriers are employees, not freelancers. We handle absences in-house. If your dedicated courier is on leave or sick, another one steps in the same day, already trained on your standards.</p><p>Unlike freelance platforms, you never face last-minute cancellations or missing couriers.</p>',
+    'faq5.q': 'Damage, loss, disputes: how do you handle them?', 'faq5.a': '<p>Every delivery is tracked and insured.</p><p>At pickup and drop-off, the courier captures a timestamped proof (photo or signature). In case of a dispute, we retrieve the step in question within minutes.</p><p>Deliveries are covered by insurance, with a higher cap for luxury, pharma and legal. Everything is documented in your dashboard.</p>',
+    'faq6.q': 'What zones and what types of parcels?', 'faq6.a': '<p><strong>Zones covered:</strong> Geneva, Nyon, Lausanne and the Riviera.</p><ul><li><span class="faq-badge">Courier bag</span><span>Standard format, Uber Eats style. For documents, envelopes, small parcels.</span></li><li><span class="faq-badge b-purple">Car trunk</span><span>For larger deliveries.</span></li></ul><p>We adapt the protocol (temperature, confidentiality, enhanced proof) to your sector: pharma, food, luxury, legal. A non-standard need? Let\'s discuss it on the discovery call.</p>',
+    'faq7.q': 'Can I switch plans along the way?', 'faq7.a': '<p>Yes, no friction, between <strong>Flex</strong> and <strong>Dedicated</strong>.</p><p>Starting on Flex and your volume grows? We switch to Dedicated as soon as it pays off for you. Conversely, if activity slows down, we move back to Flex with no penalty.</p><p>Express isn\'t really a plan: it\'s the baseline service, ordered directly from our site, no account. You can use it occasionally alongside any plan.</p>',
     'faq.sd.left': 'Can\'t find what you\'re looking for? Call us or come see us.',
     'foot.tag': 'Logistics infrastructure for French-speaking Swiss businesses.',
     'foot.svc.h': 'Services', 'foot.svc.1': 'Order', 'foot.svc.2': 'Dashboard', 'foot.svc.3': 'Our sectors', 'foot.svc.4': 'Schedule a call',
@@ -1962,7 +2091,11 @@ function setLang(lang) {
   // Update desktop lang-drop trigger
   const triggerFlag = document.getElementById('langFlag');
   const triggerCode = document.getElementById('langCode');
-  if (triggerFlag) triggerFlag.textContent = lang === 'en' ? '🇬🇧' : '🇫🇷';
+  if (triggerFlag) {
+    const flagSrc = lang === 'en' ? 'flag-gb.svg' : 'flag-fr.svg';
+    const flagAlt = lang === 'en' ? 'English' : 'Français';
+    triggerFlag.innerHTML = '<img src="' + flagSrc + '" alt="' + flagAlt + '" width="18" height="13">';
+  }
   if (triggerCode) triggerCode.textContent = lang.toUpperCase();
   document.querySelectorAll('.lang-drop-item').forEach(b => {
     const active = b.dataset.lang === lang;

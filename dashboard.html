@@ -3,10 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ===== SEO (privée, noindex) ===== -->
 <title>Tableau de bord | Chaskis</title>
 <meta name="description" content="Gérez vos livraisons, suivez vos commandes et consultez vos factures depuis votre espace client Chaskis.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://www.chaskis.ch/dashboard">
+
+<!-- ===== PWA & Assets ===== -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#3AAFA9">
+<link rel="icon" href="icon-192.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="styles.css">
 <style>
 .page-dash{padding:88px 0 60px;min-height:100vh}
@@ -92,29 +100,47 @@
 .pod-close:hover{background:var(--sand)}
 </style>
 </head>
-<body>
+<body class="page-dashboard">
 
 <div class="mob-m" id="mm">
   <a href="index.html" onclick="cm()">Accueil</a>
-  <a href="commander.html" onclick="cm()">Commander</a>
+  <a href="mobilite.html" onclick="cm()">Mobilit&eacute;</a>
   <a href="postuler.html" onclick="cm()">Postuler</a>
+  <a href="commander.html" onclick="cm()">Commander une course</a>
   <a href="index.html#booking" onclick="cm()">Planifier un appel</a>
   <a href="index.html#faq" onclick="cm()">FAQ</a>
+  <div class="mob-lang-opts">
+    <button class="mob-lang-btn active" data-lang="fr" onclick="setLang('fr');cm()"><span class="mob-lang-flag"><img src="flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
+    <button class="mob-lang-btn" data-lang="en" onclick="setLang('en');cm()"><span class="mob-lang-flag"><img src="flag-gb.svg" alt="" width="18" height="13"></span> English</button>
+  </div>
 </div>
 
 <nav class="nav" id="nav">
   <div class="ct nav-in">
     <a href="index.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
     <div class="nav-mid" style="margin-left:auto">
-      <a href="commander.html">Commander</a>
-      <a href="postuler.html">Postuler</a>
+      <a href="mobilite.html">Mobilit&eacute;</a>
+      <a href="postuler.html" data-i18n="nav.join">Postuler</a>
     </div>
-    <div class="lang-sw" id="langSw" role="radiogroup" aria-label="Langue / Language">
-      <span class="lang-pill" id="langPill" aria-hidden="true"></span>
-      <button class="active" role="radio" aria-checked="true" data-lang="fr" aria-label="Français">FR</button>
-      <button role="radio" aria-checked="false" data-lang="en" aria-label="English">EN</button>
+    <a href="commander.html" class="btn btn-o nav-cta-btn"><span data-i18n="nav.order">Commander une course</span></a>
+    <div class="lang-drop" id="langDrop">
+      <button class="lang-drop-trigger" id="langTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Changer de langue">
+        <span class="lang-drop-flag" id="langFlag"><img src="flag-fr.svg" alt="Français" width="18" height="13"></span>
+        <svg class="lang-drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="lang-drop-menu" id="langMenu" role="listbox" aria-label="Langue">
+        <button class="lang-drop-item active" role="option" data-lang="fr" data-flag="fr" data-code="FR" aria-selected="true">
+          <span class="lang-drop-item-flag"><img src="flag-fr.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">Français</span>
+        </button>
+        <button class="lang-drop-item" role="option" data-lang="en" data-flag="gb" data-code="EN" aria-selected="false">
+          <span class="lang-drop-item-flag"><img src="flag-gb.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">English</span>
+        </button>
+      </div>
     </div>
-    <button class="mob-t" id="mt" aria-label="Menu"><span></span></button>
+    <button class="mob-t" id="mt" aria-label="Menu">
+      <svg class="mob-icon mob-ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+      <svg class="mob-icon mob-ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5L19 19M5 19L19 5"/></svg>
+    </button>
   </div>
 </nav>
 

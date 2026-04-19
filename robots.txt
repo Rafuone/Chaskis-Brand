@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /app
+Disallow: /app.html
+Disallow: /dashboard
+Disallow: /dashboard.html
+Disallow: /*?lang=
+
+Sitemap: https://www.chaskis.ch/sitemap.xml

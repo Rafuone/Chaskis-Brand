@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * translate.js — Auto-traducteur FR→EN pour Chaskis
+ * translate.js : Auto-traducteur FR vers EN pour Chaskis
  *
  * Usage : node translate.js
  *
@@ -84,7 +84,7 @@ console.log(`🔍  ${missingKeys.length} clé(s) à traduire : ${missingKeys.sli
 const toTranslate = missingKeys.map(k => ({ key: k, fr: dictFr[k] }));
 
 const prompt = `Tu es un traducteur professionnel FR→EN pour un service B2B de livraison suisse (Chaskis).
-Traduis chaque valeur du français vers l'anglais. Garde EXACTEMENT le même HTML interne (balises <strong>, <br>, <span class="ac">, <svg>, etc.) — traduis uniquement le texte visible.
+Traduis chaque valeur du français vers l'anglais. Garde EXACTEMENT le même HTML interne (balises <strong>, <br>, <span class="ac">, <svg>, etc.). Traduis uniquement le texte visible.
 Réponds UNIQUEMENT avec un objet JSON valide de la forme { "clé": "traduction_en", ... }, sans aucun texte autour.
 
 Valeurs à traduire :

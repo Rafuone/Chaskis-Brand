@@ -28,6 +28,47 @@ if (mt && mm) {
     document.body.style.overflow = o ? 'hidden' : '';
   });
 }
+function cm() { if (mm) mm.classList.remove('on'); if (mt) mt.classList.remove('on'); document.body.style.overflow = ''; }
+
+// Lang dropdown (works on all pages; defers to page-level setLang if available)
+(function() {
+  const drop = document.getElementById('langDrop');
+  const trigger = document.getElementById('langTrigger');
+  const menu = document.getElementById('langMenu');
+  if (!drop || !trigger || !menu) return;
+  function open() { drop.dataset.open = ''; trigger.setAttribute('aria-expanded', 'true'); }
+  function close() { delete drop.dataset.open; trigger.setAttribute('aria-expanded', 'false'); }
+  trigger.addEventListener('click', e => { e.stopPropagation(); drop.hasAttribute('data-open') ? close() : open(); });
+  menu.addEventListener('click', e => {
+    const item = e.target.closest('.lang-drop-item');
+    if (!item) return;
+    const lang = item.dataset.lang;
+    // Defer to page-level i18n if present, otherwise just update UI state
+    if (typeof window.setLang === 'function') {
+      window.setLang(lang);
+    } else {
+      try { localStorage.setItem('chaskisLang', lang); } catch(e){}
+      const triggerFlag = document.getElementById('langFlag');
+      if (triggerFlag) {
+        const flagSrc = lang === 'en' ? 'flag-gb.svg' : 'flag-fr.svg';
+        const flagAlt = lang === 'en' ? 'English' : 'Français';
+        triggerFlag.innerHTML = '<img src="' + flagSrc + '" alt="' + flagAlt + '" width="18" height="13">';
+      }
+      document.querySelectorAll('.lang-drop-item').forEach(b => {
+        const active = b.dataset.lang === lang;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      document.querySelectorAll('.mob-lang-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.lang === lang);
+      });
+      document.documentElement.lang = lang;
+    }
+    close();
+  });
+  document.addEventListener('click', e => { if (!drop.contains(e.target)) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
 function cm() {
   if (mm) mm.classList.remove('on');
   if (mt) mt.classList.remove('on');

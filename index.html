@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chaskis — Livraisons express en Suisse romande</title>
+<title>Chaskis : Livraisons express en Suisse romande</title>
 <meta name="description" content="Service de livraison B2B en Suisse romande. 800 coursiers salariés, tarifs fixes dès CHF 8, sans engagement. Express, Flex et Dédié. Depuis Genève.">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#4BB3A4">
@@ -44,7 +44,7 @@
 }
 </script>
 <style>
-/* ===== HERO v7 — B2B REFRAME ===== */
+/* ===== HERO v7 : B2B REFRAME ===== */
 .hero{display:flex;align-items:flex-start;padding:156px 0 140px;position:relative;overflow:hidden;background:var(--bg)}
 .hero::before{content:'';position:absolute;top:-25%;right:-18%;width:75vw;height:65vw;max-width:900px;background:radial-gradient(ellipse at 60% 40%,rgba(75,179,164,.16) 0%,rgba(75,179,164,.07) 42%,transparent 70%);pointer-events:none;animation:blob-a 22s ease-in-out infinite}
 .hero::after{content:'';position:absolute;bottom:-30%;left:-12%;width:55vw;height:70vw;max-width:640px;background:radial-gradient(ellipse at 35% 55%,rgba(107,79,160,.13) 0%,rgba(107,79,160,.05) 45%,transparent 72%);pointer-events:none;animation:blob-b 31s ease-in-out infinite}
@@ -57,7 +57,7 @@
 
 .hero h1{font-size:clamp(2.6rem,5.2vw,4.2rem);font-weight:700;line-height:1.04;letter-spacing:-.05em;margin-bottom:18px}
 .hero h1 .word{display:inline-block;opacity:0;transform:translateY(40px) rotateX(-15deg);animation:word-in .7s var(--ease) forwards}
-/* <br> sits at child(5), offsets everything after — explicit rules per position */
+/* <br> sits at child(5), offsets everything after. Explicit rules per position */
 .hero h1 .word:nth-child(1){animation-delay:.1s}
 .hero h1 .word:nth-child(2){animation-delay:.15s}
 .hero h1 .word:nth-child(3){animation-delay:.2s}
@@ -99,17 +99,13 @@
 .hv-stat strong{font-size:.92rem;font-weight:800;display:block;line-height:1.1}
 .hv-stat span{font-size:.58rem;color:var(--ink-muted)}
 
-/* ===== LANG SWITCH ===== */
-.lang-sw{display:flex;align-items:center;gap:1px;background:rgba(44,32,82,.08);border-radius:var(--pill);padding:3px;margin-left:14px;position:relative}
-.lang-sw button{padding:4px 9px;border-radius:var(--pill);font-family:inherit;font-size:.65rem;font-weight:700;letter-spacing:.06em;color:var(--ink-light);background:transparent;border:none;cursor:pointer;transition:color .25s var(--ease),opacity .25s var(--ease);line-height:1;opacity:.55;position:relative;z-index:1}
-.lang-sw button.active{color:var(--ink);opacity:1}
-.lang-pill{position:absolute;top:3px;bottom:3px;left:3px;background:var(--white);border-radius:var(--pill);box-shadow:var(--sh-sm);transition:transform .28s var(--ease),width .28s var(--ease);pointer-events:none;z-index:0;will-change:transform}
-.nav.over-dark .lang-sw{background:rgba(255,255,255,.12)}
-.nav.over-dark .lang-sw .lang-pill{background:rgba(255,255,255,.92)}
-.nav.over-dark .lang-sw button{color:rgba(255,255,255,.7);opacity:.7}
-.nav.over-dark .lang-sw button.active{color:var(--ink);opacity:1}
 
-/* Floating CTA — fixed bottom-right */
+
+/* Floating CTA, fixed bottom-right */
+.nav-cta-btn{padding:8px 18px!important;font-size:.78rem!important;gap:0!important}
+.nav.over-dark .nav-cta-btn{border-color:rgba(255,255,255,.35)!important;color:#fff!important}
+.nav.over-dark .nav-cta-btn:hover{border-color:rgba(255,255,255,.7)!important;background:rgba(255,255,255,.08)!important}
+@media(max-width:767px){.nav-cta-btn{display:none}}
 .nav-cta-float{position:fixed;bottom:28px;right:28px;z-index:200;box-shadow:0 8px 32px rgba(58,175,169,.3);opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .4s var(--ease),transform .4s var(--ease)}
 .nav-cta-float.visible{opacity:1;transform:translateY(0);pointer-events:auto}
 
@@ -185,7 +181,7 @@
 .diff-stat span{font-size:.82rem;color:rgba(255,255,255,.4);font-weight:500;margin-top:8px;display:block}
 @media(max-width:600px){.diff-stats{flex-direction:column;gap:28px;align-items:center}}
 
-/* ===== CE QUE ÇA CHANGE (light — features + photo) ===== */
+/* ===== CE QUE ÇA CHANGE (light : features + photo) ===== */
 .feat-sec{padding:clamp(80px,10vw,120px) 0;background:var(--white);position:relative;overflow:hidden}
 .feat-sec::before{content:'';position:absolute;top:-120px;right:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(75,179,164,.05),transparent 70%);pointer-events:none}
 .feat-head{margin-bottom:clamp(20px,2.5vw,28px)}
@@ -322,7 +318,7 @@
 .pipe-tag.trigger{background:rgba(107,79,160,.15);color:var(--accent-light)}
 .pipe-tag.human{background:rgba(255,255,255,.07);color:rgba(255,255,255,.4)}
 
-/* (how section removed — content absorbed into booking micro-timeline) */
+/* (how section removed, content absorbed into booking micro-timeline) */
 
 /* ===== BENTO ===== */
 .bento{background:var(--white);overflow:hidden}
@@ -357,9 +353,11 @@
 .tc-stars{display:flex;gap:2px;margin-bottom:14px}
 .tc-stars svg{width:15px;height:15px;fill:var(--yellow)}
 .tc-text{font-size:.88rem;color:var(--ink-mid);line-height:1.65;margin-bottom:20px}
-.tc-author{display:flex;align-items:center;gap:10px}
-.tc-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff}
-.tc-info h4{font-size:.82rem;font-weight:700}.tc-info p{font-size:.7rem;color:var(--ink-muted)}
+.tc-author{display:flex;align-items:center;gap:12px}
+.tc-av{width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0;display:block;background:var(--sand)}
+.tc-info{display:flex;flex-direction:column;line-height:1.2}
+.tc-info h4{font-size:.82rem;font-weight:700;line-height:1.25;color:var(--ink)}
+.tc-info p{font-size:.7rem;color:var(--ink-muted);line-height:1.3;margin-top:1px}
 
 /* ===== RECRUIT ===== */
 .recruit{background:linear-gradient(135deg,var(--ink) 0%,#1e2926 100%);color:#fff;position:relative;overflow:hidden;padding:clamp(48px,6vw,72px) 0}
@@ -379,19 +377,34 @@
 .cta-booking::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--teal-bg),transparent 60%);pointer-events:none}
 .cta-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(28px,4vw,56px);align-items:start;position:relative;z-index:1}
 .bk-urgency{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:600;color:var(--teal-dark);background:var(--teal-bg);padding:6px 14px;border-radius:var(--pill);margin-bottom:16px}
+.bk-urgency{font-weight:500}
+.bk-urgency .bk-next-date{font-weight:700;color:var(--teal-dark);letter-spacing:-.005em}
 .bk-urgency-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2);animation:bk-pulse 2s infinite}
 @keyframes bk-pulse{0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,.2)}50%{box-shadow:0 0 0 6px rgba(34,197,94,.1)}}
 .cta-checks{margin-top:20px;display:flex;flex-direction:column;gap:10px}
 .cta-check{display:flex;align-items:center;gap:10px;font-size:.82rem;font-weight:500;color:var(--ink)}
 .cta-check svg{width:18px;height:18px;color:var(--teal);flex-shrink:0}
-.bk-testi{margin-top:24px;padding:18px;background:var(--white);border-radius:var(--r);border:1px solid var(--sand)}
+.bk-testi{margin-top:24px;padding:18px;background:var(--white);border-radius:var(--r);border:1px solid var(--sand);position:relative}
 .bk-testi-stars{display:flex;gap:2px;margin-bottom:8px}
 .bk-testi-stars svg{width:14px;height:14px;fill:#f59e0b;stroke:none}
-.bk-testi-text{font-size:.8rem;color:var(--ink);font-style:italic;line-height:1.55;margin-bottom:10px}
-.bk-testi-author{display:flex;align-items:center;gap:8px}
-.bk-testi-av{width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;flex-shrink:0}
-.bk-testi-author strong{font-size:.72rem;display:block;color:var(--ink)}
-.bk-testi-author span{font-size:.65rem;color:var(--ink-muted)}
+.bk-testi-slides{position:relative}
+.bk-testi-slide{display:none}
+.bk-testi-slide.active{display:block;animation:bkTestiFade .4s var(--ease)}
+@keyframes bkTestiFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.bk-testi-text{font-size:.8rem;color:var(--ink);font-style:italic;line-height:1.55;margin-bottom:12px}
+.bk-testi-author{display:flex;align-items:center;gap:10px}
+.bk-testi-av{width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--sand);display:block}
+.bk-testi-info{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.bk-testi-info strong{font-size:.75rem;color:var(--ink);font-weight:700;line-height:1.25}
+.bk-testi-info span{font-size:.66rem;color:var(--ink-muted);line-height:1.3;margin-top:1px}
+.bk-testi-ctrl{display:flex;align-items:center;justify-content:space-between;margin-top:14px;gap:10px}
+.bk-testi-dots{display:flex;gap:5px}
+.bk-testi-dot{width:5px;height:5px;border-radius:50%;background:rgba(44,32,82,.16);border:0;cursor:pointer;padding:0;transition:all .3s var(--ease)}
+.bk-testi-dot.active{background:var(--teal);width:18px;border-radius:3px}
+.bk-testi-navs{display:flex;gap:6px}
+.bk-testi-nav{background:transparent;border:1px solid rgba(0,0,0,.08);width:24px;height:24px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-mid);transition:all .25s var(--ease);padding:0}
+.bk-testi-nav:hover{background:var(--teal-bg);color:var(--teal);border-color:rgba(75,179,164,.3)}
+.bk-testi-nav svg{width:11px;height:11px}
 .bk-trust{margin-top:20px}
 .bk-trust-label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-muted);display:block;margin-bottom:8px}
 .bk-trust-logos{display:flex;align-items:center;gap:20px;opacity:.5}
@@ -418,6 +431,11 @@
 .bk-d.av:hover{background:rgba(107,91,204,.08);color:var(--ink);border-color:rgba(107,91,204,.15)}
 .bk-d.pk{background:linear-gradient(135deg, #6B5BCC, #7B68D9);color:#fff;box-shadow:0 4px 12px rgba(107,91,204,.25);border-color:transparent}
 .bk-d.past{color:var(--warm-gray);background:transparent}
+.bk-d.full{color:var(--warm-gray);background:transparent;text-decoration:line-through;text-decoration-color:rgba(0,0,0,.15);cursor:not-allowed}
+.bk-d.av.almost{position:relative}
+.bk-d.av.almost::after{content:'';position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:#f59e0b;box-shadow:0 0 0 2px var(--white)}
+.bk-d.pk.almost::after{background:#fff;box-shadow:0 0 0 2px #6B5BCC}
+.bk-cal-header button.disabled{opacity:.3;pointer-events:none}
 .bk-slots-wrap{display:flex;flex-direction:column}
 .bk-slots-title{font-size:.85rem;font-weight:700;color:var(--ink-mid);margin-bottom:12px;display:none}
 .bk-slots-title.active{display:block}
@@ -425,6 +443,8 @@
 .bk-sl{padding:12px 14px;border-radius:8px;font-size:.85rem;font-weight:600;border:1.5px solid var(--sand);color:var(--ink);cursor:pointer;transition:all .3s var(--ease);text-align:center;background:var(--white)}
 .bk-sl:hover{border-color:#6B5BCC;background:rgba(107,91,204,.04);color:var(--ink)}
 .bk-sl.pk{border-color:#6B5BCC;background:linear-gradient(135deg, #6B5BCC, #7B68D9);color:#fff;font-weight:700;box-shadow:0 2px 8px rgba(107,91,204,.2)}
+.bk-sl.taken{color:var(--warm-gray);background:transparent;border-color:transparent;text-decoration:line-through;text-decoration-color:rgba(0,0,0,.15);cursor:not-allowed;pointer-events:none;font-weight:500}
+.bk-sl.taken:hover{border-color:transparent;background:transparent}
 .bk-slots{display:none}.bk-slots.active{display:flex}
 .bk-nav{display:flex;gap:8px;margin-top:24px}
 .bk-nav .btn{flex:1;justify-content:center;padding:11px 16px;font-size:.84rem}
@@ -463,8 +483,8 @@
 .faq-ci a{color:inherit;text-decoration:none;transition:color .3s;font-weight:700}
 .faq-ci a:hover{color:var(--teal)}
 .faq-ci strong{font-weight:700;margin-right:6px;color:var(--ink)}
-.faq-ci.faq-ci-addr{opacity:.3;font-weight:400}
-.faq-ci.faq-ci-addr strong{font-weight:600}
+.faq-ci.faq-ci-addr{color:var(--ink-light);font-weight:400}
+.faq-ci.faq-ci-addr strong{font-weight:600;color:var(--ink-mid)}
 .faq-item.open .fi{background:var(--teal)}.faq-item.open .fi svg{color:#fff;transform:rotate(45deg)}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .5s var(--ease)}
 .faq-a p{padding:0 0 16px;font-size:.82rem;color:var(--ink-light);line-height:1.7}
@@ -653,45 +673,111 @@ span.ast{color:#e53e3e!important;font-weight:700}
 .sim-offer-badge[data-plan="Flex"]{background:rgba(96,165,250,.16);color:#93C5FD;border-color:rgba(147,197,253,.4)}
 .sim-offer-badge[data-plan="Express"]{background:rgba(234,179,8,.16);color:#FDE047;border-color:rgba(253,224,71,.4)}
 .sim-dark .sim-result-detail{color:rgba(255,255,255,.4);font-size:.7rem;line-height:1.5}
+.sim-dark .sim-result-disclaimer{color:rgba(255,255,255,.3);font-size:.66rem;line-height:1.5;margin-top:10px;font-style:italic}
+.sim-mode-wrap{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:4px;margin-bottom:24px}
+.sim-mode-pill{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);background:rgba(75,179,164,.22);border:1px solid rgba(75,179,164,.4);border-radius:999px;transition:transform .35s var(--ease);z-index:0}
+.sim-mode-wrap[data-mode="commission"] .sim-mode-pill{transform:translateX(100%)}
+.sim-mode-btn{position:relative;z-index:1;background:transparent;border:0;color:rgba(255,255,255,.55);font-family:inherit;font-size:.76rem;font-weight:600;padding:9px 8px;cursor:pointer;border-radius:999px;transition:color .3s;letter-spacing:-.005em}
+.sim-mode-btn.active{color:var(--teal-light)}
+.sim-mode-btn:hover:not(.active){color:rgba(255,255,255,.8)}
+.sim-result-neutral-title{font-size:1.05rem;font-weight:700;color:#fff;letter-spacing:-.02em;line-height:1.3;margin:4px 0 10px}
+.sim-result-neutral-p{font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.55;margin-bottom:16px}
+.sim-result-neutral-cta{display:inline-flex;align-items:center;gap:6px;background:var(--teal);color:#fff;padding:9px 18px;border-radius:999px;font-size:.78rem;font-weight:700;text-decoration:none;transition:transform .25s,background .25s}
+.sim-result-neutral-cta:hover{background:var(--teal-dark);transform:translateY(-1px)}
+.sim-result-neutral-cta svg{width:13px;height:13px}
+.sim-dark .sim-result-detail .ast,.sim-dark .sim-offer-label .ast{color:#fca5a5!important;margin-right:1px}
 .sim-dark-points{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
 .sim-dark-points li{display:flex;align-items:center;gap:10px;font-size:.88rem;color:rgba(255,255,255,.78);font-weight:500;line-height:1.4}
 .sim-dark-points li svg{color:var(--teal-light);flex-shrink:0}
 .sim-dark-points li strong{color:var(--teal-light);font-weight:700}
 @media(max-width:1024px){.sim-dark-grid{grid-template-columns:1fr}}
 
+/* ===== LANG DROP ===== */
+.lang-drop{position:relative;margin-left:10px}
+.lang-drop-trigger{display:flex;align-items:center;gap:5px;padding:5px 9px 5px 7px;border-radius:var(--pill);border:1.5px solid transparent;background:transparent;cursor:pointer;font-family:inherit;font-size:.72rem;font-weight:700;letter-spacing:.04em;color:var(--ink-mid);transition:background .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease);white-space:nowrap}
+.lang-drop-trigger:hover{background:rgba(44,32,82,.07);border-color:rgba(44,32,82,.12)}
+.lang-drop-trigger:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.lang-drop-flag{font-size:.9rem;line-height:1;display:flex;align-items:center}
+.lang-drop-code{font-size:.68rem;font-weight:700;letter-spacing:.06em}
+.lang-drop-chevron{width:11px;height:11px;flex-shrink:0;transition:transform .2s var(--ease);color:var(--ink-muted)}
+.lang-drop[data-open] .lang-drop-chevron{transform:rotate(180deg)}
+.lang-drop-menu{position:absolute;top:calc(100% + 6px);right:0;min-width:130px;background:var(--white);border-radius:12px;box-shadow:0 8px 28px rgba(10,5,30,.12),0 2px 8px rgba(10,5,30,.07);border:1px solid rgba(44,32,82,.08);overflow:hidden;opacity:0;transform:translateY(-6px) scale(.97);transform-origin:top right;pointer-events:none;transition:opacity .18s var(--ease),transform .18s var(--ease);z-index:300}
+.lang-drop[data-open] .lang-drop-menu{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.lang-drop-item{display:flex;align-items:center;gap:9px;width:100%;padding:10px 14px;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:500;color:var(--ink-mid);text-align:left;transition:background .15s var(--ease),color .15s var(--ease)}
+.lang-drop-item:hover{background:rgba(75,179,164,.07);color:var(--ink)}
+.lang-drop-item.active{color:var(--teal);font-weight:700;background:var(--teal-bg)}
+.lang-drop-item-flag{font-size:1rem;line-height:1;display:flex;align-items:center}
+.lang-drop-item-name{letter-spacing:-.01em}
+/* Over-dark variant */
+.nav.over-dark .lang-drop-trigger{color:rgba(255,255,255,.75)}
+.nav.over-dark .lang-drop-trigger:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
+.nav.over-dark .lang-drop-chevron{color:rgba(255,255,255,.5)}
+/* Scrolled variant */
+.nav.scrolled .lang-drop-trigger:hover{background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.1)}
+/* Mobile lang opts */
+.mob-lang-opts{display:flex;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(44,32,82,.08)}
+.mob-lang-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 14px;border-radius:10px;border:1.5px solid rgba(44,32,82,.1);background:transparent;cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:600;color:var(--ink-mid);transition:all .2s var(--ease)}
+.mob-lang-btn:hover{background:rgba(75,179,164,.06);border-color:var(--teal);color:var(--teal)}
+.mob-lang-btn.active{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
+.mob-lang-btn span{font-size:1rem;line-height:1}
+
 </style>
 </head>
-<body class="page-home">
+<body class="page-home has-promo">
+<script>
+  // Promo bar: hide if user dismissed it (before paint to avoid flash)
+  try { if (localStorage.getItem('promoDismissed') === '1') { document.body.classList.remove('has-promo'); } } catch(e){}
+</script>
 
 <div class="mob-m" id="mm">
   <a href="index.html" onclick="cm()">Accueil</a>
-  <a href="#services" onclick="cm()">Nos services</a>
   <a href="commander.html" onclick="cm()">Commander</a>
   <a href="mobilite.html" onclick="cm()">Mobilit&eacute;</a>
   <a href="postuler.html" onclick="cm()">Postuler</a>
-  <a href="#booking" onclick="cm()">Planifier un appel</a>
-  <a href="#faq" onclick="cm()">FAQ</a>
-  <div class="lang-sw mob-lang" role="radiogroup" aria-label="Langue / Language">
-    <span class="lang-pill" aria-hidden="true"></span>
-    <button class="active" role="radio" aria-checked="true" data-lang="fr" onclick="setLang('fr')" aria-label="Français">FR</button>
-    <button role="radio" aria-checked="false" data-lang="en" onclick="setLang('en')" aria-label="English">EN</button>
+  <div class="mob-lang-opts">
+    <button class="mob-lang-btn active" data-lang="fr" onclick="setLang('fr');cm()"><span>🇫🇷</span> Français</button>
+    <button class="mob-lang-btn" data-lang="en" onclick="setLang('en');cm()"><span>🇬🇧</span> English</button>
   </div>
+</div>
+
+<div class="promo-bar" id="promoBar" role="region" aria-label="Offre promotionnelle">
+  <div class="promo-bar-inner">
+    <span class="promo-bar-badge">Nouveau site</span>
+    <span class="promo-bar-text"><strong>-15%</strong> sur votre premier mois avec Flex &amp; Dédié</span>
+  </div>
+  <button class="promo-bar-close" id="promoBarClose" aria-label="Fermer la bannière"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
 </div>
 
 <nav class="nav" id="nav">
   <div class="ct nav-in">
     <a href="index.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
     <div class="nav-mid" style="margin-left:auto">
-      <a href="commander.html" data-i18n="nav.order">Commander</a>
       <a href="mobilite.html">Mobilit&eacute;</a>
       <a href="postuler.html" data-i18n="nav.join">Postuler</a>
     </div>
-    <div class="lang-sw" id="langSw" role="radiogroup" aria-label="Langue / Language">
-      <span class="lang-pill" id="langPill" aria-hidden="true"></span>
-      <button class="active" role="radio" aria-checked="true" data-lang="fr" onclick="setLang('fr')" aria-label="Français">FR</button>
-      <button role="radio" aria-checked="false" data-lang="en" onclick="setLang('en')" aria-label="English">EN</button>
+    <a href="commander.html" class="btn btn-o nav-cta-btn"><span data-i18n="nav.order">Commander une course</span></a>
+    <div class="lang-drop" id="langDrop">
+      <button class="lang-drop-trigger" id="langTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Changer de langue">
+        <span class="lang-drop-flag" id="langFlag">🇫🇷</span>
+        <svg class="lang-drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="lang-drop-menu" id="langMenu" role="listbox" aria-label="Langue">
+        <button class="lang-drop-item active" role="option" data-lang="fr" data-flag="🇫🇷" data-code="FR" aria-selected="true">
+          <span class="lang-drop-item-flag">🇫🇷</span><span class="lang-drop-item-name">Français</span>
+        </button>
+        <button class="lang-drop-item" role="option" data-lang="en" data-flag="🇬🇧" data-code="EN" aria-selected="false">
+          <span class="lang-drop-item-flag">🇬🇧</span><span class="lang-drop-item-name">English</span>
+        </button>
+      </div>
     </div>
-    <button class="mob-t" id="mt" aria-label="Menu"><span></span></button>
+    <button class="mob-t" id="mt" aria-label="Menu">
+      <svg class="mob-icon mob-ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+      </svg>
+      <svg class="mob-icon mob-ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M5 5L19 19M5 19L19 5"/>
+      </svg>
+    </button>
   </div>
 </nav>
 
@@ -702,16 +788,16 @@ span.ast{color:#e53e3e!important;font-weight:700}
     <div>
       <div class="hero-overline"><span class="dot"></span><span data-i18n="hero.overline">6 créneaux disponibles cette semaine</span></div>
       <h1>
-        <span class="word">On</span>
-        <span class="word">gère</span>
-        <span class="word">vos</span>
-        <span class="word sa">livraisons,</span><br>
-        <span class="word">vous</span>
-        <span class="word">gérez</span>
-        <span class="word">votre</span>
-        <span class="word sa">business</span>
+        <span class="word" data-i18n="hero.w1">On</span>
+        <span class="word" data-i18n="hero.w2">gère</span>
+        <span class="word" data-i18n="hero.w3">vos</span>
+        <span class="word sa" data-i18n="hero.w4">livraisons,</span><br>
+        <span class="word" data-i18n="hero.w5">vous</span>
+        <span class="word" data-i18n="hero.w6">gérez</span>
+        <span class="word" data-i18n="hero.w7">votre</span>
+        <span class="word sa" data-i18n="hero.w8">business</span>
       </h1>
-      <p class="hero-sub" data-i18n="hero.sub">Livraison B2B en Suisse romande. Coursiers salariés, tarifs fixes, traçabilité complète — le partenaire logistique des entreprises suisses.</p>
+      <p class="hero-sub" data-i18n="hero.sub">Livraison B2B en Suisse romande. Coursiers salariés, tarifs fixes, traçabilité complète : le partenaire logistique des entreprises suisses.</p>
       <div class="hero-actions">
         <a href="#booking" class="btn btn-p pulse"><span data-i18n="hero.cta1">Planifier un appel gratuit</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
         <a href="commander.html" class="btn btn-o"><span data-i18n="hero.cta2">Commander une course</span></a>
@@ -760,9 +846,9 @@ span.ast{color:#e53e3e!important;font-weight:700}
   </div></div>
   <div class="ct">
     <div class="partners-stats">
-      <div class="partners-stat rv"><strong data-count="800" data-suffix="+">0</strong><span>Coursiers en CDI</span></div>
-      <div class="partners-stat rv d1"><strong data-count="1.5" data-suffix="M" data-decimal="true">0</strong><span>Livraisons par an</span></div>
-      <div class="partners-stat rv d2"><strong data-count="6">0</strong><span>Villes en Suisse romande</span></div>
+      <div class="partners-stat rv"><strong data-count="800" data-suffix="+">0</strong><span data-i18n="stat1">Coursiers en CDI</span></div>
+      <div class="partners-stat rv d1"><strong data-count="1.5" data-suffix="M" data-decimal="true">0</strong><span data-i18n="stat2">Livraisons par an</span></div>
+      <div class="partners-stat rv d2"><strong data-count="6">0</strong><span data-i18n="stat3">Villes en Suisse romande</span></div>
     </div>
   </div>
 </div>
@@ -771,9 +857,9 @@ span.ast{color:#e53e3e!important;font-weight:700}
 <section class="diff-sec">
   <div class="ct">
     <div class="diff-head rv">
-      <span class="sl" style="color:var(--teal-light)">Pourquoi Chaskis</span>
-      <h2>La livraison professionnelle,<br><span class="ac">sans les compromis habituels</span></h2>
-      <p>Pour toute entreprise qui veut externaliser ses livraisons à un partenaire fiable — sans commission, sans mauvaise surprise.</p>
+      <span class="sl" data-i18n="diff.label" style="color:var(--teal-light)">Pourquoi Chaskis</span>
+      <h2 data-i18n-html="diff.h2">La livraison professionnelle,<br><span class="ac">sans les compromis habituels</span></h2>
+      <p data-i18n="diff.p">Pour toute entreprise qui veut externaliser ses livraisons à un partenaire fiable, sans commission, sans mauvaise surprise.</p>
     </div>
     <div class="diff-grid">
 
@@ -782,12 +868,12 @@ span.ast{color:#e53e3e!important;font-weight:700}
           <div class="diff-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
           <span class="diff-num">01</span>
         </div>
-        <h3>Coursiers salariés,<br>toujours au rendez-vous</h3>
-        <p>Formés à votre image, équipés à vos couleurs.</p>
+        <h3 data-i18n-html="diff1.h3">Coursiers salariés,<br>toujours au rendez-vous</h3>
+        <p data-i18n="diff1.p">Formés à votre image, équipés à vos couleurs.</p>
         <ul class="diff-list">
-          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Remplacement garanti en cas d'absence</li>
-          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Pas de freelances ni de turnover</li>
-          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Assurés et encadrés en interne</li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="diff1.li1">Remplacement garanti en cas d'absence</span></li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="diff1.li2">Pas de freelances ni de turnover</span></li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="diff1.li3">Assurés et encadrés en interne</span></li>
         </ul>
       </div>
 
@@ -796,12 +882,12 @@ span.ast{color:#e53e3e!important;font-weight:700}
           <div class="diff-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21V3h8"/><path d="M6 16h9"/><path d="M10 9.5h6"/></svg></div>
           <span class="diff-num">02</span>
         </div>
-        <h3>Tarif fixe,<br>coût maîtrisé</h3>
-        <p>Un coût que vous contrôlez — pas un pourcentage prélevé sur chaque vente.</p>
+        <h3 data-i18n-html="diff2.h3">Tarif fixe,<br>coût maîtrisé</h3>
+        <p data-i18n="diff2.p">Un coût que vous contrôlez, pas un pourcentage prélevé sur chaque vente.</p>
         <ul class="diff-list">
-          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span><span style="color:var(--teal-light);font-weight:600">Jusqu'à CHF 8 / livraison, dégressif selon volume</span></li>
-          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Tarif fixe, défini à l'avance</li>
-          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Zéro commission sur vos ventes</li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span><span style="color:var(--teal-light);font-weight:600" data-i18n="diff2.li1">Jusqu'à CHF 8 / livraison, dégressif selon volume</span></li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="diff2.li2">Tarif fixe, défini à l'avance</span></li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="diff2.li3">Zéro commission sur vos ventes</span></li>
         </ul>
       </div>
 
@@ -810,12 +896,12 @@ span.ast{color:#e53e3e!important;font-weight:700}
           <div class="diff-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
           <span class="diff-num">03</span>
         </div>
-        <h3>Zéro coordination<br>de votre côté</h3>
-        <p class="diff-lead">Passez une commande.<br>On s'occupe du reste.</p>
+        <h3 data-i18n-html="diff3.h3">Zéro coordination<br>de votre côté</h3>
+        <p class="diff-lead" data-i18n-html="diff3.lead">Passez une commande.<br>On s'occupe du reste.</p>
         <ul class="diff-list">
-          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Dispatch pris en charge à chaque commande</li>
-          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Un interlocuteur dédié à votre compte</li>
-          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span>Confirmation de livraison à chaque course</li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="diff3.li1">Dispatch pris en charge à chaque commande</span></li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="diff3.li2">Un interlocuteur dédié à votre compte</span></li>
+          <li><span class="diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="diff3.li3">Confirmation de livraison à chaque course</span></li>
         </ul>
       </div>
 
@@ -823,49 +909,49 @@ span.ast{color:#e53e3e!important;font-weight:700}
   </div>
 </section>
 
-<!-- ===== CE QUE ÇA CHANGE — Service de livraison professionnel tout-inclus ===== -->
+<!-- ===== CE QUE ÇA CHANGE : Service de livraison professionnel tout-inclus ===== -->
 <section class="feat-sec" id="services" aria-labelledby="feat-heading">
   <div class="ct">
     <div class="feat-layout">
       <div class="feat-list" role="list">
         <div class="feat-head rv">
-          <span class="sl">Ce que ça change pour vous</span>
-          <h2 class="st" id="feat-heading">Tout est <span class="ac">inclus</span></h2>
-          <p class="sd">On se connecte à vos outils, on gère la logistique.<br>Tout est compris dès la première commande.</p>
+          <span class="sl" data-i18n="feat.label">Ce que ça change pour vous</span>
+          <h2 class="st" id="feat-heading" data-i18n-html="feat.h2">Tout est <span class="ac">inclus</span></h2>
+          <p class="sd" data-i18n-html="feat.sd">On se connecte à vos outils, on gère la logistique.<br>Tout est compris dès la première commande.</p>
         </div>
         <article class="feat-item rv" role="listitem">
           <div class="feat-item-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-          <div class="feat-item-text"><h3>Dispatch automatique</h3><p>Commande transmise → coursier assigné → destinataire notifié par SMS.<br>Sans un appel, sans une relance.</p></div>
+          <div class="feat-item-text" data-i18n-html="feat1.text"><h3>Dispatch automatique</h3><p>Commande transmise → coursier assigné → destinataire notifié par SMS.<br>Sans un appel, sans une relance.</p></div>
         </article>
         <article class="feat-item rv d1" role="listitem">
           <div class="feat-item-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div>
-          <div class="feat-item-text"><h3>Preuve de livraison systématique</h3><p>Photo de livraison après chaque course.<br>Trace irréfutable, zéro contestation possible.</p></div>
+          <div class="feat-item-text" data-i18n-html="feat2.text"><h3>Preuve de livraison systématique</h3><p>Photo de livraison après chaque course.<br>Trace irréfutable, zéro contestation possible.</p></div>
         </article>
         <article class="feat-item rv d2" role="listitem">
           <div class="feat-item-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg></div>
-          <div class="feat-item-text"><h3>Multi-stops et créneaux sur-mesure</h3><p>Express ou planifié, une adresse ou vingt.<br>On s'adapte à votre volume et à vos horaires.</p></div>
+          <div class="feat-item-text" data-i18n-html="feat3.text"><h3>Multi-stops et créneaux sur-mesure</h3><p>Express ou planifié, une adresse ou vingt.<br>On s'adapte à votre volume et à vos horaires.</p></div>
         </article>
         <article class="feat-item rv d3" role="listitem">
           <div class="feat-item-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg></div>
-          <div class="feat-item-text"><h3>Votre marque, pas Chaskis</h3><p>Tenue, matériel et communication à vos couleurs.<br>Disponible dans l'offre Dédiée.</p></div>
+          <div class="feat-item-text" data-i18n-html="feat4.text"><h3>Votre marque, pas Chaskis</h3><p>Tenue, matériel et communication à vos couleurs.<br>Disponible dans l'offre Dédiée.</p></div>
         </article>
         <article class="feat-item rv d4" role="listitem">
           <div class="feat-item-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <div class="feat-item-text"><h3>Tous secteurs d'activité</h3><p><span class="feat-tags">Pharmacies · Médical · Retail · E-commerce · Industrie · Luxe · <span class="feat-tag-more">et plus</span></span></p></div>
+          <div class="feat-item-text" data-i18n-html="feat5.text"><h3>Adapté à votre secteur</h3><p>Pharmacies, cabinets médicaux, commerces, bureaux, ateliers... chaque métier a ses contraintes, on s'adapte à toutes.</p></div>
         </article>
       </div>
       <div class="feat-photo rv d2">
         <div class="feat-mockup">
           <div class="fm-map"><div class="fm-map-inner" id="fmDeliveryMap"></div></div>
           <div class="fm-header">
-            <span class="fm-label">Suivi de livraison</span>
+            <span class="fm-label" data-i18n="feat.fm.label">Suivi de livraison</span>
             <span class="fm-badge" id="fmBadge">⏳ En attente</span>
           </div>
           <div class="fm-steps" id="fmSteps">
-            <div class="fm-step" data-phase="0"><span class="fm-step-ic"></span><span class="fm-step-txt">Commande reçue · <strong>14:08</strong></span></div>
-            <div class="fm-step" data-phase="1"><span class="fm-step-ic"></span><span class="fm-step-txt">Coursier assigné · <strong>14:10</strong></span></div>
-            <div class="fm-step" data-phase="2"><span class="fm-step-ic"></span><span class="fm-step-txt">Point A — en attente</span></div>
-            <div class="fm-step" data-phase="3"><span class="fm-step-ic"></span><span class="fm-step-txt">Point B — en attente</span></div>
+            <div class="fm-step" data-phase="0"><span class="fm-step-ic"></span><span class="fm-step-txt" data-i18n-html="feat.step0">Commande reçue · <strong>14:08</strong></span></div>
+            <div class="fm-step" data-phase="1"><span class="fm-step-ic"></span><span class="fm-step-txt" data-i18n-html="feat.step1">Coursier assigné · <strong>14:10</strong></span></div>
+            <div class="fm-step" data-phase="2"><span class="fm-step-ic"></span><span class="fm-step-txt" data-i18n="feat.step2">Point A : en attente</span></div>
+            <div class="fm-step" data-phase="3"><span class="fm-step-ic"></span><span class="fm-step-txt" data-i18n="feat.step3">Point B : en attente</span></div>
           </div>
           <!-- footer supprimé -->
         </div>
@@ -892,33 +978,63 @@ span.ast{color:#e53e3e!important;font-weight:700}
   <div class="ct">
     <div class="sim-dark-grid">
       <div class="sim-dark-l rv">
-        <span class="sl" style="color:var(--teal-light)">Simulateur d'économies</span>
-        <h2 class="st">Quel est le vrai <span class="ac">coût</span> de vos livraisons ?</h2>
-        <p class="sd">Entre commissions, frais cachés et majorations variables, vos livraisons coûtent plus cher qu'elles ne le laissent paraître. Comparez avec nos tarifs fixes — basés sur votre volume réel.</p>
+        <span class="sl" data-i18n="sim.label" style="color:var(--teal-light)">Simulateur d'économies</span>
+        <h2 class="st" data-i18n-html="sim.h2">Quel est le vrai <span class="ac">coût</span> de vos livraisons ?</h2>
+        <p class="sd" data-i18n="sim.p">Entre commissions, frais cachés et majorations variables, vos livraisons coûtent plus cher qu'elles ne le laissent paraître. Comparez avec nos tarifs fixes, basés sur votre volume réel.</p>
         <ul class="sim-dark-points">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg><span>Tarif fixe dès <strong>CHF 8</strong> par livraison</span></li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg><span>Zéro commission sur vos ventes</span></li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg><span>Dégressif selon votre volume quotidien</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n-html="sim.pt1">Tarif fixe dès <strong>CHF 8</strong> par livraison</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="sim.pt2">Zéro commission sur vos ventes</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="sim.pt3">Dégressif selon votre volume quotidien</span></li>
         </ul>
-        <a href="#booking" class="btn btn-p pulse sim-dark-cta"><span>Calculer mon tarif exact</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#booking" class="btn btn-p pulse sim-dark-cta"><span data-i18n="sim.cta">Calculer mon tarif exact</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
       </div>
       <div class="sim-dark-r rv d2">
         <div class="sim-dark-widget">
+          <div class="sim-mode-wrap" role="tablist" aria-label="Mode de facturation actuel">
+            <span class="sim-mode-pill" id="simModePill"></span>
+            <button class="sim-mode-btn active" role="tab" data-mode="fixed" aria-selected="true" data-i18n="sim.mode.fixed">Tarif fixe par course</button>
+            <button class="sim-mode-btn" role="tab" data-mode="commission" aria-selected="false" data-i18n="sim.mode.comm">Commission sur ventes</button>
+          </div>
+
           <div class="sim-dark-field">
-            <label class="sim-label">Livraisons par jour</label>
+            <label class="sim-label" data-i18n="sim.lbl.vol">Livraisons par jour</label>
             <input type="range" class="sim-range" id="simVol" min="1" max="100" value="20">
             <div class="sim-val" id="simVolVal">20 livraisons/jour</div>
           </div>
-          <div class="sim-dark-field">
-            <label class="sim-label">Coût moyen actuel par livraison (CHF)</label>
-            <input type="range" class="sim-range" id="simCost" min="12" max="40" value="20">
+
+          <!-- MODE : TARIF FIXE -->
+          <div class="sim-dark-field sim-mode-fixed">
+            <label class="sim-label" data-i18n="sim.lbl.cost">Coût moyen actuel par course (CHF)</label>
+            <input type="range" class="sim-range" id="simCost" min="8" max="40" value="20">
             <div class="sim-val" id="simCostVal">CHF 20</div>
           </div>
+
+          <!-- MODE : COMMISSION -->
+          <div class="sim-dark-field sim-mode-commission" hidden>
+            <label class="sim-label" data-i18n="sim.lbl.basket">Panier moyen (CHF)</label>
+            <input type="range" class="sim-range" id="simBasket" min="15" max="120" step="1" value="55">
+            <div class="sim-val" id="simBasketVal">CHF 55</div>
+          </div>
+          <div class="sim-dark-field sim-mode-commission" hidden>
+            <label class="sim-label" data-i18n="sim.lbl.comm">Commission actuelle (%)</label>
+            <input type="range" class="sim-range" id="simComm" min="10" max="35" step="1" value="28">
+            <div class="sim-val" id="simCommVal">28 %</div>
+          </div>
+
           <div class="sim-dark-result">
-            <div class="sim-result-label">Économie mensuelle estimée</div>
-            <div class="sim-result-amount" id="simAmount">CHF 4'400</div>
-            <div class="sim-result-offer" id="simOffer"><span class="sim-offer-label">Offre recommandée</span><span class="sim-offer-badge" data-plan="Flex">Flex · CHF 12/livraison</span></div>
-            <div class="sim-result-detail" id="simDetail">Basé sur 20 livraisons/jour × 22 jours ouvrés</div>
+            <div class="sim-result-good" id="simGood">
+              <div class="sim-result-label" data-i18n="sim.result.savings">Économie mensuelle estimée</div>
+              <div class="sim-result-amount" id="simAmount">CHF 4'400</div>
+              <div class="sim-result-offer" id="simOffer"><span class="sim-offer-label" data-i18n-html="sim.result.offer.label"><span class="ast">*</span> Offre recommandée</span><span class="sim-offer-badge" data-plan="Flex">Flex · CHF 12/livraison</span></div>
+              <div class="sim-result-detail" id="simDetail"><span class="ast">*</span> Basé sur 20 livraisons/jour × 22 jours ouvrés</div>
+            </div>
+            <div class="sim-result-neutral" id="simNeutral" hidden>
+              <div class="sim-result-label" data-i18n="sim.result.profile">Sur votre profil actuel</div>
+              <div class="sim-result-neutral-title" data-i18n="sim.neutral.title">Chaskis n'est pas systématiquement plus avantageux.</div>
+              <p class="sim-result-neutral-p" data-i18n="sim.neutral.p">Vos conditions actuelles sont déjà serrées. Pour savoir si nos tarifs dégressifs peuvent changer la donne sur une partie de vos commandes, parlons-en 20 minutes.</p>
+              <a href="#booking" class="sim-result-neutral-cta" data-i18n-html="sim.neutral.cta">Réserver l'analyse <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            </div>
+            <div class="sim-result-disclaimer" data-i18n="sim.disclaimer">Estimation indicative, ne fait pas office de devis.</div>
           </div>
         </div>
       </div>
@@ -930,7 +1046,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
 <section class="offres" id="offres">
   <div class="ct">
     <div class="offres-header">
-      <div class="sh rv"><span class="sl">Nos offres</span><h2 class="st">Choisissez votre <span class="ac">formule</span></h2><p class="sd">Pas d'engagement initial. Commencez avec Express, évoluez vers Dédié quand votre volume le justifie.</p></div>
+      <div class="sh rv"><span class="sl" data-i18n="offres.label">Nos offres</span><h2 class="st" data-i18n-html="offres.h2">Choisissez votre <span class="ac">formule</span></h2><p class="sd" data-i18n="offres.sd">Pas d'engagement initial. Commencez avec Express, évoluez vers Dédié quand votre volume le justifie.</p></div>
     </div>
     <div class="offres-grid stg" data-mode="3">
 
@@ -938,83 +1054,83 @@ span.ast{color:#e53e3e!important;font-weight:700}
       <div class="offre-card rv" data-offer="flex">
         <div class="offre-head">
           <span class="offre-name">Flex</span>
-          <span class="offre-ideal">Un service régulier qui s'adapte à votre rythme</span>
+          <span class="offre-ideal" data-i18n="offre.flex.ideal">Un service régulier qui s'adapte à votre rythme</span>
         </div>
         <div class="offre-price">
-          <span class="offre-price-label">à partir de</span>
-          <strong>CHF 12</strong><span>/ Commande<span class="ast">*</span></span>
+          <span class="offre-price-label" data-i18n="offre.price.from">à partir de</span>
+          <strong>CHF 12</strong><span>/ <span data-i18n="offre.price.unit">Commande</span><span class="ast">*</span></span>
         </div>
         <hr class="offre-sep">
         <ul class="offre-list">
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Sans engagement, sans durée minimale</span></li>
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Prise en charge sous 5-15 min</span></li>
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Suivi temps réel + notifications client</span></li>
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Tarif dégressif selon votre volume</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="flex.li1">Sans engagement, sans durée minimale</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="flex.li2">Prise en charge sous 5-15 min</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="flex.li3">Suivi temps réel + notifications client</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="flex.li4">Tarif dégressif selon votre volume</span></li>
         </ul>
         <div class="offre-specs">
-          <div class="offre-spec"><span class="offre-spec-label">Temps d'attente</span><span class="offre-spec-val">5-15 min</span></div>
-          <div class="offre-spec"><span class="offre-spec-label">Tarification</span><span class="offre-spec-val">À la commande</span></div>
-          <div class="offre-spec"><span class="offre-spec-label">Dégressif</span><span class="offre-spec-val">Selon le volume moyen</span></div>
-          <div class="offre-spec"><span class="offre-spec-label">Engagement</span><span class="offre-spec-val">Non</span></div>
+          <div class="offre-spec"><span class="offre-spec-label" data-i18n="offre.spec.wait">Temps d'attente</span><span class="offre-spec-val" data-i18n="flex.spec.wait">5-15 min</span></div>
+          <div class="offre-spec"><span class="offre-spec-label" data-i18n="offre.spec.billing">Tarification</span><span class="offre-spec-val" data-i18n="flex.spec.billing">À la commande</span></div>
+          <div class="offre-spec"><span class="offre-spec-label" data-i18n="offre.spec.degr">Dégressif</span><span class="offre-spec-val" data-i18n="flex.spec.degr">Selon le volume moyen</span></div>
+          <div class="offre-spec"><span class="offre-spec-label" data-i18n="offre.spec.commit">Engagement</span><span class="offre-spec-val" data-i18n="offre.val.no">Non</span></div>
         </div>
-        <a href="#booking" class="btn btn-o btn-full"><span>Demander une offre</span></a>
-        <p class="offre-note"><span class="ast">*</span> Pour 3.5 commandes par heure</p>
+        <a href="#booking" class="btn btn-o btn-full"><span data-i18n="offre.cta.quote">Demander une offre</span></a>
+        <p class="offre-note"><span class="ast">*</span> <span data-i18n="flex.note">Pour 3.5 commandes par heure</span></p>
       </div>
 
-      <!-- DÉDIÉ — Von Restorff -->
+      <!-- DÉDIÉ : Von Restorff -->
       <div class="offre-card offre-star rv d2" data-offer="dedie">
-        <div class="offre-badge">Recommandé</div>
+        <div class="offre-badge" data-i18n="offre.badge.recommended">Recommandé</div>
         <div class="offre-head">
           <span class="offre-name">Dédié</span>
-          <span class="offre-ideal">Fort volume quotidien — votre flotte, sans la gérer</span>
+          <span class="offre-ideal" data-i18n="offre.dedie.ideal">Fort volume quotidien : votre flotte, sans la gérer</span>
         </div>
         <div class="offre-price">
-          <span class="offre-price-label">à partir de</span>
-          <strong>CHF 8</strong><span>/ Commande<span class="ast">*</span></span>
+          <span class="offre-price-label" data-i18n="offre.price.from">à partir de</span>
+          <strong>CHF 8</strong><span>/ <span data-i18n="offre.price.unit">Commande</span><span class="ast">*</span></span>
         </div>
         <hr class="offre-sep">
         <ul class="offre-list">
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Flotte et planning dédiés à votre activité</span></li>
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Account manager attitré</span></li>
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Coursier équipé à votre image</span></li>
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Remplacement garanti en cas d'absence</span></li>
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Disponibilité immédiate, zéro attente</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="dedie.li1">Flotte et planning dédiés à votre activité</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="dedie.li2">Account manager attitré</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="dedie.li3">Coursier équipé à votre image</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="dedie.li4">Remplacement garanti en cas d'absence</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="dedie.li5">Disponibilité immédiate, zéro attente</span></li>
         </ul>
         <div class="offre-specs">
-          <div class="offre-spec"><span class="offre-spec-label">Temps d'attente</span><span class="offre-spec-val">Aucun</span></div>
-          <div class="offre-spec"><span class="offre-spec-label">Tarification</span><span class="offre-spec-val">À l'heure</span></div>
-          <div class="offre-spec"><span class="offre-spec-label">Dégressif</span><span class="offre-spec-val">Selon le volume horaire</span></div>
-          <div class="offre-spec"><span class="offre-spec-label">Engagement</span><span class="offre-spec-val">Oui</span></div>
+          <div class="offre-spec"><span class="offre-spec-label" data-i18n="offre.spec.wait">Temps d'attente</span><span class="offre-spec-val" data-i18n="dedie.spec.wait">Aucun</span></div>
+          <div class="offre-spec"><span class="offre-spec-label" data-i18n="offre.spec.billing">Tarification</span><span class="offre-spec-val" data-i18n="dedie.spec.billing">À l'heure</span></div>
+          <div class="offre-spec"><span class="offre-spec-label" data-i18n="offre.spec.degr">Dégressif</span><span class="offre-spec-val" data-i18n="dedie.spec.degr">Selon le volume horaire</span></div>
+          <div class="offre-spec"><span class="offre-spec-label" data-i18n="offre.spec.commit">Engagement</span><span class="offre-spec-val" data-i18n="offre.val.yes">Oui</span></div>
         </div>
-        <a href="#booking" class="btn btn-p pulse btn-full"><span>Demander une offre</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-        <p class="offre-note"><span class="ast">*</span> Pour 6 commandes par heure</p>
+        <a href="#booking" class="btn btn-p pulse btn-full"><span data-i18n="offre.cta.quote">Demander une offre</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <p class="offre-note"><span class="ast">*</span> <span data-i18n="dedie.note">Pour 6 commandes par heure</span></p>
       </div>
 
       <!-- EXPRESS -->
       <div class="offre-card rv d3" data-offer="express">
         <div class="offre-head">
           <span class="offre-name">Express</span>
-          <span class="offre-ideal">Une course ponctuelle, sans compte ni engagement</span>
+          <span class="offre-ideal" data-i18n="offre.express.ideal">Une course ponctuelle, sans compte ni engagement</span>
         </div>
         <div class="offre-price">
-          <span class="offre-price-label">à partir de</span>
-          <strong>CHF 16</strong><span>/ Commande<span class="ast">*</span></span>
+          <span class="offre-price-label" data-i18n="offre.price.from">à partir de</span>
+          <strong>CHF 16</strong><span>/ <span data-i18n="offre.price.unit">Commande</span><span class="ast">*</span></span>
         </div>
         <hr class="offre-sep">
         <ul class="offre-list">
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Sans contrat, sans engagement</span></li>
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Commande en ligne, paiement immédiat</span></li>
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Prise en charge sous 30-45 min</span></li>
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Suivi en temps réel inclus</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="express.li1">Sans contrat, sans engagement</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="express.li2">Commande en ligne, paiement immédiat</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="express.li3">Prise en charge sous 30-45 min</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="express.li4">Suivi en temps réel inclus</span></li>
         </ul>
         <div class="offre-specs">
-          <div class="offre-spec"><span class="offre-spec-label">Temps d'attente</span><span class="offre-spec-val">30-45 min</span></div>
-          <div class="offre-spec"><span class="offre-spec-label">Tarification</span><span class="offre-spec-val">Au kilomètre</span></div>
-          <div class="offre-spec"><span class="offre-spec-label">Dégressif</span><span class="offre-spec-val">Selon la distance</span></div>
-          <div class="offre-spec"><span class="offre-spec-label">Engagement</span><span class="offre-spec-val">Non</span></div>
+          <div class="offre-spec"><span class="offre-spec-label" data-i18n="offre.spec.wait">Temps d'attente</span><span class="offre-spec-val" data-i18n="express.spec.wait">30-45 min</span></div>
+          <div class="offre-spec"><span class="offre-spec-label" data-i18n="offre.spec.billing">Tarification</span><span class="offre-spec-val" data-i18n="express.spec.billing">Au kilomètre</span></div>
+          <div class="offre-spec"><span class="offre-spec-label" data-i18n="offre.spec.degr">Dégressif</span><span class="offre-spec-val" data-i18n="express.spec.degr">Selon la distance</span></div>
+          <div class="offre-spec"><span class="offre-spec-label" data-i18n="offre.spec.commit">Engagement</span><span class="offre-spec-val" data-i18n="offre.val.no">Non</span></div>
         </div>
-        <a href="commander.html" class="btn btn-o btn-full"><span>Commander maintenant</span></a>
-        <p class="offre-note"><span class="ast">*</span> Pour une distance d'1 km</p>
+        <a href="commander.html" class="btn btn-o btn-full"><span data-i18n="express.btn">Commander maintenant</span></a>
+        <p class="offre-note"><span class="ast">*</span> <span data-i18n="express.note">Pour une distance d'1 km</span></p>
       </div>
 
     </div>
@@ -1026,18 +1142,41 @@ span.ast{color:#e53e3e!important;font-weight:700}
 <section class="cta-booking" id="booking">
   <div class="ct cta-layout">
     <div class="rl">
-      <div class="bk-urgency"><span class="bk-urgency-dot"></span>Prochain créneau : <strong id="bkNextSlot">mercredi 9 avril</strong></div>
+      <div class="bk-urgency"><span class="bk-urgency-dot"></span><span data-i18n="bk.urgency.label">Prochain créneau :</span> <span class="bk-next-date" id="bkNextSlot">mercredi 9 avril</span></div>
       <h2 class="st" data-i18n-html="booking.h2">Votre consultation logistique <span class="sa">offerte</span></h2>
       <p class="sd" data-i18n="booking.p">20 minutes de conseil stratégique avec un expert. On audite vos flux, on identifie les leviers d'optimisation, on vous livre un plan d'action concret.</p>
       <div class="cta-checks">
-        <div class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span>Audit complet de vos coûts de livraison</span></div>
-        <div class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span>Recommandation tarifaire personnalisée</span></div>
-        <div class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span>Plan de déploiement clé en main</span></div>
+        <div class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="bk.check1">Audit complet de vos coûts de livraison</span></div>
+        <div class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="bk.check2">Recommandation tarifaire personnalisée</span></div>
+        <div class="cta-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="bk.check3">Plan de déploiement clé en main</span></div>
       </div>
-      <div class="bk-testi">
+      <div class="bk-testi" id="bkTesti">
         <div class="bk-testi-stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div>
-        <p class="bk-testi-text">"En 20 min, on avait un plan clair. 2 semaines plus tard, tout était live."</p>
-        <div class="bk-testi-author"><div class="bk-testi-av">ML</div><div><strong>Marie Laurent</strong><span>Pharmacie du Lac, Genève</span></div></div>
+        <div class="bk-testi-slides" id="bkTestiSlides">
+          <article class="bk-testi-slide active">
+            <p class="bk-testi-text" data-i18n="bk.testi0.text">"En 20 min, on avait un plan clair. 2 semaines plus tard, tout était live."</p>
+            <div class="bk-testi-author"><img class="bk-testi-av" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Marie Laurent" loading="lazy"><div class="bk-testi-info"><strong>Marie Laurent</strong><span data-i18n="bk.testi0.co">Pharmacie du Lac, Genève</span></div></div>
+          </article>
+          <article class="bk-testi-slide">
+            <p class="bk-testi-text" data-i18n="bk.testi1.text">"L'audit a mis en lumière des coûts qu'on ne voyait même pas. On a économisé 22% dès le premier mois."</p>
+            <div class="bk-testi-author"><img class="bk-testi-av" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Pierre Dupont" loading="lazy"><div class="bk-testi-info"><strong>Pierre Dupont</strong><span data-i18n="bk.testi1.co">Swiss E-Shop, Neuchâtel</span></div></div>
+          </article>
+          <article class="bk-testi-slide">
+            <p class="bk-testi-text" data-i18n="bk.testi2.text">"Appel clair, sans bla-bla. Recommandation concrète, chiffrée, on savait quoi faire."</p>
+            <div class="bk-testi-author"><img class="bk-testi-av" src="https://randomuser.me/api/portraits/women/68.jpg" alt="Sophie Berthier" loading="lazy"><div class="bk-testi-info"><strong>Sophie Berthier</strong><span data-i18n="bk.testi2.co">Maison Bulgari, Genève</span></div></div>
+          </article>
+        </div>
+        <div class="bk-testi-ctrl">
+          <div class="bk-testi-dots" id="bkTestiDots">
+            <button class="bk-testi-dot active" data-i="0" aria-label="Témoignage 1"></button>
+            <button class="bk-testi-dot" data-i="1" aria-label="Témoignage 2"></button>
+            <button class="bk-testi-dot" data-i="2" aria-label="Témoignage 3"></button>
+          </div>
+          <div class="bk-testi-navs">
+            <button class="bk-testi-nav" id="bkTestiPrev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <button class="bk-testi-nav" id="bkTestiNext" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="bk-w rr" id="bkW">
@@ -1049,22 +1188,17 @@ span.ast{color:#e53e3e!important;font-weight:700}
             <div class="bk-cal-header">
               <h3 id="bkMonth">Avril 2026</h3>
               <div style="display:flex;gap:4px">
-                <button id="bkPrev" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
-                <button id="bkNext" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                <button id="bkPrev" aria-label="Mois précédent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+                <button id="bkNext" aria-label="Mois suivant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
               </div>
             </div>
             <div class="bk-cal" id="bkCal">
               <div class="bk-d hd">L</div><div class="bk-d hd">M</div><div class="bk-d hd">M</div><div class="bk-d hd">J</div><div class="bk-d hd">V</div><div class="bk-d hd">S</div><div class="bk-d hd">D</div>
-              <div class="bk-d"></div><div class="bk-d"></div><div class="bk-d past">1</div><div class="bk-d past">2</div><div class="bk-d past">3</div><div class="bk-d past">4</div><div class="bk-d past">5</div>
-              <div class="bk-d past">6</div><div class="bk-d past">7</div><div class="bk-d past">8</div><div class="bk-d av" data-d="9">9</div><div class="bk-d av" data-d="10">10</div><div class="bk-d">11</div><div class="bk-d">12</div>
-              <div class="bk-d av" data-d="14">14</div><div class="bk-d av" data-d="15">15</div><div class="bk-d av" data-d="16">16</div><div class="bk-d av" data-d="17">17</div><div class="bk-d av" data-d="18">18</div><div class="bk-d">19</div><div class="bk-d">20</div>
-              <div class="bk-d av" data-d="21">21</div><div class="bk-d av" data-d="22">22</div><div class="bk-d av" data-d="23">23</div><div class="bk-d av" data-d="24">24</div><div class="bk-d av" data-d="25">25</div><div class="bk-d">26</div><div class="bk-d">27</div>
-              <div class="bk-d av" data-d="28">28</div><div class="bk-d av" data-d="29">29</div><div class="bk-d av" data-d="30">30</div>
             </div>
           </div>
           <div class="bk-slots-wrap">
-            <div class="bk-slots-title" id="bkSTitle">Créneaux disponibles</div>
-            <div class="bk-slots" id="bkSl"><div class="bk-sl" data-t="09:00">09:00</div><div class="bk-sl" data-t="10:00">10:00</div><div class="bk-sl" data-t="14:00">14:00</div><div class="bk-sl" data-t="15:30">15:30</div><div class="bk-sl" data-t="16:30">16:30</div></div>
+            <div class="bk-slots-title" id="bkSTitle" data-i18n="bk.slots.avail">Créneaux disponibles</div>
+            <div class="bk-slots" id="bkSl"></div>
           </div>
         </div>
         <div class="bk-nav"><button class="btn btn-p" id="bkN1" disabled><span data-i18n="bk.next">Suivant</span></button></div>
@@ -1089,9 +1223,9 @@ span.ast{color:#e53e3e!important;font-weight:700}
     <div class="faq-banner"><div class="faq-banner-img"></div></div>
     <div class="faq-layout">
       <div class="rl">
-        <span class="sl">FAQ</span>
+        <span class="sl" data-i18n="faq.sl">FAQ</span>
         <h2 class="st" data-i18n-html="faq.h2">Vos questions, nos <span class="ac">réponses</span></h2>
-        <p class="sd">Une question ? On y répond ici. Sinon, appelez-nous ou passez nous voir.</p>
+        <p class="sd" data-i18n="faq.sd.left">Une question ? On y répond ici. Sinon, appelez-nous ou passez nous voir.</p>
         <div class="faq-contact">
           <div class="faq-ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg><a href="mailto:hello@chaskis.ch">hello@chaskis.ch</a></div>
           <div class="faq-ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><a href="tel:+41227000127">+41 22 700 01 27</a></div>
@@ -1101,11 +1235,11 @@ span.ast{color:#e53e3e!important;font-weight:700}
       </div>
     <div class="faq-list rr">
       <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq1.q">En quoi c'est différent d'Uber Eats ou Stuart ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n="faq1.a">Pas de commission à 30%. Tarif fixe. Coursiers salariés CDI, pas auto-entrepreneurs. Suivi en temps réel inclus.</p></div></div>
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq2.q">Express, Flex, Dédié — quelle différence ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n-html="faq2.a"><strong>Express</strong> : ponctuel, dès CHF 16, sans compte. <strong>Flex</strong> : régulier, dès CHF 12, sans engagement. <strong>Dédié</strong> : à l'heure, dès CHF 8, flotte attitrée.</p></div></div>
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq4.q">C'est rapide à mettre en place ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n="faq4.a">Express et Flex : quelques jours. Dédié : selon votre volume. On gère tout le setup (API, Onfleet, Stripe).</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq2.q">Express, Flex, Dédié : quelle différence ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n-html="faq2.a"><strong>Express</strong> : ponctuel, dès CHF 16, sans compte. <strong>Flex</strong> : régulier, dès CHF 12, sans engagement. <strong>Dédié</strong> : à l'heure, dès CHF 8, flotte attitrée.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq4.q">C'est rapide à mettre en place ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n="faq4.a">Express et Flex : quelques jours. Dédié : selon votre volume. On gère tout le setup.</p></div></div>
       <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq5.q">Quelles zones de livraison ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n="faq5.a">Genève, Lausanne, Neuchâtel, Fribourg, Montreux, Vevey. Extension vers Berne et Bâle en 2026.</p></div></div>
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>Quels types de colis transportez-vous ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p>Documents, colis jusqu'à 15 kg, pharma, luxe, alimentaire sous température. On adapte le protocole à chaque secteur.</p></div></div>
-      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3>Puis-je tester avant de m'engager ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p>Oui. Express et Flex sans engagement — testez avec une seule course. Pour le Dédié, course test en conditions réelles avant contrat.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq6.q">Quels types de colis transportez-vous ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n="faq6.a">Documents, colis jusqu'à 15 kg, pharma, luxe, alimentaire sous température. On adapte le protocole à chaque secteur.</p></div></div>
+      <div class="faq-item"><div class="faq-q" role="button" tabindex="0"><h3 data-i18n="faq7.q">Puis-je tester avant de m'engager ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="faq-a"><p data-i18n="faq7.a">Oui. Express et Flex sans engagement : testez avec une seule course. Pour le Dédié, course test en conditions réelles avant contrat.</p></div></div>
     </div>
     </div>
   </div>
@@ -1120,7 +1254,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
       <div class="fc"><h4 data-i18n="foot.co.h">Entreprise</h4><a href="postuler.html" data-i18n="foot.co.1">Postuler</a><a href="#faq">FAQ</a><a href="mailto:contact@chaskis.ch">contact@chaskis.ch</a></div>
       <div class="fc"><h4 data-i18n="foot.leg.h">Légal</h4><a href="#" data-i18n="foot.leg.1">Mentions légales</a><a href="#" data-i18n="foot.leg.2">Confidentialité</a><a href="#" data-i18n="foot.leg.3">CGV</a></div>
     </div>
-    <div class="f-btm"><span>&copy; 2026 Chaskis SA — Genève</span><span>Crafted by <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;font-weight:600">Gamma Project</a></span></div>
+    <div class="f-btm"><span>&copy; 2026 Chaskis SA · Genève</span><span>Crafted by <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;font-weight:600">Gamma Project</a></span></div>
   </div>
 </footer>
 
@@ -1131,11 +1265,15 @@ span.ast{color:#e53e3e!important;font-weight:700}
 <script src="auth.js"></script>
 <script>
 
-// ===== BOOKING CALENDAR (3 steps) =====
+// ===== BOOKING CALENDAR (3 steps, dynamic) =====
 (function() {
   const bkCal = document.getElementById('bkCal');
   const bkSl = document.getElementById('bkSl');
   const bkSTitle = document.getElementById('bkSTitle');
+  const bkMonth = document.getElementById('bkMonth');
+  const bkPrev = document.getElementById('bkPrev');
+  const bkNext = document.getElementById('bkNext');
+  const bkNextSlot = document.getElementById('bkNextSlot');
   const bkN1 = document.getElementById('bkN1');
   const bkN2 = document.getElementById('bkN2');
   const bkB2 = document.getElementById('bkB2');
@@ -1147,7 +1285,60 @@ span.ast{color:#e53e3e!important;font-weight:700}
 
   if (!bkCal || !bkSl) return;
 
-  let selectedDate = null;
+  const MONTHS_FR = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  const MONTHS_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DAYS_FR = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+  const DAYS_EN = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  let calLang = 'fr';
+  function MONTHS(){ return calLang === 'en' ? MONTHS_EN : MONTHS_FR; }
+  function DAYS(){ return calLang === 'en' ? DAYS_EN : DAYS_FR; }
+  const ALL_SLOTS = ['09:00','10:00','11:00','14:00','15:30','16:30'];
+
+  // Deterministic pseudo-random from YYYYMMDD seed (stable across reloads)
+  function rand(seed) {
+    let x = seed;
+    x = (x * 9301 + 49297) % 233280;
+    return x / 233280;
+  }
+  function dayKey(y,m,d){ return y*10000 + (m+1)*100 + d; }
+
+  // For a given date, return array of available slots (subset of ALL_SLOTS)
+  function slotsFor(y,m,d){
+    const weekday = new Date(y,m,d).getDay(); // 0=Sun..6=Sat
+    if (weekday === 0 || weekday === 6) return []; // weekends closed
+    const r = rand(dayKey(y,m,d));
+    // Distribution: 15% complet, 25% 1 slot, 30% 2-3 slots, 30% 4-5 slots
+    if (r < 0.15) return [];
+    if (r < 0.40) { // 1 slot
+      const i = Math.floor(rand(dayKey(y,m,d)+7) * ALL_SLOTS.length);
+      return [ALL_SLOTS[i]];
+    }
+    if (r < 0.70) { // 2-3 slots
+      const count = 2 + Math.floor(rand(dayKey(y,m,d)+13) * 2);
+      return pickSlots(y,m,d,count);
+    }
+    // 4-5 slots
+    const count = 4 + Math.floor(rand(dayKey(y,m,d)+19) * 2);
+    return pickSlots(y,m,d,count);
+  }
+  function pickSlots(y,m,d,count){
+    const pool = ALL_SLOTS.slice();
+    const out = [];
+    let seed = dayKey(y,m,d);
+    for (let i=0; i<count && pool.length; i++){
+      seed += 23;
+      const idx = Math.floor(rand(seed) * pool.length);
+      out.push(pool.splice(idx,1)[0]);
+    }
+    return out.sort();
+  }
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  let viewY = today.getFullYear();
+  let viewM = today.getMonth();
+
+  let selectedY = null, selectedMo = null, selectedD = null;
   let selectedTime = null;
 
   function setStep(n) {
@@ -1156,56 +1347,159 @@ span.ast{color:#e53e3e!important;font-weight:700}
     progSpans.forEach((s, i) => s.classList.toggle('done', i < n));
   }
 
-  function selectDate(day) {
+  function renderSlots(y,m,d){
+    const slots = slotsFor(y,m,d);
+    bkSl.innerHTML = '';
+    ALL_SLOTS.forEach(t => {
+      const el = document.createElement('div');
+      el.className = 'bk-sl';
+      el.dataset.t = t;
+      el.textContent = t;
+      if (slots.indexOf(t) === -1) el.classList.add('taken');
+      else el.addEventListener('click', () => {
+        bkSl.querySelectorAll('.bk-sl.pk').forEach(s => s.classList.remove('pk'));
+        el.classList.add('pk');
+        selectedTime = t;
+        bkN1.disabled = false;
+      });
+      bkSl.appendChild(el);
+    });
+    const n = slots.length;
+    const isEn = calLang === 'en';
+    if (n === 0) bkSTitle.textContent = isEn ? 'Fully booked today' : 'Complet ce jour';
+    else if (n === 1) bkSTitle.textContent = isEn ? 'Last slot remaining' : 'Plus qu\'un créneau';
+    else if (n <= 3) bkSTitle.textContent = isEn ? 'A few slots left' : 'Quelques créneaux restants';
+    else bkSTitle.textContent = isEn ? 'Available slots' : 'Créneaux disponibles';
+  }
+
+  function selectDate(dayEl){
     bkCal.querySelectorAll('.bk-d.pk').forEach(d => d.classList.remove('pk'));
-    day.classList.add('pk');
-    selectedDate = day.dataset.d;
+    dayEl.classList.add('pk');
+    selectedY = parseInt(dayEl.dataset.y,10);
+    selectedMo = parseInt(dayEl.dataset.m,10);
+    selectedD = parseInt(dayEl.dataset.d,10);
     bkSl.classList.add('active');
     bkSTitle.classList.add('active');
     selectedTime = null;
-    bkSl.querySelectorAll('.bk-sl.pk').forEach(s => s.classList.remove('pk'));
     bkN1.disabled = true;
+    renderSlots(selectedY, selectedMo, selectedD);
   }
 
-  // Date selection
-  bkCal.querySelectorAll('.bk-d.av').forEach(day => {
-    day.addEventListener('click', () => selectDate(day));
+  function renderMonth(){
+    bkMonth.textContent = MONTHS()[viewM].charAt(0).toUpperCase()+MONTHS()[viewM].slice(1)+' '+viewY;
+    // Clear (keep first 7 header cells)
+    while (bkCal.children.length > 7) bkCal.removeChild(bkCal.lastChild);
+    // Monday-first grid
+    const first = new Date(viewY, viewM, 1);
+    let startOffset = first.getDay() - 1; if (startOffset < 0) startOffset = 6; // Mon=0..Sun=6
+    for (let i=0; i<startOffset; i++){
+      const d = document.createElement('div');
+      d.className = 'bk-d';
+      bkCal.appendChild(d);
+    }
+    const daysInMonth = new Date(viewY, viewM+1, 0).getDate();
+    for (let d=1; d<=daysInMonth; d++){
+      const el = document.createElement('div');
+      el.className = 'bk-d';
+      el.textContent = d;
+      const dt = new Date(viewY, viewM, d); dt.setHours(0,0,0,0);
+      const isPast = dt < today;
+      const slots = isPast ? [] : slotsFor(viewY, viewM, d);
+      if (isPast) el.classList.add('past');
+      else if (slots.length === 0) el.classList.add('full');
+      else {
+        el.classList.add('av');
+        if (slots.length === 1) el.classList.add('almost');
+        el.dataset.y = viewY; el.dataset.m = viewM; el.dataset.d = d;
+        el.addEventListener('click', () => selectDate(el));
+      }
+      bkCal.appendChild(el);
+    }
+    // Prev button disabled if viewing current month
+    bkPrev.classList.toggle('disabled', viewY === today.getFullYear() && viewM === today.getMonth());
+  }
+
+  function findNextAvailable(){
+    // Search up to 60 days ahead
+    const d = new Date(today);
+    for (let i=0; i<60; i++){
+      const s = slotsFor(d.getFullYear(), d.getMonth(), d.getDate());
+      if (s.length) return { y: d.getFullYear(), m: d.getMonth(), d: d.getDate(), slots: s };
+      d.setDate(d.getDate()+1);
+    }
+    return null;
+  }
+
+  function updateNextSlotBadge(){
+    const n = findNextAvailable();
+    if (!n || !bkNextSlot) return;
+    const dt = new Date(n.y, n.m, n.d);
+    const dayName = DAYS()[dt.getDay()];
+    bkNextSlot.textContent = dayName+' '+n.d+' '+MONTHS()[n.m];
+  }
+
+  bkPrev.addEventListener('click', () => {
+    if (viewY === today.getFullYear() && viewM === today.getMonth()) return;
+    viewM--; if (viewM < 0){ viewM = 11; viewY--; }
+    renderMonth();
+  });
+  bkNext.addEventListener('click', () => {
+    viewM++; if (viewM > 11){ viewM = 0; viewY++; }
+    renderMonth();
   });
 
-  // Pre-select first available date
+  renderMonth();
+  updateNextSlotBadge();
+
+  // Pre-select next available date in current view (or first dispo next month if none)
   const firstAv = bkCal.querySelector('.bk-d.av');
   if (firstAv) selectDate(firstAv);
-
-  // Time selection
-  bkSl.querySelectorAll('.bk-sl').forEach(slot => {
-    slot.addEventListener('click', () => {
-      bkSl.querySelectorAll('.bk-sl.pk').forEach(s => s.classList.remove('pk'));
-      slot.classList.add('pk');
-      selectedTime = slot.dataset.t;
-      bkN1.disabled = false;
-    });
-  });
+  else {
+    // jump to next month that has availability
+    const n = findNextAvailable();
+    if (n){
+      viewY = n.y; viewM = n.m;
+      renderMonth();
+      const target = bkCal.querySelector('.bk-d.av[data-d="'+n.d+'"]');
+      if (target) selectDate(target);
+    }
+  }
 
   // Step 1 → 2
-  bkN1.addEventListener('click', () => { if (selectedDate && selectedTime) setStep(2); });
-
-  // Step 2 → 3 (confirmation)
+  bkN1.addEventListener('click', () => { if (selectedD && selectedTime) setStep(2); });
   bkN2.addEventListener('click', () => setStep(3));
-
-  // Back
   bkB2.addEventListener('click', () => setStep(1));
+
+  window._calRebuild = function(lang) {
+    calLang = lang;
+    renderMonth();
+    updateNextSlotBadge();
+    if (selectedD !== null) renderSlots(selectedY, selectedMo, selectedD);
+  };
 })();
 
-// ===== SIMULATEUR D'ÉCONOMIES =====
+// ===== SIMULATEUR D'ÉCONOMIES (dual mode) =====
 (function() {
   const vol = document.getElementById('simVol');
   const cost = document.getElementById('simCost');
+  const basket = document.getElementById('simBasket');
+  const comm = document.getElementById('simComm');
   const volVal = document.getElementById('simVolVal');
   const costVal = document.getElementById('simCostVal');
+  const basketVal = document.getElementById('simBasketVal');
+  const commVal = document.getElementById('simCommVal');
   const amount = document.getElementById('simAmount');
   const detail = document.getElementById('simDetail');
   const offerBadge = document.querySelector('#simOffer .sim-offer-badge');
-  if (!vol || !cost) return;
+  const modeWrap = document.querySelector('.sim-mode-wrap');
+  const modeBtns = document.querySelectorAll('.sim-mode-btn');
+  const fieldsFixed = document.querySelectorAll('.sim-mode-fixed');
+  const fieldsComm = document.querySelectorAll('.sim-mode-commission');
+  const goodBlock = document.getElementById('simGood');
+  const neutralBlock = document.getElementById('simNeutral');
+  if (!vol) return;
+
+  let mode = 'fixed'; // 'fixed' | 'commission'
 
   function getChaskisRate(v) {
     if (v < 10) return { rate: 16, plan: 'Express' };
@@ -1215,30 +1509,85 @@ span.ast{color:#e53e3e!important;font-weight:700}
   function fmtCHF(n) {
     return "CHF " + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
   }
-  function update() {
-    const v = +vol.value;
-    const c = +cost.value;
-    const { rate, plan } = getChaskisRate(v);
-    const days = 22;
-    const saving = Math.max(0, (c - rate) * v * days);
-    volVal.textContent = v + ' livraison' + (v > 1 ? 's' : '') + '/jour';
-    costVal.textContent = 'CHF ' + c;
-    amount.textContent = fmtCHF(saving);
-    detail.textContent = `Basé sur ${v} livraison${v>1?'s':''}/jour × ${days} jours ouvrés`;
-    if (offerBadge) {
-      offerBadge.textContent = `${plan} · CHF ${rate}/livraison`;
-      offerBadge.dataset.plan = plan;
-    }
-    updateFill(vol);
-    updateFill(cost);
-  }
   function updateFill(el) {
+    if (!el) return;
     const pct = ((el.value - el.min) / (el.max - el.min)) * 100;
     el.style.setProperty('--fill', pct + '%');
   }
+
+  function setMode(next){
+    mode = next;
+    modeWrap.setAttribute('data-mode', next);
+    modeBtns.forEach(b => {
+      const active = b.dataset.mode === next;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    fieldsFixed.forEach(el => el.hidden = (next !== 'fixed'));
+    fieldsComm.forEach(el => el.hidden = (next !== 'commission'));
+    update();
+  }
+
+  function update() {
+    const v = +vol.value;
+    const { rate, plan } = getChaskisRate(v);
+    const days = 22;
+    const lang = window._currentLang || 'fr';
+    const isEn = lang === 'en';
+
+    let currentCostPerCourse;
+    let basisText;
+    if (mode === 'fixed'){
+      currentCostPerCourse = +cost.value;
+      costVal.textContent = 'CHF ' + currentCostPerCourse;
+      basisText = isEn
+        ? `${v} delivery/day × ${days} working days at CHF ${currentCostPerCourse}/delivery`
+        : `${v} course${v>1?'s':''}/jour × ${days} jours à CHF ${currentCostPerCourse}/course`;
+    } else {
+      const b = +basket.value;
+      const p = +comm.value;
+      currentCostPerCourse = b * p / 100;
+      basketVal.textContent = 'CHF ' + b;
+      commVal.textContent = p + ' %';
+      basisText = isEn
+        ? `Basket CHF ${b} × ${p}% commission, ${v} order${v>1?'s':''}/day × ${days} days`
+        : `Panier ${b} CHF × ${p}% de commission, ${v} commande${v>1?'s':''}/jour × ${days} jours`;
+    }
+    volVal.textContent = isEn
+      ? v + (v > 1 ? ' deliveries' : ' delivery') + '/day'
+      : v + ' livraison' + (v > 1 ? 's' : '') + '/jour';
+
+    const saving = (currentCostPerCourse - rate) * v * days;
+
+    if (saving > 0){
+      goodBlock.hidden = false;
+      neutralBlock.hidden = true;
+      amount.textContent = fmtCHF(saving);
+      detail.innerHTML = `<span class="ast">*</span> ${basisText}`;
+      if (offerBadge){
+        offerBadge.textContent = isEn
+          ? `${plan} · CHF ${rate}/delivery`
+          : `${plan} · CHF ${rate}/livraison`;
+        offerBadge.dataset.plan = plan;
+      }
+    } else {
+      goodBlock.hidden = true;
+      neutralBlock.hidden = false;
+    }
+
+    updateFill(vol);
+    updateFill(cost);
+    updateFill(basket);
+    updateFill(comm);
+  }
+
   vol.addEventListener('input', update);
-  cost.addEventListener('input', update);
+  cost && cost.addEventListener('input', update);
+  basket && basket.addEventListener('input', update);
+  comm && comm.addEventListener('input', update);
+  modeBtns.forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
   update();
+  window._simUpdate = update;
 })();
 
 // ===== HERO 3D CARD PARALLAX =====
@@ -1281,7 +1630,7 @@ const extraReveal = new IntersectionObserver(entries => {
 }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.vpc, .pipe-step').forEach(el => extraReveal.observe(el));
 
-// ===== NAV DARK DETECTION (auto — no manual tagging needed) =====
+// ===== NAV DARK DETECTION (auto, no manual tagging needed) =====
 (function() {
   const nav = document.getElementById('nav');
   if (!nav) return;
@@ -1335,14 +1684,57 @@ document.querySelectorAll('.vpc, .pipe-step').forEach(el => extraReveal.observe(
 // ===== I18N =====
 const T = {
   fr: {
-    'nav.order': 'Commander', 'nav.join': 'Postuler',
+    'nav.order': 'Commander une course', 'nav.join': 'Postuler',
+    'stat1': 'Coursiers en CDI', 'stat2': 'Livraisons par an', 'stat3': 'Villes en Suisse romande',
+    'diff.label': 'Pourquoi Chaskis', 'diff.h2': 'La livraison professionnelle,<br><span class="ac">sans les compromis habituels</span>', 'diff.p': 'Pour toute entreprise qui veut externaliser ses livraisons à un partenaire fiable, sans commission, sans mauvaise surprise.',
+    'diff1.h3': 'Coursiers salariés,<br>toujours au rendez-vous', 'diff1.p': 'Formés à votre image, équipés à vos couleurs.',
+    'diff1.li1': 'Remplacement garanti en cas d\'absence', 'diff1.li2': 'Pas de freelances ni de turnover', 'diff1.li3': 'Assurés et encadrés en interne',
+    'diff2.h3': 'Tarif fixe,<br>coût maîtrisé', 'diff2.p': 'Un coût que vous contrôlez, pas un pourcentage prélevé sur chaque vente.',
+    'diff2.li1': 'Jusqu\'à CHF 8 / livraison, dégressif selon volume', 'diff2.li2': 'Tarif fixe, défini à l\'avance', 'diff2.li3': 'Zéro commission sur vos ventes',
+    'diff3.h3': 'Zéro coordination<br>de votre côté', 'diff3.lead': 'Passez une commande.<br>On s\'occupe du reste.',
+    'diff3.li1': 'Dispatch pris en charge à chaque commande', 'diff3.li2': 'Un interlocuteur dédié à votre compte', 'diff3.li3': 'Confirmation de livraison à chaque course',
+    'feat.fm.label': 'Suivi de livraison',
+    'feat.step0': 'Commande reçue · <strong>14:08</strong>', 'feat.step1': 'Coursier assigné · <strong>14:10</strong>',
+    'feat.step2': 'Point A : en attente', 'feat.step3': 'Point B : en attente',
+    'feat.label': 'Ce que ça change pour vous', 'feat.h2': 'Tout est <span class="ac">inclus</span>', 'feat.sd': 'On se connecte à vos outils, on gère la logistique.<br>Tout est compris dès la première commande.',
+    'feat1.text': '<h3>Dispatch automatique</h3><p>Commande transmise → coursier assigné → destinataire notifié par SMS.<br>Sans un appel, sans une relance.</p>',
+    'feat2.text': '<h3>Preuve de livraison systématique</h3><p>Photo de livraison après chaque course.<br>Trace irréfutable, zéro contestation possible.</p>',
+    'feat3.text': '<h3>Multi-stops et créneaux sur-mesure</h3><p>Express ou planifié, une adresse ou vingt.<br>On s\'adapte à votre volume et à vos horaires.</p>',
+    'feat4.text': '<h3>Votre marque, pas Chaskis</h3><p>Tenue, matériel et communication à vos couleurs.<br>Disponible dans l\'offre Dédiée.</p>',
+    'feat5.text': '<h3>Adapté à votre secteur</h3><p>Pharmacies, cabinets médicaux, commerces, bureaux, ateliers... chaque métier a ses contraintes, on s\'adapte à toutes.</p>',
+    'sim.pt1': 'Tarif fixe dès <strong>CHF 8</strong> par livraison', 'sim.pt2': 'Zéro commission sur vos ventes', 'sim.pt3': 'Dégressif selon votre volume quotidien',
+    'sim.cta': 'Calculer mon tarif exact',
+    'sim.lbl.vol': 'Livraisons par jour', 'sim.lbl.cost': 'Coût moyen actuel par course (CHF)', 'sim.lbl.basket': 'Panier moyen (CHF)', 'sim.lbl.comm': 'Commission actuelle (%)',
+    'sim.result.savings': 'Économie mensuelle estimée', 'sim.result.offer.label': '<span class="ast">*</span> Offre recommandée',
+    'sim.result.profile': 'Sur votre profil actuel', 'sim.disclaimer': 'Estimation indicative, ne fait pas office de devis.',
+    'sim.label': 'Simulateur d\'économies', 'sim.h2': 'Quel est le vrai <span class="ac">coût</span> de vos livraisons ?', 'sim.p': 'Entre commissions, frais cachés et majorations variables, vos livraisons coûtent plus cher qu\'elles ne le laissent paraître. Comparez avec nos tarifs fixes, basés sur votre volume réel.',
+    'sim.mode.fixed': 'Tarif fixe par course', 'sim.mode.comm': 'Commission sur ventes',
+    'sim.neutral.title': 'Chaskis n\'est pas systématiquement plus avantageux.', 'sim.neutral.p': 'Vos conditions actuelles sont déjà serrées. Pour savoir si nos tarifs dégressifs peuvent changer la donne sur une partie de vos commandes, parlons-en 20 minutes.',
+    'sim.neutral.cta': 'Réserver l\'analyse <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>',
+    'offres.label': 'Nos offres', 'offres.h2': 'Choisissez votre <span class="ac">formule</span>', 'offres.sd': 'Pas d\'engagement initial. Commencez avec Express, évoluez vers Dédié quand votre volume le justifie.',
+    'offre.flex.ideal': 'Un service régulier qui s\'adapte à votre rythme',
+    'offre.dedie.ideal': 'Fort volume quotidien : votre flotte, sans la gérer',
+    'offre.express.ideal': 'Une course ponctuelle, sans compte ni engagement',
+    'offre.price.from': 'à partir de', 'offre.price.unit': 'Commande',
+    'offre.badge.recommended': 'Recommandé',
+    'offre.spec.wait': 'Temps d\'attente', 'offre.spec.billing': 'Tarification', 'offre.spec.degr': 'Dégressif', 'offre.spec.commit': 'Engagement',
+    'offre.val.no': 'Non', 'offre.val.yes': 'Oui',
+    'offre.cta.quote': 'Demander une offre',
+    'flex.li1': 'Sans engagement, sans durée minimale', 'flex.li2': 'Prise en charge sous 5-15 min', 'flex.li3': 'Suivi temps réel + notifications client', 'flex.li4': 'Tarif dégressif selon votre volume',
+    'flex.spec.wait': '5-15 min', 'flex.spec.billing': 'À la commande', 'flex.spec.degr': 'Selon le volume moyen', 'flex.note': 'Pour 3.5 commandes par heure',
+    'dedie.li1': 'Flotte et planning dédiés à votre activité', 'dedie.li2': 'Account manager attitré', 'dedie.li3': 'Coursier équipé à votre image', 'dedie.li4': 'Remplacement garanti en cas d\'absence', 'dedie.li5': 'Disponibilité immédiate, zéro attente',
+    'dedie.spec.wait': 'Aucun', 'dedie.spec.billing': 'À l\'heure', 'dedie.spec.degr': 'Selon le volume horaire', 'dedie.note': 'Pour 6 commandes par heure',
+    'express.li1': 'Sans contrat, sans engagement', 'express.li2': 'Commande en ligne, paiement immédiat', 'express.li3': 'Prise en charge sous 30-45 min', 'express.li4': 'Suivi en temps réel inclus',
+    'express.spec.wait': '30-45 min', 'express.spec.billing': 'Au kilomètre', 'express.spec.degr': 'Selon la distance', 'express.btn': 'Commander maintenant', 'express.note': 'Pour une distance d\'1 km',
+    'hero.w1': 'On', 'hero.w2': 'gère', 'hero.w3': 'vos', 'hero.w4': 'livraisons,',
+    'hero.w5': 'vous', 'hero.w6': 'gérez', 'hero.w7': 'votre', 'hero.w8': 'business',
     'hero.overline': '6 créneaux disponibles cette semaine',
-    'hero.sub': 'Livraison B2B en Suisse romande. Coursiers salariés, tarifs fixes, traçabilité complète — le partenaire logistique des entreprises suisses.',
+    'hero.sub': 'Livraison B2B en Suisse romande. Coursiers salariés, tarifs fixes, traçabilité complète : le partenaire logistique des entreprises suisses.',
     'hero.cta1': 'Planifier un appel gratuit', 'hero.cta2': 'Commander une course',
     'hero.stat1': 'Délai moyen', 'hero.stat2': 'vs plateformes', 'hero.stat3': 'Coursiers CDI', 'hero.stat4': 'Courses / an',
     'partners.headline': 'entreprises nous font confiance',
     'zoom.h2': 'La livraison pro, <span class="accent">sans les galères</span>',
-    'zoom.p': 'Tarifs fixes, coursiers salariés CDI, suivi en temps réel. Chaskis est le partenaire B2B conçu pour les entreprises de Suisse romande qui veulent de la fiabilité — pas des mauvaises surprises.',
+    'zoom.p': 'Tarifs fixes, coursiers salariés CDI, suivi en temps réel. Chaskis est le partenaire B2B conçu pour les entreprises de Suisse romande qui veulent de la fiabilité, pas des mauvaises surprises.',
     'bento.label': 'Nos services', 'bento.h2': 'Tout ce dont votre logistique a <span class="ac">besoin</span>',
     'bento1.h3': 'Coursiers & chauffeurs salariés', 'bento1.p': 'Vélo pour la zone urbaine, voiture pour les colis lourds ou longues distances. 800 employés CDI, formés & assurés. Pas d\'auto-entrepreneurs.',
     'bento2.h3': 'Import CSV & API', 'bento2.p': 'Connectez votre POS, WooCommerce ou Shopify. Commandes en masse par CSV. Zéro ressaisie.',
@@ -1364,24 +1756,30 @@ const T = {
     'vpc1.h3': '-40% sur vos coûts', 'vpc1.p': 'Tarif fixe dès CHF 8/course. Sans commission, sans frais cachés. Vos marges restent vos marges.', 'vpc1.big': '-40%',
     'vpc2.h3': 'Zéro gestion manuelle', 'vpc2.p': 'Paiement Stripe → course créée → livreur assigné → SMS envoyé. Tout en automatique, sans intervention humaine.', 'vpc2.big': '0 appel',
     'vpc3.h3': 'Fiabilité suisse', 'vpc3.p': '800 coursiers salariés (pas auto-entrepreneurs), formation interne, assurance complète et preuve de livraison sur chaque course.', 'vpc3.big': 'CDI',
-    'pipe.label': 'Le flux automatisé', 'pipe.h2': 'De la commande à la <span style="color:var(--teal-light)">livraison</span> — sans vous', 'pipe.p': 'Voici ce qui se passe quand un client passe commande. Zéro intervention humaine côté Chaskis, 100% traçable.',
+    'pipe.label': 'Le flux automatisé', 'pipe.h2': 'De la commande à la <span style="color:var(--teal-light)">livraison</span>, sans vous', 'pipe.p': 'Voici ce qui se passe quand un client passe commande. Zéro intervention humaine côté Chaskis, 100% traçable.',
     'pipe.auto': 'Automatique',
     'pipe1.n': 'Étape 1', 'pipe1.h3': 'Client commande', 'pipe1.p': 'Via le formulaire web, votre API ou un import CSV. Référence marchand obligatoire pour identifier le colis.',
     'pipe2.n': 'Étape 2', 'pipe2.h3': 'Stripe confirme', 'pipe2.p': 'Paiement chiffré. Dès validation, un webhook déclenche automatiquement le process en backend.',
-    'pipe3.n': 'Étape 3', 'pipe3.h3': 'Dispatch automatique', 'pipe3.p': 'Onfleet crée la tâche et assigne le coursier disponible le plus proche. Zéro appel, zéro coordination manuelle.',
+    'pipe3.n': 'Étape 3', 'pipe3.h3': 'Dispatch automatique', 'pipe3.p': 'Shipday crée la tâche et assigne le coursier disponible le plus proche. Zéro appel, zéro coordination manuelle.',
     'pipe4.n': 'Étape 4', 'pipe4.h3': 'Livreur s\'identifie', 'pipe4.p': 'Le coursier utilise la référence marchand pour s\'identifier au point de retrait. Le commerçant reçoit un SMS d\'annonce.',
     'pipe5.n': 'Étape 5', 'pipe5.h3': 'Suivi GPS en direct', 'pipe5.p': 'Client et expéditeur reçoivent un lien de tracking en temps réel. Notifications automatiques à chaque étape clé.',
     'pipe6.n': 'Étape 6', 'pipe6.h3': 'Proof of Delivery', 'pipe6.p': 'L\'app livreur exige une photo ou signature pour clôturer la course. Preuve horodatée disponible dans votre dashboard.',
-    'how.label': 'Comment démarrer', 'how.h2': 'Un onboarding <span class="ac">clé en main</span>', 'how.p': 'De l\'appel découverte à votre première livraison — on gère tout le setup.',
+    'how.label': 'Comment démarrer', 'how.h2': 'Un onboarding <span class="ac">clé en main</span>', 'how.p': 'De l\'appel découverte à votre première livraison, on gère tout le setup.',
     'how1.h3': 'Appel découverte (20 min)', 'how1.p': 'On comprend votre volume, vos secteurs, vos contraintes. On propose le bon plan : Express, Flex ou Dédié.',
-    'how2.h3': 'Setup technique', 'how2.p': 'Création du compte, config API ou import CSV, connexion Stripe, parametrage Onfleet/Make.com. On gère tout.',
+    'how2.h3': 'Setup technique', 'how2.p': 'Création du compte, config API ou import CSV, connexion Stripe, paramétrage Shipday. On gère tout.',
     'how3.h3': 'Première course test', 'how3.p': 'On effectue une course en conditions réelles pour valider le flux complet : commande → dispatch → POD.',
     'how4.h3': 'Go live & optimisation', 'how4.p': 'Dashboard actif, coursiers dédiés assignés, analytics hebdomadaires. Vous n\'avez plus à penser à la logistique.',
     'recruit.h2': 'Rejoignez les <span class="purple">800+ coursiers</span> qui ont choisi Chaskis',
     'recruit.p': 'CDI, horaires flexibles, matériel fourni, assurance complète. Un vrai job, pas une mission freelance.',
     'recruit.b1': 'CDI', 'recruit.b2': 'Horaires flex', 'recruit.b3': 'Assuré', 'recruit.b4': 'Matériel fourni',
     'recruit.cta': 'Découvrir les postes',
-    'booking.label': 'Démarrer avec Chaskis', 'booking.h2': 'Planifiez votre appel <span class="sa">gratuit</span>', 'booking.p': '20 minutes pour comprendre votre activité et proposer le bon plan logistique. Sans engagement.',
+    'booking.label': 'Démarrer avec Chaskis', 'booking.h2': 'Votre consultation logistique <span class="sa">offerte</span>', 'booking.p': '20 minutes de conseil stratégique avec un expert. On audite vos flux, on identifie les leviers d\'optimisation, on vous livre un plan d\'action concret.',
+    'bk.urgency.label': 'Prochain créneau :',
+    'bk.slots.avail': 'Créneaux disponibles', 'bk.slots.full': 'Complet ce jour', 'bk.slots.last': 'Plus qu\'un créneau', 'bk.slots.few': 'Quelques créneaux restants',
+    'bk.testi0.text': '"En 20 min, on avait un plan clair. 2 semaines plus tard, tout était live."', 'bk.testi0.co': 'Pharmacie du Lac, Genève',
+    'bk.testi1.text': '"L\'audit a mis en lumière des coûts qu\'on ne voyait même pas. On a économisé 22% dès le premier mois."', 'bk.testi1.co': 'Swiss E-Shop, Neuchâtel',
+    'bk.testi2.text': '"Appel clair, sans bla-bla. Recommandation concrète, chiffrée, on savait quoi faire."', 'bk.testi2.co': 'Maison Bulgari, Genève',
+    'bk.check1': 'Audit complet de vos coûts de livraison', 'bk.check2': 'Recommandation tarifaire personnalisée', 'bk.check3': 'Plan de déploiement clé en main',
     'perk1.h4': '20 min chrono', 'perk1.p': 'On respecte votre temps.',
     'perk2.h4': 'Sans engagement', 'perk2.p': 'On discute, vous décidez.',
     'perk3.h4': 'Tarif sur mesure', 'perk3.p': 'Adapté à votre volume et secteur.',
@@ -1396,13 +1794,17 @@ const T = {
     'bk.f.sector.opts': '<option>E-commerce / Retail</option><option>Médical / Pharma</option><option>Luxe / Bijouterie</option><option>Juridique / Notarial</option><option>Restauration</option><option>Autre</option>',
     'bk.back': 'Retour', 'bk.confirm': 'Confirmer',
     'bk.step3.h3': 'C\'est réservé !', 'bk.step3.p': 'Confirmation par email. À très vite !',
+    'faq.sl': 'FAQ',
     'faq.h2': 'Vos questions, nos <span class="ac">réponses</span>',
     'faq.sd': 'Pas trouvé ? <a href="#booking" style="color:var(--teal);font-weight:700">Planifiez un appel</a>.',
-    'faq1.q': 'En quoi c\'est différent d\'Uber Eats ou Stuart ?', 'faq1.a': 'Pas de commission à 30%. Tarif fixe. Coursiers salariés CDI, pas auto-entrepreneurs. Et surtout : coursiers salariés CDI, tarif fixe garanti, suivi en temps réel inclus.',
-    'faq2.q': 'Express, Flex, Dédié — quelle différence ?', 'faq2.a': '<strong>Express</strong> : livraison ponctuelle, dès CHF 16 au kilomètre, sans compte. <strong>Flex</strong> : à la commande, dès CHF 12, sans engagement, idéal pour les volumes variables. <strong>Dédié</strong> : tarification à l\'heure, dès CHF 8, contrat + flotte attitrée, account manager dédié.',
+    'faq1.q': 'En quoi c\'est différent d\'Uber Eats ou Stuart ?', 'faq1.a': 'Pas de commission sur vos ventes. Tarif fixe par course. Coursiers salariés CDI, pas auto-entrepreneurs. Suivi en temps réel inclus, sans frais cachés.',
+    'faq2.q': 'Express, Flex, Dédié : quelle différence ?', 'faq2.a': '<strong>Express</strong> : livraison ponctuelle, dès CHF 16, sans compte. <strong>Flex</strong> : à la commande, dès CHF 12, sans engagement, idéal pour les volumes variables. <strong>Dédié</strong> : tarification à l\'heure, dès CHF 8, contrat + flotte attitrée, account manager dédié.',
     'faq3.q': 'C\'est quoi la "référence commande marchand" ?', 'faq3.a': 'C\'est le code que le livreur présente au commerçant pour récupérer la bonne commande. Ça évite les erreurs de colis et permet de notifier le commerçant automatiquement à l\'arrivée du coursier.',
-    'faq4.q': 'C\'est rapide à mettre en place ?', 'faq4.a': 'Express et Flex : démarrage en quelques jours après l\'appel découverte. Dédié : la mise en place dépend de votre volume et planning. Dans tous les cas, on gère l\'intégralité du setup (API, Onfleet, Stripe).',
+    'faq4.q': 'C\'est rapide à mettre en place ?', 'faq4.a': 'Express et Flex : démarrage en quelques jours après l\'appel découverte. Dédié : la mise en place dépend de votre volume et planning. Dans tous les cas, on gère l\'intégralité du setup.',
     'faq5.q': 'Quelles zones de livraison ?', 'faq5.a': 'Lausanne, Genève, Neuchâtel, Fribourg, Montreux, Vevey et environs. Extension prévue vers Berne et Bâle en 2026.',
+    'faq6.q': 'Quels types de colis transportez-vous ?', 'faq6.a': 'Documents, colis jusqu\'à 15 kg, pharma, luxe, alimentaire sous température contrôlée. On adapte le protocole à chaque secteur.',
+    'faq7.q': 'Puis-je tester avant de m\'engager ?', 'faq7.a': 'Oui. Express et Flex sans engagement : testez avec une seule course. Pour le Dédié, on effectue une course test en conditions réelles avant tout contrat.',
+    'faq.sd.left': 'Une question ? On y répond ici. Sinon, appelez-nous ou passez nous voir.',
     'foot.tag': 'Infrastructure logistique pour les entreprises de Suisse romande.',
     'foot.svc.h': 'Services', 'foot.svc.1': 'Commander', 'foot.svc.2': 'Tableau de bord', 'foot.svc.3': 'Nos secteurs', 'foot.svc.4': 'Planifier un appel',
     'foot.co.h': 'Entreprise', 'foot.co.1': 'Postuler',
@@ -1411,18 +1813,61 @@ const T = {
     'float.cta': 'Planifier un appel',
   },
   en: {
-    'nav.order': 'Order', 'nav.join': 'Join us',
+    'nav.order': 'Place an order', 'nav.join': 'Join us',
+    'stat1': 'Employed couriers', 'stat2': 'Deliveries per year', 'stat3': 'Cities in French Switzerland',
+    'diff.label': 'Why Chaskis', 'diff.h2': 'Professional delivery,<br><span class="ac">without the usual trade-offs</span>', 'diff.p': 'For any business that wants to outsource its deliveries to a reliable partner — no commission, no surprises.',
+    'diff1.h3': 'Employed couriers,<br>always on time', 'diff1.p': 'Trained to your standards, equipped in your brand.',
+    'diff1.li1': 'Guaranteed replacement in case of absence', 'diff1.li2': 'No freelancers, no turnover', 'diff1.li3': 'Insured and managed in-house',
+    'diff2.h3': 'Fixed rate,<br>controlled costs', 'diff2.p': 'A cost you control — not a percentage taken from every sale.',
+    'diff2.li1': 'From CHF 8 / delivery, tiered by volume', 'diff2.li2': 'Fixed rate, set in advance', 'diff2.li3': 'Zero commission on your sales',
+    'diff3.h3': 'Zero coordination<br>on your end', 'diff3.lead': 'Place an order.<br>We handle the rest.',
+    'diff3.li1': 'Dispatch handled on every order', 'diff3.li2': 'A dedicated contact for your account', 'diff3.li3': 'Delivery confirmation after every run',
+    'feat.fm.label': 'Delivery tracking',
+    'feat.step0': 'Order received · <strong>14:08</strong>', 'feat.step1': 'Courier assigned · <strong>14:10</strong>',
+    'feat.step2': 'Point A: waiting', 'feat.step3': 'Point B: waiting',
+    'feat.label': 'What changes for you', 'feat.h2': 'Everything is <span class="ac">included</span>', 'feat.sd': 'We connect to your tools, we manage the logistics.<br>Everything is covered from your very first order.',
+    'feat1.text': '<h3>Automatic dispatch</h3><p>Order placed → courier assigned → recipient notified by SMS.<br>No calls, no follow-ups.</p>',
+    'feat2.text': '<h3>Systematic proof of delivery</h3><p>Photo after every delivery.<br>Irrefutable record, zero disputes.</p>',
+    'feat3.text': '<h3>Multi-stop & custom time slots</h3><p>Express or scheduled, one address or twenty.<br>We adapt to your volume and your hours.</p>',
+    'feat4.text': '<h3>Your brand, not Chaskis</h3><p>Uniform, equipment and communication in your colours.<br>Available with the Dedicated plan.</p>',
+    'feat5.text': '<h3>Adapted to your sector</h3><p>Pharmacies, medical practices, shops, offices, workshops... every trade has its constraints, we adapt to all of them.</p>',
+    'sim.pt1': 'Fixed rate from <strong>CHF 8</strong> per delivery', 'sim.pt2': 'Zero commission on your sales', 'sim.pt3': 'Tiered pricing based on your daily volume',
+    'sim.cta': 'Calculate my exact rate',
+    'sim.lbl.vol': 'Deliveries per day', 'sim.lbl.cost': 'Current average cost per delivery (CHF)', 'sim.lbl.basket': 'Average basket (CHF)', 'sim.lbl.comm': 'Current commission (%)',
+    'sim.result.savings': 'Estimated monthly savings', 'sim.result.offer.label': '<span class="ast">*</span> Recommended plan',
+    'sim.result.profile': 'Based on your current profile', 'sim.disclaimer': 'Indicative estimate only, not a binding quote.',
+    'sim.label': 'Savings simulator', 'sim.h2': 'What is the real <span class="ac">cost</span> of your deliveries?', 'sim.p': 'Between commissions, hidden fees and variable surcharges, your deliveries cost more than they appear to. Compare with our fixed rates based on your actual volume.',
+    'sim.mode.fixed': 'Fixed rate per delivery', 'sim.mode.comm': 'Commission on sales',
+    'sim.neutral.title': 'Chaskis is not necessarily more competitive.', 'sim.neutral.p': 'Your current conditions are already tight. To find out whether our tiered pricing can make a difference on some of your orders, let\'s talk for 20 minutes.',
+    'sim.neutral.cta': 'Book the analysis <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>',
+    'offres.label': 'Our plans', 'offres.h2': 'Choose your <span class="ac">plan</span>', 'offres.sd': 'No initial commitment. Start with Express, move to Dedicated when your volume justifies it.',
+    'offre.flex.ideal': 'A regular service that adapts to your rhythm',
+    'offre.dedie.ideal': 'High daily volume: your fleet, without managing it',
+    'offre.express.ideal': 'A one-off delivery, no account needed',
+    'offre.price.from': 'from', 'offre.price.unit': 'Order',
+    'offre.badge.recommended': 'Recommended',
+    'offre.spec.wait': 'Wait time', 'offre.spec.billing': 'Billing', 'offre.spec.degr': 'Tiered', 'offre.spec.commit': 'Commitment',
+    'offre.val.no': 'No', 'offre.val.yes': 'Yes',
+    'offre.cta.quote': 'Request a quote',
+    'flex.li1': 'No commitment, no minimum duration', 'flex.li2': 'Pickup within 5–15 min', 'flex.li3': 'Real-time tracking + client notifications', 'flex.li4': 'Tiered pricing based on your volume',
+    'flex.spec.wait': '5–15 min', 'flex.spec.billing': 'Per order', 'flex.spec.degr': 'Based on avg. volume', 'flex.note': 'For 3.5 orders per hour',
+    'dedie.li1': 'Fleet and schedule dedicated to your business', 'dedie.li2': 'Dedicated account manager', 'dedie.li3': 'Courier equipped in your branding', 'dedie.li4': 'Guaranteed replacement in case of absence', 'dedie.li5': 'Immediate availability, zero wait',
+    'dedie.spec.wait': 'None', 'dedie.spec.billing': 'Hourly', 'dedie.spec.degr': 'Based on hourly volume', 'dedie.note': 'For 6 orders per hour',
+    'express.li1': 'No contract, no commitment', 'express.li2': 'Online order, immediate payment', 'express.li3': 'Pickup within 30–45 min', 'express.li4': 'Real-time tracking included',
+    'express.spec.wait': '30–45 min', 'express.spec.billing': 'Per kilometre', 'express.spec.degr': 'Based on distance', 'express.btn': 'Order now', 'express.note': 'For a 1 km distance',
+    'hero.w1': 'We', 'hero.w2': 'handle', 'hero.w3': 'your', 'hero.w4': 'deliveries,',
+    'hero.w5': 'you', 'hero.w6': 'handle', 'hero.w7': 'your', 'hero.w8': 'business',
     'hero.overline': '6 slots available this week',
-    'hero.sub': 'B2B delivery across French-speaking Switzerland. Employed couriers, fixed rates, full tracking — the logistics partner for Swiss businesses.',
+    'hero.sub': 'B2B delivery across French-speaking Switzerland. Employed couriers, fixed rates, full tracking: the logistics partner for Swiss businesses.',
     'hero.cta1': 'Schedule a free call', 'hero.cta2': 'Place an order',
     'hero.stat1': 'Avg. delivery', 'hero.stat2': 'vs platforms', 'hero.stat3': 'Employed couriers', 'hero.stat4': 'Deliveries / yr',
     'partners.headline': 'companies trust us',
     'zoom.h2': 'Professional delivery, <span class="accent">without the headaches</span>',
-    'zoom.p': 'Fixed rates, full-time employed couriers, real-time tracking. Chaskis is the B2B partner built for Swiss businesses that need reliability — not surprises.',
+    'zoom.p': 'Fixed rates, full-time employed couriers, real-time tracking. Chaskis is the B2B partner built for Swiss businesses that need reliability, not surprises.',
     'bento.label': 'Our services', 'bento.h2': 'Everything your logistics <span class="ac">needs</span>',
     'bento1.h3': 'Employed couriers & drivers', 'bento1.p': 'Bike for urban zones, car for heavy parcels or longer distances. 800 full-time employees, trained & insured. No freelancers.',
     'bento2.h3': 'CSV import & API', 'bento2.p': 'Connect your POS, WooCommerce or Shopify. Bulk orders via CSV. Zero manual re-entry.',
-    'bento3.h3': 'Multi-stop routes', 'bento3.p': 'Optimise your delivery rounds. Add as many stops as needed — the route is recalculated in real time.',
+    'bento3.h3': 'Multi-stop routes', 'bento3.p': 'Optimise your delivery rounds. Add as many stops as needed: the route is recalculated in real time.',
     'bento4.h3': 'Dashboard & analytics', 'bento4.p': 'Real-time dashboard, delivery history, monthly reports, performance KPIs.',
     'bento5.h3': 'Proof of Delivery', 'bento5.p': 'Photo or electronic signature at every handover. Time-stamped, geolocated, stored in your client portal. Dispute? You have the proof.',
     'testi.label': 'Testimonials', 'testi.h2': 'What our <span class="ac">clients</span> say',
@@ -1440,24 +1885,30 @@ const T = {
     'vpc1.h3': '-40% on your costs', 'vpc1.p': 'Fixed rate from CHF 8/delivery. No commission, no hidden fees. Your margins stay yours.', 'vpc1.big': '-40%',
     'vpc2.h3': 'Zero manual management', 'vpc2.p': 'Stripe payment → delivery created → courier assigned → SMS sent. Fully automated, no human intervention.', 'vpc2.big': '0 call',
     'vpc3.h3': 'Swiss reliability', 'vpc3.p': '800 employed couriers (not freelancers), in-house training, full insurance and proof of delivery on every order.', 'vpc3.big': 'CDI',
-    'pipe.label': 'The automated flow', 'pipe.h2': 'From order to <span style="color:var(--teal-light)">delivery</span> — hands-free', 'pipe.p': 'Here\'s what happens when a client places an order. Zero manual intervention on the Chaskis side, 100% traceable.',
+    'pipe.label': 'The automated flow', 'pipe.h2': 'From order to <span style="color:var(--teal-light)">delivery</span>, hands-free', 'pipe.p': 'Here\'s what happens when a client places an order. Zero manual intervention on the Chaskis side, 100% traceable.',
     'pipe.auto': 'Automatic',
     'pipe1.n': 'Step 1', 'pipe1.h3': 'Client orders', 'pipe1.p': 'Via the web form, your API or a CSV import. Merchant reference required to identify the parcel.',
     'pipe2.n': 'Step 2', 'pipe2.h3': 'Stripe confirms', 'pipe2.p': 'Encrypted payment. Once validated, a webhook automatically triggers the backend process.',
-    'pipe3.n': 'Step 3', 'pipe3.h3': 'Automatic dispatch', 'pipe3.p': 'Onfleet creates the task and assigns the nearest available courier. Zero calls, zero manual coordination.',
+    'pipe3.n': 'Step 3', 'pipe3.h3': 'Automatic dispatch', 'pipe3.p': 'Shipday creates the task and assigns the nearest available courier. Zero calls, zero manual coordination.',
     'pipe4.n': 'Step 4', 'pipe4.h3': 'Courier checks in', 'pipe4.p': 'The courier uses the merchant reference to identify themselves at the pickup point. The merchant receives an SMS notification.',
     'pipe5.n': 'Step 5', 'pipe5.h3': 'Live GPS tracking', 'pipe5.p': 'Client and sender receive a real-time tracking link. Automatic notifications at each key stage.',
     'pipe6.n': 'Step 6', 'pipe6.h3': 'Proof of Delivery', 'pipe6.p': 'The courier app requires a photo or signature to close the delivery. Time-stamped proof available in your dashboard.',
-    'how.label': 'Getting started', 'how.h2': 'A turnkey <span class="ac">onboarding</span>', 'how.p': 'From discovery call to your first delivery — we handle the entire setup.',
+    'how.label': 'Getting started', 'how.h2': 'A turnkey <span class="ac">onboarding</span>', 'how.p': 'From discovery call to your first delivery, we handle the entire setup.',
     'how1.h3': 'Discovery call (20 min)', 'how1.p': 'We understand your volume, sectors and constraints. We propose the right plan: Express, Flex or Dedicated.',
-    'how2.h3': 'Technical setup', 'how2.p': 'Account creation, API config or CSV import, Stripe connection, Onfleet/Make.com setup. We handle everything.',
+    'how2.h3': 'Technical setup', 'how2.p': 'Account creation, API config or CSV import, Stripe connection, Shipday setup. We handle everything.',
     'how3.h3': 'First test delivery', 'how3.p': 'We run a live delivery to validate the full flow: order → dispatch → POD.',
     'how4.h3': 'Go live & optimisation', 'how4.p': 'Dashboard active, dedicated couriers assigned, weekly analytics. You no longer have to think about logistics.',
     'recruit.h2': 'Join the <span class="purple">800+ couriers</span> who chose Chaskis',
     'recruit.p': 'Permanent contract, flexible hours, equipment provided, full insurance. A real job, not a freelance gig.',
     'recruit.b1': 'Full-time', 'recruit.b2': 'Flex hours', 'recruit.b3': 'Insured', 'recruit.b4': 'Equipment provided',
     'recruit.cta': 'See open positions',
-    'booking.label': 'Get started with Chaskis', 'booking.h2': 'Schedule your <span class="sa">free</span> call', 'booking.p': '20 minutes to understand your business and propose the right logistics plan. No commitment.',
+    'booking.label': 'Get started with Chaskis', 'booking.h2': 'Your complimentary <span class="sa">logistics consultation</span>', 'booking.p': '20 minutes of strategic advice with an expert. We audit your flows, identify levers for optimisation, and deliver a concrete action plan.',
+    'bk.urgency.label': 'Next slot:',
+    'bk.slots.avail': 'Available slots', 'bk.slots.full': 'Fully booked today', 'bk.slots.last': 'Last slot remaining', 'bk.slots.few': 'A few slots left',
+    'bk.testi0.text': '"In 20 min we had a clear plan. Two weeks later, everything was live."', 'bk.testi0.co': 'Pharmacie du Lac, Geneva',
+    'bk.testi1.text': '"The audit revealed costs we hadn\'t even noticed. We saved 22% from the very first month."', 'bk.testi1.co': 'Swiss E-Shop, Neuchâtel',
+    'bk.testi2.text': '"Clear call, no fluff. Concrete, costed recommendation — we knew exactly what to do."', 'bk.testi2.co': 'Maison Bulgari, Geneva',
+    'bk.check1': 'Full audit of your delivery costs', 'bk.check2': 'Personalised pricing recommendation', 'bk.check3': 'Turnkey deployment plan',
     'perk1.h4': '20 min max', 'perk1.p': 'We respect your time.',
     'perk2.h4': 'No commitment', 'perk2.p': 'We talk, you decide.',
     'perk3.h4': 'Custom pricing', 'perk3.p': 'Adapted to your volume and sector.',
@@ -1472,13 +1923,17 @@ const T = {
     'bk.f.sector.opts': '<option>E-commerce / Retail</option><option>Medical / Pharma</option><option>Luxury / Jewellery</option><option>Legal / Notarial</option><option>Restaurants</option><option>Other</option>',
     'bk.back': 'Back', 'bk.confirm': 'Confirm',
     'bk.step3.h3': 'You\'re booked!', 'bk.step3.p': 'Confirmation by email. See you soon!',
+    'faq.sl': 'FAQ',
     'faq.h2': 'Your questions, our <span class="ac">answers</span>',
     'faq.sd': 'Can\'t find it? <a href="#booking" style="color:var(--teal);font-weight:700">Schedule a call</a>.',
-    'faq1.q': 'How is this different from Uber Eats or Stuart?', 'faq1.a': 'No 30% commission. Fixed rate. Employed couriers on permanent contracts, not freelancers. Real-time tracking included, guaranteed fixed price.',
-    'faq2.q': 'Express, Flex, Dedicated — what\'s the difference?', 'faq2.a': '<strong>Express</strong>: one-off delivery, from CHF 16 per km, no account needed. <strong>Flex</strong>: per order, from CHF 12, no commitment, ideal for variable volumes. <strong>Dedicated</strong>: hourly rate, from CHF 8, contract + assigned fleet, dedicated account manager.',
+    'faq1.q': 'How is this different from Uber Eats or Stuart?', 'faq1.a': 'No commission on your sales. Fixed rate per delivery. Employed couriers on permanent contracts, not freelancers. Real-time tracking included, no hidden fees.',
+    'faq2.q': 'Express, Flex, Dedicated: what\'s the difference?', 'faq2.a': '<strong>Express</strong>: one-off delivery, from CHF 16, no account needed. <strong>Flex</strong>: per order, from CHF 12, no commitment, ideal for variable volumes. <strong>Dedicated</strong>: hourly rate, from CHF 8, contract + assigned fleet, dedicated account manager.',
     'faq3.q': 'What is the "merchant order reference"?', 'faq3.a': 'It\'s the code the courier shows the merchant to collect the right order. It prevents parcel mix-ups and automatically notifies the merchant when the courier arrives.',
-    'faq4.q': 'Is it quick to set up?', 'faq4.a': 'Express and Flex: up and running within a few days of the discovery call. Dedicated: setup depends on your volume and schedule. Either way, we handle the full integration (API, Onfleet, Stripe).',
+    'faq4.q': 'Is it quick to set up?', 'faq4.a': 'Express and Flex: up and running within a few days of the discovery call. Dedicated: setup depends on your volume and schedule. Either way, we handle the full integration.',
     'faq5.q': 'What are the delivery zones?', 'faq5.a': 'Lausanne, Geneva, Neuchâtel, Fribourg, Montreux, Vevey and surroundings. Expansion planned to Bern and Basel in 2026.',
+    'faq6.q': 'What types of parcels do you transport?', 'faq6.a': 'Documents, parcels up to 15 kg, pharma, luxury goods, temperature-controlled food. We adapt our protocol to each sector.',
+    'faq7.q': 'Can I try before committing?', 'faq7.a': 'Yes. Express and Flex are commitment-free: try with a single delivery. For Dedicated, we run a real-condition test delivery before any contract.',
+    'faq.sd.left': 'Can\'t find what you\'re looking for? Call us or come see us.',
     'foot.tag': 'Logistics infrastructure for French-speaking Swiss businesses.',
     'foot.svc.h': 'Services', 'foot.svc.1': 'Order', 'foot.svc.2': 'Dashboard', 'foot.svc.3': 'Our sectors', 'foot.svc.4': 'Schedule a call',
     'foot.co.h': 'Company', 'foot.co.1': 'Join us',
@@ -1488,18 +1943,8 @@ const T = {
   }
 };
 
-function movePill(lang) {
-  document.querySelectorAll('.lang-sw').forEach(sw => {
-    const pill = sw.querySelector('.lang-pill');
-    const btn = sw.querySelector(`button[data-lang="${lang}"]`);
-    if (!pill || !btn) return;
-    // pill anchored at left:3px — translate to button position
-    pill.style.width = btn.offsetWidth + 'px';
-    pill.style.transform = `translateX(${btn.offsetLeft - 3}px)`;
-  });
-}
-
 function setLang(lang) {
+  window._currentLang = lang;
   const dict = T[lang] || T.fr;
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const v = dict[el.dataset.i18n];
@@ -1513,16 +1958,45 @@ function setLang(lang) {
     const v = dict[el.dataset.i18nPlaceholder];
     if (v !== undefined) el.placeholder = v;
   });
-  document.querySelectorAll('.lang-sw button').forEach(b => {
-    b.classList.toggle('active', b.dataset.lang === lang);
-    b.setAttribute('aria-checked', b.dataset.lang === lang ? 'true' : 'false');
-  });
   document.documentElement.lang = lang;
-  movePill(lang);
+  // Update desktop lang-drop trigger
+  const triggerFlag = document.getElementById('langFlag');
+  const triggerCode = document.getElementById('langCode');
+  if (triggerFlag) triggerFlag.textContent = lang === 'en' ? '🇬🇧' : '🇫🇷';
+  if (triggerCode) triggerCode.textContent = lang.toUpperCase();
+  document.querySelectorAll('.lang-drop-item').forEach(b => {
+    const active = b.dataset.lang === lang;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+  // Update mobile lang buttons
+  document.querySelectorAll('.mob-lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  // Rebuild dynamic sections
+  if (window._simUpdate) window._simUpdate();
+  if (window._calRebuild) window._calRebuild(lang);
+  if (window._testiRebuild) window._testiRebuild(lang);
 }
 
-// Init pill position on load
-window.addEventListener('load', () => movePill('fr'));
+// Lang drop toggle
+(function() {
+  const drop = document.getElementById('langDrop');
+  const trigger = document.getElementById('langTrigger');
+  const menu = document.getElementById('langMenu');
+  if (!drop || !trigger || !menu) return;
+  function open() { drop.dataset.open = ''; trigger.setAttribute('aria-expanded', 'true'); }
+  function close() { delete drop.dataset.open; trigger.setAttribute('aria-expanded', 'false'); }
+  trigger.addEventListener('click', e => { e.stopPropagation(); drop.hasAttribute('data-open') ? close() : open(); });
+  menu.addEventListener('click', e => {
+    const item = e.target.closest('.lang-drop-item');
+    if (!item) return;
+    setLang(item.dataset.lang);
+    close();
+  });
+  document.addEventListener('click', e => { if (!drop.contains(e.target)) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
@@ -1556,7 +2030,7 @@ if ('serviceWorker' in navigator) {
   function makeRoute() {
     let sx, sy, ex, ey, dist, att = 0;
     do {
-      // Bias toward edges — avoid central zone on desktop
+      // Bias toward edges, avoid central zone on desktop
       const edgeX = () => Math.random() < 0.5 ? rnd(0.04, 0.32) * W : rnd(0.68, 0.96) * W;
       const anyX  = () => rnd(0.04, 0.96) * W;
       const edgeY = () => rnd(0.05, 0.95) * H;
@@ -1640,11 +2114,11 @@ if ('serviceWorker' in navigator) {
       if (c.timer <= 0) continue; // pre-delay: invisible
 
       if (c.phase === 'spawn') {
-        // Pulsing origin dot — visible and prominent
-        // Single ring — ease-out cubic, time-based (smooth, no restart jump)
+        // Pulsing origin dot, visible and prominent
+        // Single ring, ease-out cubic, time-based (smooth, no restart jump)
         const t = (performance.now() % 2400) / 2400; // 2.4s period
         const eased = 1 - Math.pow(1 - t, 3);        // ease-out cubic
-        // Core dot — small and calm
+        // Core dot, small and calm
         ctx.beginPath();
         ctx.arc(c.pts[0].x, c.pts[0].y, 3.5, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${r},${g},${b},0.45)`;
@@ -1662,7 +2136,7 @@ if ('serviceWorker' in navigator) {
 
         drawRoute(c, 1);
 
-        // Keep origin dot visible — smooth spawn→trace transition
+        // Keep origin dot visible, smooth spawn→trace transition
         ctx.beginPath();
         ctx.arc(c.pts[0].x, c.pts[0].y, 3.5, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${r},${g},${b},0.35)`;
@@ -1703,7 +2177,7 @@ if ('serviceWorker' in navigator) {
 })();
 
 
-/* ===== DIFF CARDS — 3D TILT + TEAL GLOW ===== */
+/* ===== DIFF CARDS : 3D TILT + TEAL GLOW ===== */
 (function(){
   if(window.matchMedia('(max-width:1024px)').matches||'ontouchstart' in window) return;
   var cards=document.querySelectorAll('.diff-card');
@@ -1736,12 +2210,12 @@ if ('serviceWorker' in navigator) {
   }
 })();
 
-/* ===== OFFRE CARDS — 3D TILT + SPOTLIGHT ===== */
+/* ===== OFFRE CARDS : 3D TILT + SPOTLIGHT ===== */
 (function(){
   if(window.matchMedia('(max-width:1024px)').matches||'ontouchstart' in window) return;
   var cards=document.querySelectorAll('.offre-card');
   if(!cards.length) return;
-  var MAX_TILT=6;
+  var MAX_TILT=2.5;
   for(var i=0;i<cards.length;i++){
     (function(card){
       card.addEventListener('mouseenter',function(){
@@ -1753,8 +2227,8 @@ if ('serviceWorker' in navigator) {
         var y=(e.clientY-r.top)/r.height;
         var tiltX=(y-.5)*-MAX_TILT;
         var tiltY=(x-.5)*MAX_TILT;
-        card.style.transform='perspective(800px) rotateX('+tiltX+'deg) rotateY('+tiltY+'deg) translateY(-6px) scale(1.02)';
-        card.style.boxShadow='0 20px 40px rgba(44,32,82,.1), 0 8px 16px rgba(75,179,164,.08)';
+        card.style.transform='perspective(1200px) rotateX('+tiltX+'deg) rotateY('+tiltY+'deg) translateY(-3px) scale(1.005)';
+        card.style.boxShadow='0 14px 28px rgba(44,32,82,.07), 0 4px 10px rgba(75,179,164,.05)';
         card.style.setProperty('--mx',(x*100)+'%');
         card.style.setProperty('--my',(y*100)+'%');
       });
@@ -1769,12 +2243,12 @@ if ('serviceWorker' in navigator) {
   }
 })();
 
-// ===== DELIVERY MAP — Leaflet + Genève (vue GPS) =====
+// ===== DELIVERY MAP : Leaflet + Genève (vue GPS) =====
 (function initDeliveryMap() {
   const el = document.getElementById('fmDeliveryMap');
   if (!el || !window.L) return;
 
-  // Route OSRM réelle — vélo, rues de Genève (Plainpalais → nord)
+  // Route OSRM réelle, vélo, rues de Genève (Plainpalais → nord)
   const ROUTE = [
     [46.199004,6.142012],[46.199120,6.141927],[46.199174,6.141872],
     [46.199232,6.141810],[46.199298,6.141767],[46.199465,6.141647],
@@ -1796,7 +2270,7 @@ if ('serviceWorker' in navigator) {
     [46.201824,6.145914],[46.201715,6.146111],[46.201491,6.146488],
   ];
 
-  // Carte fixe — le zoom sera fait en CSS transform (pas d'appel Leaflet)
+  // Carte fixe, le zoom sera fait en CSS transform (pas d'appel Leaflet)
   const bounds = L.latLngBounds(ROUTE);
   const center = bounds.getCenter();
   const map = L.map('fmDeliveryMap', {
@@ -1936,10 +2410,15 @@ if ('serviceWorker' in navigator) {
   const BADGE_CHECK = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
 
   // Textes dynamiques pour les steps A et B
-  const STEP_TEXTS = {
-    2: { pending: 'Point A — en attente', active: 'Point A — en cours', done: 'Point A — livré · <strong>14:18</strong>' },
-    3: { pending: 'Point B — en attente', active: 'Point B — en cours', done: 'Point B — livré · <strong>14:24</strong>' },
+  const STEP_TEXTS_FR = {
+    2: { pending: 'Point A : en attente', active: 'Point A : en cours', done: 'Point A livré · <strong>14:18</strong>' },
+    3: { pending: 'Point B : en attente', active: 'Point B : en cours', done: 'Point B livré · <strong>14:24</strong>' },
   };
+  const STEP_TEXTS_EN = {
+    2: { pending: 'Point A: waiting', active: 'Point A: in progress', done: 'Point A delivered · <strong>14:18</strong>' },
+    3: { pending: 'Point B: waiting', active: 'Point B: in progress', done: 'Point B delivered · <strong>14:24</strong>' },
+  };
+  function STEP_TEXTS() { return (window._currentLang === 'en') ? STEP_TEXTS_EN : STEP_TEXTS_FR; }
 
   function setMockupPhase(phase, aIsDone, bIsDone) {
     stepsEl.forEach((s) => {
@@ -1957,23 +2436,24 @@ if ('serviceWorker' in navigator) {
         else { s.classList.add('pending'); ic.innerHTML = CIRCLE_HTML; }
       }
       else if (p === 2) {
-        if (aIsDone) { s.classList.add('done'); ic.innerHTML = chk(!wasDone); txt.innerHTML = STEP_TEXTS[2].done; }
-        else if (phase >= 2) { s.classList.add('active'); ic.innerHTML = DOT_HTML; txt.innerHTML = STEP_TEXTS[2].active; }
-        else { s.classList.add('pending'); ic.innerHTML = CIRCLE_HTML; txt.innerHTML = STEP_TEXTS[2].pending; }
+        if (aIsDone) { s.classList.add('done'); ic.innerHTML = chk(!wasDone); txt.innerHTML = STEP_TEXTS()[2].done; }
+        else if (phase >= 2) { s.classList.add('active'); ic.innerHTML = DOT_HTML; txt.innerHTML = STEP_TEXTS()[2].active; }
+        else { s.classList.add('pending'); ic.innerHTML = CIRCLE_HTML; txt.innerHTML = STEP_TEXTS()[2].pending; }
       }
       else if (p === 3) {
-        if (bIsDone) { s.classList.add('done'); ic.innerHTML = chk(!wasDone); txt.innerHTML = STEP_TEXTS[3].done; }
-        else if (aIsDone) { s.classList.add('active'); ic.innerHTML = DOT_HTML; txt.innerHTML = STEP_TEXTS[3].active; }
-        else { s.classList.add('pending'); ic.innerHTML = CIRCLE_HTML; txt.innerHTML = STEP_TEXTS[3].pending; }
+        if (bIsDone) { s.classList.add('done'); ic.innerHTML = chk(!wasDone); txt.innerHTML = STEP_TEXTS()[3].done; }
+        else if (aIsDone) { s.classList.add('active'); ic.innerHTML = DOT_HTML; txt.innerHTML = STEP_TEXTS()[3].active; }
+        else { s.classList.add('pending'); ic.innerHTML = CIRCLE_HTML; txt.innerHTML = STEP_TEXTS()[3].pending; }
       }
     });
+    const isEn = window._currentLang === 'en';
     if (phase <= 1) {
       badge.className = 'fm-badge waiting';
-      badge.innerHTML = phase === 0 ? 'En attente' : 'Assigné';
+      badge.innerHTML = phase === 0 ? (isEn ? 'Waiting' : 'En attente') : (isEn ? 'Assigned' : 'Assigné');
     } else if (!bIsDone) {
-      badge.className = 'fm-badge in-progress'; badge.innerHTML = 'En cours';
+      badge.className = 'fm-badge in-progress'; badge.innerHTML = isEn ? 'In progress' : 'En cours';
     } else {
-      badge.className = 'fm-badge delivered'; badge.innerHTML = BADGE_CHECK + ' Livrée';
+      badge.className = 'fm-badge delivered'; badge.innerHTML = BADGE_CHECK + (isEn ? ' Delivered' : ' Livrée');
     }
   }
 
@@ -2076,14 +2556,14 @@ if ('serviceWorker' in navigator) {
       updateStopMarker(markerA, true);
     }
 
-    // Stop B livré — seulement quand le coursier est vraiment arrivé
+    // Stop B livré, seulement quand le coursier est vraiment arrivé
     if (!bMarked && eased >= 0.99) {
       bMarked = true;
       courierMarker.setIcon(deliveredIcon);
       if (map.hasLayer(markerB)) map.removeLayer(markerB);
     }
 
-    // Phases mockup — MAJ seulement quand ça change (sinon l'animation check redémarre)
+    // Phases mockup, MAJ seulement quand ça change (sinon l'animation check redémarre)
     // Étapes 0 et 1 (Commande reçue, Coursier assigné) déjà cochées dès le début
     let phase;
     if (t < 0.50) phase = 2;
@@ -2112,20 +2592,32 @@ if ('serviceWorker' in navigator) {
   });
 })();
 
-// ===== TESTIMONIALS — adaptive infinite marquee =====
+// ===== TESTIMONIALS : adaptive infinite marquee =====
 (function() {
-  const CARDS = [
-    { text: "On est passé de 30% de commission à un tarif fixe. En 3 mois, marge récupérée sur chaque commande.", name: "Marie Laurent", role: "Pharmacie du Lac, Genève", initials: "ML", bg: "var(--teal)" },
-    { text: "L'import CSV a tout changé. On envoie nos 40 commandes du matin en un clic, les livreurs reçoivent tout automatiquement.", name: "Pierre Dupont", role: "Swiss E-Shop, Neuchâtel", initials: "PD", bg: "var(--accent)" },
-    { text: "Le livreur connaît notre protocole discrétion. Pour la bijouterie, c'est crucial. Et la preuve de remise en photo est irréprochable.", name: "Sophie Berthier", role: "Maison Bulgari, Genève", initials: "SB", bg: "var(--teal-dark)" },
-    { text: "Notaire, on a des délais légaux stricts. Chaskis livre nos actes à temps, avec preuve électronique. Zéro litige depuis 6 mois.", name: "François Riviera", role: "Étude Notariale Riviera, Lausanne", initials: "FR", bg: "var(--accent-light)" },
+  const CARDS_FR = [
+    { text: "On est passé de 30% de commission à un tarif fixe. En 3 mois, la marge est récupérée sur chaque commande.", name: "Marie Laurent", role: "Pharmacie du Lac, Genève", photo: "https://randomuser.me/api/portraits/women/44.jpg" },
+    { text: "L'import CSV a tout changé. On envoie nos 40 commandes du matin en un clic, les livreurs reçoivent tout automatiquement.", name: "Pierre Dupont", role: "Swiss E-Shop, Neuchâtel", photo: "https://randomuser.me/api/portraits/men/32.jpg" },
+    { text: "Le livreur connaît notre protocole discrétion. Pour la bijouterie, c'est crucial. Et la preuve de remise en photo est irréprochable.", name: "Sophie Berthier", role: "Maison Bulgari, Genève", photo: "https://randomuser.me/api/portraits/women/68.jpg" },
+    { text: "Notaire, on a des délais légaux stricts. Chaskis livre nos actes à temps, avec preuve électronique. Zéro litige depuis 6 mois.", name: "François Riviera", role: "Étude Notariale Riviera, Lausanne", photo: "https://randomuser.me/api/portraits/men/75.jpg" },
+    { text: "Pour nos prélèvements du matin, la fenêtre est serrée. En 6 mois, pas un seul retard. Ça change la donne pour nos patients.", name: "Dr. Caroline Weber", role: "Laboratoire Genolier, Nyon", photo: "https://randomuser.me/api/portraits/women/52.jpg" },
+    { text: "L'interface de suivi en temps réel a remplacé nos trois outils maison. Nos clients adorent recevoir le SMS de livraison.", name: "Thomas Meier", role: "Atelier Horloger, La Chaux-de-Fonds", photo: "https://randomuser.me/api/portraits/men/45.jpg" },
   ];
+  const CARDS_EN = [
+    { text: "We switched from 30% commission to a fixed rate. Within 3 months, the margin was recovered on every single order.", name: "Marie Laurent", role: "Pharmacie du Lac, Geneva", photo: "https://randomuser.me/api/portraits/women/44.jpg" },
+    { text: "The CSV import changed everything. We send our 40 morning orders in one click, and couriers receive everything automatically.", name: "Pierre Dupont", role: "Swiss E-Shop, Neuchâtel", photo: "https://randomuser.me/api/portraits/men/32.jpg" },
+    { text: "The courier knows our discretion protocol. For a jeweller, that's critical. And the photo proof of delivery is impeccable.", name: "Sophie Berthier", role: "Maison Bulgari, Geneva", photo: "https://randomuser.me/api/portraits/women/68.jpg" },
+    { text: "As a notary, we have strict legal deadlines. Chaskis delivers our deeds on time, with electronic proof. Zero disputes in 6 months.", name: "François Riviera", role: "Étude Notariale Riviera, Lausanne", photo: "https://randomuser.me/api/portraits/men/75.jpg" },
+    { text: "For our morning samples, the window is tight. In 6 months, not a single delay. It's a game-changer for our patients.", name: "Dr. Caroline Weber", role: "Laboratoire Genolier, Nyon", photo: "https://randomuser.me/api/portraits/women/52.jpg" },
+    { text: "The real-time tracking interface replaced our three in-house tools. Our clients love getting the delivery SMS.", name: "Thomas Meier", role: "Atelier Horloger, La Chaux-de-Fonds", photo: "https://randomuser.me/api/portraits/men/45.jpg" },
+  ];
+  let testiLang = 'fr';
+  function getCards() { return testiLang === 'en' ? CARDS_EN : CARDS_FR; }
   const STARS = '<div class="tc-stars">' + Array(5).fill('<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>').join('') + '</div>';
 
   function makeCard(c) {
     return '<article class="tc">' + STARS +
       '<p class="tc-text">' + c.text + '</p>' +
-      '<div class="tc-author"><div class="tc-av" style="background:' + c.bg + '">' + c.initials + '</div>' +
+      '<div class="tc-author"><img class="tc-av" src="' + c.photo + '" alt="' + c.name + '" loading="lazy">' +
       '<div class="tc-info"><h4>' + c.name + '</h4><p>' + c.role + '</p></div></div></article>';
   }
 
@@ -2137,7 +2629,7 @@ if ('serviceWorker' in navigator) {
   const CARD_STEP = CARD_W + GAP;
   // One "unit" = CARDS.length cards. The track shifts by exactly one unit per cycle.
   // Because the content is periodic with this unit, the reset is mathematically seamless.
-  const UNIT_STEP = CARDS.length * CARD_STEP;   // e.g. 4 * 360 = 1440
+  const UNIT_STEP = getCards().length * CARD_STEP;   // e.g. 4 * 360 = 1440
   const SPEED = 60;            // px per second
   let styleEl = null;
 
@@ -2145,7 +2637,8 @@ if ('serviceWorker' in navigator) {
     const vw = window.innerWidth;
     // Track must be >= viewport + UNIT_STEP so during the entire cycle the viewport is covered.
     const unitsNeeded = Math.ceil((vw + UNIT_STEP) / UNIT_STEP) + 1; // +1 safety buffer
-    const html = Array.from({length: unitsNeeded}, () => CARDS.map(makeCard).join('')).join('');
+    const cards = getCards();
+    const html = Array.from({length: unitsNeeded}, () => cards.map(makeCard).join('')).join('');
     track.innerHTML = html;
     const duration = Math.max(20, Math.round(UNIT_STEP / SPEED));
 
@@ -2163,6 +2656,52 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('resize', () => {
     clearTimeout(rzT);
     rzT = setTimeout(build, 200);
+  });
+
+  window._testiRebuild = function(lang) { testiLang = lang; build(); };
+})();
+
+// ===== BOOKING TESTIMONIAL CAROUSEL =====
+(function(){
+  var slides = document.querySelectorAll('#bkTestiSlides .bk-testi-slide');
+  var dots = document.querySelectorAll('#bkTestiDots .bk-testi-dot');
+  var prev = document.getElementById('bkTestiPrev');
+  var next = document.getElementById('bkTestiNext');
+  if(!slides.length) return;
+  var cur = 0;
+  var autoTimer;
+
+  function show(i){
+    cur = (i + slides.length) % slides.length;
+    slides.forEach(function(s,k){ s.classList.toggle('active', k===cur); });
+    dots.forEach(function(d,k){ d.classList.toggle('active', k===cur); });
+  }
+  function go(delta){ show(cur + delta); resetAuto(); }
+  function resetAuto(){
+    clearInterval(autoTimer);
+    autoTimer = setInterval(function(){ show(cur + 1); }, 6000);
+  }
+  prev && prev.addEventListener('click', function(){ go(-1); });
+  next && next.addEventListener('click', function(){ go(1); });
+  dots.forEach(function(d){
+    d.addEventListener('click', function(){ show(parseInt(d.dataset.i,10)); resetAuto(); });
+  });
+  resetAuto();
+  // Pause on hover
+  var wrap = document.getElementById('bkTesti');
+  if(wrap){
+    wrap.addEventListener('mouseenter', function(){ clearInterval(autoTimer); });
+    wrap.addEventListener('mouseleave', resetAuto);
+  }
+})();
+
+// ===== PROMO BAR dismiss =====
+(function(){
+  var btn = document.getElementById('promoBarClose');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    document.body.classList.remove('has-promo');
+    try { localStorage.setItem('promoDismissed','1'); } catch(e){}
   });
 })();
 

@@ -92,5 +92,5 @@ drawIcon(document.getElementById('c512'), 512, 100);
 // Teal #3AAFA9 = rgb(58, 175, 169)
 fs.writeFileSync('icon-192.png', makePNG(192, 58, 175, 169, 38));
 fs.writeFileSync('icon-512.png', makePNG(512, 58, 175, 169, 100));
-console.log('✅ icon-192.png et icon-512.png générés (fond teal — logo via SVG)');
+console.log('✅ icon-192.png et icon-512.png générés (fond teal, logo via SVG)');
 console.log('ℹ️  Chrome 113+ utilise les SVG (icon-192.svg) avec le vrai logo automatiquement.');

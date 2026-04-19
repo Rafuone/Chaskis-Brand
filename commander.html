@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Commander une livraison — Chaskis</title>
+<title>Commander une livraison | Chaskis</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#3AAFA9">
 <link rel="stylesheet" href="styles.css">
@@ -25,6 +25,8 @@
 .seg-card:hover::before{transform:scaleX(1)}
 .seg-card.pro::before{background:var(--accent)}
 .seg-card.pro:hover{border-color:var(--accent-light)}
+.seg-promo{position:absolute;top:14px;right:14px;background:linear-gradient(135deg,#ef4444,#f97316);color:#fff;font-size:.64rem;font-weight:800;letter-spacing:.03em;padding:5px 10px;border-radius:999px;box-shadow:0 2px 6px rgba(239,68,68,.25);z-index:1}
+.seg-promo sup{font-size:.5rem;vertical-align:super}
 .seg-ic{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;transition:transform .4s var(--ease-bounce)}
 .seg-card:hover .seg-ic{transform:scale(1.12) rotate(-5deg)}
 .seg-ic.t{background:var(--teal-bg);color:var(--teal)}
@@ -116,7 +118,7 @@
 .f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .f-hint{font-size:.68rem;color:var(--ink-muted);margin-top:4px}
 
-/* Reference merchant field — special */
+/* Reference merchant field : special */
 .ref-highlight input{border-color:rgba(107,79,160,.2)}
 .ref-highlight input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(107,79,160,.08)}
 .ref-info{display:flex;align-items:flex-start;gap:8px;background:var(--accent-bg);border:1px solid rgba(107,79,160,.12);border-radius:var(--r);padding:10px 12px;margin-top:6px}
@@ -320,7 +322,7 @@
 </nav>
 
 <!-- ================================ -->
-<!-- SCREEN 0 — SEGMENTATION         -->
+<!-- SCREEN 0 : SEGMENTATION          -->
 <!-- ================================ -->
 <div class="screen active" id="screenSeg">
   <div class="seg-wrap">
@@ -333,11 +335,12 @@
 
         <!-- Particulier -->
         <div class="seg-card" onclick="selectSeg('particulier')">
+          <div class="seg-promo">-10% sur votre 1<sup>re</sup> course</div>
           <div class="seg-ic t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
           <div class="seg-type">Particulier &amp; petits pros</div>
           <h2>Express</h2>
           <div class="seg-price"><sup>CHF</sup> 16<small>+</small></div>
-          <p class="seg-price-note">par course · tarif unique · sans abonnement</p>
+          <p class="seg-price-note">par course · tarif unique · remise auto à la première commande</p>
           <ul class="seg-feats">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Commande ponctuelle, sans compte</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Paiement sécurisé en ligne (Stripe)</li>
@@ -377,7 +380,7 @@
 </div>
 
 <!-- ================================ -->
-<!-- SCREEN 1 — B2B GATE              -->
+<!-- SCREEN 1 : B2B GATE              -->
 <!-- ================================ -->
 <div class="screen" id="screenGate">
   <div class="gate-wrap">
@@ -417,7 +420,7 @@
 </div>
 
 <!-- ================================ -->
-<!-- SCREEN 2 — FORMULAIRE            -->
+<!-- SCREEN 2 : FORMULAIRE            -->
 <!-- ================================ -->
 <div class="screen" id="screenForm">
   <div class="form-wrap">
@@ -498,7 +501,7 @@
                 </div>
 
                 <div class="stops-list" id="stopsList">
-                  <!-- B1 — always present -->
+                  <!-- B1, always present -->
                   <div class="stop-item" id="stop-b1">
                     <div class="stop-let drop">B1</div>
                     <div style="flex:1">
@@ -662,7 +665,7 @@
 </div><!-- /screenForm -->
 
 <!-- ================================ -->
-<!-- SCREEN 3 — CHECKOUT              -->
+<!-- SCREEN 3 : CHECKOUT              -->
 <!-- ================================ -->
 <div class="screen" id="screenCheckout">
   <div class="checkout-wrap">
@@ -731,7 +734,7 @@
           <div class="co-order-id" id="coOrderId">CMD-????</div>
           <div id="coSumContent"></div>
           <button class="co-pay-btn" onclick="confirmOrder()">
-            <span id="coPayBtnTxt">Payer CHF ?.— et confirmer</span>
+            <span id="coPayBtnTxt">Payer CHF ?.- et confirmer</span>
           </button>
           <button class="co-back" onclick="showScreen('screenForm')">← Modifier la commande</button>
           <div class="co-secure">
@@ -793,11 +796,11 @@ function selectSeg(type) {
   if (type === 'entreprise') {
     const user = typeof getUser === 'function' ? getUser() : null;
     if (user && (user.plan === 'flex' || user.plan === 'dedie')) {
-      // Logged in as Pro — unlock tier and go straight to form
+      // Logged in as Pro, unlock tier and go straight to form
       tierName = user.plan === 'dedie' ? 'Dédié' : 'Flex';
       tierPrice = user.plan === 'dedie' ? 8 : 10;
       document.getElementById('formTitle').innerHTML = 'Livraison <span style="color:var(--teal)">' + tierName + '</span>';
-      document.getElementById('formSub').textContent = 'Connecté en tant que ' + user.name + ' — ' + tierName;
+      document.getElementById('formSub').textContent = 'Connecté en tant que ' + user.name + ' · ' + tierName;
       showScreen('screenForm');
     } else {
       showScreen('screenGate');
@@ -952,7 +955,7 @@ function updateSum() {
       ${tourneeLineHtml}
       <div class="sum-row"><span class="sk">Horaire</span><span class="sv">${timeLabel}</span></div>
     </div>
-    <div class="sum-total"><span class="stl">Total estimé</span><span class="stv">CHF ${price}.—</span></div>
+    <div class="sum-total"><span class="stl">Total estimé</span><span class="stv">CHF ${price}.-</span></div>
   `;
 
   updateSumCta();
@@ -964,7 +967,7 @@ function updateSumCta() {
   const cta = document.getElementById('sumCta');
   if (pick && drop) {
     cta.classList.add('ready');
-    cta.textContent = 'Passer au paiement → CHF ' + calcPrice() + '.—';
+    cta.textContent = 'Passer au paiement → CHF ' + calcPrice() + '.-';
   } else {
     cta.classList.remove('ready');
     cta.textContent = 'Passer au paiement →';
@@ -976,12 +979,12 @@ function goCheckout() {
   const price = calcPrice();
   const containerName = container === 'coffre' ? '🚗 Coffre voiture' : '🎒 Sac à dos';
   const timeLabel = timeMode === 'asap' ? '⚡ Dès que possible (~3h)' : '📅 ' + (document.getElementById('planDate')?.value || '') + ' ' + (document.getElementById('planTime')?.value || '');
-  const pick = document.getElementById('pickAddress')?.value || '—';
-  const drop = document.getElementById('dropAddress')?.value || '—';
+  const pick = document.getElementById('pickAddress')?.value || '-';
+  const drop = document.getElementById('dropAddress')?.value || '-';
   const ref = document.getElementById('pickRef')?.value || '';
 
   document.getElementById('coOrderId').textContent = orderNum;
-  document.getElementById('coPayBtnTxt').textContent = 'Payer CHF ' + price + '.— et confirmer';
+  document.getElementById('coPayBtnTxt').textContent = 'Payer CHF ' + price + '.- et confirmer';
 
   document.getElementById('coSumContent').innerHTML = `
     <div class="co-line"><span class="ck">Formule</span><span class="cv">${tierName}</span></div>
@@ -991,7 +994,7 @@ function goCheckout() {
     ${stopCount > 0 ? `<div class="co-line"><span class="ck">🗺️ Tournée</span><span class="cv" style="color:var(--teal)">+${stopCount} arrêt${stopCount>1?'s':''} (+${stopCount*3} CHF)</span></div>` : ''}
     <div class="co-line"><span class="ck">Format</span><span class="cv">${containerName}</span></div>
     <div class="co-line"><span class="ck">Horaire</span><span class="cv">${timeLabel}</span></div>
-    <div class="co-total"><span class="ctl">Total TTC</span><span class="ctv">CHF ${price}.—</span></div>
+    <div class="co-total"><span class="ctl">Total TTC</span><span class="ctv">CHF ${price}.-</span></div>
   `;
 
   // Hide contact section if logged in

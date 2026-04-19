@@ -1,6 +1,6 @@
 // ===== CHASKIS SHARED JS =====
 
-// ===== PWA INSTALL — capture globale =====
+// ===== PWA INSTALL : capture globale =====
 let _pwaPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();

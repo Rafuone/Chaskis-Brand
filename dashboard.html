@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tableau de bord — Chaskis</title>
+<title>Tableau de bord | Chaskis</title>
 <meta name="description" content="Gérez vos livraisons, suivez vos commandes et consultez vos factures depuis votre espace client Chaskis.">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#3AAFA9">
@@ -224,7 +224,7 @@
 <div class="pod-overlay" id="podOverlay" onclick="if(event.target===this)closePod()">
   <div class="pod-modal">
     <h3>Preuve de livraison</h3>
-    <p class="pod-meta" id="podOrderMeta">—</p>
+    <p class="pod-meta" id="podOrderMeta">-</p>
     <div class="pod-tabs">
       <button class="pod-tab on" onclick="switchPodTab('photo',this)">📷 Photo</button>
       <button class="pod-tab" onclick="switchPodTab('sig',this)">✍️ Signature</button>
@@ -250,9 +250,9 @@
       </div>
     </div>
     <div class="pod-info-row">
-      <div class="pod-info-item"><span class="pii-l">Heure de livraison</span><span class="pii-v" id="podTime">—</span></div>
-      <div class="pod-info-item"><span class="pii-l">Coursier</span><span class="pii-v" id="podCourier">—</span></div>
-      <div class="pod-info-item"><span class="pii-l">Référence</span><span class="pii-v" id="podRef">—</span></div>
+      <div class="pod-info-item"><span class="pii-l">Heure de livraison</span><span class="pii-v" id="podTime">-</span></div>
+      <div class="pod-info-item"><span class="pii-l">Coursier</span><span class="pii-v" id="podCourier">-</span></div>
+      <div class="pod-info-item"><span class="pii-l">Référence</span><span class="pii-v" id="podRef">-</span></div>
     </div>
     <button class="pod-close" onclick="closePod()">Fermer</button>
   </div>
@@ -266,7 +266,7 @@
       <div class="fc"><h4>Entreprise</h4><a href="postuler.html">Devenir coursier</a><a href="index.html#faq">FAQ</a><a href="mailto:contact@chaskis.ch">Contact</a></div>
       <div class="fc"><h4>Légal</h4><a href="#">Mentions légales</a><a href="#">Confidentialité</a></div>
     </div>
-    <div class="f-btm"><span>&copy; 2026 Chaskis SA — Lausanne</span><span>Fait en Suisse romande</span></div>
+    <div class="f-btm"><span>&copy; 2026 Chaskis SA · Lausanne</span><span>Fait en Suisse romande</span></div>
   </div>
 </footer>
 
@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ===== OVERVIEW =====
   document.getElementById('welcomeMsg').textContent = `Bonjour, ${user.name.split(' ')[0]}`;
-  document.getElementById('welcomeSub').textContent = `${user.company} — Plan ${getPlanLabel(user.plan)}`;
+  document.getElementById('welcomeSub').textContent = `${user.company} · Plan ${getPlanLabel(user.plan)}`;
 
   document.getElementById('overviewStats').innerHTML = `
     <div class="dash-stat"><strong style="color:var(--teal)">${orders.filter(o => o.date >= '2026-04-01').length}</strong><span>Livraisons ce mois</span></div>
@@ -359,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (user.plan === 'express') {
     upgradeEl.innerHTML = `<div class="dash-upgrade"><div><h4>Passez au Pro</h4><p>Réservez un appel découverte pour accéder aux tarifs Flex (CHF 10) ou Dédié (CHF 8).</p></div><a href="index.html#booking" class="btn btn-w btn-sm"><span>Planifier un appel gratuit</span></a></div>`;
   } else if (user.plan === 'flex') {
-    upgradeEl.innerHTML = `<div class="dash-upgrade"><div><h4>Passez au Dédié — CHF 8/course</h4><p>Flotte dédiée à votre marque, account manager et SLA garanti.</p></div><a href="index.html#booking" class="btn btn-w btn-sm"><span>Prendre rendez-vous</span></a></div>`;
+    upgradeEl.innerHTML = `<div class="dash-upgrade"><div><h4>Passez au Dédié : CHF 8/course</h4><p>Flotte dédiée à votre marque, account manager et SLA garanti.</p></div><a href="index.html#booking" class="btn btn-w btn-sm"><span>Prendre rendez-vous</span></a></div>`;
   } else {
     upgradeEl.innerHTML = `<div class="dash-upgrade" style="background:linear-gradient(135deg,var(--purple),var(--purple-light))"><div><h4>Plan Dédié actif</h4><p>Votre flotte dédiée est opérationnelle. Merci pour votre confiance.</p></div><span class="btn btn-w btn-sm" style="pointer-events:none;opacity:.7"><span>Actif</span></span></div>`;
   }

@@ -14,7 +14,7 @@ const DEMO_ORDERS = {
   express: [
     { id: 'CK-41023', date: '2026-04-02', from: 'Rue du Pont 12, Lausanne', to: 'Avenue de Cour 45, Lausanne', status: 'livre', price: 16, courier: 'Marco R.' },
     { id: 'CK-39871', date: '2026-03-18', from: 'Place St-François, Lausanne', to: 'Chemin de Mornex 6, Lausanne', status: 'livre', price: 16, courier: 'Sophie B.' },
-    { id: 'CK-38102', date: '2026-03-05', from: 'Rue de Bourg 8, Lausanne', to: 'Avenue de Rhodanie 2, Lausanne', status: 'annule', price: 16, courier: '—' },
+    { id: 'CK-38102', date: '2026-03-05', from: 'Rue de Bourg 8, Lausanne', to: 'Avenue de Rhodanie 2, Lausanne', status: 'annule', price: 16, courier: '-' },
   ],
   flex: [
     { id: 'CK-42150', date: '2026-04-07', from: 'Rue du Mont-Blanc 8, Genève', to: 'Rue de la Servette 12, Genève', status: 'en_cours', price: 10, courier: 'Ahmed K.', eta: '14:25' },
@@ -23,7 +23,7 @@ const DEMO_ORDERS = {
     { id: 'CK-41100', date: '2026-04-01', from: 'Place Bel-Air, Genève', to: 'Rue de Lausanne 15, Genève', status: 'livre', price: 10, courier: 'Sophie B.' },
     { id: 'CK-40320', date: '2026-03-28', from: 'Rue du Mont-Blanc 8, Genève', to: 'Avenue Pictet-de-Rochemont 4, Genève', status: 'livre', price: 10, courier: 'Ahmed K.' },
     { id: 'CK-39800', date: '2026-03-22', from: 'Rue de la Croix-d\'Or 7, Genève', to: 'Rue de Carouge 40, Genève', status: 'livre', price: 10, courier: 'Julie M.' },
-    { id: 'CK-39210', date: '2026-03-15', from: 'Quai du Mont-Blanc 19, Genève', to: 'Boulevard de Saint-Georges 6, Genève', status: 'annule', price: 10, courier: '—' },
+    { id: 'CK-39210', date: '2026-03-15', from: 'Quai du Mont-Blanc 19, Genève', to: 'Boulevard de Saint-Georges 6, Genève', status: 'annule', price: 10, courier: '-' },
     { id: 'CK-38700', date: '2026-03-08', from: 'Place Cornavin 2, Genève', to: 'Rue de la Servette 45, Genève', status: 'livre', price: 10, courier: 'Marco R.' },
   ],
   dedie: [
@@ -37,7 +37,7 @@ const DEMO_ORDERS = {
     { id: 'CK-41300', date: '2026-04-01', from: 'Faubourg du Lac 5, Neuchâtel', to: 'Quai Robert-Comtesse 2, Neuchâtel', status: 'livre', price: 8, courier: 'Lisa G.' },
     { id: 'CK-41100', date: '2026-03-31', from: 'Rue du Seyon 12, Neuchâtel', to: 'Rue des Beaux-Arts 2, Neuchâtel', status: 'livre', price: 8, courier: 'Thomas L.' },
     { id: 'CK-40900', date: '2026-03-29', from: 'Avenue de la Gare 8, Neuchâtel', to: 'Boulevard de la Gare 12, Neuchâtel', status: 'livre', price: 8, courier: 'Lisa G.' },
-    { id: 'CK-40700', date: '2026-03-27', from: 'Faubourg du Lac 5, Neuchâtel', to: 'Rue du Château 1, Neuchâtel', status: 'annule', price: 8, courier: '—' },
+    { id: 'CK-40700', date: '2026-03-27', from: 'Faubourg du Lac 5, Neuchâtel', to: 'Rue du Château 1, Neuchâtel', status: 'annule', price: 8, courier: '-' },
     { id: 'CK-40500', date: '2026-03-25', from: 'Rue du Seyon 12, Neuchâtel', to: 'Rue de l\'Hôpital 10, Neuchâtel', status: 'livre', price: 8, courier: 'Thomas L.' },
     { id: 'CK-40300', date: '2026-03-22', from: 'Avenue de la Gare 8, Neuchâtel', to: 'Quai Philippe-Godet 6, Neuchâtel', status: 'livre', price: 8, courier: 'Lisa G.' },
     { id: 'CK-40100', date: '2026-03-18', from: 'Faubourg du Lac 5, Neuchâtel', to: 'Rue des Moulins 3, Neuchâtel', status: 'livre', price: 8, courier: 'Thomas L.' },
@@ -232,7 +232,7 @@ function updateTierGating() {
     // Update subtitle
     const sub = document.querySelector('.ostep-sub');
     if (sub && document.getElementById('os0')) {
-      sub.textContent = `Connecté en tant que ${user.name} — Plan ${getPlanLabel(plan)}`;
+      sub.textContent = `Connecté en tant que ${user.name} · Plan ${getPlanLabel(plan)}`;
     }
     // Unlock tiers based on plan
     if (plan === 'flex' || plan === 'dedie') {

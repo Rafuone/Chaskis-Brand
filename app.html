@@ -339,7 +339,7 @@ input,button,select,textarea{font-family:'Urbanist',sans-serif}
       <div class="price-bar slide-up" style="animation-delay:.2s">
         <div class="price-bar-left">
           <span>Total estimé</span>
-          <strong id="appPrice">CHF —</strong>
+          <strong id="appPrice">CHF -</strong>
         </div>
         <div style="font-size:.7rem;color:var(--teal-d);text-align:right;line-height:1.4">Paiement<br>sécurisé</div>
       </div>
@@ -481,11 +481,11 @@ function updateAppPrice() {
   const priceEl = document.getElementById('appPrice');
   const btn = document.getElementById('appCmdBtn');
   if (pick && drop) {
-    priceEl.textContent = 'CHF ' + price + '.—';
+    priceEl.textContent = 'CHF ' + price + '.-';
     btn.disabled = false;
-    btn.textContent = 'Commander · CHF ' + price + '.— →';
+    btn.textContent = 'Commander · CHF ' + price + '.- →';
   } else {
-    priceEl.textContent = 'CHF —';
+    priceEl.textContent = 'CHF -';
     btn.disabled = true;
     btn.textContent = 'Remplissez les adresses →';
   }

@@ -282,6 +282,7 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 
 /* ===== Prestige (dark, calm) ===== */
 .mob-prestige{background:rgba(20,20,30,.35);color:#fff;position:relative;overflow:hidden;padding:clamp(80px,10vw,120px) 0;border-top:1px solid rgba(255,255,255,.04)}
+.mob-prestige.scene-pinned{background:#0B0914;overflow:visible;z-index:50}
 .mob-prestige-stage{position:relative;z-index:1}
 .scene-pinned .mob-prestige-stage{min-height:100vh;display:flex;align-items:center;padding:clamp(60px,8vw,100px) 0}
 /* Pin mode: hide animated items initially (GSAP reveals via scrub) */
@@ -1591,11 +1592,11 @@ window.addEventListener('load', () => {
   if (!window.gsap || !window.ScrollTrigger) return;
   gsap.registerPlugin(ScrollTrigger);
 
-  // Smooth scroll via Lenis
+  // Smooth scroll via Lenis — ticker GSAP requis pour sync avec ScrollTrigger
   if (window.Lenis) {
     const lenis = new Lenis({ duration: 1.15, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
     lenis.on('scroll', ScrollTrigger.update);
   }
 
@@ -1697,8 +1698,8 @@ window.addEventListener('load', () => {
         end: `+=${revItems.length * 160 + 80}`,
         pin: true,
         pinSpacing: true,
+        pinType: 'transform',
         scrub: 0.8,
-        anticipatePin: 1,
         onUpdate(self) {
           const idx = Math.min(Math.floor(self.progress * presWords.length), presWords.length - 1);
           swapSig(idx);

@@ -115,12 +115,18 @@ body.page-mobilite #nav .lang-drop-flag{box-shadow:0 0 0 1px rgba(255,255,255,.4
 body.page-mobilite #nav:not(.scrolled):not(.over-dark) .nav-mid a{color:rgba(255,255,255,.75)}
 body.page-mobilite #nav:not(.scrolled):not(.over-dark) .nav-mid a:hover,
 body.page-mobilite #nav:not(.scrolled):not(.over-dark) .nav-mid a.active{color:#fff}
-body.page-mobilite #nav:not(.scrolled):not(.over-dark) .nav-mid a.active::after{background:var(--my)}
 body.page-mobilite #nav.scrolled{background:rgba(11,9,20,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
 body.page-mobilite #nav.scrolled .nav-mid a{color:rgba(255,255,255,.75)}
 body.page-mobilite #nav.scrolled .nav-mid a:hover,
 body.page-mobilite #nav.scrolled .nav-mid a.active{color:#fff}
-body.page-mobilite #nav.scrolled .nav-mid a.active::after{background:var(--my)}
+/* Underline jaune pour tous les états (hover + active), remplace le teal global */
+body.page-mobilite #nav .nav-mid a::after{background:var(--my) !important}
+
+/* Lang dropdown : dark mode sur Mobilité */
+body.page-mobilite .lang-drop-menu{background:#1C1829;border-color:rgba(255,255,255,.08);box-shadow:0 18px 44px rgba(0,0,0,.55)}
+body.page-mobilite .lang-drop-item{color:rgba(255,255,255,.82)}
+body.page-mobilite .lang-drop-item:hover{background:rgba(245,184,0,.06);color:#fff}
+body.page-mobilite .lang-drop-item.active{color:var(--my);background:rgba(245,184,0,.1);font-weight:700}
 
 /* Background orbs (parallax, always visible) */
 .mob-orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
@@ -509,8 +515,8 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 </div>
 
 <div class="mob-m" id="mm">
-  <a href="index.html" onclick="cm()">Accueil</a>
-  <a href="mobilite.html" onclick="cm()">Mobilit&eacute;</a>
+  <a href="index.html" onclick="cm()">Livraison</a>
+  <a href="mobilite.html" onclick="cm()" class="active">Mobilit&eacute;</a>
   <a href="postuler.html" onclick="cm()">Postuler</a>
   <a href="commander.html" onclick="cm()">Commander une course</a>
   <a href="index.html#booking" onclick="cm()">Planifier un appel</a>
@@ -523,8 +529,9 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 
 <nav class="nav" id="nav">
   <div class="ct nav-in">
-    <a href="index.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
+    <a href="index.html" class="nav-logo" aria-label="Chaskis, accueil"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
     <div class="nav-mid" style="margin-left:auto">
+      <a href="index.html">Livraison</a>
       <a href="mobilite.html" class="active">Mobilit&eacute;</a>
       <a href="postuler.html">Postuler</a>
     </div>

@@ -855,10 +855,10 @@ span.ast{color:#e53e3e!important;font-weight:700}
 </script>
 
 <div class="mob-m" id="mm">
-  <a href="index.html" onclick="cm()">Accueil</a>
-  <a href="commander.html" onclick="cm()">Commander</a>
-  <a href="mobilite.html" onclick="cm()">Mobilit&eacute;</a>
-  <a href="postuler.html" onclick="cm()">Postuler</a>
+  <a href="index.html" onclick="cm()" data-i18n="nav.delivery">Livraison</a>
+  <a href="mobilite.html" onclick="cm()" data-i18n="nav.mobility">Mobilit&eacute;</a>
+  <a href="postuler.html" onclick="cm()" data-i18n="nav.join">Postuler</a>
+  <a href="commander.html" onclick="cm()" data-i18n="nav.order">Commander une course</a>
   <div class="mob-lang-opts">
     <button class="mob-lang-btn active" data-lang="fr" onclick="setLang('fr');cm()"><span class="mob-lang-flag"><img src="flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
     <button class="mob-lang-btn" data-lang="en" onclick="setLang('en');cm()"><span class="mob-lang-flag"><img src="flag-gb.svg" alt="" width="18" height="13"></span> English</button>
@@ -880,9 +880,10 @@ span.ast{color:#e53e3e!important;font-weight:700}
 
 <nav class="nav" id="nav">
   <div class="ct nav-in">
-    <a href="index.html" class="nav-logo"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
+    <a href="index.html" class="nav-logo" aria-label="Chaskis, accueil"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
     <div class="nav-mid" style="margin-left:auto">
-      <a href="mobilite.html">Mobilit&eacute;</a>
+      <a href="index.html" class="active" data-i18n="nav.delivery">Livraison</a>
+      <a href="mobilite.html" data-i18n="nav.mobility">Mobilit&eacute;</a>
       <a href="postuler.html" data-i18n="nav.join">Postuler</a>
     </div>
     <a href="commander.html" class="btn btn-o nav-cta-btn"><span data-i18n="nav.order">Commander une course</span></a>
@@ -1853,7 +1854,7 @@ document.querySelectorAll('.vpc, .pipe-step').forEach(el => extraReveal.observe(
 // ===== I18N =====
 const T = {
   fr: {
-    'nav.order': 'Commander une course', 'nav.join': 'Postuler',
+    'nav.order': 'Commander une course', 'nav.join': 'Postuler', 'nav.delivery': 'Livraison', 'nav.mobility': 'Mobilité',
     'stat1': 'Coursiers en CDI', 'stat2': 'Livraisons par an', 'stat3': 'Villes en Suisse romande',
     'diff.label': 'Pourquoi Chaskis', 'diff.h2': 'La livraison professionnelle,<br><span class="ac">sans les compromis habituels</span>', 'diff.p': 'Pour toute entreprise qui veut externaliser ses livraisons à un partenaire fiable, sans commission, sans mauvaise surprise.',
     'diff1.h3': 'Coursiers salariés,<br>toujours au rendez-vous', 'diff1.p': 'Formés à votre image, équipés à vos couleurs.',
@@ -1982,7 +1983,7 @@ const T = {
     'float.cta': 'Planifier un appel',
   },
   en: {
-    'nav.order': 'Place an order', 'nav.join': 'Join us',
+    'nav.order': 'Place an order', 'nav.join': 'Join us', 'nav.delivery': 'Delivery', 'nav.mobility': 'Mobility',
     'stat1': 'Employed couriers', 'stat2': 'Deliveries per year', 'stat3': 'Cities in French Switzerland',
     'diff.label': 'Why Chaskis', 'diff.h2': 'Professional delivery,<br><span class="ac">without the usual trade-offs</span>', 'diff.p': 'For any business that wants to outsource its deliveries to a reliable partner. No commission, no surprises.',
     'diff1.h3': 'Employed couriers,<br>always on time', 'diff1.p': 'Trained to your standards, equipped in your brand.',

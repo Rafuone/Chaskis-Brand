@@ -45,7 +45,6 @@
 <!-- ===== Animation libraries ===== -->
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
 
 <!-- ===== Structured Data ===== -->
 <script type="application/ld+json">
@@ -1657,13 +1656,8 @@ window.addEventListener('load', () => {
   if (!window.gsap || !window.ScrollTrigger) return;
   gsap.registerPlugin(ScrollTrigger);
 
-  // Smooth scroll via Lenis — ticker GSAP requis pour sync avec ScrollTrigger
-  if (window.Lenis) {
-    const lenis = new Lenis({ lerp: 0.1, smoothWheel: true, syncTouch: false });
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
-    lenis.on('scroll', ScrollTrigger.update);
-  }
+  // Scroll natif (Lenis retire) : ScrollTrigger fonctionne nativement sur tous navigateurs.
+  // Les scrubs GSAP (0.6 / 1 / 1.4) assurent le rendu lisse sur parallax et pins.
 
   // ===== HERO : subtle parallax on scroll (no opacity fade — avoids grayed-out state on mid-page load) =====
   gsap.to('.mob-hero-content', {

@@ -62,25 +62,64 @@ Use these prompts in Midjourney, DALL-E, or Ideogram to generate photos for the 
 
 ---
 
-## Recruitment Page (postuler.html)
+## Recruitment Page (postuler.html) — REFONTE avril 2026
 
-### Hero
-**Prompt:** A bike courier riding fast through Geneva streets with a big smile, motion blur on background, sharp focus on courier, teal delivery bag, dynamic action shot, golden hour, cinematic, 16:9 aspect ratio
+> Refonte complète : 1 seule image hero (format portrait 4:5) à la place du collage IA répétitif précédent. Ajout d'un badge iridescent CSS (conic-gradient) avec "97% satisfaction équipes" en overlay sur la hero. Les 2 métiers (coursier / chauffeur) sont en cartes descriptives côte à côte, sans images dans la v1. La page ne contient plus qu'une seule image. D'autres images viendront plus tard si besoin.
 
-### Coursier section
-**Prompt:** A young courier on an electric cargo bike, loading packages into the front container, urban Swiss setting, wearing professional teal uniform, modern and eco-friendly vibe, natural lighting, 4:3 aspect ratio
+### postuler-hero.png (unique image de la page)
+**Fichier :** `postuler-hero.png` · **Ratio :** 4:5 (portrait, 520×650 environ) · **Placement :** colonne droite du hero, avec badge iridescent en overlay top-right
 
-### Chauffeur section
-**Prompt:** A professional driver in a clean dark uniform standing next to a modern van/car, holding a tablet, professional and approachable, Swiss city parking, clean and premium feel, 4:3 aspect ratio
+**Prompt :** Authentic editorial photograph of a Chaskis bike courier in action, three-quarter rear view (not facing camera), insulated delivery backpack visible on shoulders, teal Chaskis branded uniform, riding through a narrow cobblestone street in old-town Geneva or Lausanne, late afternoon golden hour light, warm bokeh of European stone buildings and soft street lamps in the background, candid reportage style, no people in foreground, no group shots, no repeated faces, shallow depth of field on the courier, motion subtle, 35mm film look, natural colors, cinematic yet realistic, 4:5 portrait ratio.
 
-### Team photo
-**Prompt:** Candid group photo of courier team having a break together, sitting on steps in a Swiss city, laughing, drinking coffee, diverse group, authentic moment, warm tones, 16:9 aspect ratio
+**Anti-patterns (ne pas faire) :**
+- Pas de collage multi visages, pas de foule dupliquée
+- Pas de regard caméra
+- Pas de style 3D ou illustration
+- Pas d'arrière plan urbain générique (éviter New York, Paris, Tokyo — c'est Genève ou Lausanne)
 
-### Employee testimonials (4 avatars)
-**1.** Friendly young man, 20s, sporty build, bike courier type, casual smile, outdoor headshot
-**2.** Woman in her 30s, short hair, energetic, urban style, outdoor headshot
-**3.** Man in his 30s, driver type, professional but warm, clean-shaven, headshot
-**4.** Young woman, 20s, student worker type, bright smile, outdoor headshot
+### Badge iridescent (CSS-only, pas d'image)
+Implémenté directement en CSS avec `conic-gradient` + animation de rotation (voir `.iri-badge` dans postuler.html). Couleurs pastel holographiques : rose, bleu pervenche, menthe, jaune pâle, lavande, pêche. Contenu : "97%" en gradient purple→teal, label "Satisfaction équipes" en dessous.
+
+### postuler-role-coursier.png (carte métier coursier)
+**Fichier :** `postuler-coursier.png` · **Ratio :** 3:4 ou 4:5 (portrait) · **Placement :** `.r-role.r-coursier .r-role-bg` (background-image cover)
+
+**Prompt :** Editorial portrait photograph, young female bike courier in a teal Chaskis branded jacket, seated on the edge of a wooden bench outside a small Geneva café in the morning, her delivery bike with an insulated bag leaning against the wall behind her, hands wrapped around a takeaway coffee cup, soft natural diffuse morning light from the side, shallow depth of field, looking slightly off-camera with a warm relaxed expression, no direct eye contact, cobblestone ground, old-town European facade out of focus, documentary 35mm film feel, not posed, not stock-photo.
+
+### postuler-role-chauffeur.png (carte métier chauffeur)
+**Fichier :** `postuler-chauffeur.png` · **Ratio :** 3:4 ou 4:5 (portrait) · **Placement :** `.r-role.r-chauffeur .r-role-bg` (background-image cover)
+
+**Prompt :** Cinematic side-window portrait of a Chaskis professional driver behind the wheel of a modern dark delivery van, hands gently on the steering wheel, focused calm expression looking at the road ahead (profile or 3/4 view, never looking at camera), soft daylight coming through the side window creating highlights on the shoulder, mid-buste framing, realistic interior of the van slightly visible, Geneva urban street reflections on the side window, understated and premium, documentary realism, shallow depth of field, no stock-photo cliché.
+
+**Anti-patterns communs (coursier + chauffeur) :**
+- Pas de sourire forcé ni regard caméra direct
+- Pas de pose "bras croisés devant un van"
+- Pas de fond new-yorkais, parisien ou tokyoïte : c'est Genève ou Lausanne
+- Pas de collage ni de visages dupliqués
+- Cohérence visuelle : les deux portraits doivent se répondre par la lumière et le cadrage (mêmes tons chauds, même grain, complémentaires sans être identiques)
+
+### Interviews : 3 portraits individuels (section "Les voix du terrain")
+
+> Format 4:5 portrait, grand, un portrait par personne. Les trois doivent se répondre visuellement (même palette lumineuse, même grain) sans être identiques. Priorité à l'authenticité reportage, pas stock-photo.
+
+### postuler-itv-pierre.png (Pierre, coursier Genève)
+**Prompt :** Documentary portrait of a 27 year old male bike courier named Pierre, athletic build, short dark hair, standing outside in a Geneva cobblestone street mid-morning, wearing the teal Chaskis cycling uniform, arms relaxed, leaning slightly against his delivery bike, confident calm expression looking just off-camera, soft cloudy daylight, shallow depth of field, European old-town background out of focus, honest reportage feel, 4:5 portrait ratio, not stock-photo.
+
+### postuler-itv-amelia.png (Amélia, chauffeure Lausanne)
+**Prompt :** Documentary portrait of a 31 year old female professional driver named Amélia, warm friendly expression (not smiling big), standing next to an open Chaskis delivery van door in Lausanne, afternoon soft light, dark driver uniform, short wavy hair, looking slightly off-camera, arms loosely crossed, realistic and grounded, Lausanne lake or urban backdrop heavily blurred, documentary 35mm feel, 4:5 portrait ratio.
+
+### postuler-itv-abdel.png (Abdel, coursier Genève)
+**Prompt :** Documentary portrait of a 34 year old male courier named Abdel, warm direct but calm expression, teal Chaskis jacket, standing in a small Geneva square late afternoon, golden hour light on the side of his face, vertical framing, delivery bag on shoulder, bike partially visible behind, no smile forced, natural reportage, shallow depth of field, 4:5 portrait ratio.
+
+### postuler-itv-nadia.png (Nadia, chauffeure Nyon)
+**Prompt :** Documentary portrait of a 29 year old female professional driver named Nadia, warm and focused expression, standing beside a Chaskis delivery van in a Nyon parking area midday, dark driver uniform, curly medium hair tied back loosely, slight three-quarter profile looking toward the vehicle, natural daylight from overhead, realistic and grounded, Alps or lake faintly suggested in the background, shallow depth of field, 4:5 portrait ratio, not stock-photo.
+
+### postuler-itv-karim.png (Karim, coursier Lausanne)
+**Prompt :** Documentary portrait of a 23 year old male bike courier named Karim, energetic but calm expression, teal Chaskis jersey, leaning against his bike on a Lausanne slope with the lake visible in the bokeh behind him, early afternoon bright cloudy light, looking slightly off-camera with a quiet confidence, no forced smile, delivery bag on the handlebars, 35mm film feel, shallow depth of field, 4:5 portrait ratio.
+
+### postuler-itv-valentina.png (Valentina, coursière Riviera)
+**Prompt :** Documentary portrait of a 36 year old female bike courier named Valentina, serene and grounded expression, teal Chaskis jacket, seated on a low stone wall along the Riviera lakefront (Vevey or Montreux), late morning soft light, bike leaning nearby, looking gently off-camera, soft water reflections out of focus behind her, honest reportage feel, no stock-photo cliché, 4:5 portrait ratio.
+
+**Consistance entre les 6 interviews :** même tempérament photographique (documentaire doux, 35mm, profondeur de champ courte), temps de la journée varié pour éviter la redite, tenues Chaskis différentes selon rôle mais palette teal constante. Éviter tout sourire publicitaire.
 
 ---
 

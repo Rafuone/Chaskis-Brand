@@ -702,7 +702,7 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
   <div class="mob-prestige-stage" id="mobPrestigeStage">
     <div class="ct">
       <div class="mob-prestige-layout">
-        <div class="mob-prestige-text rev">
+        <div class="mob-prestige-text">
           <span class="mob-prestige-badge"><span class="mob-prestige-badge-pill">Collecte Prestige</span><span class="mob-pillar-new">Nouveauté</span></span>
           <h2>Pour vos pièces <span class="ac">les plus précieuses</span>,<br>un service sans faille.</h2>
           <p class="mob-prestige-lead">Vous n'avez pas toujours le temps, l'envie ou la possibilité de vous déplacer pour récupérer un objet de valeur. Confiez-nous la collecte : on y va à votre place, on ramène en sécurité.</p>
@@ -1564,6 +1564,26 @@ setTimeout(() => window.__mobSigFallback(), 200);
   document.querySelectorAll('.mob-proof-stat strong').forEach(el => io.observe(el));
 })();
 
+// ===== HOW-IT-WORKS STEPS : IO reveal, stagger, sans dépendance GSAP =====
+(function() {
+  const container = document.getElementById('mobHowSteps');
+  if (!container) return;
+  const steps = Array.from(container.querySelectorAll('.mob-how-step'));
+  if (!steps.length) return;
+  if (!('IntersectionObserver' in window)) {
+    steps.forEach(s => s.classList.add('is-active'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) return;
+    steps.forEach((step, i) => setTimeout(() => step.classList.add('is-active'), i * 150));
+    io.disconnect();
+  }, { threshold: 0.2 });
+  io.observe(container);
+  // Filet de sécurité
+  setTimeout(() => steps.forEach(s => s.classList.add('is-active')), 3500);
+})();
+
 // ===== GSAP + LENIS : scroll-driven transitions only, no hidden states =====
 // IMPORTANT: elements MUST stay visible by default. Only animate enhancements on top.
 window.addEventListener('load', () => {
@@ -1610,23 +1630,12 @@ window.addEventListener('load', () => {
   // Le pin ScrollTrigger causait des chevauchements visuels avec la section précédente
   // selon l'état du layout au moment de l'init. La révélation CSS+IO est plus fiable.
 
-  // ===== HOW IT WORKS : scrub-driven progress line + active steps =====
+  // ===== HOW IT WORKS : ligne de progression scrub (étapes activées par IO, cf. plus haut) =====
   const howFill = document.getElementById('mobHowFill');
-  const howSteps = gsap.utils.toArray('.mob-how-step');
-  if (howFill && howSteps.length) {
-    ScrollTrigger.create({
-      trigger: '.mob-how-steps',
-      start: 'top 80%',
-      end: 'bottom 55%',
-      scrub: .8,
-      onUpdate: (self) => {
-        const p = self.progress;
-        howFill.style.transform = `scaleX(${p})`;
-        const activeCount = Math.ceil(p * howSteps.length);
-        howSteps.forEach((step, i) => {
-          step.classList.toggle('is-active', i < activeCount || (i === 0 && p > 0.02));
-        });
-      }
+  if (howFill) {
+    gsap.fromTo(howFill, { scaleX: 0 }, {
+      scaleX: 1, ease: 'none',
+      scrollTrigger: { trigger: '.mob-how-steps', start: 'top 80%', end: 'bottom 55%', scrub: 1 }
     });
   }
 

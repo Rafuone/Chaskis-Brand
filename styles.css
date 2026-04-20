@@ -211,6 +211,8 @@ section{padding:clamp(64px,8vw,100px) 0}
   .nav-login span{display:none}
   .field-row{grid-template-columns:1fr}
   .ft{grid-template-columns:1fr;gap:20px}
+  /* Push lang-drop + burger to the right when nav-mid and CTA are hidden */
+  .lang-drop{margin-left:auto}
 }
 .mob-lang{margin-top:8px;margin-left:0}
 .mob-m .mob-lang{opacity:0;transform:translateY(16px);transition:all .4s var(--ease)}

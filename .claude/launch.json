@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "chaskis-brand",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "-l", "3000", "--no-clipboard"],
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "3000", "--directory", "C:\\Users\\rafuo\\Desktop\\Claude\\Chaskis-website\\Chaskis-Brand"],
       "port": 3000,
       "openPath": "/index.html"
     }

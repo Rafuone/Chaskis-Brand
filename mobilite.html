@@ -1189,10 +1189,12 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
   });
 })();
 
-// ===== PRESTIGE reveal (IntersectionObserver, CSS transitions) =====
+// ===== PRESTIGE reveal : IO fallback (mobile / si GSAP indisponible) =====
 (function() {
   const section = document.querySelector('.mob-prestige');
   if (!section) return;
+  // Desktop : le pin GSAP (window.load) prend la main — on ne touche pas à scene-pinned
+  if (window.matchMedia('(min-width:900px)').matches) return;
   section.classList.add('scene-ready');
   if (!('IntersectionObserver' in window)) {
     section.classList.add('scene-active');
@@ -1200,15 +1202,14 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
   }
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
+      if (e.isIntersecting && !section.classList.contains('scene-pinned')) {
         section.classList.add('scene-active');
         io.unobserve(section);
       }
     });
   }, { threshold: 0, rootMargin: '0px 0px -15% 0px' });
   io.observe(section);
-  // Safety fallback
-  setTimeout(() => section.classList.add('scene-active'), 3000);
+  setTimeout(() => { if (!section.classList.contains('scene-pinned')) section.classList.add('scene-active'); }, 3000);
 })();
 
 // ===== TILT EFFECT : hero visual + diff cards =====
@@ -1648,6 +1649,68 @@ window.addEventListener('load', () => {
       }
     );
   });
+
+  // ===== PRESTIGE : scrollytelling pin (desktop ≥900px uniquement) =====
+  const prestige = document.querySelector('.mob-prestige');
+  const presRotator = document.getElementById('mobSignatureRotator');
+  if (prestige && presRotator && window.matchMedia('(min-width:900px)').matches) {
+    const presWords = Array.from(presRotator.querySelectorAll('.sig-word'));
+    const presBgEl  = document.getElementById('mobSignatureBg');
+    const presImgs  = presBgEl ? Array.from(presBgEl.querySelectorAll('.mob-signature-bg-img')) : [];
+
+    // Bascule en mode pin (désactive le fallback IO)
+    prestige.classList.remove('scene-ready', 'scene-active');
+    prestige.classList.add('scene-pinned');
+    presRotator.dataset.driven = 'scroll';
+
+    const revItems = [
+      prestige.querySelector('.mob-prestige-badge'),
+      prestige.querySelector('.mob-prestige-text h2'),
+      prestige.querySelector('.mob-prestige-lead'),
+      prestige.querySelector('.mob-prestige-list li:nth-child(1)'),
+      prestige.querySelector('.mob-prestige-list li:nth-child(2)'),
+      prestige.querySelector('.mob-prestige-list li:nth-child(3)'),
+      prestige.querySelector('.mob-prestige-text .mob-hero-btn-primary'),
+    ].filter(Boolean);
+
+    // Force l'état caché (au cas où l'IO aurait déjà tiré)
+    gsap.set(revItems, { opacity: 0, y: 28 });
+
+    let sigIdx = 0;
+    const swapSig = (idx) => {
+      if (idx === sigIdx || !presWords[idx]) return;
+      const prev = presWords[sigIdx];
+      const next = presWords[idx];
+      prev.classList.remove('is-active');
+      prev.classList.add('is-leaving');
+      next.classList.remove('is-leaving');
+      next.classList.add('is-active');
+      presImgs.forEach(img => img.classList.toggle('is-active', img.dataset.word === next.dataset.word));
+      setTimeout(() => prev.classList.remove('is-leaving'), 900);
+      sigIdx = idx;
+    };
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: prestige,
+        start: 'top top',
+        end: `+=${revItems.length * 160 + 80}`,
+        pin: true,
+        pinSpacing: true,
+        scrub: 0.8,
+        anticipatePin: 1,
+        onUpdate(self) {
+          const idx = Math.min(Math.floor(self.progress * presWords.length), presWords.length - 1);
+          swapSig(idx);
+        }
+      }
+    });
+
+    // Révélation progressive des éléments le long de la timeline
+    revItems.forEach((item, i) => {
+      tl.to(item, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, i * 0.55);
+    });
+  }
 
   // ===== MOUSE PARALLAX on hero (desktop only) =====
   const heroEl = document.getElementById('mobHero');

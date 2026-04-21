@@ -27,6 +27,7 @@
 <link rel="icon" href="icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="styles.css?v=20260421">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="preload" as="image" href="postuler-hero.png" fetchpriority="high">
 
 <script type="application/ld+json">
@@ -112,48 +113,6 @@
   font-size: .75rem; color: var(--ink-mid); font-style: italic; line-height: 1.5;
 }
 
-/* ===== BADGE IRIDESCENT ===== */
-.iri-badge {
-  --mx: 50%; --my: 50%; --angle: 0deg; --tilt: 0deg;
-  position: absolute; top: -20px; right: -20px;
-  width: clamp(100px,11vw,140px); height: clamp(100px,11vw,140px);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  z-index: 4; cursor: pointer;
-  filter: drop-shadow(0 14px 36px rgba(139,115,184,.4)) drop-shadow(0 4px 10px rgba(0,0,0,.15));
-  transform: rotate(var(--tilt));
-  animation: iri-float 7s ease-in-out infinite;
-}
-.iri-badge::before {
-  content: ''; position: absolute; inset: 0; border-radius: 50%;
-  background: conic-gradient(from var(--angle), #ffc2dc,#a8d4ff,#8ef0dc,#c4b0ff,#ffb0d4,#90e0f8,#b8c8ff,#7ee8cc,#ffaac8,#a0ccff,#ffc2dc);
-  animation: iri-spin 14s linear infinite; filter: blur(2px) saturate(1.2);
-}
-.iri-badge::after {
-  content: ''; position: absolute; inset: 5px; border-radius: 50%;
-  background: conic-gradient(from calc(var(--angle) * -1 + 120deg), #ffd0e8,#b0d8ff,#88f0d8,#d0b8ff,#ffb8d8,#98e8f8,#ffd0e8);
-  animation: iri-spin 22s linear infinite reverse; mix-blend-mode: screen; opacity: .65;
-}
-.iri-spec {
-  position: absolute; inset: 0; border-radius: 50%;
-  background: radial-gradient(circle 38% at var(--mx) var(--my), rgba(255,255,255,.75) 0%, rgba(255,255,255,.25) 22%, rgba(255,255,255,0) 52%);
-  mix-blend-mode: overlay; pointer-events: none; z-index: 1; transition: background .25s ease-out;
-}
-.iri-content {
-  position: relative; z-index: 2;
-  background: rgba(255,255,255,.52); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  border-radius: 50%; width: 72%; height: 72%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center; padding: 8px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.5);
-}
-.iri-content strong {
-  font-size: clamp(1.3rem,2vw,1.8rem); font-weight: 900; letter-spacing: -.04em;
-  background: linear-gradient(135deg, #6B4FA0 0%, #8B73B8 40%, #4BB3A4 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1;
-}
-.iri-content span { font-size: clamp(.48rem,.65vw,.58rem); font-weight: 700; color: var(--ink-mid); text-transform: uppercase; letter-spacing: .07em; margin-top: 4px; max-width: 88%; line-height: 1.3; }
-@keyframes iri-spin { to { transform: rotate(360deg); } }
-@keyframes iri-float { 0%,100% { transform: rotate(var(--tilt)) translateY(0); } 50% { transform: rotate(var(--tilt)) translateY(-7px); } }
-@media (prefers-reduced-motion: reduce) { .iri-badge,.iri-badge::before,.iri-badge::after { animation: none !important; } .r-hero::before { animation: none !important; } }
 
 /* ===== STATS BAR (même style que partners-stats sur index.html) ===== */
 .r-stats { background: var(--white); border-top: 1px solid var(--sand); border-bottom: 1px solid var(--sand); padding: clamp(40px,5vw,64px) 0; }
@@ -163,37 +122,47 @@
 .r-stat span { font-size: .88rem; color: var(--ink-light); font-weight: 500; margin-top: 10px; display: block; }
 
 /* ===== COMPARATIF ===== */
-.r-cmp { background: #13102a; padding: clamp(72px,9vw,120px) 0; }
-.r-cmp-head { max-width: 680px; margin: 0 auto clamp(44px,5.5vw,60px); text-align: center; }
+.r-cmp { background: #0f0d20; padding: clamp(64px,8vw,100px) 0 clamp(64px,8vw,100px); }
+.r-cmp-head { max-width: 680px; margin: 0 auto clamp(32px,4vw,48px); text-align: center; }
 .r-cmp-head h2 { font-size: clamp(1.8rem,3vw,2.6rem); font-weight: 800; line-height: 1.1; letter-spacing: -.035em; color: #fff; margin-bottom: 14px; }
 .r-cmp-head h2 .sa { font-family: 'Instrument Serif', serif; font-weight: 400; font-style: italic; color: var(--teal-light); }
 .r-cmp-head p { font-size: 1rem; color: rgba(255,255,255,.32); line-height: 1.65; }
-.r-cmp-wrap { border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,.07); }
-.r-cmp-headers { display: grid; grid-template-columns: 1fr 1fr; }
-.r-cmp-col { padding: clamp(14px,1.8vw,20px) clamp(20px,3vw,36px); display: flex; align-items: center; gap: 9px; font-size: .82rem; font-weight: 600; }
-.r-cmp-col.left { background: rgba(255,255,255,.04); color: rgba(255,255,255,.35); border-bottom: 1px solid rgba(255,255,255,.07); }
-.r-cmp-col.right { background: rgba(75,179,164,.09); color: var(--teal-light); border-bottom: 1px solid rgba(75,179,164,.14); border-left: 1px solid rgba(75,179,164,.08); }
-.r-cmp-col .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.r-cmp-col.left .dot { background: rgba(255,255,255,.25); }
-.r-cmp-col.right .dot { background: var(--teal); box-shadow: 0 0 0 3px rgba(75,179,164,.2); }
-.r-cmp-row { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,.05); }
-.r-cmp-row:last-child { border-bottom: none; }
-.r-cmp-cell { padding: clamp(16px,2vw,24px) clamp(20px,3vw,36px); display: flex; align-items: flex-start; gap: 11px; transition: background .2s; }
-.r-cmp-cell.left { background: rgba(255,255,255,.02); border-right: 1px solid rgba(255,255,255,.06); }
-.r-cmp-cell.right { background: rgba(75,179,164,.03); }
-.r-cmp-row:hover .r-cmp-cell.left { background: rgba(255,255,255,.04); }
-.r-cmp-row:hover .r-cmp-cell.right { background: rgba(75,179,164,.07); }
-.r-cmp-ico { flex-shrink: 0; margin-top: 2px; }
-.r-cmp-ico svg { width: 15px; height: 15px; fill: none; stroke-width: 2; stroke-linecap: round; display: block; }
-.r-cmp-cell.left .r-cmp-ico svg { stroke: rgba(255,255,255,.2); }
-.r-cmp-cell.right .r-cmp-ico svg { stroke: var(--teal); }
-.r-cmp-label { font-size: .83rem; font-weight: 600; line-height: 1.3; margin-bottom: 3px; }
-.r-cmp-cell.left .r-cmp-label { color: rgba(255,255,255,.38); }
-.r-cmp-cell.right .r-cmp-label { color: rgba(255,255,255,.85); }
-.r-cmp-detail { font-size: .76rem; line-height: 1.6; }
-.r-cmp-cell.left .r-cmp-detail { color: rgba(255,255,255,.18); }
-.r-cmp-cell.right .r-cmp-detail { color: rgba(255,255,255,.42); }
-@media (max-width: 600px) { .r-cmp-headers, .r-cmp-row { grid-template-columns: 1fr; } .r-cmp-cell.left { border-right: none; border-bottom: 1px solid rgba(255,255,255,.05); } .r-cmp-col.right { border-left: none; } }
+/* Table */
+.r-cmp-table { border-radius: 16px; border: 1px solid rgba(255,255,255,.08); }
+.r-cmp-thead { display: grid; grid-template-columns: 1fr 1fr; }
+.r-cmp-th.is-left { border-top-left-radius: 15px; }
+.r-cmp-th.is-right { border-top-right-radius: 15px; }
+.r-cmp-tr:last-child .r-cmp-td.is-left { border-bottom-left-radius: 15px; }
+.r-cmp-tr:last-child .r-cmp-td.is-right { border-bottom-right-radius: 15px; }
+.r-cmp-th { padding: 12px 24px; font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; display: flex; align-items: center; gap: 7px; }
+.r-cmp-th.is-left { background: rgba(20,18,38,.97); color: rgba(255,255,255,.3); border-bottom: 1px solid rgba(255,255,255,.07); backdrop-filter: blur(8px); }
+.r-cmp-th.is-right { background: rgba(8,34,30,.97); color: var(--teal-light); border-bottom: 1px solid rgba(75,179,164,.12); border-left: 1px solid rgba(75,179,164,.1); backdrop-filter: blur(8px); }
+.r-cmp-th .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.r-cmp-th.is-left .dot { background: rgba(255,255,255,.2); }
+.r-cmp-th.is-right .dot { background: var(--teal); box-shadow: 0 0 0 3px rgba(75,179,164,.2); }
+/* Rows */
+.r-cmp-tr { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid rgba(255,255,255,.05); opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .45s ease; }
+.r-cmp-tr.is-in { opacity: 1; transform: none; }
+.r-cmp-td { padding: clamp(12px,1.6vw,18px) clamp(16px,2.5vw,28px); display: flex; align-items: flex-start; gap: 12px; }
+.r-cmp-td.is-left { background: rgba(255,255,255,.02); border-right: 1px solid rgba(255,255,255,.05); }
+.r-cmp-td.is-right { background: rgba(75,179,164,.04); }
+.r-cmp-ico-lg { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.r-cmp-td.is-left .r-cmp-ico-lg { background: rgba(255,255,255,.07); }
+.r-cmp-td.is-right .r-cmp-ico-lg { background: rgba(75,179,164,.18); }
+.r-cmp-ico-lg svg { width: 14px; height: 14px; stroke-width: 2.5; stroke-linecap: round; fill: none; display: block; }
+.r-cmp-td.is-left .r-cmp-ico-lg svg { stroke: rgba(255,255,255,.3); }
+.r-cmp-td.is-right .r-cmp-ico-lg svg { stroke: var(--teal-light); }
+.r-cmp-main { font-size: clamp(.88rem,1.05vw,1rem); font-weight: 700; line-height: 1.35; margin-bottom: 4px; }
+.r-cmp-td.is-left .r-cmp-main { color: rgba(255,255,255,.38); }
+.r-cmp-td.is-right .r-cmp-main { color: rgba(255,255,255,.9); }
+.r-cmp-sub { font-size: .78rem; line-height: 1.65; }
+.r-cmp-td.is-left .r-cmp-sub { color: rgba(255,255,255,.2); }
+.r-cmp-td.is-right .r-cmp-sub { color: rgba(255,255,255,.45); }
+@media (max-width: 600px) {
+  .r-cmp-thead, .r-cmp-tr { grid-template-columns: 1fr; }
+  .r-cmp-td.is-left { border-right: none; border-bottom: 1px solid rgba(255,255,255,.05); }
+  .r-cmp-th.is-right { border-left: none; }
+}
 
 /* ===== SECTION MOTION (coursier / chauffeur animés) ===== */
 .r-motion { background: var(--bg); padding: clamp(64px,8vw,112px) 0; }
@@ -345,6 +314,12 @@
   pointer-events: none;
   z-index: 2;
 }
+.r-volet-card:not(.is-active) {
+  opacity: .72;
+}
+.r-volet-card:not(.is-active) .r-volet-photo img {
+  filter: saturate(.45);
+}
 .r-volet-card:not(.is-active)::after {
   background: linear-gradient(to top, rgba(6,12,20,.7) 0%, rgba(6,12,20,.35) 60%, rgba(6,12,20,.2) 100%);
 }
@@ -380,11 +355,13 @@
 }
 /* Collapsed name, vertical text, hidden when active : exit immédiat, enter doux */
 .r-volet-cname {
-  position: absolute; bottom: 24px; left: 50%; z-index: 3;
+  position: absolute; bottom: 72px; left: 50%; z-index: 3;
   transform: translateX(-50%) rotate(-90deg);
   transform-origin: center center;
-  font-size: .7rem; font-weight: 700; color: rgba(255,255,255,.7);
-  white-space: nowrap; letter-spacing: .04em;
+  font-size: clamp(1.3rem,2vw,1.75rem); font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 0.6px rgba(255,255,255,.55);
+  text-transform: uppercase; white-space: nowrap; letter-spacing: .12em;
   transition: opacity .4s .25s cubic-bezier(.2,.8,.2,1);
 }
 .r-volet-card.is-active .r-volet-cname {
@@ -429,7 +406,7 @@
   background: #050d14;
   position: relative; overflow: hidden;
 }
-.r-dl-map { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: .4; }
+.r-dl-map { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: .22; }
 /* Lueur teal en bas à droite */
 .r-dl::after {
   content: '';
@@ -480,19 +457,46 @@
   border: 1px solid rgba(255,255,255,.12);
   background: rgba(255,255,255,.07);
   color: #fff; text-align: left; width: 100%;
-  transition: all .3s var(--ease);
+  position: relative; overflow: hidden;
+  transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, border-color .25s ease, background .25s ease;
 }
-.sdl-btn:hover { background: rgba(255,255,255,.13); border-color: rgba(255,255,255,.22); transform: translateY(-2px); }
-.sdl-btn svg { width: 26px; height: 26px; flex-shrink: 0; opacity: .9; }
+.sdl-btn:hover { transform: translateY(-3px); }
+.sdl-btn svg { width: 26px; height: 26px; flex-shrink: 0; opacity: .9; transition: opacity .2s ease; }
+.sdl-btn:hover svg { opacity: 1; }
 .sdl-btn .sdl-txt { display: flex; flex-direction: column; line-height: 1.1; }
 .sdl-btn .sdl-txt small { font-size: .6rem; font-weight: 500; opacity: .55; letter-spacing: .02em; }
-.sdl-btn .sdl-txt strong { font-size: .95rem; font-weight: 700; letter-spacing: -.01em; margin-top: 2px; }
+.sdl-btn .sdl-txt strong { font-size: .95rem; font-weight: 700; letter-spacing: -.01em; margin-top: 2px; transition: color .2s ease; }
+
+/* Secondary : fill teal + border glow */
+.sdl-btn.sdl-secondary::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(105deg, rgba(75,179,164,.14) 0%, rgba(75,179,164,.04) 100%);
+  transform: translateX(-105%);
+  transition: transform .32s cubic-bezier(.2,.8,.2,1);
+  border-radius: inherit;
+}
+.sdl-btn.sdl-secondary:hover::before { transform: translateX(0); }
+.sdl-btn.sdl-secondary:hover {
+  border-color: rgba(75,179,164,.6);
+  box-shadow: 0 0 0 1px rgba(75,179,164,.2), 0 8px 24px rgba(75,179,164,.18);
+}
+.sdl-btn.sdl-secondary:hover .sdl-txt strong { color: var(--teal-light); }
+
+/* Primary : shimmer + lift */
 .sdl-primary {
   background: #fff; color: #0a0f1a;
   border-color: rgba(255,255,255,.9);
-  box-shadow: 0 8px 24px rgba(0,0,0,.3);
+  box-shadow: 0 6px 20px rgba(0,0,0,.25);
 }
-.sdl-primary:hover { background: #f5f5f5; color: #0a0f1a; }
+.sdl-primary::after {
+  content: ''; position: absolute;
+  top: 0; left: -70%; width: 45%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+  transform: skewX(-18deg);
+  transition: left .5s ease;
+}
+.sdl-primary:hover { background: #f0f0f0; color: #0a0f1a; box-shadow: 0 14px 36px rgba(0,0,0,.35); }
+.sdl-primary:hover::after { left: 130%; }
 .sdl-primary svg { opacity: 1; }
 .sdl-secondary-link { font-size: .8rem; color: rgba(255,255,255,.4); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,.2); transition: all .3s; margin-top: 4px; }
 .sdl-secondary-link:hover { color: rgba(255,255,255,.75); }
@@ -538,10 +542,9 @@
   .r-volet-card:last-child { border-bottom: none; }
   .r-volet-card.is-active { height: 400px; }
   .r-volet-photo img { object-position: center 20%; }
-  .r-volet-cname { transform: translateX(-50%); left: 24px; bottom: 50%; transform: translateY(50%); writing-mode: horizontal-tb; }
+  .r-volet-cname { left: 24px; bottom: 50%; transform: translateY(50%); writing-mode: horizontal-tb; }
   .r-volet-card.is-active .r-volet-cname { opacity: 0; }
   .r-perks-grid { grid-template-columns: 1fr; }
-  .iri-badge { top: -14px; right: -10px; }
   .r-dl-right { max-width: 100%; }
 }
 </style>
@@ -604,7 +607,7 @@
         <div class="r-hero-pills">
           <span class="r-hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Pourboires 100% reversés</span>
           <span class="r-hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Vélo &amp; matériel fournis J1</span>
-          <span class="r-hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Zéro commission prélevée</span>
+          <span class="r-hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Zéro avance de frais</span>
           <span class="r-hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Frontaliers bienvenus</span>
         </div>
       </div>
@@ -614,13 +617,6 @@
           <div class="img-prompt">
             <button type="button" class="copy-prompt-btn" aria-label="Copier le prompt IA du hero" data-prompt-key="postuler-hero"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Copier le prompt</span></button>
             <span class="img-prompt-text">Photo hero · 4:5 portrait · coursier en action, golden hour, cobblestone. Voir IMAGE_PROMPTS.md § postuler-hero.</span>
-          </div>
-        </div>
-        <div class="iri-badge" id="iriBadge" aria-label="97% de satisfaction interne">
-          <div class="iri-spec" aria-hidden="true"></div>
-          <div class="iri-content">
-            <strong>97<span style="font-size:.55em;vertical-align:top;margin-left:1px">%</span></strong>
-            <span>Satisfaction équipes</span>
           </div>
         </div>
       </div>
@@ -634,146 +630,54 @@
   <div class="ct">
     <div class="r-stats-row">
       <div class="r-stat rv"><strong>800+</strong><span>Collègues en CDI</span></div>
-      <div class="r-stat rv d1"><strong>4</strong><span>Zones de déploiement</span></div>
+      <div class="r-stat rv d1"><strong>4</strong><span>Villes couvertes</span></div>
       <div class="r-stat rv d2"><strong>100%</strong><span>Des pourboires reversés</span></div>
-      <div class="r-stat rv d3"><strong>0</strong><span>Commission prélevée</span></div>
+      <div class="r-stat rv d3"><strong>0 CHF</strong><span>À avancer sur le matériel</span></div>
     </div>
   </div>
 </div>
 
-<!-- ===== COMPARATIF ===== -->
+<!-- ===== COMPARATIF SCROLL-STEP ===== -->
 <section class="r-cmp" id="avantages">
+  <div class="ct r-cmp-head rv">
+    <span class="sl">Ce qui change chez nous</span>
+    <h2>Ce qui <span class="sa">change vraiment</span> chez nous</h2>
+    <p>Pas de jargon. Juste ce que vous vivez, comparé à ce que vous avez peut-être connu.</p>
+  </div>
   <div class="ct">
-    <div class="r-cmp-head rv">
-      <span class="sl">Ce qui change chez nous</span>
-      <h2>Ce qui <span class="sa">change vraiment</span> chez nous</h2>
-      <p>Pas de jargon. Juste ce que vous vivez, comparé à ce que vous avez peut-être connu.</p>
-    </div>
-    <div class="r-cmp-wrap">
-      <div class="r-cmp-headers">
-        <div class="r-cmp-col left"><span class="dot"></span>Ailleurs</div>
-        <div class="r-cmp-col right"><span class="dot"></span>Chez Chaskis</div>
+    <div class="r-cmp-table">
+      <div class="r-cmp-thead">
+        <div class="r-cmp-th is-left"><span class="dot"></span>Ailleurs</div>
+        <div class="r-cmp-th is-right"><span class="dot"></span>Chez Chaskis</div>
       </div>
-
-      <div class="r-cmp-row">
-        <div class="r-cmp-cell left">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">Auto-entrepreneur ou CDD renouvelable</div>
-            <div class="r-cmp-detail">Pas de garantie de revenus, aucune protection sociale.</div>
-          </div>
-        </div>
-        <div class="r-cmp-cell right">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">CDI dès le premier jour, salaire fixe CCT</div>
-            <div class="r-cmp-detail">Vrai contrat, protection complète, revenus stables.</div>
-          </div>
-        </div>
+      <div class="r-cmp-tr">
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Auto-entrepreneur ou CDD renouvelable</div><div class="r-cmp-sub">Pas de garantie de revenus, aucune protection sociale.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">CDI dès le premier jour, salaire fixe CCT</div><div class="r-cmp-sub">Vrai contrat, protection complète, revenus stables.</div></div></div>
       </div>
-
-      <div class="r-cmp-row">
-        <div class="r-cmp-cell left">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">Vélo, scooter et téléphone à vos frais</div>
-            <div class="r-cmp-detail">Investissement de départ non remboursé.</div>
-          </div>
-        </div>
-        <div class="r-cmp-cell right">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">Vélo, sac, veste et téléphone fournis dès J1</div>
-            <div class="r-cmp-detail">0 CHF à avancer. Le matériel vous attend le premier matin.</div>
-          </div>
-        </div>
+      <div class="r-cmp-tr">
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Vélo, scooter et téléphone à vos frais</div><div class="r-cmp-sub">Investissement de départ non remboursé.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">Vélo, sac, veste et téléphone fournis dès J1</div><div class="r-cmp-sub">0 CHF à avancer. Le matériel vous attend le premier matin.</div></div></div>
       </div>
-
-      <div class="r-cmp-row">
-        <div class="r-cmp-cell left">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">Pas couverts si accident ou maladie</div>
-            <div class="r-cmp-detail">Arrêt de travail = arrêt des revenus.</div>
-          </div>
-        </div>
-        <div class="r-cmp-cell right">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">Assurance accident, maladie et intempéries</div>
-            <div class="r-cmp-detail">Couverts et payés dans tous les cas. C'est le CDI en Suisse.</div>
-          </div>
-        </div>
+      <div class="r-cmp-tr">
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Pas couverts si accident ou maladie</div><div class="r-cmp-sub">Arrêt de travail = arrêt des revenus.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">Assurance accident, maladie et intempéries</div><div class="r-cmp-sub">Couverts et payés dans tous les cas. C'est le CDI en Suisse.</div></div></div>
       </div>
-
-      <div class="r-cmp-row">
-        <div class="r-cmp-cell left">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">Un bot, un ticket, une FAQ</div>
-            <div class="r-cmp-detail">Aucune réponse humaine en cas de problème terrain.</div>
-          </div>
-        </div>
-        <div class="r-cmp-cell right">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">Un dispatcher qui décroche et connaît votre prénom</div>
-            <div class="r-cmp-detail">Problème en cours de route ? Quelqu'un répond.</div>
-          </div>
-        </div>
+      <div class="r-cmp-tr">
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Un bot, un ticket, une FAQ</div><div class="r-cmp-sub">Aucune réponse humaine en cas de problème terrain.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">Un dispatcher qui décroche et connaît votre prénom</div><div class="r-cmp-sub">Problème en cours de route ? Quelqu'un répond.</div></div></div>
       </div>
-
-      <div class="r-cmp-row">
-        <div class="r-cmp-cell left">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">Commission prélevée sur vos pourboires</div>
-            <div class="r-cmp-detail">La plateforme garde une partie de ce que les clients vous donnent.</div>
-          </div>
-        </div>
-        <div class="r-cmp-cell right">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">100% des pourboires reversés, sans exception</div>
-            <div class="r-cmp-detail">Chaque centime que le client vous donne, vous le gardez.</div>
-          </div>
-        </div>
+      <div class="r-cmp-tr">
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Plateforme qui garde une part de vos pourboires</div><div class="r-cmp-sub">Chaque centime de pourboire n'arrive pas entier dans votre poche.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">100% des pourboires reversés, sans exception</div><div class="r-cmp-sub">Chaque centime que le client vous donne, vous le gardez.</div></div></div>
       </div>
-
-      <div class="r-cmp-row">
-        <div class="r-cmp-cell left">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">Convention collective ignorée ou contournée</div>
-            <div class="r-cmp-detail">Dimanches imposés, congés payés convertis en salaire : pratiques illégales courantes.</div>
-          </div>
-        </div>
-        <div class="r-cmp-cell right">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">CCT des coursiers urbains respectée à la lettre</div>
-            <div class="r-cmp-detail">Repos, congés, heures sup : tout est conforme. Pas de promesses verbales, tout est dans le contrat.</div>
-          </div>
-        </div>
+      <div class="r-cmp-tr">
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Convention collective ignorée ou contournée</div><div class="r-cmp-sub">Dimanches imposés, congés convertis en salaire : pratiques illégales courantes.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">CCT des coursiers urbains respectée à la lettre</div><div class="r-cmp-sub">Repos, congés, heures sup : tout est conforme. Tout est dans le contrat.</div></div></div>
       </div>
-
-      <div class="r-cmp-row">
-        <div class="r-cmp-cell left">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">Débrouille-toi dès le premier jour</div>
-            <div class="r-cmp-detail">Aucune formation, mise en autonomie immédiate sans filet.</div>
-          </div>
-        </div>
-        <div class="r-cmp-cell right">
-          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-          <div>
-            <div class="r-cmp-label">Formation initiale incluse avant la première mission</div>
-            <div class="r-cmp-detail">Vous partez formé, pas largué. Accompagnement terrain dès l'embauche.</div>
-          </div>
-        </div>
+      <div class="r-cmp-tr">
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Débrouille-toi dès le premier jour</div><div class="r-cmp-sub">Aucune formation, mise en autonomie immédiate sans filet.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">Formation initiale incluse avant la première mission</div><div class="r-cmp-sub">Vous partez formé, pas largué. Accompagnement terrain dès l'embauche.</div></div></div>
       </div>
-
     </div>
   </div>
 </section>
@@ -785,7 +689,7 @@
     <header class="r-testi-header rv">
       <span class="sl">Les voix du terrain</span>
       <h2>Ce qu'ils disent de <span class="sa">Chaskis</span></h2>
-      <p>Six collègues. Six villes. Six parcours.</p>
+      <p>Six collègues. Six histoires. Six parcours.</p>
     </header>
     <div class="r-volet" id="rVolet" role="tablist">
 
@@ -794,11 +698,11 @@
           <img src="courier.jpg" alt="Pierre, coursier à Genève" style="object-position:center top">
         </div>
         <span class="r-volet-tag">Coursier · Genève</span>
-        <span class="r-volet-cname" aria-hidden="true">Pierre</span>
+        <span class="r-volet-cname" aria-hidden="true">Abdel</span>
         <div class="r-volet-content">
-          <blockquote class="r-volet-quote">Le premier mois où je suis tombé malade et où j'ai reçu mon salaire quand même, j'ai compris que c'était pas juste un autre job. C'était autre chose.</blockquote>
+          <blockquote class="r-volet-quote">Le premier jour, on m'a tendu un vélo, une veste, un sac. Zéro caution, zéro contrat auto-entrepreneur à signer avant de partir. Tu commences ta journée, pas ton business plan.</blockquote>
           <div class="r-volet-author">
-            <strong>Pierre, 27 ans</strong>
+            <strong>Abdel, 27 ans</strong>
             <span>Coursier à Genève · chez Chaskis depuis 2022</span>
           </div>
         </div>
@@ -806,16 +710,11 @@
 
       <article class="r-volet-card" role="tab" aria-selected="false" tabindex="0">
         <div class="r-volet-photo">
-          <img src="postuler-itv-amelia.png" alt="Amélia, chauffeure à Lausanne" onerror="this.style.display='none'">
-          <div class="img-prompt">
-            <button type="button" class="copy-prompt-btn" data-prompt-key="postuler-itv-amelia" aria-label="Copier le prompt Amélia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Copier</span></button>
-            <span class="img-prompt-text">Portrait Amélia · voir IMAGE_PROMPTS.md § postuler-itv-amelia</span>
-          </div>
-        </div>
+          <img src="courier4.png" alt="Amélia, chauffeure à Lausanne" style="object-position:center top">
         <span class="r-volet-tag">Chauffeure · Lausanne</span>
         <span class="r-volet-cname" aria-hidden="true">Amélia</span>
         <div class="r-volet-content">
-          <blockquote class="r-volet-quote">Chaskis m'a financé le permis D1. Aujourd'hui je fais des transferts en van avec une formation que j'aurais pas eu les moyens de payer seule. J'ai progressé sans avoir à partir ailleurs.</blockquote>
+          <blockquote class="r-volet-quote">Avant, j'enchaînais les courtes missions en auto-entrepreneuse, jamais sûre du mois d'après. Ici c'est un CDI, des horaires, un salaire fixe. J'ai pu signer un bail sans qu'on me regarde de travers.</blockquote>
           <div class="r-volet-author">
             <strong>Amélia, 31 ans</strong>
             <span>Chauffeure à Lausanne · chez Chaskis depuis 2021</span>
@@ -828,30 +727,26 @@
           <img src="courier2.jpg" alt="Abdel, coursier à Genève">
         </div>
         <span class="r-volet-tag">Coursier · Genève</span>
-        <span class="r-volet-cname" aria-hidden="true">Abdel</span>
+        <span class="r-volet-cname" aria-hidden="true">Pierre</span>
         <div class="r-volet-content">
-          <blockquote class="r-volet-quote">La grosse différence ici, c'est qu'on est considéré comme un professionnel. Quand il y a un souci sur une course, je prends mon téléphone, j'ai quelqu'un en face.</blockquote>
+          <blockquote class="r-volet-quote">La vraie différence, c'est qu'au bout du fil il y a toujours quelqu'un. Pas un ticket, pas un bot. Un collègue qui connaît mon prénom et qui règle le problème avec moi.</blockquote>
           <div class="r-volet-author">
-            <strong>Abdel, 34 ans</strong>
+            <strong>Pierre, 34 ans</strong>
             <span>Coursier à Genève · chez Chaskis depuis 2020</span>
           </div>
         </div>
       </article>
 
       <article class="r-volet-card" role="tab" aria-selected="false" tabindex="0">
-        <div class="r-volet-photo" style="background:linear-gradient(160deg,#1a1000,#2a1800)">
-          <img src="postuler-itv-nadia.png" alt="Nadia, chauffeure à Nyon" onerror="this.style.display='none'">
-          <div class="img-prompt">
-            <button type="button" class="copy-prompt-btn" data-prompt-key="postuler-itv-nadia" aria-label="Copier le prompt Nadia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Copier</span></button>
-            <span class="img-prompt-text">Portrait Nadia · voir IMAGE_PROMPTS.md § postuler-itv-nadia</span>
-          </div>
+        <div class="r-volet-photo">
+          <img src="courier6.png" alt="Chloé, chauffeure à Nyon" style="object-position:center top">
         </div>
         <span class="r-volet-tag">Chauffeure · Nyon</span>
-        <span class="r-volet-cname" aria-hidden="true">Nadia</span>
+        <span class="r-volet-cname" aria-hidden="true">Chloé</span>
         <div class="r-volet-content">
-          <blockquote class="r-volet-quote">En deux semaines, j'avais la formation, le permis, et mes premières courses. Ici on vous fait grandir avant de vous lancer.</blockquote>
+          <blockquote class="r-volet-quote">Chauffeure dans un métier qui reste très masculin, je m'attendais à devoir prouver deux fois plus. Chez Chaskis, personne ne m'a jamais fait sentir que j'avais quoi que ce soit à prouver. On me parle comme aux autres.</blockquote>
           <div class="r-volet-author">
-            <strong>Nadia, 29 ans</strong>
+            <strong>Chloé, 29 ans</strong>
             <span>Chauffeure à Nyon · chez Chaskis depuis 2023</span>
           </div>
         </div>
@@ -859,14 +754,14 @@
 
       <article class="r-volet-card" role="tab" aria-selected="false" tabindex="0">
         <div class="r-volet-photo">
-          <img src="courier3.jpg" alt="Karim, coursier à Lausanne">
+          <img src="courier3.jpg" alt="Karim, coursier à Lausanne" style="object-position:center top">
         </div>
         <span class="r-volet-tag">Coursier · Lausanne</span>
         <span class="r-volet-cname" aria-hidden="true">Karim</span>
         <div class="r-volet-content">
-          <blockquote class="r-volet-quote">Je gagne mieux que des potes en stage. Et je suis dehors, je bouge. J'ai compris que c'était ça mon truc.</blockquote>
+          <blockquote class="r-volet-quote">Les pourboires, ici, c'est 100% pour moi. Pas de "frais de gestion", pas de pourcentage prélevé au passage. C'est écrit noir sur blanc dans le contrat, et ça change tout à la fin du mois.</blockquote>
           <div class="r-volet-author">
-            <strong>Karim, 23 ans</strong>
+            <strong>Karim, 31 ans</strong>
             <span>Coursier à Lausanne · chez Chaskis depuis 2024</span>
           </div>
         </div>
@@ -874,16 +769,12 @@
 
       <article class="r-volet-card" role="tab" aria-selected="false" tabindex="0">
         <div class="r-volet-photo">
-          <img src="postuler-itv-valentina.png" alt="Thomas, coursier à la Riviera" onerror="this.style.display='none'">
-          <div class="img-prompt">
-            <button type="button" class="copy-prompt-btn" data-prompt-key="postuler-itv-valentina" aria-label="Copier le prompt Thomas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Copier</span></button>
-            <span class="img-prompt-text">Portrait Thomas · voir IMAGE_PROMPTS.md § postuler-itv-valentina</span>
-          </div>
+          <img src="courier5.png" alt="Thomas, coursier à la Riviera" style="object-position:center top">
         </div>
         <span class="r-volet-tag">Coursier · Riviera</span>
         <span class="r-volet-cname" aria-hidden="true">Thomas</span>
         <div class="r-volet-content">
-          <blockquote class="r-volet-quote">Le vélo est entretenu, le matériel est fourni. Si quelque chose casse en cours, j'ai un numéro direct. Jamais eu ça ailleurs.</blockquote>
+          <blockquote class="r-volet-quote">Pneu crevé un mardi matin, un appel, quelqu'un m'apportait la roue. J'ai aussi accès à des tarifs préférentiels chez les magasins partenaires. Ce sont les petits trucs qu'on remarque après des années dans le métier.</blockquote>
           <div class="r-volet-author">
             <strong>Thomas, 36 ans</strong>
             <span>Coursier à la Riviera · chez Chaskis depuis 2022</span>
@@ -968,6 +859,8 @@
         <div class="faq-contact">
           <a class="faq-ci" href="mailto:hello@chaskis.ch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg><span>hello@chaskis.ch</span></a>
           <a class="faq-ci" href="tel:+41227000127"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>+41 22 700 01 27</span></a>
+          <a class="faq-ci faq-ci-addr" href="https://maps.google.com/?q=69+rue+des+Vollandes+1207+Gen%C3%A8ve" target="_blank" rel="noopener" aria-label="Adresse Genève"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span><strong>Genève</strong>69 rue des Vollandes, 1207</span></a>
+          <a class="faq-ci faq-ci-addr" href="https://maps.google.com/?q=22+chemin+de+Pierrefleur+1004+Lausanne" target="_blank" rel="noopener" aria-label="Adresse Lausanne"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span><strong>Lausanne</strong>22 ch. de Pierrefleur, 1004</span></a>
         </div>
       </div>
       <div class="faq-list rr">
@@ -1002,17 +895,7 @@
 
 <!-- ===== CTA FINAL ===== -->
 <section class="r-dl" id="download">
-  <svg class="r-dl-map" viewBox="0 0 900 450" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M80 260 C130 210, 240 185, 380 188 C520 191, 680 215, 780 265 C810 282, 800 315, 765 328 C730 341, 660 335, 580 315 C480 290, 370 288, 270 300 C180 310, 110 305, 88 282 C76 272, 72 265, 80 260Z" stroke="rgba(75,179,164,0.18)" stroke-width="1.5" fill="rgba(75,179,164,0.05)"/>
-    <circle cx="95" cy="272" r="5" fill="rgba(75,179,164,0.35)"/>
-    <circle cx="95" cy="272" r="11" stroke="rgba(75,179,164,0.18)" stroke-width="1" fill="none"/>
-    <text x="108" y="268" font-size="9" fill="rgba(75,179,164,0.3)" font-family="sans-serif" letter-spacing="1">GENÈVE</text>
-    <circle cx="420" cy="186" r="3.5" fill="rgba(75,179,164,0.22)"/>
-    <text x="428" y="183" font-size="8" fill="rgba(75,179,164,0.22)" font-family="sans-serif" letter-spacing="1">NYON</text>
-    <circle cx="610" cy="200" r="3.5" fill="rgba(75,179,164,0.22)"/>
-    <text x="620" y="197" font-size="8" fill="rgba(75,179,164,0.22)" font-family="sans-serif" letter-spacing="1">LAUSANNE</text>
-    <path d="M95 272 L420 186 L610 200" stroke="rgba(75,179,164,0.07)" stroke-width="1" stroke-dasharray="5 5"/>
-  </svg>
+  <div class="r-dl-map" id="rdlGmap" aria-hidden="true"></div>
   <div class="ct r-dl-inner rv">
 
     <div class="r-dl-left">
@@ -1040,7 +923,7 @@
             <span class="sdl-txt"><small>Télécharger sur</small><strong>App Store</strong></span>
           </a>
           <a class="sdl-btn sdl-secondary" href="#" aria-label="Télécharger sur Google Play">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-1.4l2.584 1.496a1 1 0 010 1.394l-2.585 1.496-2.528-2.528 2.53-2.858zM5.864 2.658L16.8 8.99l-2.302 2.302-8.635-8.635z"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.41 21.67a1.12 1.12 0 0 0 1.22-.09l9.48-5.38-2.16-2.17-8.54 7.64zm9.7-14.05L3.63 2.24a1.12 1.12 0 0 0-1.22-.09l8.54 7.65 2.16-2.18zm3.62 3.05-3.18-3.18L16.3 4.3l3.77 2.14c1.08.61 1.08 1.6 0 2.21l-3.77 2.14zm-3.18 1.06L3.41 2.33A.9.9 0 0 0 3 3.05v17.9a.9.9 0 0 0 .41.72l10.14-9.04z"/></svg>
             <span class="sdl-txt"><small>Disponible sur</small><strong>Google Play</strong></span>
           </a>
         </div>
@@ -1054,6 +937,31 @@
 <!-- ===== FOOTER ===== -->
 <footer class="footer" data-nav-dark data-shared></footer>
 
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+(function(){
+  var el = document.getElementById('rdlGmap');
+  if (!el) return;
+  var map = L.map(el, {
+    center: [46.2044, 6.1432],
+    zoom: 14,
+    zoomControl: false,
+    dragging: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    boxZoom: false,
+    keyboard: false,
+    attributionControl: false,
+    tap: false,
+  });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd',
+    maxZoom: 19,
+  }).addTo(map);
+})();
+</script>
 <script src="shared.js?v=20260420a"></script>
 <script src="auth.js"></script>
 <script>
@@ -1140,37 +1048,6 @@
   });
 })();
 
-/* IRIDESCENT BADGE */
-(function(){
-  const badge = document.getElementById('iriBadge');
-  if (!badge) return;
-  if (window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
-  const parent = badge.closest('.r-hero-img-wrap') || badge.parentElement;
-  function onMove(e) {
-    const r = badge.getBoundingClientRect();
-    const x = ((e.clientX - r.left) / r.width) * 100;
-    const y = ((e.clientY - r.top) / r.height) * 100;
-    badge.style.setProperty('--mx', Math.max(-20, Math.min(120, x)) + '%');
-    badge.style.setProperty('--my', Math.max(-20, Math.min(120, y)) + '%');
-    badge.style.setProperty('--tilt', ((x - 50) / 25 - (y - 50) / 25) + 'deg');
-  }
-  (parent || document).addEventListener('mousemove', onMove, { passive: true });
-  (parent || document).addEventListener('mouseleave', () => {
-    badge.style.setProperty('--mx', '50%');
-    badge.style.setProperty('--my', '50%');
-    badge.style.setProperty('--tilt', '0deg');
-  });
-  let rafId = null;
-  window.addEventListener('scroll', () => {
-    if (rafId) return;
-    rafId = requestAnimationFrame(() => {
-      const r = badge.getBoundingClientRect();
-      badge.style.setProperty('--angle', (1 - (r.top + r.height / 2) / window.innerHeight) * 280 + 'deg');
-      rafId = null;
-    });
-  }, { passive: true });
-})();
-
 /* COPY PROMPT BUTTONS */
 (function(){
   const PROMPTS = {
@@ -1205,6 +1082,27 @@
       label.textContent = 'Copié !';
       setTimeout(() => { btn.classList.remove('copied'); label.textContent = old; }, 1800);
     });
+  });
+})();
+
+/* COMPARATIF : révélation ligne par ligne au scroll */
+(function(){
+  const rows = document.querySelectorAll('.r-cmp-tr');
+  if (!rows.length || !window.IntersectionObserver) {
+    rows.forEach(r => r.classList.add('is-in'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '0px 0px -60px 0px' });
+  rows.forEach((r, i) => {
+    r.style.transitionDelay = `${i * 0.06}s`;
+    io.observe(r);
   });
 })();
 </script>

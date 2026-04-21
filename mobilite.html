@@ -162,7 +162,7 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 /* ===== Hero ===== */
 .mob-hero{position:relative;background:transparent;color:#fff;overflow:hidden;padding:160px 0 120px;display:flex;align-items:center}
 .mob-hero-content{position:relative;z-index:3;width:100%}
-.mob-hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:64px;align-items:center}
+.mob-hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);align-items:center}
 .mob-hero-overline{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 10px;background:rgba(245,184,0,.08);border:1px solid rgba(245,184,0,.22);border-radius:999px;color:var(--my-bright);font-size:.74rem;font-weight:600;letter-spacing:.02em;margin-bottom:22px;opacity:0;transform:translateY(12px);animation:fadeUp .7s var(--ease,cubic-bezier(.22,.61,.36,1)) .05s forwards}
 .mob-hero-overline::before{content:'';width:6px;height:6px;background:var(--my-bright);border-radius:50%;animation:pulse-dot 2s ease-in-out infinite}
 @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
@@ -180,7 +180,7 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 .mob-hero-sub{font-size:clamp(.95rem,1.1vw,1.08rem);color:var(--t2);line-height:1.65;max-width:520px;margin-bottom:28px;opacity:0;transform:translateY(12px);animation:fadeUp .7s cubic-bezier(.22,.61,.36,1) .6s forwards}
 .mob-hero-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;opacity:0;transform:translateY(12px);animation:fadeUp .7s cubic-bezier(.22,.61,.36,1) .75s forwards}
 .mob-hero-grid{perspective:1200px}
-.mob-hero-visual{position:relative;aspect-ratio:3/4;border-radius:24px;overflow:hidden;opacity:0;transform:translateY(20px) scale(.98);animation:fadeUp 1s cubic-bezier(.22,.61,.36,1) .4s forwards;border:1px solid var(--line);box-shadow:0 40px 80px rgba(0,0,0,.5);transition:transform .7s cubic-bezier(.22,.61,.36,1),box-shadow .7s cubic-bezier(.22,.61,.36,1);will-change:transform}
+.mob-hero-visual{position:relative;aspect-ratio:4/5;border-radius:24px;overflow:hidden;opacity:0;transform:translateY(20px) scale(.98);animation:fadeUp 1s cubic-bezier(.22,.61,.36,1) .4s forwards;border:1px solid var(--line);box-shadow:0 40px 80px rgba(0,0,0,.5);transition:transform .7s cubic-bezier(.22,.61,.36,1),box-shadow .7s cubic-bezier(.22,.61,.36,1);will-change:transform}
 .mob-hero-visual img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.05) contrast(1.04)}
 /* Teinte violet/bleu subtile pour aligner les noirs de l'image sur le bg de la page */
 .mob-hero-visual::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(60,50,110,.22),rgba(20,15,40,.32) 60%,rgba(11,9,20,.5) 100%);mix-blend-mode:multiply;pointer-events:none}
@@ -521,8 +521,8 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
   <a href="index.html#booking" onclick="cm()">Planifier un appel</a>
   <a href="index.html#faq" onclick="cm()">FAQ</a>
   <div class="mob-lang-opts">
-    <button class="mob-lang-btn active" data-lang="fr" onclick="setLang('fr');cm()"><span class="mob-lang-flag"><img src="flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
-    <button class="mob-lang-btn" data-lang="en" onclick="setLang('en');cm()"><span class="mob-lang-flag"><img src="flag-gb.svg" alt="" width="18" height="13"></span> English</button>
+    <button class="mob-lang-btn active" data-lang="fr" onclick="__chaskisSetLang('fr');cm()"><span class="mob-lang-flag"><img src="flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
+    <button class="mob-lang-btn" data-lang="en" onclick="__chaskisSetLang('en');cm()"><span class="mob-lang-flag"><img src="flag-gb.svg" alt="" width="18" height="13"></span> English</button>
   </div>
 </div>
 
@@ -530,11 +530,11 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
   <div class="ct nav-in">
     <a href="index.html" class="nav-logo" aria-label="Chaskis, accueil"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
     <div class="nav-mid" style="margin-left:auto">
-      <a href="index.html">Livraison</a>
-      <a href="mobilite.html" class="active">Mobilit&eacute;</a>
-      <a href="postuler.html">Postuler</a>
+      <a href="index.html" data-i18n="nav.livraison">Livraison</a>
+      <a href="mobilite.html" class="active" data-i18n="nav.mobilite">Mobilit&eacute;</a>
+      <a href="postuler.html" data-i18n="nav.postuler">Postuler</a>
     </div>
-    <a href="commander.html" class="btn btn-o nav-cta-btn"><span>Commander une course</span></a>
+    <a href="commander.html" class="btn btn-o nav-cta-btn"><span data-i18n="nav.commander">Commander une course</span></a>
     <div class="lang-drop" id="langDrop">
       <button class="lang-drop-trigger" id="langTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Changer de langue">
         <span class="lang-drop-flag" id="langFlag"><img src="flag-fr.svg" alt="Français" width="18" height="13"></span>
@@ -562,7 +562,7 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
     <div class="ct">
       <div class="mob-hero-grid">
         <div class="mob-hero-text">
-          <div class="mob-hero-overline">Votre chauffeur à Genève, Nyon, Lausanne et la Riviera</div>
+          <div class="mob-hero-overline" data-i18n="m.hero.overline">Votre chauffeur à Genève, Nyon, Lausanne et la Riviera</div>
           <h1>
             <span class="word" style="animation-delay:.1s">Des</span>
             <span class="word" style="animation-delay:.2s">chauffeurs</span>
@@ -578,14 +578,14 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
               <span class="hero-rot-word" data-word="rendezvous">rendez-vous</span>
             </span><span class="word" style="animation-delay:.58s">.</span>
           </h1>
-          <p class="mob-hero-sub">Aéroport, événements, stations de ski, mise à disposition : nos chauffeurs salariés s'adaptent à votre agenda, à l'aller comme au retour, avec une facturation directe pour votre entreprise.</p>
+          <p class="mob-hero-sub" data-i18n="m.hero.sub">Aéroport, événements, stations de ski, mise à disposition : nos chauffeurs salariés s'adaptent à votre agenda, à l'aller comme au retour, avec une facturation directe pour votre entreprise.</p>
           <div class="mob-hero-actions">
             <a href="#mobForm" class="mob-hero-btn-primary">
-              <span>Demander un chauffeur</span>
+              <span data-i18n="m.hero.cta1">Demander un chauffeur</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
             <a href="#mobPillars" class="mob-hero-btn-secondary">
-              <span>Découvrir nos services</span>
+              <span data-i18n="m.hero.cta2">Découvrir nos services</span>
             </a>
           </div>
         </div>
@@ -1114,19 +1114,24 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 </section>
 
 <!-- ===== FOOTER ===== -->
-<footer class="footer" data-nav-dark>
-  <div class="ct">
-    <div class="ft">
-      <div class="fb"><a href="index.html" class="nav-logo"><img src="Chaskis-logo-ondark.svg" alt="Chaskis" height="20"></a><p data-i18n="foot.tag">Infrastructure logistique pour les entreprises de Suisse romande.</p><div class="fb-soc"><a href="https://www.instagram.com/chaskisdelivery/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a><a href="https://www.linkedin.com/company/chaskis-sa/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a><a href="https://www.tiktok.com/@chaskisdelivery_" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg></a></div></div>
-      <div class="fc"><h4 data-i18n="foot.svc.h">Services</h4><a href="commander.html" data-i18n="foot.svc.1">Commander</a><a href="dashboard.html" data-i18n="foot.svc.2">Tableau de bord</a><a href="index.html#services" data-i18n="foot.svc.3">Nos secteurs</a><a href="index.html#booking" data-i18n="foot.svc.4">Réserver un appel</a></div>
-      <div class="fc"><h4 data-i18n="foot.co.h">Entreprise</h4><a href="postuler.html" data-i18n="foot.co.1">Postuler</a><a href="index.html#faq">FAQ</a><a href="mailto:contact@chaskis.ch">contact@chaskis.ch</a></div>
-      <div class="fc"><h4 data-i18n="foot.leg.h">Légal</h4><a href="#" data-i18n="foot.leg.1">Mentions légales</a><a href="#" data-i18n="foot.leg.2">Confidentialité</a><a href="#" data-i18n="foot.leg.3">CGV</a></div>
-    </div>
-    <div class="f-btm"><span>&copy; 2026 Chaskis SA · Genève</span><span>Fait en Suisse romande</span></div>
-  </div>
-</footer>
+<footer class="footer" data-nav-dark data-shared></footer>
 
-<script src="shared.js"></script>
+<script>
+/* i18n dict for mobilite.html */
+window.T = {
+  fr: {
+    'm.hero.overline': 'Votre chauffeur à Genève, Nyon, Lausanne et la Riviera',
+    'm.hero.sub': "Aéroport, événements, stations de ski, mise à disposition : nos chauffeurs salariés s'adaptent à votre agenda, à l'aller comme au retour, avec une facturation directe pour votre entreprise.",
+    'm.hero.cta1': 'Demander un chauffeur', 'm.hero.cta2': 'Découvrir nos services',
+  },
+  en: {
+    'm.hero.overline': 'Your driver in Geneva, Nyon, Lausanne and the Riviera',
+    'm.hero.sub': "Airport, events, ski resorts, on-call service: our salaried drivers adapt to your schedule, outbound and return, with direct billing for your company.",
+    'm.hero.cta1': 'Request a driver', 'm.hero.cta2': 'Discover our services',
+  }
+};
+</script>
+<script src="shared.js?v=20260422d"></script>
 <script src="auth.js"></script>
 
 <script>
@@ -1221,6 +1226,12 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
   // Hero visual tilt
   const heroVis = document.getElementById('mobHeroVis');
   if (heroVis) {
+    // The fadeUp animation with "forwards" overrides inline transform. Drop it after it ends
+    // so the tilt can take effect. Preserve the final opacity.
+    const clearAnim = () => { heroVis.style.animation = 'none'; heroVis.style.opacity = '1'; };
+    heroVis.addEventListener('animationend', clearAnim, { once: true });
+    // Safety: if the animation fired before the listener or was interrupted, clear after 1.5s.
+    setTimeout(clearAnim, 1500);
     heroVis.addEventListener('mousemove', e => {
       const r = heroVis.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width - 0.5;
@@ -1248,43 +1259,7 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
   });
 })();
 
-// ===== PAGE TRANSITION CURTAIN =====
-(function() {
-  const c = document.getElementById('pageCurtain');
-  if (!c) return;
-  const MY_COLOR = '#0B0914'; // couleur de CETTE page
-
-  // À l'arrivée : reprendre la couleur de la page de départ pour un raccord invisible
-  const fromColor = sessionStorage.getItem('curtainFrom');
-  if (fromColor) {
-    c.style.background = fromColor;
-    sessionStorage.removeItem('curtainFrom');
-  }
-  document.addEventListener('DOMContentLoaded', () => {
-    requestAnimationFrame(() => c.classList.add('is-lifted'));
-  });
-
-  // Au départ : rideau dans la couleur de CETTE page (pas la destination)
-  document.addEventListener('click', e => {
-    const link = e.target.closest('a[href]');
-    if (!link) return;
-    const href = link.getAttribute('href') || '';
-    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || link.target === '_blank') return;
-    const abs = link.href;
-    if (abs.startsWith('http') && !abs.includes(location.hostname)) return;
-    e.preventDefault();
-    sessionStorage.setItem('curtainFrom', MY_COLOR);
-    c.style.background = MY_COLOR;
-    c.style.transition = 'none';
-    c.style.transform = 'translateX(110%)';
-    c.style.pointerEvents = 'all';
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      c.style.transition = 'transform .55s cubic-bezier(.4,0,.2,1)';
-      c.style.transform = 'translateX(0)';
-      setTimeout(() => { window.location.href = abs; }, 500);
-    }));
-  });
-})();
+// PAGE TRANSITION : géré par shared.js
 
 // ===== ORBS parallax (background) =====
 (function() {

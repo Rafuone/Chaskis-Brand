@@ -771,18 +771,18 @@ function renderSummary() {
     const p = state.pricing;
     sumLines.style.display = 'flex';
     let lines = '';
-    lines += `<div class="sum-line"><span>Collecte (${p.pickup.distanceKm.toFixed(1)} km)</span><strong>${formatCHF(p.pickup.costHT)} CHF</strong></div>`;
+    lines += `<div class="sum-line"><span>Collecte (${p.pickup.distanceKm.toFixed(1)} km)</span><strong>CHF ${formatCHF(p.pickup.costHT)}</strong></div>`;
     p.segments.forEach(s => {
-      lines += `<div class="sum-line"><span>${escapeHtml(s.fromLabel)} → ${escapeHtml(s.toLabel)} (${s.distanceKm.toFixed(1)} km)</span><strong>${formatCHF(s.costHT)} CHF</strong></div>`;
+      lines += `<div class="sum-line"><span>${escapeHtml(s.fromLabel)} → ${escapeHtml(s.toLabel)} (${s.distanceKm.toFixed(1)} km)</span><strong>CHF ${formatCHF(s.costHT)}</strong></div>`;
     });
-    if (p.urgencyCost) lines += `<div class="sum-line"><span>Urgence ${escapeHtml(p.zone.name)}</span><strong>+${formatCHF(p.urgencyCost)} CHF</strong></div>`;
-    lines += `<div class="sum-line"><span>TVA ${(p.vatRate*100).toFixed(1)}%</span><strong>${formatCHF(p.vat)} CHF</strong></div>`;
+    if (p.urgencyCost) lines += `<div class="sum-line"><span>Urgence ${escapeHtml(p.zone.name)}</span><strong>+CHF ${formatCHF(p.urgencyCost)}</strong></div>`;
+    lines += `<div class="sum-line"><span>TVA ${(p.vatRate*100).toFixed(1)}%</span><strong>CHF ${formatCHF(p.vat)}</strong></div>`;
     sumLines.innerHTML = lines;
     sumTotal.style.display = 'flex';
-    document.getElementById('sumTotalVal').innerHTML = `${formatCHF(p.totalTTC)} <small>CHF</small>`;
+    document.getElementById('sumTotalVal').textContent = `CHF ${formatCHF(p.totalTTC)}`;
     sumMobileVal.classList.remove('empty');
-    sumMobileVal.textContent = `${formatCHF(p.totalTTC)} CHF`;
-    document.getElementById('payAmount').textContent = `${formatCHF(p.totalTTC)} CHF`;
+    sumMobileVal.textContent = `CHF ${formatCHF(p.totalTTC)}`;
+    document.getElementById('payAmount').textContent = `CHF ${formatCHF(p.totalTTC)}`;
   } else {
     sumLines.style.display = 'none';
     sumTotal.style.display = 'none';

@@ -1378,17 +1378,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
 </section>
 
 <!-- ===== FOOTER ===== -->
-<footer class="footer" data-nav-dark>
-  <div class="ct">
-    <div class="ft">
-      <div class="fb"><a href="index.html" class="nav-logo"><img src="Chaskis-logo-ondark.svg" alt="Chaskis" height="20"></a><p data-i18n="foot.tag">Infrastructure logistique pour les entreprises de Suisse romande.</p><div class="fb-soc"><a href="https://www.instagram.com/chaskisdelivery/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a><a href="https://www.linkedin.com/company/chaskis-sa/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a><a href="https://www.tiktok.com/@chaskisdelivery_" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg></a></div></div>
-      <div class="fc"><h4 data-i18n="foot.svc.h">Services</h4><a href="commander.html" data-i18n="foot.svc.1">Commander</a><a href="dashboard.html" data-i18n="foot.svc.2">Tableau de bord</a><a href="#services" data-i18n="foot.svc.3">Nos secteurs</a><a href="#booking" data-i18n="foot.svc.4">Réserver un appel</a></div>
-      <div class="fc"><h4 data-i18n="foot.co.h">Entreprise</h4><a href="postuler.html" data-i18n="foot.co.1">Postuler</a><a href="#faq">FAQ</a><a href="mailto:contact@chaskis.ch">contact@chaskis.ch</a></div>
-      <div class="fc"><h4 data-i18n="foot.leg.h">Légal</h4><a href="#" data-i18n="foot.leg.1">Mentions légales</a><a href="#" data-i18n="foot.leg.2">Confidentialité</a><a href="#" data-i18n="foot.leg.3">CGV</a></div>
-    </div>
-    <div class="f-btm"><span>&copy; 2026 Chaskis SA · Genève</span><span>Fait en Suisse romande</span></div>
-  </div>
-</footer>
+<footer class="footer" data-nav-dark data-shared></footer>
 
 <a href="#booking" class="btn btn-p pulse nav-cta-float"><span data-i18n="float.cta">Planifier un appel</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
 
@@ -1764,41 +1754,7 @@ const extraReveal = new IntersectionObserver(entries => {
 }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.vpc, .pipe-step').forEach(el => extraReveal.observe(el));
 
-// ===== PAGE TRANSITION CURTAIN =====
-(function() {
-  const c = document.getElementById('pageCurtain');
-  if (!c) return;
-  const MY_COLOR = '#FAFAF7'; // couleur de CETTE page
-
-  const fromColor = sessionStorage.getItem('curtainFrom');
-  if (fromColor) {
-    c.style.background = fromColor;
-    sessionStorage.removeItem('curtainFrom');
-  }
-  document.addEventListener('DOMContentLoaded', () => {
-    requestAnimationFrame(() => c.classList.add('is-lifted'));
-  });
-
-  document.addEventListener('click', e => {
-    const link = e.target.closest('a[href]');
-    if (!link) return;
-    const href = link.getAttribute('href') || '';
-    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || link.target === '_blank') return;
-    const abs = link.href;
-    if (abs.startsWith('http') && !abs.includes(location.hostname)) return;
-    e.preventDefault();
-    sessionStorage.setItem('curtainFrom', MY_COLOR);
-    c.style.background = MY_COLOR;
-    c.style.transition = 'none';
-    c.style.transform = 'translateX(110%)';
-    c.style.pointerEvents = 'all';
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      c.style.transition = 'transform .55s cubic-bezier(.4,0,.2,1)';
-      c.style.transform = 'translateX(0)';
-      setTimeout(() => { window.location.href = abs; }, 500);
-    }));
-  });
-})();
+// PAGE TRANSITION : géré par shared.js
 
 // ===== NAV DARK DETECTION (auto, no manual tagging needed) =====
 (function() {
@@ -1975,7 +1931,7 @@ const T = {
     'faq6.q': 'Quelles zones et quels types de colis ?', 'faq6.a': '<p><strong>Zones couvertes :</strong> Genève, Nyon, Lausanne et la Riviera.</p><ul><li><span class="faq-badge">Sac coursier</span><span>Format standard, type Uber Eats. Pour documents, plis, petits colis.</span></li><li><span class="faq-badge b-purple">Coffre de voiture</span><span>Pour les livraisons plus volumineuses.</span></li></ul><p>On adapte le protocole (température, confidentialité, preuve renforcée) à votre secteur : pharma, alimentaire, luxe, juridique. Un besoin hors-standard ? On en discute à l\'appel découverte.</p>',
     'faq7.q': 'Je peux changer de formule en cours de route ?', 'faq7.a': '<p>Oui, sans friction, entre <strong>Flex</strong> et <strong>Dédié</strong>.</p><p>Vous démarrez en Flex et votre volume grandit ? On bascule en Dédié dès que ça devient rentable pour vous. À l\'inverse, si l\'activité ralentit, on repasse en Flex sans pénalité.</p><p>L\'Express n\'est pas vraiment une formule : c\'est le service de base, commandé directement depuis notre site, sans compte. Vous pouvez l\'utiliser ponctuellement en complément, quelle que soit votre formule.</p>',
     'faq.sd.left': 'Une question ? On y répond ici. Sinon, appelez-nous ou passez nous voir.',
-    'foot.tag': 'Infrastructure logistique pour les entreprises de Suisse romande.',
+    'foot.tag': 'Livraison, mobilité et infrastructure logistique pour les entreprises de Suisse romande.',
     'foot.svc.h': 'Services', 'foot.svc.1': 'Commander', 'foot.svc.2': 'Tableau de bord', 'foot.svc.3': 'Nos secteurs', 'foot.svc.4': 'Planifier un appel',
     'foot.co.h': 'Entreprise', 'foot.co.1': 'Postuler',
     'foot.leg.h': 'Légal', 'foot.leg.1': 'Mentions légales', 'foot.leg.2': 'Confidentialité', 'foot.leg.3': 'CGV',
@@ -2104,7 +2060,7 @@ const T = {
     'faq6.q': 'What zones and what types of parcels?', 'faq6.a': '<p><strong>Zones covered:</strong> Geneva, Nyon, Lausanne and the Riviera.</p><ul><li><span class="faq-badge">Courier bag</span><span>Standard format, Uber Eats style. For documents, envelopes, small parcels.</span></li><li><span class="faq-badge b-purple">Car trunk</span><span>For larger deliveries.</span></li></ul><p>We adapt the protocol (temperature, confidentiality, enhanced proof) to your sector: pharma, food, luxury, legal. A non-standard need? Let\'s discuss it on the discovery call.</p>',
     'faq7.q': 'Can I switch plans along the way?', 'faq7.a': '<p>Yes, no friction, between <strong>Flex</strong> and <strong>Dedicated</strong>.</p><p>Starting on Flex and your volume grows? We switch to Dedicated as soon as it pays off for you. Conversely, if activity slows down, we move back to Flex with no penalty.</p><p>Express isn\'t really a plan: it\'s the baseline service, ordered directly from our site, no account. You can use it occasionally alongside any plan.</p>',
     'faq.sd.left': 'Can\'t find what you\'re looking for? Call us or come see us.',
-    'foot.tag': 'Logistics infrastructure for French-speaking Swiss businesses.',
+    'foot.tag': 'Delivery, mobility and logistics infrastructure for French-speaking Swiss businesses.',
     'foot.svc.h': 'Services', 'foot.svc.1': 'Order', 'foot.svc.2': 'Dashboard', 'foot.svc.3': 'Our sectors', 'foot.svc.4': 'Schedule a call',
     'foot.co.h': 'Company', 'foot.co.1': 'Join us',
     'foot.leg.h': 'Legal', 'foot.leg.1': 'Legal notice', 'foot.leg.2': 'Privacy', 'foot.leg.3': 'T&C',
@@ -2460,7 +2416,7 @@ if ('serviceWorker' in navigator) {
     tap: false,
   });
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
     subdomains: 'abcd',
     maxZoom: 19,
   }).addTo(map);

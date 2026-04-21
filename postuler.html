@@ -26,7 +26,7 @@
 <meta name="theme-color" content="#4BB3A4">
 <link rel="icon" href="icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=20260420d">
+<link rel="stylesheet" href="styles.css?v=20260421">
 <link rel="preload" as="image" href="postuler-hero.png" fetchpriority="high">
 
 <script type="application/ld+json">
@@ -73,11 +73,12 @@
 .r-hero-text { display: flex; flex-direction: column; align-items: flex-start; }
 .r-hero-overline {
   display: inline-flex; align-items: center; gap: 8px;
-  font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em;
-  color: var(--teal-dark); margin-bottom: 20px; padding: 6px 14px;
-  border-radius: var(--pill); background: var(--teal-bg); border: 1px solid rgba(75,179,164,.18);
+  font-size: .74rem; font-weight: 600;
+  color: var(--teal-dark); margin-bottom: 20px; padding: 6px 14px 6px 10px;
+  border-radius: var(--pill); background: var(--teal-bg); border: 1px solid rgba(75,179,164,.15);
 }
-.r-hero-overline .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 3px rgba(75,179,164,.25); animation: bk-pulse 2s infinite; }
+.r-hero-overline .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); flex-shrink: 0; animation: hero-dot 2.4s ease-in-out infinite; }
+@keyframes hero-dot { 0%,100% { box-shadow: 0 0 0 0 rgba(75,179,164,.45); } 60% { box-shadow: 0 0 0 4px rgba(75,179,164,0); } }
 .r-hero h1 {
   font-size: clamp(2rem,3.8vw,3.4rem);
   font-weight: 800; line-height: 1.07; letter-spacing: -.04em;
@@ -158,31 +159,41 @@
 .r-stats { background: var(--white); border-top: 1px solid var(--sand); border-bottom: 1px solid var(--sand); padding: clamp(40px,5vw,64px) 0; }
 .r-stats-row { display: flex; justify-content: center; gap: clamp(48px,8vw,120px); flex-wrap: wrap; }
 .r-stat { text-align: center; }
-.r-stat strong { font-size: clamp(3.2rem,7vw,5.5rem); font-weight: 800; letter-spacing: -.06em; line-height: 1; display: block; background: linear-gradient(135deg, var(--teal-light), #B8B6E2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.r-stat strong { font-size: clamp(3.2rem,7vw,5.5rem); font-weight: 800; letter-spacing: -.06em; line-height: 1; display: block; background: linear-gradient(135deg, var(--teal-light), #B8B6E2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; padding: 0 6px; overflow: visible; }
 .r-stat span { font-size: .88rem; color: var(--ink-light); font-weight: 500; margin-top: 10px; display: block; }
 
-/* ===== AVANTAGES ===== */
-.r-perks { background: var(--bg); padding: clamp(72px,9vw,120px) 0; }
-.r-perks-header { max-width: 680px; margin: 0 auto clamp(44px,5.5vw,64px); text-align: center; }
-.r-perks-header h2 { font-size: clamp(1.8rem,3vw,2.6rem); font-weight: 800; line-height: 1.1; letter-spacing: -.035em; color: var(--ink); margin-bottom: 14px; }
-.r-perks-header h2 .sa { font-family: 'Instrument Serif', serif; font-weight: 400; font-style: italic; color: var(--teal); }
-.r-perks-header p { font-size: 1rem; color: var(--ink-light); line-height: 1.65; }
-.r-perks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(12px,1.6vw,18px); }
-.r-perk { background: var(--white); border: 1px solid var(--sand); border-radius: var(--r); padding: clamp(20px,2.2vw,28px); display: flex; flex-direction: column; gap: 12px; transition: box-shadow .25s var(--ease), transform .25s var(--ease); }
-.r-perk:hover { box-shadow: var(--sh-md); transform: translateY(-3px); }
-.r-perk-icon { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; }
-.r-perk-icon svg { width: 20px; height: 20px; }
-.pi-teal { background: var(--teal-bg); } .pi-teal svg { color: var(--teal-dark); }
-.pi-purple { background: var(--accent-bg); } .pi-purple svg { color: var(--accent); }
-.pi-green { background: #dcfce7; } .pi-green svg { color: #16a34a; }
-.pi-amber { background: #fef9c3; } .pi-amber svg { color: #b45309; }
-.r-perk-title { font-size: .92rem; font-weight: 800; color: var(--ink); letter-spacing: -.015em; line-height: 1.2; }
-.r-perk-desc { font-size: .82rem; color: var(--ink-muted); line-height: 1.55; margin-top: -2px; }
-.r-perk-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: var(--pill); font-size: .64rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; width: fit-content; }
-.rb-teal { background: var(--teal-bg); color: var(--teal-dark); border: 1px solid rgba(75,179,164,.2); }
-.rb-purple { background: var(--accent-bg); color: var(--accent); border: 1px solid rgba(107,79,160,.15); }
-.rb-green { background: #dcfce7; color: #15803d; border: 1px solid rgba(22,163,74,.15); }
-.rb-amber { background: #fef9c3; color: #92400e; border: 1px solid rgba(180,83,9,.15); }
+/* ===== COMPARATIF ===== */
+.r-cmp { background: #13102a; padding: clamp(72px,9vw,120px) 0; }
+.r-cmp-head { max-width: 680px; margin: 0 auto clamp(44px,5.5vw,60px); text-align: center; }
+.r-cmp-head h2 { font-size: clamp(1.8rem,3vw,2.6rem); font-weight: 800; line-height: 1.1; letter-spacing: -.035em; color: #fff; margin-bottom: 14px; }
+.r-cmp-head h2 .sa { font-family: 'Instrument Serif', serif; font-weight: 400; font-style: italic; color: var(--teal-light); }
+.r-cmp-head p { font-size: 1rem; color: rgba(255,255,255,.32); line-height: 1.65; }
+.r-cmp-wrap { border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,.07); }
+.r-cmp-headers { display: grid; grid-template-columns: 1fr 1fr; }
+.r-cmp-col { padding: clamp(14px,1.8vw,20px) clamp(20px,3vw,36px); display: flex; align-items: center; gap: 9px; font-size: .82rem; font-weight: 600; }
+.r-cmp-col.left { background: rgba(255,255,255,.04); color: rgba(255,255,255,.35); border-bottom: 1px solid rgba(255,255,255,.07); }
+.r-cmp-col.right { background: rgba(75,179,164,.09); color: var(--teal-light); border-bottom: 1px solid rgba(75,179,164,.14); border-left: 1px solid rgba(75,179,164,.08); }
+.r-cmp-col .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.r-cmp-col.left .dot { background: rgba(255,255,255,.25); }
+.r-cmp-col.right .dot { background: var(--teal); box-shadow: 0 0 0 3px rgba(75,179,164,.2); }
+.r-cmp-row { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,.05); }
+.r-cmp-row:last-child { border-bottom: none; }
+.r-cmp-cell { padding: clamp(16px,2vw,24px) clamp(20px,3vw,36px); display: flex; align-items: flex-start; gap: 11px; transition: background .2s; }
+.r-cmp-cell.left { background: rgba(255,255,255,.02); border-right: 1px solid rgba(255,255,255,.06); }
+.r-cmp-cell.right { background: rgba(75,179,164,.03); }
+.r-cmp-row:hover .r-cmp-cell.left { background: rgba(255,255,255,.04); }
+.r-cmp-row:hover .r-cmp-cell.right { background: rgba(75,179,164,.07); }
+.r-cmp-ico { flex-shrink: 0; margin-top: 2px; }
+.r-cmp-ico svg { width: 15px; height: 15px; fill: none; stroke-width: 2; stroke-linecap: round; display: block; }
+.r-cmp-cell.left .r-cmp-ico svg { stroke: rgba(255,255,255,.2); }
+.r-cmp-cell.right .r-cmp-ico svg { stroke: var(--teal); }
+.r-cmp-label { font-size: .83rem; font-weight: 600; line-height: 1.3; margin-bottom: 3px; }
+.r-cmp-cell.left .r-cmp-label { color: rgba(255,255,255,.38); }
+.r-cmp-cell.right .r-cmp-label { color: rgba(255,255,255,.85); }
+.r-cmp-detail { font-size: .76rem; line-height: 1.6; }
+.r-cmp-cell.left .r-cmp-detail { color: rgba(255,255,255,.18); }
+.r-cmp-cell.right .r-cmp-detail { color: rgba(255,255,255,.42); }
+@media (max-width: 600px) { .r-cmp-headers, .r-cmp-row { grid-template-columns: 1fr; } .r-cmp-cell.left { border-right: none; border-bottom: 1px solid rgba(255,255,255,.05); } .r-cmp-col.right { border-left: none; } }
 
 /* ===== SECTION MOTION (coursier / chauffeur animés) ===== */
 .r-motion { background: var(--bg); padding: clamp(64px,8vw,112px) 0; }
@@ -196,24 +207,44 @@
   height: clamp(500px, 60vw, 680px);
   display: flex; flex-direction: column; justify-content: flex-end;
 }
-/* Scène défilante */
+/* Scène vidéo */
 .r-motion-scene {
   position: absolute; inset: 0; overflow: hidden;
 }
-.r-motion-bg-track {
-  position: absolute; top: 0; bottom: 0; left: 0;
-  display: flex; width: 200%;
-  will-change: transform;
+/* Vidéo de fond coursier : bottom 20% solide pour cacher le raccord 16:9 */
+.r-motion-panel.is-coursier .r-motion-scene {
+  background: linear-gradient(180deg, #0d2416 0%, #0a1c10 60%, #07140b 100%);
 }
-.r-motion-bg-img {
-  flex: 0 0 50%; height: 100%;
-  background-size: cover; background-position: center;
+/* Vidéo de fond chauffeur : même principe, tons ambrés */
+.r-motion-panel.is-chauffeur .r-motion-scene {
+  background: linear-gradient(180deg, #1a1000 0%, #140d00 60%, #0d0900 100%);
 }
-.r-motion-panel.is-coursier .r-motion-bg-img {
-  background: linear-gradient(135deg, #0d2416 0%, #1a3a26 30%, #0f2d1e 60%, #142010 100%);
+.r-motion-video-tint.is-chauffeur {
+  background:
+    linear-gradient(180deg, transparent 0%, transparent 55%, rgba(26,16,0,.45) 70%, rgba(20,13,0,.9) 80%, #140d00 88%, #0d0900 100%),
+    linear-gradient(90deg, rgba(26,16,0,.35) 0%, transparent 10%, transparent 90%, rgba(26,16,0,.35) 100%),
+    linear-gradient(180deg, rgba(26,16,0,.25) 0%, transparent 20%);
 }
-.r-motion-panel.is-chauffeur .r-motion-bg-img {
-  background: linear-gradient(135deg, #1a1000 0%, #2a1a00 30%, #1f1400 60%, #140d00 100%);
+.r-motion-video {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 80%;
+  object-fit: cover; object-position: center;
+  z-index: 0;
+  pointer-events: none;
+}
+/* Teinte + fondu bas qui masque la bordure du 16:9 */
+.r-motion-video-tint {
+  position: absolute; inset: 0;
+  z-index: 1; pointer-events: none;
+}
+.r-motion-video-tint.is-coursier {
+  background:
+    /* Fondu bas : transparent jusqu'à 55%, puis descend vers le vert foncé du scene pour masquer le raccord à 80% */
+    linear-gradient(180deg, transparent 0%, transparent 55%, rgba(13,36,22,.45) 70%, rgba(10,28,16,.9) 80%, #0a1c10 88%, #07140b 100%),
+    /* Vignettes latérales discrètes */
+    linear-gradient(90deg, rgba(13,36,22,.35) 0%, transparent 10%, transparent 90%, rgba(13,36,22,.35) 100%),
+    /* Léger tint top pour cohérence */
+    linear-gradient(180deg, rgba(13,36,22,.25) 0%, transparent 20%);
 }
 /* Overlay gradient du bas */
 .r-motion-panel::before {
@@ -225,57 +256,6 @@
 .r-motion-panel.is-coursier::after {
   content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 1px;
   background: rgba(255,255,255,.06); z-index: 3;
-}
-/* Foreground (PNG transparent du sujet) */
-.r-motion-fg {
-  position: absolute; inset: 0; z-index: 3;
-  display: flex; align-items: flex-end; justify-content: center;
-  pointer-events: none;
-  overflow: hidden;
-}
-.r-motion-fg img {
-  height: 90%; width: auto; object-fit: contain;
-  object-position: bottom center;
-  display: block;
-  filter: drop-shadow(0 0 40px rgba(0,0,0,.4));
-  transform-origin: bottom center;
-}
-/* Placeholder pour l'image foreground */
-.r-motion-fg-placeholder {
-  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 260px; height: 380px; z-index: 3;
-  display: flex; align-items: center; justify-content: center;
-  text-align: center; padding: 20px;
-  font-size: .68rem; color: rgba(255,255,255,.3); font-style: italic; line-height: 1.5;
-  border: 1px dashed rgba(255,255,255,.1); border-radius: 12px;
-  margin-bottom: 140px;
-}
-/* Effet vitesse : traits de flou horizontaux */
-.r-motion-blur {
-  position: absolute; z-index: 2; left: 0; right: 0;
-  pointer-events: none; overflow: hidden;
-}
-.r-motion-blur.top { top: 0; height: 35%; background: linear-gradient(180deg, rgba(0,0,0,.3) 0%, transparent 100%); }
-.r-motion-blur.mid { top: 30%; height: 40%; }
-.r-motion-speed-lines {
-  position: absolute; inset: 0; z-index: 2; pointer-events: none; overflow: hidden;
-}
-.r-motion-speed-lines::before,
-.r-motion-speed-lines::after {
-  content: '';
-  position: absolute;
-  left: -20%; width: 140%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.06) 30%, rgba(255,255,255,.14) 50%, rgba(255,255,255,.06) 70%, transparent 100%);
-  animation: speed-line 1.8s linear infinite;
-}
-.r-motion-speed-lines::before { top: 28%; animation-duration: 1.6s; }
-.r-motion-speed-lines::after { top: 58%; animation-duration: 2.1s; animation-delay: -.8s; }
-@keyframes speed-line {
-  from { transform: translateX(0); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  to { transform: translateX(60%); opacity: 0; }
 }
 /* Contenu overlay (texte) */
 .r-motion-content {
@@ -319,26 +299,8 @@
 }
 .is-coursier .r-motion-cta { background: var(--teal); color: #fff; }
 .is-coursier .r-motion-cta:hover { background: var(--teal-dark); }
-.is-chauffeur .r-motion-cta { background: #d97706; color: #fff; }
-.is-chauffeur .r-motion-cta:hover { background: #b45309; }
-/* Animation défilement fond */
-@keyframes r-scroll-coursier {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-@keyframes r-scroll-chauffeur {
-  from { transform: translateX(-50%); }
-  to { transform: translateX(0); }
-}
-.r-motion-panel.is-coursier .r-motion-bg-track { animation: r-scroll-coursier 8s linear infinite; }
-.r-motion-panel.is-chauffeur .r-motion-bg-track { animation: r-scroll-chauffeur 7s linear infinite; }
-@media (prefers-reduced-motion: reduce) {
-  .r-motion-bg-track { animation: none !important; }
-  .r-motion-speed-lines::before,.r-motion-speed-lines::after { animation: none !important; }
-}
-/* Copy prompt btn */
-.r-motion-panel .img-prompt { position: absolute; top: 14px; left: 14px; z-index: 5; display: flex; align-items: flex-start; flex-direction: column; gap: 6px; max-width: 260px; }
-.r-motion-panel .img-prompt-text { font-size: .66rem; color: rgba(255,255,255,.4); font-style: italic; line-height: 1.4; }
+.is-chauffeur .r-motion-cta { background: #fcd34d; color: #1a1000; }
+.is-chauffeur .r-motion-cta:hover { background: #fbbf24; }
 
 /* ===== TÉMOIGNAGES VOLET ===== */
 .r-testi { background: var(--bg); padding: clamp(72px,9vw,120px) 0 clamp(72px,9vw,120px); }
@@ -372,57 +334,82 @@
   position: absolute; inset: 0;
   background: linear-gradient(160deg, #0d2416, #1a3026);
 }
-.r-volet-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; transition: transform .7s var(--ease); }
+.r-volet-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 22%; display: block; transition: transform .7s var(--ease); }
 .r-volet-card.is-active .r-volet-photo img { transform: scale(1.04); }
-/* Dark overlays */
+/* Dark overlays : lumineux en haut, soutenu en bas pour la lisibilité du texte */
 .r-volet-card::after {
   content: '';
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(6,12,20,.97) 0%, rgba(6,12,20,.45) 45%, rgba(6,12,20,.1) 100%);
-  transition: background .4s;
+  background: linear-gradient(to top, rgba(6,12,20,.96) 0%, rgba(6,12,20,.82) 28%, rgba(6,12,20,.52) 50%, rgba(6,12,20,.18) 68%, rgba(6,12,20,0) 86%);
+  transition: background .45s cubic-bezier(.4,0,.2,1);
   pointer-events: none;
+  z-index: 2;
 }
 .r-volet-card:not(.is-active)::after {
-  background: linear-gradient(to top, rgba(6,12,20,.88) 0%, rgba(6,12,20,.65) 100%);
+  background: linear-gradient(to top, rgba(6,12,20,.7) 0%, rgba(6,12,20,.35) 60%, rgba(6,12,20,.2) 100%);
 }
-/* Role tag — visible only when active */
+/* Hover sur carte inactive : photo plus lumineuse, nom plus vif, léger scale */
+.r-volet-card:not(.is-active):hover::after {
+  background: linear-gradient(to top, rgba(6,12,20,.5) 0%, rgba(6,12,20,.18) 60%, rgba(6,12,20,.05) 100%);
+}
+.r-volet-card:not(.is-active):hover .r-volet-photo img {
+  transform: scale(1.03);
+}
+.r-volet-card:not(.is-active):hover .r-volet-cname {
+  color: #fff;
+  letter-spacing: .06em;
+}
+/* Role tag, visible only when active : exit rapide, enter différé */
 .r-volet-tag {
-  position: absolute; top: 20px; left: 18px; z-index: 3;
+  position: absolute; top: 20px; left: 18px; z-index: 4;
   padding: 5px 13px; border-radius: 100px;
-  background: rgba(255,255,255,.12); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  background:
+    linear-gradient(rgba(255,255,255,.14), rgba(255,255,255,.14)) padding-box,
+    linear-gradient(135deg, rgba(255,255,255,.75) 0%, rgba(255,255,255,.18) 45%, rgba(255,255,255,.55) 100%) border-box;
+  border: 1px solid transparent;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   font-size: .6rem; font-weight: 700; color: #fff; letter-spacing: .06em; text-transform: uppercase;
   white-space: nowrap;
-  opacity: 0; transform: translateY(-4px);
-  transition: opacity .3s .25s, transform .3s .25s;
+  opacity: 0; transform: translateY(-6px);
+  transition: opacity .18s cubic-bezier(.4,0,1,1), transform .18s cubic-bezier(.4,0,1,1);
 }
 .r-volet-tag::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--teal); margin-right: 7px; vertical-align: middle; }
-.r-volet-card.is-active .r-volet-tag { opacity: 1; transform: none; }
-/* Collapsed name — vertical text, hidden when active */
+.r-volet-card.is-active .r-volet-tag {
+  opacity: 1; transform: none;
+  transition: opacity .4s .32s cubic-bezier(.2,.8,.2,1), transform .5s .32s cubic-bezier(.2,.8,.2,1);
+}
+/* Collapsed name, vertical text, hidden when active : exit immédiat, enter doux */
 .r-volet-cname {
   position: absolute; bottom: 24px; left: 50%; z-index: 3;
   transform: translateX(-50%) rotate(-90deg);
   transform-origin: center center;
-  font-size: .7rem; font-weight: 700; color: rgba(255,255,255,.6);
+  font-size: .7rem; font-weight: 700; color: rgba(255,255,255,.7);
   white-space: nowrap; letter-spacing: .04em;
-  transition: opacity .2s;
+  transition: opacity .4s .25s cubic-bezier(.2,.8,.2,1);
 }
-.r-volet-card.is-active .r-volet-cname { opacity: 0; pointer-events: none; }
-/* Active content */
+.r-volet-card.is-active .r-volet-cname {
+  opacity: 0; pointer-events: none;
+  transition: opacity .12s cubic-bezier(.4,0,1,1);
+}
+/* Active content : enter staggered, exit rapide */
 .r-volet-content {
   position: absolute; bottom: 0; left: 0; right: 0; z-index: 4;
   padding: clamp(22px,3vw,36px);
-  opacity: 0; transform: translateY(10px);
-  transition: opacity .35s .2s, transform .35s .2s;
+  opacity: 0; transform: translateY(14px);
+  transition: opacity .22s cubic-bezier(.4,0,1,1), transform .22s cubic-bezier(.4,0,1,1);
   pointer-events: none;
 }
-.r-volet-card.is-active .r-volet-content { opacity: 1; transform: none; pointer-events: auto; }
+.r-volet-card.is-active .r-volet-content {
+  opacity: 1; transform: none; pointer-events: auto;
+  transition: opacity .52s .28s cubic-bezier(.2,.8,.2,1), transform .58s .28s cubic-bezier(.2,.8,.2,1);
+}
 .r-volet-quote {
   font-size: clamp(.88rem,1.05vw,1rem); color: rgba(255,255,255,.88); line-height: 1.7;
-  position: relative; padding-left: 20px; margin-bottom: 16px;
+  position: relative; padding-left: 26px; margin-bottom: 16px;
 }
 .r-volet-quote::before {
-  content: '\201C'; position: absolute; left: 0; top: -4px;
-  font-family: 'Instrument Serif', serif; font-size: 2rem; color: var(--teal-light); font-style: italic; line-height: 1;
+  content: '\201C'; position: absolute; left: -4px; top: -10px;
+  font-family: 'Instrument Serif', serif; font-size: 3rem; color: var(--teal-light); font-style: italic; line-height: 1;
 }
 .r-volet-author { padding-top: 14px; border-top: 1px solid rgba(255,255,255,.12); }
 .r-volet-author strong { display: block; font-size: .88rem; font-weight: 800; color: #fff; letter-spacing: -.01em; }
@@ -442,16 +429,7 @@
   background: #050d14;
   position: relative; overflow: hidden;
 }
-/* Grille de fond subtile */
-.r-dl::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(75,179,164,.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(75,179,164,.05) 1px, transparent 1px);
-  background-size: 48px 48px;
-  pointer-events: none;
-}
+.r-dl-map { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: .4; }
 /* Lueur teal en bas à droite */
 .r-dl::after {
   content: '';
@@ -617,9 +595,9 @@
     <div class="r-hero-grid">
 
       <div class="r-hero-text rv">
-        <span class="r-hero-overline"><span class="dot"></span>Venez bosser avec nous en Suisse romande</span>
-        <h1>On cherche des gens biens.<br><span class="sa">On en a déjà 800.</span></h1>
-        <p class="r-hero-sub">Coursier à vélo ou chauffeur, on vous fait confiance dès le premier jour. CDI, matériel fourni, planning qu'on construit ensemble, à Genève, Nyon, Lausanne et la Riviera.</p>
+        <div class="r-hero-overline"><span class="dot"></span><span>Deviens acteur d'une livraison plus humaine</span></div>
+        <h1>Rejoignez une équipe où <span class="sa">chaque livreur</span> compte.</h1>
+        <p class="r-hero-sub">Coursier à vélo ou chauffeur, on vous fait confiance dès le premier jour. CDI, matériel fourni, assurance complète. Canton de Genève et canton de Vaud. Frontaliers bienvenus.</p>
         <div class="r-hero-cta">
           <a href="#download" class="btn btn-p pulse"><span>Télécharger l'app et postuler</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
         </div>
@@ -663,54 +641,143 @@
   </div>
 </div>
 
-<!-- ===== AVANTAGES ===== -->
-<section class="r-perks" id="avantages">
+<!-- ===== COMPARATIF ===== -->
+<section class="r-cmp" id="avantages">
   <div class="ct">
-    <div class="r-perks-header rv">
+    <div class="r-cmp-head rv">
       <span class="sl">Ce qui change chez nous</span>
-      <h2>Dans votre contrat, <span class="sa">dès le premier jour</span></h2>
-      <p>Pas de clause qui surprend plus tard. Voici ce qui est garanti, écrit noir sur blanc.</p>
+      <h2>Ce qui <span class="sa">change vraiment</span> chez nous</h2>
+      <p>Pas de jargon. Juste ce que vous vivez, comparé à ce que vous avez peut-être connu.</p>
     </div>
-    <div class="r-perks-grid stg">
-      <div class="r-perk rv">
-        <div class="r-perk-icon pi-teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-        <span class="r-perk-badge rb-teal">Dès l'embauche</span>
-        <div class="r-perk-title">CDI + salaire horaire fixe (CCT)</div>
-        <div class="r-perk-desc">Vrai contrat à durée indéterminée, salaire conforme à la convention collective suisse. Pas d'auto-entrepreneuriat, pas de variable qui fluctue.</div>
+    <div class="r-cmp-wrap">
+      <div class="r-cmp-headers">
+        <div class="r-cmp-col left"><span class="dot"></span>Ailleurs</div>
+        <div class="r-cmp-col right"><span class="dot"></span>Chez Chaskis</div>
       </div>
-      <div class="r-perk rv d2">
-        <div class="r-perk-icon pi-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/><rect x="9" y="11" width="14" height="10" rx="1"/><path d="M16 11V9a2 2 0 00-4 0v2"/></svg></div>
-        <span class="r-perk-badge rb-green">0 CHF à avancer</span>
-        <div class="r-perk-title">Matériel fourni dès J1</div>
-        <div class="r-perk-desc">Vélo, sac isotherme, veste, téléphone. Pour les chauffeurs : véhicule ou remboursement des frais. Aucun investissement personnel.</div>
+
+      <div class="r-cmp-row">
+        <div class="r-cmp-cell left">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">Auto-entrepreneur ou CDD renouvelable</div>
+            <div class="r-cmp-detail">Pas de garantie de revenus, aucune protection sociale.</div>
+          </div>
+        </div>
+        <div class="r-cmp-cell right">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">CDI dès le premier jour, salaire fixe CCT</div>
+            <div class="r-cmp-detail">Vrai contrat, protection complète, revenus stables.</div>
+          </div>
+        </div>
       </div>
-      <div class="r-perk rv d3">
-        <div class="r-perk-icon pi-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-        <span class="r-perk-badge rb-purple">Construit avec vous</span>
-        <div class="r-perk-title">Planning mensuel flexible</div>
-        <div class="r-perk-desc">Vous indiquez vos dispos, on bâtit les créneaux avec vous. Compatible études, enfants, deuxième job ou temps plein.</div>
+
+      <div class="r-cmp-row">
+        <div class="r-cmp-cell left">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">Vélo, scooter et téléphone à vos frais</div>
+            <div class="r-cmp-detail">Investissement de départ non remboursé.</div>
+          </div>
+        </div>
+        <div class="r-cmp-cell right">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">Vélo, sac, veste et téléphone fournis dès J1</div>
+            <div class="r-cmp-detail">0 CHF à avancer. Le matériel vous attend le premier matin.</div>
+          </div>
+        </div>
       </div>
-      <div class="r-perk rv d2">
-        <div class="r-perk-icon pi-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <span class="r-perk-badge rb-amber">En cas de pépin</span>
-        <div class="r-perk-title">Assurance complète</div>
-        <div class="r-perk-desc">Accident, maladie, intempéries : vous êtes couverts et payés. C'est ça, un vrai CDI en Suisse.</div>
+
+      <div class="r-cmp-row">
+        <div class="r-cmp-cell left">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">Pas couverts si accident ou maladie</div>
+            <div class="r-cmp-detail">Arrêt de travail = arrêt des revenus.</div>
+          </div>
+        </div>
+        <div class="r-cmp-cell right">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">Assurance accident, maladie et intempéries</div>
+            <div class="r-cmp-detail">Couverts et payés dans tous les cas. C'est le CDI en Suisse.</div>
+          </div>
+        </div>
       </div>
-      <div class="r-perk rv d3">
-        <div class="r-perk-icon pi-teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
-        <span class="r-perk-badge rb-teal">Pas un ticket de support</span>
-        <div class="r-perk-title">Un humain qui décroche</div>
-        <div class="r-perk-desc">Problème sur une course ? Vous appelez, notre dispatcher répond. Il connaît votre prénom. Pas d'algorithme de notation.</div>
+
+      <div class="r-cmp-row">
+        <div class="r-cmp-cell left">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">Un bot, un ticket, une FAQ</div>
+            <div class="r-cmp-detail">Aucune réponse humaine en cas de problème terrain.</div>
+          </div>
+        </div>
+        <div class="r-cmp-cell right">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">Un dispatcher qui décroche et connaît votre prénom</div>
+            <div class="r-cmp-detail">Problème en cours de route ? Quelqu'un répond.</div>
+          </div>
+        </div>
       </div>
-      <div class="r-perk rv d4">
-        <div class="r-perk-icon pi-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-        <span class="r-perk-badge rb-green">100% pour vous</span>
-        <div class="r-perk-title">Pourboires + primes de perf</div>
-        <div class="r-perk-desc">Chaque pourboire est intégralement reversé. Primes mensuelles sur performance. Formations financées si vous voulez évoluer.</div>
+
+      <div class="r-cmp-row">
+        <div class="r-cmp-cell left">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">Commission prélevée sur vos pourboires</div>
+            <div class="r-cmp-detail">La plateforme garde une partie de ce que les clients vous donnent.</div>
+          </div>
+        </div>
+        <div class="r-cmp-cell right">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">100% des pourboires reversés, sans exception</div>
+            <div class="r-cmp-detail">Chaque centime que le client vous donne, vous le gardez.</div>
+          </div>
+        </div>
       </div>
+
+      <div class="r-cmp-row">
+        <div class="r-cmp-cell left">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">Convention collective ignorée ou contournée</div>
+            <div class="r-cmp-detail">Dimanches imposés, congés payés convertis en salaire : pratiques illégales courantes.</div>
+          </div>
+        </div>
+        <div class="r-cmp-cell right">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">CCT des coursiers urbains respectée à la lettre</div>
+            <div class="r-cmp-detail">Repos, congés, heures sup : tout est conforme. Pas de promesses verbales, tout est dans le contrat.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="r-cmp-row">
+        <div class="r-cmp-cell left">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">Débrouille-toi dès le premier jour</div>
+            <div class="r-cmp-detail">Aucune formation, mise en autonomie immédiate sans filet.</div>
+          </div>
+        </div>
+        <div class="r-cmp-cell right">
+          <div class="r-cmp-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div>
+            <div class="r-cmp-label">Formation initiale incluse avant la première mission</div>
+            <div class="r-cmp-detail">Vous partez formé, pas largué. Accompagnement terrain dès l'embauche.</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
+
 
 <!-- ===== TÉMOIGNAGES VOLET ===== -->
 <section class="r-testi" id="temoignages">
@@ -724,11 +791,7 @@
 
       <article class="r-volet-card is-active" role="tab" aria-selected="true" tabindex="0">
         <div class="r-volet-photo">
-          <img src="postuler-itv-pierre.png" alt="Pierre, coursier à Genève" onerror="this.style.display='none'">
-          <div class="img-prompt">
-            <button type="button" class="copy-prompt-btn" data-prompt-key="postuler-itv-pierre" aria-label="Copier le prompt Pierre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Copier</span></button>
-            <span class="img-prompt-text">Portrait Pierre · voir IMAGE_PROMPTS.md § postuler-itv-pierre</span>
-          </div>
+          <img src="courier.jpg" alt="Pierre, coursier à Genève" style="object-position:center top">
         </div>
         <span class="r-volet-tag">Coursier · Genève</span>
         <span class="r-volet-cname" aria-hidden="true">Pierre</span>
@@ -762,11 +825,7 @@
 
       <article class="r-volet-card" role="tab" aria-selected="false" tabindex="0">
         <div class="r-volet-photo">
-          <img src="postuler-itv-abdel.png" alt="Abdel, coursier à Genève" onerror="this.style.display='none'">
-          <div class="img-prompt">
-            <button type="button" class="copy-prompt-btn" data-prompt-key="postuler-itv-abdel" aria-label="Copier le prompt Abdel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Copier</span></button>
-            <span class="img-prompt-text">Portrait Abdel · voir IMAGE_PROMPTS.md § postuler-itv-abdel</span>
-          </div>
+          <img src="courier2.jpg" alt="Abdel, coursier à Genève">
         </div>
         <span class="r-volet-tag">Coursier · Genève</span>
         <span class="r-volet-cname" aria-hidden="true">Abdel</span>
@@ -800,11 +859,7 @@
 
       <article class="r-volet-card" role="tab" aria-selected="false" tabindex="0">
         <div class="r-volet-photo">
-          <img src="postuler-itv-karim.png" alt="Karim, coursier à Lausanne" onerror="this.style.display='none'">
-          <div class="img-prompt">
-            <button type="button" class="copy-prompt-btn" data-prompt-key="postuler-itv-karim" aria-label="Copier le prompt Karim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Copier</span></button>
-            <span class="img-prompt-text">Portrait Karim · voir IMAGE_PROMPTS.md § postuler-itv-karim</span>
-          </div>
+          <img src="courier3.jpg" alt="Karim, coursier à Lausanne">
         </div>
         <span class="r-volet-tag">Coursier · Lausanne</span>
         <span class="r-volet-cname" aria-hidden="true">Karim</span>
@@ -819,19 +874,19 @@
 
       <article class="r-volet-card" role="tab" aria-selected="false" tabindex="0">
         <div class="r-volet-photo">
-          <img src="postuler-itv-valentina.png" alt="Valentina, coursière à la Riviera" onerror="this.style.display='none'">
+          <img src="postuler-itv-valentina.png" alt="Thomas, coursier à la Riviera" onerror="this.style.display='none'">
           <div class="img-prompt">
-            <button type="button" class="copy-prompt-btn" data-prompt-key="postuler-itv-valentina" aria-label="Copier le prompt Valentina"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Copier</span></button>
-            <span class="img-prompt-text">Portrait Valentina · voir IMAGE_PROMPTS.md § postuler-itv-valentina</span>
+            <button type="button" class="copy-prompt-btn" data-prompt-key="postuler-itv-valentina" aria-label="Copier le prompt Thomas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Copier</span></button>
+            <span class="img-prompt-text">Portrait Thomas · voir IMAGE_PROMPTS.md § postuler-itv-valentina</span>
           </div>
         </div>
-        <span class="r-volet-tag">Coursière · Riviera</span>
-        <span class="r-volet-cname" aria-hidden="true">Valentina</span>
+        <span class="r-volet-tag">Coursier · Riviera</span>
+        <span class="r-volet-cname" aria-hidden="true">Thomas</span>
         <div class="r-volet-content">
-          <blockquote class="r-volet-quote">Le vélo est entretenu, le matériel est fourni. Si quelque chose casse en course, j'ai un numéro direct. Jamais eu ça ailleurs.</blockquote>
+          <blockquote class="r-volet-quote">Le vélo est entretenu, le matériel est fourni. Si quelque chose casse en cours, j'ai un numéro direct. Jamais eu ça ailleurs.</blockquote>
           <div class="r-volet-author">
-            <strong>Valentina, 36 ans</strong>
-            <span>Coursière à la Riviera · chez Chaskis depuis 2022</span>
+            <strong>Thomas, 36 ans</strong>
+            <span>Coursier à la Riviera · chez Chaskis depuis 2022</span>
           </div>
         </div>
       </article>
@@ -853,22 +908,10 @@
     <!-- COURSIER -->
     <div class="r-motion-panel is-coursier" id="panelCoursier">
       <div class="r-motion-scene">
-        <div class="r-motion-bg-track" id="bgCoursier">
-          <div class="r-motion-bg-img" id="bgCoursierImg1" data-real-src="motion-bg-coursier.jpg"></div>
-          <div class="r-motion-bg-img" id="bgCoursierImg2" data-real-src="motion-bg-coursier.jpg"></div>
-        </div>
-      </div>
-      <div class="r-motion-speed-lines" aria-hidden="true"></div>
-      <div class="r-motion-blur top" aria-hidden="true"></div>
-      <!-- Foreground PNG coursier -->
-      <div class="r-motion-fg" id="fgCoursier">
-        <img src="postuler-coursier-fg.png" alt="Coursier Chaskis à vélo"
-          onerror="this.closest('.r-motion-fg').innerHTML='<div class=\'r-motion-fg-placeholder\'>PNG transparent du coursier<br>à générer · sujet seul, sans fond<br><em style=\'font-size:.6rem;opacity:.5\'>postuler-coursier-fg.png</em></div>'">
-      </div>
-      <!-- Prompt -->
-      <div class="img-prompt" style="position:absolute;top:14px;left:14px;z-index:5;display:flex;flex-direction:column;gap:6px;max-width:240px">
-        <button type="button" class="copy-prompt-btn" data-prompt-key="postuler-coursier-fg" aria-label="Copier le prompt coursier foreground"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Prompt coursier FG</span></button>
-        <span class="img-prompt-text" style="color:rgba(255,255,255,.3);font-size:.62rem;font-style:italic">PNG transparent · coursier seul, profil 3/4, découpe nette</span>
+        <video class="r-motion-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+          <source src="motion-bg-coursier.mp4" type="video/mp4">
+        </video>
+        <div class="r-motion-video-tint is-coursier" aria-hidden="true"></div>
       </div>
       <div class="r-motion-content">
         <span class="r-motion-role-tag"><span class="dot"></span>Coursier à vélo</span>
@@ -876,10 +919,10 @@
         <p>Genève, Nyon, Lausanne et la Riviera. Temps plein ou complément de revenus.</p>
         <div class="r-motion-facts">
           <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>CDI dès l'embauche</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Vélo + matériel fournis J1</span>
           <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Salaire horaire fixe CCT</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Planning construit avec vous</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Équipement pluie inclus</span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Vélo + matériel fournis J1</span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Pourboires 100% reversés</span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Formation initiale incluse</span>
           <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Assurance accidents prise en charge</span>
         </div>
         <a href="#download" class="r-motion-cta"><span>Postuler comme coursier</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
@@ -889,34 +932,22 @@
     <!-- CHAUFFEUR -->
     <div class="r-motion-panel is-chauffeur" id="panelChauffeur">
       <div class="r-motion-scene">
-        <div class="r-motion-bg-track" id="bgChauffeur">
-          <div class="r-motion-bg-img" id="bgChauffeurImg1" data-real-src="motion-bg-chauffeur.jpg"></div>
-          <div class="r-motion-bg-img" id="bgChauffeurImg2" data-real-src="motion-bg-chauffeur.jpg"></div>
-        </div>
-      </div>
-      <div class="r-motion-speed-lines" aria-hidden="true"></div>
-      <div class="r-motion-blur top" aria-hidden="true"></div>
-      <!-- Foreground PNG chauffeur -->
-      <div class="r-motion-fg" id="fgChauffeur">
-        <img src="postuler-chauffeur-fg.png" alt="Chauffeur Chaskis au volant"
-          onerror="this.closest('.r-motion-fg').innerHTML='<div class=\'r-motion-fg-placeholder\'>PNG transparent du chauffeur<br>à générer · intérieur voiture, sans fond<br><em style=\'font-size:.6rem;opacity:.5\'>postuler-chauffeur-fg.png</em></div>'">
-      </div>
-      <!-- Prompt -->
-      <div class="img-prompt" style="position:absolute;top:14px;left:14px;z-index:5;display:flex;flex-direction:column;gap:6px;max-width:240px">
-        <button type="button" class="copy-prompt-btn" data-prompt-key="postuler-chauffeur-fg" aria-label="Copier le prompt chauffeur foreground"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Prompt chauffeur FG</span></button>
-        <span class="img-prompt-text" style="color:rgba(255,255,255,.3);font-size:.62rem;font-style:italic">PNG transparent · chauffeur au volant, profil 3/4, découpe nette</span>
+        <video class="r-motion-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+          <source src="driver.mp4" type="video/mp4">
+        </video>
+        <div class="r-motion-video-tint is-chauffeur" aria-hidden="true"></div>
       </div>
       <div class="r-motion-content">
         <span class="r-motion-role-tag"><span class="dot"></span>Chauffeur</span>
         <h3>Prenez la route.<br><span class="sa">Avec un vrai cadre.</span></h3>
-        <p>Mobilité premium et livraisons longue distance. Permis B121 ou D1 requis.</p>
+        <p>Transferts, livraisons longue distance. Genève et canton de Vaud.</p>
         <div class="r-motion-facts">
           <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>CDI dès l'embauche</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Véhicule ou frais remboursés</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Formations financées (D1, VTC)</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Horaires choisis avec vous</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Frais de carburant remboursés</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Assurance tous risques incluse</span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Salaire horaire fixe CCT</span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Horaires flexibles, choisis avec vous</span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Frais professionnels remboursés</span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Pourboires 100% reversés</span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Formations adaptées financées</span>
         </div>
         <a href="#download" class="r-motion-cta"><span>Postuler comme chauffeur</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
       </div>
@@ -971,6 +1002,17 @@
 
 <!-- ===== CTA FINAL ===== -->
 <section class="r-dl" id="download">
+  <svg class="r-dl-map" viewBox="0 0 900 450" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M80 260 C130 210, 240 185, 380 188 C520 191, 680 215, 780 265 C810 282, 800 315, 765 328 C730 341, 660 335, 580 315 C480 290, 370 288, 270 300 C180 310, 110 305, 88 282 C76 272, 72 265, 80 260Z" stroke="rgba(75,179,164,0.18)" stroke-width="1.5" fill="rgba(75,179,164,0.05)"/>
+    <circle cx="95" cy="272" r="5" fill="rgba(75,179,164,0.35)"/>
+    <circle cx="95" cy="272" r="11" stroke="rgba(75,179,164,0.18)" stroke-width="1" fill="none"/>
+    <text x="108" y="268" font-size="9" fill="rgba(75,179,164,0.3)" font-family="sans-serif" letter-spacing="1">GENÈVE</text>
+    <circle cx="420" cy="186" r="3.5" fill="rgba(75,179,164,0.22)"/>
+    <text x="428" y="183" font-size="8" fill="rgba(75,179,164,0.22)" font-family="sans-serif" letter-spacing="1">NYON</text>
+    <circle cx="610" cy="200" r="3.5" fill="rgba(75,179,164,0.22)"/>
+    <text x="620" y="197" font-size="8" fill="rgba(75,179,164,0.22)" font-family="sans-serif" letter-spacing="1">LAUSANNE</text>
+    <path d="M95 272 L420 186 L610 200" stroke="rgba(75,179,164,0.07)" stroke-width="1" stroke-dasharray="5 5"/>
+  </svg>
   <div class="ct r-dl-inner rv">
 
     <div class="r-dl-left">
@@ -1010,25 +1052,7 @@
 </section>
 
 <!-- ===== FOOTER ===== -->
-<footer class="footer" data-nav-dark>
-  <div class="ct">
-    <div class="ft">
-      <div class="fb">
-        <a href="index.html" class="nav-logo"><img src="Chaskis-logo-ondark.svg" alt="Chaskis" height="20"></a>
-        <p>Gestion de livraison et mobilité en Suisse romande.</p>
-        <div class="fb-soc">
-          <a href="https://www.instagram.com/chaskisdelivery/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a>
-          <a href="https://www.linkedin.com/company/chaskis-sa/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
-          <a href="https://www.tiktok.com/@chaskisdelivery_" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg></a>
-        </div>
-      </div>
-      <div class="fc"><h4>Services</h4><a href="commander.html">Commander une course</a><a href="index.html#services">Nos services</a><a href="index.html#booking">Planifier un appel</a></div>
-      <div class="fc"><h4>Entreprise</h4><a href="postuler.html">Postuler</a><a href="#faq">FAQ</a><a href="mailto:hello@chaskis.ch">hello@chaskis.ch</a></div>
-      <div class="fc"><h4>Légal</h4><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">Cookies</a></div>
-    </div>
-    <div class="f-btm"><span>&copy; 2026 Chaskis SA · Genève &amp; Lausanne</span><span>Fait en Suisse romande</span></div>
-  </div>
-</footer>
+<footer class="footer" data-nav-dark data-shared></footer>
 
 <script src="shared.js?v=20260420a"></script>
 <script src="auth.js"></script>
@@ -1151,11 +1175,14 @@
 (function(){
   const PROMPTS = {
     'postuler-hero': "Authentic editorial photograph of a Chaskis bike courier in action, three-quarter rear view, insulated delivery backpack visible, teal Chaskis branded uniform, riding through a narrow cobblestone street in old-town Geneva or Lausanne, late afternoon golden hour light, warm bokeh of European stone buildings, candid reportage style, 35mm film look, 4:5 portrait ratio.",
-    'postuler-coursier-fg': "Professional product-style photograph of a Chaskis bike courier, full body, isolated on a pure white or transparent background, wearing teal Chaskis uniform with delivery backpack, riding or standing with bike, slight motion pose, clean studio lighting, no background elements, suitable for compositing — PNG with transparent background required.",
-    'postuler-chauffeur-fg': "Professional product-style photograph of a Chaskis professional driver inside a delivery van, upper body to mid-waist visible, isolated on transparent background, wearing dark driver uniform, hands on steering wheel or relaxed, slight 3/4 angle, clean lighting — PNG with transparent background required for compositing.",
-    'postuler-itv-pierre': "Documentary portrait of a 27 year old male bike courier named Pierre, athletic build, short dark hair, Geneva cobblestone street mid-morning, teal Chaskis cycling uniform, leaning slightly against his delivery bike, confident calm expression looking just off-camera, soft daylight, shallow depth of field, 4:5 portrait ratio, reportage style.",
-    'postuler-itv-amelia': "Documentary portrait of a 31 year old female professional driver named Amélia, warm friendly expression, standing next to an open Chaskis delivery van door in Lausanne, afternoon soft light, dark driver uniform, short wavy hair, looking slightly off-camera, Lausanne backdrop heavily blurred, documentary 35mm feel, 4:5 portrait ratio.",
-    'postuler-itv-abdel': "Documentary portrait of a 34 year old male courier named Abdel, warm calm expression, teal Chaskis jacket, Geneva square late afternoon, golden hour light on the side of his face, delivery bag on shoulder, bike partially visible behind, natural reportage, shallow depth of field, 4:5 portrait ratio."
+    'postuler-coursier-fg': "Professional product-style photograph of a Chaskis bike courier, full body, isolated on a pure white or transparent background, wearing teal Chaskis uniform with delivery backpack, riding or standing with bike, slight motion pose, clean studio lighting, no background elements, suitable for compositing, PNG with transparent background required.",
+    'postuler-chauffeur-fg': "Professional product-style photograph of a Chaskis professional driver inside a delivery van, upper body to mid-waist visible, isolated on transparent background, wearing dark driver uniform, hands on steering wheel or relaxed, slight 3/4 angle, clean lighting, PNG with transparent background required for compositing.",
+    'postuler-itv-pierre': "Candid portrait of Pierre, 27, Mediterranean complexion, short dark hair, wearing a plain dark t-shirt and a casual teal Chaskis jacket, no helmet, leaning against a low stone wall in a Geneva park, gaze slightly downward with a natural half-smile, not posed for camera, soft green tree bokeh behind, warm late-morning light, chest-up framing, 4:5 ratio. Same Chaskis day shoot, natural outdoor setting, Geneva.",
+    'postuler-itv-amelia': "Natural portrait of Amélia, 31, genuine relaxed smile looking directly at camera, casual dark jacket, shoulder-length curly hair loose, sitting on a bench facing Lake Geneva (Lac Léman shoreline, Geneva side), soft afternoon light reflecting off the water behind her, green trees framing the background, chest-to-torso framing, at ease and natural, same Chaskis day shoot, 4:5 ratio.",
+    'postuler-itv-abdel': "Relaxed portrait of Abdel, 34, short beard, charcoal jacket over a plain crewneck, sitting on a lakeside bench at the edge of Lac Léman in Geneva, gaze directed calmly to the side, not looking at camera, one arm resting on the bench back, soft water and tree bokeh behind, warm golden light, chest-up framing, same Chaskis day shoot, 4:5 ratio.",
+    'postuler-itv-nadia': "Candid portrait of Nadia, 29, hair loosely tied back, Chaskis jacket over a plain top, caught mid-laugh at something off-frame, standing on a gravel path under trees in a Geneva park, body slightly turned with face angled naturally toward camera, dappled soft daylight, deep green foliage bokeh, chest-to-mid-torso framing, same Chaskis day shoot, 4:5 ratio.",
+    'postuler-itv-karim': "Lively portrait of Karim, 23, wearing a plain hoodie with a small Chaskis logo, grinning naturally mid-conversation, gaze slightly off-camera, sitting on a low stone wall or wooden bench in a Geneva park, bright natural light through tree canopy, green bokeh background, waist-up framing, spontaneous and real, same Chaskis day shoot, 4:5 ratio.",
+    'postuler-itv-valentina': "Relaxed portrait of Thomas, 36, short dark beard, plain long-sleeve shirt or light Chaskis jacket, sitting on a lakeside bench along Lac Léman in Geneva, looking down slightly with a quiet smile as if checking his phone, calm water and soft tree reflections in bokeh background, warm afternoon light, chest-up framing, same Chaskis day shoot, 4:5 ratio."
   };
   document.querySelectorAll('.copy-prompt-btn').forEach(btn => {
     btn.addEventListener('click', async e => {

@@ -757,33 +757,52 @@ function renderSummary() {
   const zone = state.pickup.coords ? P.findZoneByPostalCode(state.pickup.postalCode) : null;
   sumZoneSlot.innerHTML = zone ? zoneBadgeHtml(zone, true) : '';
 
+  const sumMetaWrap = document.getElementById('sumMetaWrap');
   if (state.pricing) {
+    if (sumMetaWrap) sumMetaWrap.style.display = '';
     sumMeta.style.display = 'flex';
-    document.getElementById('sumVehicle').textContent = state.vehicle === 'bike' ? 'Vélo' : 'Voiture';
-    document.getElementById('sumTiming').textContent = state.timing === 'express' ? 'Super Express (<2h)' : (state.scheduledDate && state.scheduledTime ? `${state.scheduledDate.split('-').reverse().join('/')} · ${state.scheduledTime}` : 'Planifié');
+    const vehIcon = state.vehicle === 'bike'
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 17.5h-6l-3-8H3"/><path d="M12 5l2 4.5"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l2-5a2 2 0 0 1 2-1h10a2 2 0 0 1 2 1l2 5v5a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1H7v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><circle cx="7" cy="14" r="1" fill="currentColor"/><circle cx="17" cy="14" r="1" fill="currentColor"/></svg>';
+    const vehLabel = state.vehicle === 'bike' ? 'Vélo' : 'Voiture';
+    document.getElementById('sumVehicle').innerHTML = '<span class="sum-pill sum-pill-veh">' + vehIcon + '<span>' + vehLabel + '</span></span>';
+    if (state.timing === 'express') {
+      document.getElementById('sumTiming').innerHTML = '<span class="sum-pill sum-pill-express"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>Super Express <em>&lt;2h</em></span></span>';
+    } else {
+      const planLbl = state.scheduledDate && state.scheduledTime
+        ? `${state.scheduledDate.split('-').reverse().join('/')} · ${state.scheduledTime}`
+        : 'Planifié';
+      document.getElementById('sumTiming').innerHTML = '<span class="sum-pill sum-pill-planned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>' + escapeHtml(planLbl) + '</span></span>';
+    }
   } else {
+    if (sumMetaWrap) sumMetaWrap.style.display = 'none';
     sumMeta.style.display = 'none';
   }
 
   sumLoading.classList.toggle('show', state.pricingLoading);
 
+  const sumLinesWrap = document.getElementById('sumLinesWrap');
   if (state.pricing) {
     const p = state.pricing;
+    if (sumLinesWrap) sumLinesWrap.style.display = '';
     sumLines.style.display = 'flex';
     let lines = '';
-    lines += `<div class="sum-line"><span>Collecte (${p.pickup.distanceKm.toFixed(1)} km)</span><strong>CHF ${formatCHF(p.pickup.costHT)}</strong></div>`;
+    if (p.pickup.costHT > 0) {
+      lines += `<div class="sum-line"><span class="sum-line-lbl">Collecte <em>${p.pickup.distanceKm.toFixed(1)} km</em></span><strong>CHF ${formatCHF(p.pickup.costHT)}</strong></div>`;
+    }
     p.segments.forEach(s => {
-      lines += `<div class="sum-line"><span>${escapeHtml(s.fromLabel)} → ${escapeHtml(s.toLabel)} (${s.distanceKm.toFixed(1)} km)</span><strong>CHF ${formatCHF(s.costHT)}</strong></div>`;
+      lines += `<div class="sum-line"><span class="sum-line-lbl">${escapeHtml(s.fromLabel)} → ${escapeHtml(s.toLabel)} <em>${s.distanceKm.toFixed(1)} km</em></span><strong>CHF ${formatCHF(s.costHT)}</strong></div>`;
     });
-    if (p.urgencyCost) lines += `<div class="sum-line"><span>Urgence ${escapeHtml(p.zone.name)}</span><strong>+CHF ${formatCHF(p.urgencyCost)}</strong></div>`;
-    lines += `<div class="sum-line"><span>TVA ${(p.vatRate*100).toFixed(1)}%</span><strong>CHF ${formatCHF(p.vat)}</strong></div>`;
+    if (p.urgencyCost) lines += `<div class="sum-line sum-line-extra"><span class="sum-line-lbl">Supplément urgence <em>${escapeHtml(p.zone.name)}</em></span><strong>+CHF ${formatCHF(p.urgencyCost)}</strong></div>`;
+    lines += `<div class="sum-line sum-line-tax"><span class="sum-line-lbl">TVA <em>${(p.vatRate*100).toFixed(1)}%</em></span><strong>CHF ${formatCHF(p.vat)}</strong></div>`;
     sumLines.innerHTML = lines;
     sumTotal.style.display = 'flex';
-    document.getElementById('sumTotalVal').textContent = `CHF ${formatCHF(p.totalTTC)}`;
+    document.getElementById('sumTotalVal').innerHTML = `<small>CHF</small> ${formatCHF(p.totalTTC)}`;
     sumMobileVal.classList.remove('empty');
     sumMobileVal.textContent = `CHF ${formatCHF(p.totalTTC)}`;
     document.getElementById('payAmount').textContent = `CHF ${formatCHF(p.totalTTC)}`;
   } else {
+    if (sumLinesWrap) sumLinesWrap.style.display = 'none';
     sumLines.style.display = 'none';
     sumTotal.style.display = 'none';
     sumMobileVal.classList.add('empty');

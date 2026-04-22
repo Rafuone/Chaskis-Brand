@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- ===== SEO ===== -->
-<title>Chaskis : Livraison B2B Suisse romande, coursiers salariés</title>
+<title>Chaskis : livraison pour les entreprises en Suisse romande, coursiers salariés</title>
 <meta name="description" content="Livraison pro en Suisse romande. 800 coursiers salariés CDI, tarifs fixes dès CHF 8, zéro commission. Express, Flex, Dédié. Genève · Nyon · Lausanne · Riviera.">
-<meta name="keywords" content="livraison Genève, coursier Lausanne, livraison B2B Suisse romande, livreur professionnel, coursier salarié, livraison express Suisse, service de livraison entreprise, coursier Nyon, livraison Riviera">
+<meta name="keywords" content="livraison Genève, coursier Lausanne, livraison entreprises Suisse romande, livreur professionnel, coursier salarié, livraison express Suisse, service de livraison entreprise, coursier Nyon, livraison Riviera">
 <meta name="author" content="Chaskis SA">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="geo.region" content="CH-GE">
@@ -20,7 +20,7 @@
 <!-- ===== Open Graph ===== -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Chaskis">
-<meta property="og:title" content="Chaskis : Livraison B2B en Suisse romande">
+<meta property="og:title" content="Chaskis : livraison pour les entreprises en Suisse romande">
 <meta property="og:description" content="800 coursiers salariés CDI, tarifs fixes dès CHF 8, zéro commission. Genève, Nyon, Lausanne, Riviera.">
 <meta property="og:url" content="https://www.chaskis.ch/">
 <meta property="og:image" content="https://www.chaskis.ch/hero-courier.png">
@@ -32,7 +32,7 @@
 
 <!-- ===== Twitter ===== -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Chaskis : Livraison B2B en Suisse romande">
+<meta name="twitter:title" content="Chaskis : livraison pour les entreprises en Suisse romande">
 <meta name="twitter:description" content="800 coursiers salariés CDI, tarifs fixes dès CHF 8, zéro commission. Genève, Nyon, Lausanne, Riviera.">
 <meta name="twitter:image" content="https://www.chaskis.ch/hero-courier.png">
 
@@ -48,7 +48,7 @@
 <meta name="theme-color" content="#4BB3A4">
 <link rel="icon" href="icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=20260422f">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 
 <!-- ===== Structured Data ===== -->
@@ -64,7 +64,7 @@
       "url": "https://www.chaskis.ch/",
       "logo": "https://www.chaskis.ch/Chaskis-logo.svg",
       "image": "https://www.chaskis.ch/hero-courier.png",
-      "description": "Infrastructure de livraison B2B pour les entreprises de Suisse romande. Coursiers salariés, dispatch automatique, preuve photo, tarifs fixes.",
+      "description": "Infrastructure de livraison pour les entreprises de Suisse romande. Coursiers salariés, dispatch automatique, preuve photo, tarifs fixes.",
       "email": "hello@chaskis.ch",
       "telephone": "+41227000127",
       "areaServed": {"@type":"Place","name":"Suisse romande"},
@@ -153,7 +153,7 @@
 #pageCurtain{position:fixed;inset:0;z-index:9999;background:#FAFAF7;transform:translateX(0);transition:transform .62s cubic-bezier(.4,0,.2,1);pointer-events:all}
 #pageCurtain.is-lifted{transform:translateX(-110%);pointer-events:none}
 
-/* ===== HERO v7 : B2B REFRAME ===== */
+/* ===== HERO v7 ===== */
 .hero{display:flex;align-items:flex-start;padding:156px 0 140px;position:relative;overflow:hidden;background:var(--bg)}
 .hero::before{content:'';position:absolute;top:-25%;right:-18%;width:75vw;height:65vw;max-width:900px;background:radial-gradient(ellipse at 60% 40%,rgba(75,179,164,.16) 0%,rgba(75,179,164,.07) 42%,transparent 70%);pointer-events:none;animation:blob-a 22s ease-in-out infinite}
 .hero::after{content:'';position:absolute;bottom:-30%;left:-12%;width:55vw;height:70vw;max-width:640px;background:radial-gradient(ellipse at 35% 55%,rgba(107,79,160,.13) 0%,rgba(107,79,160,.05) 45%,transparent 72%);pointer-events:none;animation:blob-b 31s ease-in-out infinite}
@@ -215,8 +215,7 @@
 .nav.over-dark .nav-cta-btn{border-color:rgba(44,32,82,.35)!important;color:var(--ink)!important}
 .nav.over-dark .nav-cta-btn:hover{border-color:rgba(44,32,82,.7)!important;background:rgba(44,32,82,.08)!important}
 @media(max-width:767px){.nav-cta-btn{display:none}}
-.nav-cta-float{position:fixed;bottom:28px;right:28px;z-index:200;box-shadow:0 8px 32px rgba(58,175,169,.3);opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .4s var(--ease),transform .4s var(--ease)}
-.nav-cta-float.visible{opacity:1;transform:translateY(0);pointer-events:auto}
+/* .nav-cta-float styles mutualisés dans styles.css (nav-cta-float block) */
 
 /* ===== CTA PULSE ===== */
 @keyframes cta-pulse{
@@ -589,7 +588,7 @@
 
 /* FAQ banner + left column */
 .faq-banner{margin-bottom:clamp(36px,4vw,52px);border-radius:var(--rxl);overflow:hidden}
-.faq-banner-img{width:100%;height:clamp(200px,22vw,300px);background:linear-gradient(135deg,rgba(75,179,164,.08),rgba(107,79,160,.06))}
+.faq-banner-img{width:100%;height:clamp(220px,26vw,360px);background-image:url('Geneva.png');background-size:cover;background-position:center 40%;background-repeat:no-repeat}
 .faq-contact{display:flex;flex-direction:column;gap:10px;margin-top:28px}
 .faq-ci{display:flex;align-items:center;gap:14px;font-size:.92rem;line-height:1.5;color:var(--ink);padding:14px 18px;background:var(--white);border:1px solid var(--sand);border-radius:12px;transition:background .25s ease,border-color .25s ease}
 .faq-ci:hover{background:var(--teal-bg);border-color:rgba(75,179,164,.3)}
@@ -626,9 +625,9 @@ section{padding:clamp(56px,7vw,96px) 0}
 .partners-head p em{font-style:normal;font-weight:800;color:var(--teal)}
 .partners-stats{display:flex;justify-content:center;gap:clamp(48px,8vw,120px);flex-wrap:wrap;padding:clamp(40px,5vw,64px) 0;border-top:1px solid rgba(0,0,0,.06);margin-top:clamp(32px,4vw,52px)}
 .partners-stat{text-align:center}
-.partners-stat strong{font-size:clamp(3.2rem,7vw,5.5rem);font-weight:800;letter-spacing:-.06em;line-height:1;display:block;background:linear-gradient(135deg,var(--teal-light),#B8B6E2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.partners-stat strong{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;letter-spacing:-.05em;line-height:1;display:block;background:linear-gradient(135deg,var(--teal-light),#B8B6E2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .partners-stat span{font-size:.88rem;color:var(--ink-light);font-weight:500;margin-top:10px;display:block}
-@media(max-width:520px){.partners-stats{gap:36px}.partners-stat strong{font-size:clamp(2.8rem,14vw,4rem)}}
+@media(max-width:520px){.partners-stats{gap:36px}.partners-stat strong{font-size:clamp(2.2rem,10vw,3rem)}}
 .mq-w{overflow:hidden;position:relative}
 .mq-w::before,.mq-w::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:1;pointer-events:none}
 .mq-w::before{left:0;background:linear-gradient(90deg,var(--white),transparent)}
@@ -928,7 +927,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
         <span class="word" data-i18n="hero.w7">votre</span>
         <span class="word sa" data-i18n="hero.w8">business</span>
       </h1>
-      <p class="hero-sub" data-i18n="hero.sub">Livraison B2B en Suisse romande. Coursiers salariés, tarifs fixes, traçabilité complète : le partenaire logistique des entreprises suisses.</p>
+      <p class="hero-sub" data-i18n="hero.sub">Livraison professionnelle en Suisse romande. Coursiers salariés, tarifs fixes, traçabilité complète : le partenaire logistique des entreprises suisses.</p>
       <div class="hero-actions">
         <a href="#booking" class="btn btn-p pulse"><span data-i18n="hero.cta1">Planifier un appel gratuit</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
         <a href="commander.html" class="btn btn-o"><span data-i18n="hero.cta2">Commander une course</span></a>
@@ -1383,7 +1382,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
 <a href="#booking" class="btn btn-p pulse nav-cta-float"><span data-i18n="float.cta">Planifier un appel</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-<script src="shared.js?v=20260422d"></script>
+<script src="shared.js?v=20260422h"></script>
 <script src="auth.js"></script>
 <script>
 
@@ -1855,12 +1854,12 @@ const T = {
     'hero.w1': 'On', 'hero.w2': 'gère', 'hero.w3': 'vos', 'hero.w4': 'livraisons,',
     'hero.w5': 'vous', 'hero.w6': 'gérez', 'hero.w7': 'votre', 'hero.w8': 'business',
     'hero.overline': '6 créneaux disponibles cette semaine',
-    'hero.sub': 'Livraison B2B en Suisse romande. Coursiers salariés, tarifs fixes, traçabilité complète : le partenaire logistique des entreprises suisses.',
+    'hero.sub': 'Livraison professionnelle en Suisse romande. Coursiers salariés, tarifs fixes, traçabilité complète : le partenaire logistique des entreprises suisses.',
     'hero.cta1': 'Planifier un appel gratuit', 'hero.cta2': 'Commander une course',
     'hero.stat1': 'Délai moyen', 'hero.stat2': 'vs plateformes', 'hero.stat3': 'Coursiers CDI', 'hero.stat4': 'Courses / an',
     'partners.headline': 'entreprises nous font confiance',
     'zoom.h2': 'La livraison pro, <span class="accent">sans les galères</span>',
-    'zoom.p': 'Tarifs fixes, coursiers salariés CDI, suivi en temps réel. Chaskis est le partenaire B2B conçu pour les entreprises de Suisse romande qui veulent de la fiabilité, pas des mauvaises surprises.',
+    'zoom.p': 'Tarifs fixes, coursiers salariés CDI, suivi en temps réel. Chaskis est le partenaire logistique conçu pour les entreprises de Suisse romande qui veulent de la fiabilité, pas des mauvaises surprises.',
     'bento.label': 'Nos services', 'bento.h2': 'Tout ce dont votre logistique a <span class="ac">besoin</span>',
     'bento1.h3': 'Coursiers & chauffeurs salariés', 'bento1.p': 'Vélo pour la zone urbaine, voiture pour les colis lourds ou longues distances. 800 employés CDI, formés & assurés. Pas d\'auto-entrepreneurs.',
     'bento2.h3': 'Import CSV & API', 'bento2.p': 'Connectez votre POS, WooCommerce ou Shopify. Commandes en masse par CSV. Zéro ressaisie.',
@@ -1984,12 +1983,12 @@ const T = {
     'hero.w1': 'We', 'hero.w2': 'handle', 'hero.w3': 'your', 'hero.w4': 'deliveries,',
     'hero.w5': 'you', 'hero.w6': 'handle', 'hero.w7': 'your', 'hero.w8': 'business',
     'hero.overline': '6 slots available this week',
-    'hero.sub': 'B2B delivery across French-speaking Switzerland. Employed couriers, fixed rates, full tracking: the logistics partner for Swiss businesses.',
+    'hero.sub': 'Professional delivery across French-speaking Switzerland. Employed couriers, fixed rates, full tracking: the logistics partner for Swiss businesses.',
     'hero.cta1': 'Schedule a free call', 'hero.cta2': 'Place an order',
     'hero.stat1': 'Avg. delivery', 'hero.stat2': 'vs platforms', 'hero.stat3': 'Employed couriers', 'hero.stat4': 'Deliveries / yr',
     'partners.headline': 'companies trust us',
     'zoom.h2': 'Professional delivery, <span class="accent">without the headaches</span>',
-    'zoom.p': 'Fixed rates, full-time employed couriers, real-time tracking. Chaskis is the B2B partner built for Swiss businesses that need reliability, not surprises.',
+    'zoom.p': 'Fixed rates, full-time employed couriers, real-time tracking. Chaskis is the logistics partner built for Swiss businesses that need reliability, not surprises.',
     'bento.label': 'Our services', 'bento.h2': 'Everything your logistics <span class="ac">needs</span>',
     'bento1.h3': 'Employed couriers & drivers', 'bento1.p': 'Bike for urban zones, car for heavy parcels or longer distances. 800 full-time employees, trained & insured. No freelancers.',
     'bento2.h3': 'CSV import & API', 'bento2.p': 'Connect your POS, WooCommerce or Shopify. Bulk orders via CSV. Zero manual re-entry.',
@@ -2109,24 +2108,7 @@ function setLang(lang) {
   if (window._testiRebuild) window._testiRebuild(lang);
 }
 
-// Lang drop toggle
-(function() {
-  const drop = document.getElementById('langDrop');
-  const trigger = document.getElementById('langTrigger');
-  const menu = document.getElementById('langMenu');
-  if (!drop || !trigger || !menu) return;
-  function open() { drop.dataset.open = ''; trigger.setAttribute('aria-expanded', 'true'); }
-  function close() { delete drop.dataset.open; trigger.setAttribute('aria-expanded', 'false'); }
-  trigger.addEventListener('click', e => { e.stopPropagation(); drop.hasAttribute('data-open') ? close() : open(); });
-  menu.addEventListener('click', e => {
-    const item = e.target.closest('.lang-drop-item');
-    if (!item) return;
-    setLang(item.dataset.lang);
-    close();
-  });
-  document.addEventListener('click', e => { if (!drop.contains(e.target)) close(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-})();
+// Lang drop toggle : géré par shared.js (window.__chaskisSetLang). Ne pas dupliquer ici.
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));

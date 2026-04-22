@@ -26,7 +26,7 @@
 <meta name="theme-color" content="#4BB3A4">
 <link rel="icon" href="icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=20260421">
+<link rel="stylesheet" href="styles.css?v=20260422f">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="preload" as="image" href="postulation-hero.png" fetchpriority="high">
 
@@ -101,7 +101,7 @@
 .r-hero-pill svg { width: 12px; height: 12px; color: var(--teal); flex-shrink: 0; }
 
 /* ===== HERO IMAGE ===== */
-.r-hero-img-wrap { position: relative; aspect-ratio: 4/5; border-radius: var(--rxl); overflow: visible; perspective: 1200px; }
+.r-hero-img-wrap { position: relative; aspect-ratio: 4/5; width: 100%; border-radius: var(--rxl); overflow: visible; perspective: 1200px; }
 .r-hero-img {
   width: 100%; height: 100%; border-radius: var(--rxl); overflow: hidden;
   background: linear-gradient(135deg, var(--teal-bg) 0%, var(--accent-bg) 60%, var(--cream) 100%);
@@ -111,6 +111,30 @@
   transform-style: preserve-3d;
 }
 .r-hero-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Layers pour crossfade coursier <-> chauffeur */
+.r-hero-img-layer { position: absolute; inset: 0; opacity: 0; transition: opacity .7s cubic-bezier(.4,0,.2,1); will-change: opacity; }
+.r-hero-img-layer.is-active { opacity: 1; }
+.r-hero-img-layer img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.r-hero-img-layer.is-placeholder { background: linear-gradient(135deg, #1a1000 0%, #2d1f05 55%, #4a3a08 100%); }
+.r-hero-img-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: rgba(252,211,77,.85); text-align: center; padding: 24px; opacity: 0; pointer-events: none; }
+.r-hero-img-layer.is-placeholder .r-hero-img-placeholder { opacity: 1; }
+.r-hero-img-placeholder span { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 1.3rem; letter-spacing: .01em; }
+.r-hero-img-placeholder small { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; opacity: .65; font-weight: 500; }
+
+/* Typewriter mot rotatif — le GROUPE "chaque X" (parent .sa) bascule couleur selon coursier/chauffeur */
+.r-hero-rotate { display: inline-block; position: relative; transition: opacity .3s cubic-bezier(.4,0,.2,1), transform .3s cubic-bezier(.4,0,.2,1); will-change: opacity, transform; }
+.r-hero-rotate.is-leaving { opacity: 0; transform: translateY(-8px); }
+.r-hero-rotate.is-entering { opacity: 0; transform: translateY(8px); }
+/* .sa est le parent "chaque X" (italic serif teal par défaut). Sur is-driver, tout passe en jaune franc accessible. */
+.r-hero h1 .sa { transition: color .45s cubic-bezier(.4,0,.2,1); }
+.r-hero h1 .sa.is-driver { color: #C98A00; }  /* jaune doré, contrast ~3.6:1 sur #FAFAF7 — OK large text WCAG AA */
+@media (prefers-reduced-motion: reduce) {
+  .r-hero-rotate, .r-hero-rotate.is-leaving, .r-hero-rotate.is-entering { transition: color .2s ease; transform: none; opacity: 1; }
+  .r-hero-img-layer { transition: none; }
+  .r-hero h1 .sa { transition: color .15s ease; }
+}
+
 .r-hero-img .img-prompt {
   position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 20px;
   font-size: .75rem; color: var(--ink-mid); font-style: italic; line-height: 1.5;
@@ -121,7 +145,7 @@
 .r-stats { background: var(--white); border-top: 1px solid var(--sand); border-bottom: 1px solid var(--sand); padding: clamp(40px,5vw,64px) 0; }
 .r-stats-row { display: flex; justify-content: center; gap: clamp(48px,8vw,120px); flex-wrap: wrap; }
 .r-stat { text-align: center; }
-.r-stat strong { font-size: clamp(3.2rem,7vw,5.5rem); font-weight: 800; letter-spacing: -.06em; line-height: 1; display: block; background: linear-gradient(135deg, var(--teal-light), #B8B6E2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; padding: 0 6px; overflow: visible; }
+.r-stat strong { font-size: clamp(2.5rem,5vw,4rem); font-weight: 800; letter-spacing: -.05em; line-height: 1; display: block; background: linear-gradient(135deg, var(--teal-light), #B8B6E2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; padding: 0 6px; overflow: visible; }
 .r-stat span { font-size: .88rem; color: var(--ink-light); font-weight: 500; margin-top: 10px; display: block; }
 
 /* ===== COMPARATIF ===== */
@@ -466,6 +490,8 @@
 .sdl-btn:hover { transform: translateY(-3px); }
 .sdl-btn svg { width: 26px; height: 26px; flex-shrink: 0; opacity: .9; transition: opacity .2s ease; }
 .sdl-btn:hover svg { opacity: 1; }
+.sdl-btn .gplay-logo { width: 24px; height: 24px; opacity: 1; }
+.sdl-btn .gplay-logo path { fill: attr(fill); }
 .sdl-btn .sdl-txt { display: flex; flex-direction: column; line-height: 1.1; }
 .sdl-btn .sdl-txt small { font-size: .6rem; font-weight: 500; opacity: .55; letter-spacing: .02em; }
 .sdl-btn .sdl-txt strong { font-size: .95rem; font-weight: 700; letter-spacing: -.01em; margin-top: 2px; transition: color .2s ease; }
@@ -550,9 +576,15 @@
   .r-perks-grid { grid-template-columns: 1fr; }
   .r-dl-right { max-width: 100%; }
 }
+
+/* ===== Page transition curtain ===== */
+#pageCurtain{position:fixed;inset:0;z-index:9999;background:#FAFAF7;transform:translateX(0);transition:transform .62s cubic-bezier(.4,0,.2,1);pointer-events:all}
+#pageCurtain.is-lifted{transform:translateX(-110%);pointer-events:none}
 </style>
 </head>
 <body class="page-postuler">
+
+<div id="pageCurtain" aria-hidden="true"></div>
 
 <!-- Mobile menu -->
 <div class="mob-m" id="mm">
@@ -602,10 +634,10 @@
 
       <div class="r-hero-text rv">
         <div class="r-hero-overline"><span class="dot"></span><span data-i18n="r.hero.overline">Deviens acteur d'une livraison plus humaine</span></div>
-        <h1 data-i18n-html="r.hero.h1">Rejoignez une équipe où <span class="sa">chaque livreur</span> compte.</h1>
+        <h1 data-i18n-html="r.hero.h1">Rejoignez une équipe où <span class="sa">chaque <span class="r-hero-rotate" aria-live="polite">coursier</span></span> compte.</h1>
         <p class="r-hero-sub" data-i18n="r.hero.sub">Coursier à vélo ou chauffeur, on vous fait confiance dès le premier jour. CDI, matériel fourni, assurance complète. Canton de Genève et canton de Vaud. Frontaliers bienvenus.</p>
         <div class="r-hero-cta">
-          <a href="#download" class="btn btn-p pulse"><span data-i18n="r.hero.cta">Télécharger l'app et postuler</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          <a href="#download" class="btn btn-p pulse" id="rHeroCta"><span data-i18n="r.hero.cta">Télécharger l'app et postuler</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
         </div>
         <div class="r-hero-pills">
           <span class="r-hero-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.hero.pill1">Pourboires 100% reversés</span></span>
@@ -616,10 +648,12 @@
       </div>
 
       <div class="r-hero-img-wrap rv d2">
-        <div class="r-hero-img" id="heroImg" data-src="postulation-hero.png">
-          <div class="img-prompt">
-            <button type="button" class="copy-prompt-btn" aria-label="Copier le prompt IA du hero" data-prompt-key="postuler-hero"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg><span>Copier le prompt</span></button>
-            <span class="img-prompt-text">Photo hero · 4:5 portrait · coursier en action, golden hour, cobblestone. Voir IMAGE_PROMPTS.md § postuler-hero.</span>
+        <div class="r-hero-img" id="heroImg">
+          <div class="r-hero-img-layer is-active" data-role="courier">
+            <img src="postulation-hero.png" alt="Coursier Chaskis en livraison à vélo">
+          </div>
+          <div class="r-hero-img-layer" data-role="driver">
+            <img src="driver.png" alt="Chauffeur Chaskis en berline classe affaires">
           </div>
         </div>
       </div>
@@ -654,32 +688,32 @@
         <div class="r-cmp-th is-right"><span class="dot"></span><span data-i18n="r.cmp.right">Chez Chaskis</span></div>
       </div>
       <div class="r-cmp-tr">
-        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Auto-entrepreneur ou CDD renouvelable</div><div class="r-cmp-sub">Pas de garantie de revenus, aucune protection sociale.</div></div></div>
-        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">CDI dès le premier jour, salaire fixe CCT</div><div class="r-cmp-sub">Vrai contrat, protection complète, revenus stables.</div></div></div>
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r1.l.m">Auto-entrepreneur ou CDD renouvelable</div><div class="r-cmp-sub" data-i18n="r.cmp.r1.l.s">Pas de garantie de revenus, aucune protection sociale.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r1.r.m">CDI dès le premier jour, salaire fixe CCT</div><div class="r-cmp-sub" data-i18n="r.cmp.r1.r.s">Vrai contrat, protection complète, revenus stables.</div></div></div>
       </div>
       <div class="r-cmp-tr">
-        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Vélo, scooter et téléphone à vos frais</div><div class="r-cmp-sub">Investissement de départ non remboursé.</div></div></div>
-        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">Vélo, sac, veste et téléphone fournis dès J1</div><div class="r-cmp-sub">0 CHF à avancer. Le matériel vous attend le premier matin.</div></div></div>
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r2.l.m">Vélo, scooter et téléphone à vos frais</div><div class="r-cmp-sub" data-i18n="r.cmp.r2.l.s">Investissement de départ non remboursé.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r2.r.m">Vélo, sac, veste et téléphone fournis dès J1</div><div class="r-cmp-sub" data-i18n="r.cmp.r2.r.s">0 CHF à avancer. Le matériel vous attend le premier matin.</div></div></div>
       </div>
       <div class="r-cmp-tr">
-        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Pas couverts si accident ou maladie</div><div class="r-cmp-sub">Arrêt de travail = arrêt des revenus.</div></div></div>
-        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">Assurance accident, maladie et intempéries</div><div class="r-cmp-sub">Couverts et payés dans tous les cas. C'est le CDI en Suisse.</div></div></div>
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r3.l.m">Pas couverts si accident ou maladie</div><div class="r-cmp-sub" data-i18n="r.cmp.r3.l.s">Arrêt de travail = arrêt des revenus.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r3.r.m">Assurance accident, maladie et intempéries</div><div class="r-cmp-sub" data-i18n="r.cmp.r3.r.s">Couverts et payés dans tous les cas. C'est le CDI en Suisse.</div></div></div>
       </div>
       <div class="r-cmp-tr">
-        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Un bot, un ticket, une FAQ</div><div class="r-cmp-sub">Aucune réponse humaine en cas de problème terrain.</div></div></div>
-        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">Un dispatcher qui décroche et connaît votre prénom</div><div class="r-cmp-sub">Problème en cours de route ? Quelqu'un répond.</div></div></div>
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r4.l.m">Un bot, un ticket, une FAQ</div><div class="r-cmp-sub" data-i18n="r.cmp.r4.l.s">Aucune réponse humaine en cas de problème terrain.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r4.r.m">Un dispatcher qui décroche et connaît votre prénom</div><div class="r-cmp-sub" data-i18n="r.cmp.r4.r.s">Problème en cours de route ? Quelqu'un répond.</div></div></div>
       </div>
       <div class="r-cmp-tr">
-        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Plateforme qui garde une part de vos pourboires</div><div class="r-cmp-sub">Chaque centime de pourboire n'arrive pas entier dans votre poche.</div></div></div>
-        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">100% des pourboires reversés, sans exception</div><div class="r-cmp-sub">Chaque centime que le client vous donne, vous le gardez.</div></div></div>
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r5.l.m">Plateforme qui garde une part de vos pourboires</div><div class="r-cmp-sub" data-i18n="r.cmp.r5.l.s">Chaque centime de pourboire n'arrive pas entier dans votre poche.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r5.r.m">100% des pourboires reversés, sans exception</div><div class="r-cmp-sub" data-i18n="r.cmp.r5.r.s">Chaque centime que le client vous donne, vous le gardez.</div></div></div>
       </div>
       <div class="r-cmp-tr">
-        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Convention collective ignorée ou contournée</div><div class="r-cmp-sub">Dimanches imposés, congés convertis en salaire : pratiques illégales courantes.</div></div></div>
-        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">CCT des coursiers urbains respectée à la lettre</div><div class="r-cmp-sub">Repos, congés, heures sup : tout est conforme. Tout est dans le contrat.</div></div></div>
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r6.l.m">Convention collective ignorée ou contournée</div><div class="r-cmp-sub" data-i18n="r.cmp.r6.l.s">Dimanches imposés, congés convertis en salaire : pratiques illégales courantes.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r6.r.m">CCT des coursiers urbains respectée à la lettre</div><div class="r-cmp-sub" data-i18n="r.cmp.r6.r.s">Repos, congés, heures sup : tout est conforme. Tout est dans le contrat.</div></div></div>
       </div>
       <div class="r-cmp-tr">
-        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main">Débrouille-toi dès le premier jour</div><div class="r-cmp-sub">Aucune formation, mise en autonomie immédiate sans filet.</div></div></div>
-        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main">Formation initiale incluse avant la première mission</div><div class="r-cmp-sub">Vous partez formé, pas largué. Accompagnement terrain dès l'embauche.</div></div></div>
+        <div class="r-cmp-td is-left"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r7.l.m">Débrouille-toi dès le premier jour</div><div class="r-cmp-sub" data-i18n="r.cmp.r7.l.s">Aucune formation, mise en autonomie immédiate sans filet.</div></div></div>
+        <div class="r-cmp-td is-right"><div class="r-cmp-ico-lg"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="r-cmp-main" data-i18n="r.cmp.r7.r.m">Formation initiale incluse avant la première mission</div><div class="r-cmp-sub" data-i18n="r.cmp.r7.r.s">Vous partez formé, pas largué. Accompagnement terrain dès l'embauche.</div></div></div>
       </div>
     </div>
   </div>
@@ -705,18 +739,18 @@
         <div class="r-motion-video-tint is-coursier" aria-hidden="true"></div>
       </div>
       <div class="r-motion-content">
-        <span class="r-motion-role-tag"><span class="dot"></span>Coursier à vélo</span>
-        <h3>Livrez la ville.<br><span class="sa">À votre rythme.</span></h3>
-        <p>Genève, Nyon, Lausanne et la Riviera. Temps plein ou complément de revenus.</p>
+        <span class="r-motion-role-tag"><span class="dot"></span><span data-i18n="r.mot.co.tag">Coursier à vélo</span></span>
+        <h3 data-i18n-html="r.mot.co.h3">Livrez la ville.<br><span class="sa">À votre rythme.</span></h3>
+        <p data-i18n="r.mot.co.p">Genève, Nyon, Lausanne et la Riviera. Temps plein ou complément de revenus.</p>
         <div class="r-motion-facts">
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>CDI dès l'embauche</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Salaire horaire fixe CCT</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Vélo + matériel fournis J1</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Pourboires 100% reversés</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Formation initiale incluse</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Assurance accidents prise en charge</span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.mot.co.f1">CDI dès l'embauche</span></span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.mot.co.f2">Salaire horaire fixe CCT</span></span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.mot.co.f3">Vélo + matériel fournis J1</span></span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.mot.co.f4">Pourboires 100% reversés</span></span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.mot.co.f5">Formation initiale incluse</span></span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.mot.co.f6">Assurance accidents prise en charge</span></span>
         </div>
-        <a href="#download" class="r-motion-cta"><span>Postuler comme coursier</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#download" class="r-motion-cta"><span data-i18n="r.mot.co.cta">Postuler comme coursier</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
       </div>
     </div>
 
@@ -729,18 +763,18 @@
         <div class="r-motion-video-tint is-chauffeur" aria-hidden="true"></div>
       </div>
       <div class="r-motion-content">
-        <span class="r-motion-role-tag"><span class="dot"></span>Chauffeur</span>
-        <h3>Prenez la route.<br><span class="sa">Avec un vrai cadre.</span></h3>
-        <p>Transferts, livraisons longue distance. Genève et canton de Vaud.</p>
+        <span class="r-motion-role-tag"><span class="dot"></span><span data-i18n="r.mot.ch.tag">Chauffeur</span></span>
+        <h3 data-i18n-html="r.mot.ch.h3">Prenez la route.<br><span class="sa">Avec un vrai cadre.</span></h3>
+        <p data-i18n="r.mot.ch.p">Transferts, livraisons longue distance. Genève et canton de Vaud.</p>
         <div class="r-motion-facts">
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>CDI dès l'embauche</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Salaire horaire fixe CCT</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Horaires flexibles, choisis avec vous</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Frais professionnels remboursés</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Pourboires 100% reversés</span>
-          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Formations adaptées financées</span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.mot.ch.f1">CDI dès l'embauche</span></span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.mot.ch.f2">Salaire horaire fixe CCT</span></span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.mot.ch.f3">Horaires flexibles, choisis avec vous</span></span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.mot.ch.f4">Frais professionnels remboursés</span></span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.mot.ch.f5">Pourboires 100% reversés</span></span>
+          <span class="r-motion-fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.mot.ch.f6">Formations adaptées financées</span></span>
         </div>
-        <a href="#download" class="r-motion-cta"><span>Postuler comme chauffeur</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#download" class="r-motion-cta"><span data-i18n="r.mot.ch.cta">Postuler comme chauffeur</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
       </div>
     </div>
 
@@ -762,13 +796,13 @@
         <div class="r-volet-photo">
           <img src="courier.jpg" alt="Pierre, coursier à Genève" style="object-position:center top">
         </div>
-        <span class="r-volet-tag">Coursier · Genève</span>
+        <span class="r-volet-tag" data-i18n="r.testi.t1.tag">Coursier · Genève</span>
         <span class="r-volet-cname" aria-hidden="true">Abdel</span>
         <div class="r-volet-content">
-          <blockquote class="r-volet-quote">Le premier jour, on m'a tendu un vélo, une veste, un sac. Zéro caution, zéro contrat auto-entrepreneur à signer avant de partir. Tu commences ta journée, pas ton business plan.</blockquote>
+          <blockquote class="r-volet-quote" data-i18n="r.testi.t1.q">Le premier jour, on m'a tendu un vélo, une veste, un sac. Zéro caution, zéro contrat auto-entrepreneur à signer avant de partir. Tu commences ta journée, pas ton business plan.</blockquote>
           <div class="r-volet-author">
-            <strong>Abdel, 27 ans</strong>
-            <span>Coursier à Genève · chez Chaskis depuis 2022</span>
+            <strong data-i18n="r.testi.t1.name">Abdel, 27 ans</strong>
+            <span data-i18n="r.testi.t1.role">Coursier à Genève · chez Chaskis depuis 2022</span>
           </div>
         </div>
       </article>
@@ -776,13 +810,13 @@
       <article class="r-volet-card" role="tab" aria-selected="false" tabindex="0">
         <div class="r-volet-photo">
           <img src="courier4.png" alt="Amélia, chauffeure à Lausanne" style="object-position:center top">
-        <span class="r-volet-tag">Chauffeure · Lausanne</span>
+        <span class="r-volet-tag" data-i18n="r.testi.t2.tag">Chauffeure · Lausanne</span>
         <span class="r-volet-cname" aria-hidden="true">Amélia</span>
         <div class="r-volet-content">
-          <blockquote class="r-volet-quote">Avant, j'enchaînais les courtes missions en auto-entrepreneuse, jamais sûre du mois d'après. Ici c'est un CDI, des horaires, un salaire fixe. J'ai pu signer un bail sans qu'on me regarde de travers.</blockquote>
+          <blockquote class="r-volet-quote" data-i18n="r.testi.t2.q">Avant, j'enchaînais les courtes missions en auto-entrepreneuse, jamais sûre du mois d'après. Ici c'est un CDI, des horaires, un salaire fixe. J'ai pu signer un bail sans qu'on me regarde de travers.</blockquote>
           <div class="r-volet-author">
-            <strong>Amélia, 31 ans</strong>
-            <span>Chauffeure à Lausanne · chez Chaskis depuis 2021</span>
+            <strong data-i18n="r.testi.t2.name">Amélia, 31 ans</strong>
+            <span data-i18n="r.testi.t2.role">Chauffeure à Lausanne · chez Chaskis depuis 2021</span>
           </div>
         </div>
       </article>
@@ -791,13 +825,13 @@
         <div class="r-volet-photo">
           <img src="courier2.jpg" alt="Abdel, coursier à Genève">
         </div>
-        <span class="r-volet-tag">Coursier · Genève</span>
+        <span class="r-volet-tag" data-i18n="r.testi.t3.tag">Coursier · Genève</span>
         <span class="r-volet-cname" aria-hidden="true">Pierre</span>
         <div class="r-volet-content">
-          <blockquote class="r-volet-quote">La vraie différence, c'est qu'au bout du fil il y a toujours quelqu'un. Pas un ticket, pas un bot. Un collègue qui connaît mon prénom et qui règle le problème avec moi.</blockquote>
+          <blockquote class="r-volet-quote" data-i18n="r.testi.t3.q">La vraie différence, c'est qu'au bout du fil il y a toujours quelqu'un. Pas un ticket, pas un bot. Un collègue qui connaît mon prénom et qui règle le problème avec moi.</blockquote>
           <div class="r-volet-author">
-            <strong>Pierre, 34 ans</strong>
-            <span>Coursier à Genève · chez Chaskis depuis 2020</span>
+            <strong data-i18n="r.testi.t3.name">Pierre, 34 ans</strong>
+            <span data-i18n="r.testi.t3.role">Coursier à Genève · chez Chaskis depuis 2020</span>
           </div>
         </div>
       </article>
@@ -806,13 +840,13 @@
         <div class="r-volet-photo">
           <img src="courier6.png" alt="Chloé, chauffeure à Nyon" style="object-position:center top">
         </div>
-        <span class="r-volet-tag">Chauffeure · Nyon</span>
+        <span class="r-volet-tag" data-i18n="r.testi.t4.tag">Chauffeure · Nyon</span>
         <span class="r-volet-cname" aria-hidden="true">Chloé</span>
         <div class="r-volet-content">
-          <blockquote class="r-volet-quote">Chauffeure dans un métier qui reste très masculin, je m'attendais à devoir prouver deux fois plus. Chez Chaskis, personne ne m'a jamais fait sentir que j'avais quoi que ce soit à prouver. On me parle comme aux autres.</blockquote>
+          <blockquote class="r-volet-quote" data-i18n="r.testi.t4.q">Chauffeure dans un métier qui reste très masculin, je m'attendais à devoir prouver deux fois plus. Chez Chaskis, personne ne m'a jamais fait sentir que j'avais quoi que ce soit à prouver. On me parle comme aux autres.</blockquote>
           <div class="r-volet-author">
-            <strong>Chloé, 29 ans</strong>
-            <span>Chauffeure à Nyon · chez Chaskis depuis 2023</span>
+            <strong data-i18n="r.testi.t4.name">Chloé, 29 ans</strong>
+            <span data-i18n="r.testi.t4.role">Chauffeure à Nyon · chez Chaskis depuis 2023</span>
           </div>
         </div>
       </article>
@@ -821,13 +855,13 @@
         <div class="r-volet-photo">
           <img src="courier3.jpg" alt="Karim, coursier à Lausanne" style="object-position:center top">
         </div>
-        <span class="r-volet-tag">Coursier · Lausanne</span>
+        <span class="r-volet-tag" data-i18n="r.testi.t5.tag">Coursier · Lausanne</span>
         <span class="r-volet-cname" aria-hidden="true">Karim</span>
         <div class="r-volet-content">
-          <blockquote class="r-volet-quote">Les pourboires, ici, c'est 100% pour moi. Pas de "frais de gestion", pas de pourcentage prélevé au passage. C'est écrit noir sur blanc dans le contrat, et ça change tout à la fin du mois.</blockquote>
+          <blockquote class="r-volet-quote" data-i18n="r.testi.t5.q">Les pourboires, ici, c'est 100% pour moi. Pas de "frais de gestion", pas de pourcentage prélevé au passage. C'est écrit noir sur blanc dans le contrat, et ça change tout à la fin du mois.</blockquote>
           <div class="r-volet-author">
-            <strong>Karim, 31 ans</strong>
-            <span>Coursier à Lausanne · chez Chaskis depuis 2024</span>
+            <strong data-i18n="r.testi.t5.name">Karim, 31 ans</strong>
+            <span data-i18n="r.testi.t5.role">Coursier à Lausanne · chez Chaskis depuis 2024</span>
           </div>
         </div>
       </article>
@@ -836,13 +870,13 @@
         <div class="r-volet-photo">
           <img src="courier5.png" alt="Thomas, coursier à la Riviera" style="object-position:center top">
         </div>
-        <span class="r-volet-tag">Coursier · Riviera</span>
+        <span class="r-volet-tag" data-i18n="r.testi.t6.tag">Coursier · Riviera</span>
         <span class="r-volet-cname" aria-hidden="true">Thomas</span>
         <div class="r-volet-content">
-          <blockquote class="r-volet-quote">Pneu crevé un mardi matin, un appel, quelqu'un m'apportait la roue. J'ai aussi accès à des tarifs préférentiels chez les magasins partenaires. Ce sont les petits trucs qu'on remarque après des années dans le métier.</blockquote>
+          <blockquote class="r-volet-quote" data-i18n="r.testi.t6.q">Pneu crevé un mardi matin, un appel, quelqu'un m'apportait la roue. J'ai aussi accès à des tarifs préférentiels chez les magasins partenaires. Ce sont les petits trucs qu'on remarque après des années dans le métier.</blockquote>
           <div class="r-volet-author">
-            <strong>Thomas, 36 ans</strong>
-            <span>Coursier à la Riviera · chez Chaskis depuis 2022</span>
+            <strong data-i18n="r.testi.t6.name">Thomas, 36 ans</strong>
+            <span data-i18n="r.testi.t6.role">Coursier à la Riviera · chez Chaskis depuis 2022</span>
           </div>
         </div>
       </article>
@@ -868,28 +902,28 @@
       </div>
       <div class="faq-list rr">
         <div class="faq-item">
-          <div class="faq-q" role="button" tabindex="0" aria-expanded="false"><h3>Faut-il un permis de séjour ou la nationalité suisse pour postuler ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span></div>
-          <div class="faq-a"><div class="faq-answer"><p>Un permis de travail valable en Suisse est requis.</p><ul><li><span class="faq-badge">B, C, Ci</span><span>Conviennent sans condition.</span></li><li><span class="faq-badge b-purple">UE / AELE</span><span>Ressortissants acceptés avec permis valide.</span></li><li><span class="faq-badge b-ink">Permis L</span><span>Accepté selon la durée restante.</span></li></ul></div></div>
+          <div class="faq-q" role="button" tabindex="0" aria-expanded="false"><h3 data-i18n="r.faq.q1">Faut-il un permis de séjour ou la nationalité suisse pour postuler ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span></div>
+          <div class="faq-a"><div class="faq-answer" data-i18n-html="r.faq.a1"><p>Un permis de travail valable en Suisse est requis.</p><ul><li><span class="faq-badge">B, C, Ci</span><span>Conviennent sans condition.</span></li><li><span class="faq-badge b-purple">UE / AELE</span><span>Ressortissants acceptés avec permis valide.</span></li><li><span class="faq-badge b-ink">Permis L</span><span>Accepté selon la durée restante.</span></li></ul></div></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q" role="button" tabindex="0" aria-expanded="false"><h3>Combien gagne un coursier ou chauffeur chez Chaskis ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span></div>
-          <div class="faq-a"><div class="faq-answer"><p>Salaire horaire fixe conforme à la CCT suisse, plus primes de performance et pourboires 100% reversés. La fourchette exacte est communiquée lors de l'entretien.</p></div></div>
+          <div class="faq-q" role="button" tabindex="0" aria-expanded="false"><h3 data-i18n="r.faq.q2">Combien gagne un coursier ou chauffeur chez Chaskis ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span></div>
+          <div class="faq-a"><div class="faq-answer" data-i18n-html="r.faq.a2"><p>Salaire horaire fixe conforme à la CCT suisse, plus primes de performance et pourboires 100% reversés. La fourchette exacte est communiquée lors de l'entretien.</p></div></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q" role="button" tabindex="0" aria-expanded="false"><h3>Quels horaires et quelle flexibilité ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span></div>
-          <div class="faq-a"><div class="faq-answer"><p>Planning mensuel construit avec vous selon vos disponibilités. Compatible études, enfants, complément d'activité ou temps plein.</p></div></div>
+          <div class="faq-q" role="button" tabindex="0" aria-expanded="false"><h3 data-i18n="r.faq.q3">Quels horaires et quelle flexibilité ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span></div>
+          <div class="faq-a"><div class="faq-answer" data-i18n-html="r.faq.a3"><p>Planning mensuel construit avec vous selon vos disponibilités. Compatible études, enfants, complément d'activité ou temps plein.</p></div></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q" role="button" tabindex="0" aria-expanded="false"><h3>Quel matériel dois-je fournir ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span></div>
-          <div class="faq-a"><div class="faq-answer"><p><strong>Aucun.</strong> Coursiers : vélo, sac isotherme, veste et téléphone fournis dès le premier jour. Chauffeurs : véhicule selon le poste ou frais remboursés.</p></div></div>
+          <div class="faq-q" role="button" tabindex="0" aria-expanded="false"><h3 data-i18n="r.faq.q4">Quel matériel dois-je fournir ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span></div>
+          <div class="faq-a"><div class="faq-answer" data-i18n-html="r.faq.a4"><p><strong>Aucun.</strong> Coursiers : vélo, sac isotherme, veste et téléphone fournis dès le premier jour. Chauffeurs : véhicule selon le poste ou frais remboursés.</p></div></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q" role="button" tabindex="0" aria-expanded="false"><h3>Quel permis est requis pour devenir chauffeur ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span></div>
-          <div class="faq-a"><div class="faq-answer"><ul><li><span class="faq-badge">Permis B</span><span>Obligatoire, depuis plus de 2 ans.</span></li><li><span class="faq-badge b-purple">B121 ou D1</span><span>Selon le type de mission.</span></li><li><span class="faq-badge b-ink">Carte VTC</span><span>Requise à Genève. On vous accompagne sur les démarches.</span></li></ul></div></div>
+          <div class="faq-q" role="button" tabindex="0" aria-expanded="false"><h3 data-i18n="r.faq.q5">Quel permis est requis pour devenir chauffeur ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span></div>
+          <div class="faq-a"><div class="faq-answer" data-i18n-html="r.faq.a5"><ul><li><span class="faq-badge">Permis B</span><span>Obligatoire, depuis plus de 2 ans.</span></li><li><span class="faq-badge b-purple">B121 ou D1</span><span>Selon le type de mission.</span></li><li><span class="faq-badge b-ink">Carte VTC</span><span>Requise à Genève. On vous accompagne sur les démarches.</span></li></ul></div></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q" role="button" tabindex="0" aria-expanded="false"><h3>Comment se passe le recrutement ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span></div>
-          <div class="faq-a"><div class="faq-answer"><p>Candidature via l'app, retour rapide de notre équipe, puis entretien dans la semaine. Formation initiale incluse avant la première mission.</p></div></div>
+          <div class="faq-q" role="button" tabindex="0" aria-expanded="false"><h3 data-i18n="r.faq.q6">Comment se passe le recrutement ?</h3><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></span></div>
+          <div class="faq-a"><div class="faq-answer" data-i18n-html="r.faq.a6"><p>Candidature via l'app, retour rapide de notre équipe, puis entretien dans la semaine. Formation initiale incluse avant la première mission.</p></div></div>
         </div>
       </div>
     </div>
@@ -913,24 +947,29 @@
     </div>
 
     <div class="r-dl-right">
-      <div class="r-dl-app-label">Disponible sur iOS et Android</div>
+      <div class="r-dl-app-label" data-i18n="r.dl.app.label">Disponible sur iOS et Android</div>
       <div class="r-dl-app-features">
-        <div class="r-dl-app-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>Suivi de livraison en temps réel</div>
-        <div class="r-dl-app-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>Planning et disponibilités</div>
-        <div class="r-dl-app-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg>Messagerie équipe intégrée</div>
+        <div class="r-dl-app-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.dl.app.f1">Suivi de livraison en temps réel</span></div>
+        <div class="r-dl-app-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.dl.app.f2">Planning et disponibilités</span></div>
+        <div class="r-dl-app-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="r.dl.app.f3">Messagerie équipe intégrée</span></div>
       </div>
       <div class="smart-dl" data-sdl-apple="#" data-sdl-google="#" aria-label="Télécharger l'app Chaskis">
         <div class="smart-dl-row">
           <a class="sdl-btn sdl-primary" href="#" aria-label="Télécharger sur l'App Store">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-            <span class="sdl-txt"><small>Télécharger sur</small><strong>App Store</strong></span>
+            <span class="sdl-txt"><small data-i18n="r.dl.store.dl">Télécharger sur</small><strong>App Store</strong></span>
           </a>
           <a class="sdl-btn sdl-secondary" href="#" aria-label="Télécharger sur Google Play">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.41 21.67a1.12 1.12 0 0 0 1.22-.09l9.48-5.38-2.16-2.17-8.54 7.64zm9.7-14.05L3.63 2.24a1.12 1.12 0 0 0-1.22-.09l8.54 7.65 2.16-2.18zm3.62 3.05-3.18-3.18L16.3 4.3l3.77 2.14c1.08.61 1.08 1.6 0 2.21l-3.77 2.14zm-3.18 1.06L3.41 2.33A.9.9 0 0 0 3 3.05v17.9a.9.9 0 0 0 .41.72l10.14-9.04z"/></svg>
-            <span class="sdl-txt"><small>Disponible sur</small><strong>Google Play</strong></span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="gplay-logo">
+              <path fill="#00D7FE" d="M3.61 1.83A2 2 0 0 0 3 3.27v17.46c0 .55.23 1.07.61 1.44l.08.08L13.5 12.1v-.2L3.69 1.75l-.08.08z"/>
+              <path fill="#FFCE00" d="m16.81 15.41-3.31-3.31v-.2l3.31-3.32.08.04 3.93 2.23c1.12.63 1.12 1.67 0 2.31l-3.93 2.22-.08.03z"/>
+              <path fill="#FF3A44" d="m16.89 15.38-3.39-3.38L3.61 21.9c.37.39.98.44 1.67.05l11.61-6.57z"/>
+              <path fill="#00F076" d="m16.89 8.62-11.61-6.6c-.69-.39-1.3-.34-1.67.05l9.89 9.89 3.39-3.34z"/>
+            </svg>
+            <span class="sdl-txt"><small data-i18n="r.dl.store.on">Disponible sur</small><strong>Google Play</strong></span>
           </a>
         </div>
-        <a class="sdl-secondary-link" href="#" aria-label="Disponible aussi sur l'autre store">Disponible aussi sur <strong>Google Play</strong></a>
+        <a class="sdl-secondary-link" href="#" aria-label="Disponible aussi sur l'autre store"><span data-i18n="r.dl.store.also">Disponible aussi sur</span> <strong>Google Play</strong></a>
       </div>
     </div>
 
@@ -938,6 +977,8 @@
 </section>
 
 <!-- ===== FOOTER ===== -->
+<a href="#download" class="btn btn-p pulse nav-cta-float" id="rFloatCta"><span data-i18n="r.hero.cta">Télécharger l'app et postuler</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+
 <footer class="footer" data-nav-dark data-shared></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
@@ -970,7 +1011,7 @@
 window.T = {
   fr: {
     'r.hero.overline': "Deviens acteur d'une livraison plus humaine",
-    'r.hero.h1': 'Rejoignez une équipe où <span class="sa">chaque livreur</span> compte.',
+    'r.hero.h1': 'Rejoignez une équipe où <span class="sa">chaque <span class="r-hero-rotate" aria-live="polite">coursier</span></span> compte.',
     'r.hero.sub': "Coursier à vélo ou chauffeur, on vous fait confiance dès le premier jour. CDI, matériel fourni, assurance complète. Canton de Genève et canton de Vaud. Frontaliers bienvenus.",
     'r.hero.cta': "Télécharger l'app et postuler",
     'r.hero.pill1': 'Pourboires 100% reversés', 'r.hero.pill2': 'Matériel fourni dès J1', 'r.hero.pill3': 'Zéro avance de frais', 'r.hero.pill4': 'Frontaliers bienvenus',
@@ -978,19 +1019,76 @@ window.T = {
     'r.cmp.sl': 'Ce qui change chez nous', 'r.cmp.h2': 'Ce qui <span class="sa">change vraiment</span> chez nous',
     'r.cmp.sub': "Pas de jargon. Juste ce que vous vivez, comparé à ce que vous avez peut-être connu.",
     'r.cmp.left': 'Ailleurs', 'r.cmp.right': 'Chez Chaskis',
+    'r.cmp.r1.l.m': 'Auto-entrepreneur ou CDD renouvelable', 'r.cmp.r1.l.s': 'Pas de garantie de revenus, aucune protection sociale.',
+    'r.cmp.r1.r.m': 'CDI dès le premier jour, salaire fixe CCT', 'r.cmp.r1.r.s': 'Vrai contrat, protection complète, revenus stables.',
+    'r.cmp.r2.l.m': 'Vélo, scooter et téléphone à vos frais', 'r.cmp.r2.l.s': 'Investissement de départ non remboursé.',
+    'r.cmp.r2.r.m': 'Vélo, sac, veste et téléphone fournis dès J1', 'r.cmp.r2.r.s': '0 CHF à avancer. Le matériel vous attend le premier matin.',
+    'r.cmp.r3.l.m': 'Pas couverts si accident ou maladie', 'r.cmp.r3.l.s': 'Arrêt de travail = arrêt des revenus.',
+    'r.cmp.r3.r.m': 'Assurance accident, maladie et intempéries', 'r.cmp.r3.r.s': "Couverts et payés dans tous les cas. C'est le CDI en Suisse.",
+    'r.cmp.r4.l.m': 'Un bot, un ticket, une FAQ', 'r.cmp.r4.l.s': 'Aucune réponse humaine en cas de problème terrain.',
+    'r.cmp.r4.r.m': 'Un dispatcher qui décroche et connaît votre prénom', 'r.cmp.r4.r.s': 'Problème en cours de route ? Quelqu\'un répond.',
+    'r.cmp.r5.l.m': 'Plateforme qui garde une part de vos pourboires', 'r.cmp.r5.l.s': "Chaque centime de pourboire n'arrive pas entier dans votre poche.",
+    'r.cmp.r5.r.m': '100% des pourboires reversés, sans exception', 'r.cmp.r5.r.s': 'Chaque centime que le client vous donne, vous le gardez.',
+    'r.cmp.r6.l.m': 'Convention collective ignorée ou contournée', 'r.cmp.r6.l.s': 'Dimanches imposés, congés convertis en salaire : pratiques illégales courantes.',
+    'r.cmp.r6.r.m': 'CCT des coursiers urbains respectée à la lettre', 'r.cmp.r6.r.s': 'Repos, congés, heures sup : tout est conforme. Tout est dans le contrat.',
+    'r.cmp.r7.l.m': 'Débrouille-toi dès le premier jour', 'r.cmp.r7.l.s': 'Aucune formation, mise en autonomie immédiate sans filet.',
+    'r.cmp.r7.r.m': 'Formation initiale incluse avant la première mission', 'r.cmp.r7.r.s': "Vous partez formé, pas largué. Accompagnement terrain dès l'embauche.",
     'r.mot.sl': 'Deux métiers, un seul employeur', 'r.mot.h2': 'Choisissez votre <span class="sa">façon de bouger</span>',
     'r.mot.sub': "Coursier à vélo ou chauffeur, CDI dès le premier jour dans les deux cas.",
+    'r.mot.co.tag': 'Coursier à vélo',
+    'r.mot.co.h3': 'Livrez la ville.<br><span class="sa">À votre rythme.</span>',
+    'r.mot.co.p': 'Genève, Nyon, Lausanne et la Riviera. Temps plein ou complément de revenus.',
+    'r.mot.co.f1': "CDI dès l'embauche", 'r.mot.co.f2': 'Salaire horaire fixe CCT',
+    'r.mot.co.f3': 'Vélo + matériel fournis J1', 'r.mot.co.f4': 'Pourboires 100% reversés',
+    'r.mot.co.f5': 'Formation initiale incluse', 'r.mot.co.f6': 'Assurance accidents prise en charge',
+    'r.mot.co.cta': 'Postuler comme coursier',
+    'r.mot.ch.tag': 'Chauffeur',
+    'r.mot.ch.h3': 'Prenez la route.<br><span class="sa">Avec un vrai cadre.</span>',
+    'r.mot.ch.p': 'Transferts, livraisons longue distance. Genève et canton de Vaud.',
+    'r.mot.ch.f1': "CDI dès l'embauche", 'r.mot.ch.f2': 'Salaire horaire fixe CCT',
+    'r.mot.ch.f3': 'Horaires flexibles, choisis avec vous', 'r.mot.ch.f4': 'Frais professionnels remboursés',
+    'r.mot.ch.f5': 'Pourboires 100% reversés', 'r.mot.ch.f6': 'Formations adaptées financées',
+    'r.mot.ch.cta': 'Postuler comme chauffeur',
     'r.testi.sl': 'Les voix du terrain', 'r.testi.h2': "Ce qu'ils disent de <span class=\"sa\">Chaskis</span>",
     'r.testi.sub': 'Six collègues. Six histoires. Six parcours.',
+    'r.testi.t1.tag': 'Coursier · Genève', 'r.testi.t1.q': "Le premier jour, on m'a tendu un vélo, une veste, un sac. Zéro caution, zéro contrat auto-entrepreneur à signer avant de partir. Tu commences ta journée, pas ton business plan.",
+    'r.testi.t1.name': 'Abdel, 27 ans', 'r.testi.t1.role': 'Coursier à Genève · chez Chaskis depuis 2022',
+    'r.testi.t2.tag': 'Chauffeure · Lausanne', 'r.testi.t2.q': "Avant, j'enchaînais les courtes missions en auto-entrepreneuse, jamais sûre du mois d'après. Ici c'est un CDI, des horaires, un salaire fixe. J'ai pu signer un bail sans qu'on me regarde de travers.",
+    'r.testi.t2.name': 'Amélia, 31 ans', 'r.testi.t2.role': 'Chauffeure à Lausanne · chez Chaskis depuis 2021',
+    'r.testi.t3.tag': 'Coursier · Genève', 'r.testi.t3.q': "La vraie différence, c'est qu'au bout du fil il y a toujours quelqu'un. Pas un ticket, pas un bot. Un collègue qui connaît mon prénom et qui règle le problème avec moi.",
+    'r.testi.t3.name': 'Pierre, 34 ans', 'r.testi.t3.role': 'Coursier à Genève · chez Chaskis depuis 2020',
+    'r.testi.t4.tag': 'Chauffeure · Nyon', 'r.testi.t4.q': "Chauffeure dans un métier qui reste très masculin, je m'attendais à devoir prouver deux fois plus. Chez Chaskis, personne ne m'a jamais fait sentir que j'avais quoi que ce soit à prouver. On me parle comme aux autres.",
+    'r.testi.t4.name': 'Chloé, 29 ans', 'r.testi.t4.role': 'Chauffeure à Nyon · chez Chaskis depuis 2023',
+    'r.testi.t5.tag': 'Coursier · Lausanne', 'r.testi.t5.q': "Les pourboires, ici, c'est 100% pour moi. Pas de « frais de gestion », pas de pourcentage prélevé au passage. C'est écrit noir sur blanc dans le contrat, et ça change tout à la fin du mois.",
+    'r.testi.t5.name': 'Karim, 31 ans', 'r.testi.t5.role': 'Coursier à Lausanne · chez Chaskis depuis 2024',
+    'r.testi.t6.tag': 'Coursier · Riviera', 'r.testi.t6.q': "Pneu crevé un mardi matin, un appel, quelqu'un m'apportait la roue. J'ai aussi accès à des tarifs préférentiels chez les magasins partenaires. Ce sont les petits trucs qu'on remarque après des années dans le métier.",
+    'r.testi.t6.name': 'Thomas, 36 ans', 'r.testi.t6.role': 'Coursier à la Riviera · chez Chaskis depuis 2022',
     'r.faq.sl': 'FAQ candidats', 'r.faq.h2': 'Les questions que <span class="sa">vous nous posez</span>',
     'r.faq.sub': "Tout ce qu'il faut savoir avant de postuler. Une autre question ? Écrivez-nous.",
+    'r.faq.q1': 'Faut-il un permis de séjour ou la nationalité suisse pour postuler ?',
+    'r.faq.a1': '<p>Un permis de travail valable en Suisse est requis.</p><ul><li><span class="faq-badge">B, C, Ci</span><span>Conviennent sans condition.</span></li><li><span class="faq-badge b-purple">UE / AELE</span><span>Ressortissants acceptés avec permis valide.</span></li><li><span class="faq-badge b-ink">Permis L</span><span>Accepté selon la durée restante.</span></li></ul>',
+    'r.faq.q2': 'Combien gagne un coursier ou chauffeur chez Chaskis ?',
+    'r.faq.a2': "<p>Salaire horaire fixe conforme à la CCT suisse, plus primes de performance et pourboires 100% reversés. La fourchette exacte est communiquée lors de l'entretien.</p>",
+    'r.faq.q3': 'Quels horaires et quelle flexibilité ?',
+    'r.faq.a3': "<p>Planning mensuel construit avec vous selon vos disponibilités. Compatible études, enfants, complément d'activité ou temps plein.</p>",
+    'r.faq.q4': 'Quel matériel dois-je fournir ?',
+    'r.faq.a4': '<p><strong>Aucun.</strong> Coursiers : vélo, sac isotherme, veste et téléphone fournis dès le premier jour. Chauffeurs : véhicule selon le poste ou frais remboursés.</p>',
+    'r.faq.q5': 'Quel permis est requis pour devenir chauffeur ?',
+    'r.faq.a5': '<ul><li><span class="faq-badge">Permis B</span><span>Obligatoire, depuis plus de 2 ans.</span></li><li><span class="faq-badge b-purple">B121 ou D1</span><span>Selon le type de mission.</span></li><li><span class="faq-badge b-ink">Carte VTC</span><span>Requise à Genève. On vous accompagne sur les démarches.</span></li></ul>',
+    'r.faq.q6': 'Comment se passe le recrutement ?',
+    'r.faq.a6': "<p>Candidature via l'app, retour rapide de notre équipe, puis entretien dans la semaine. Formation initiale incluse avant la première mission.</p>",
     'r.dl.sl': 'Prêt ?', 'r.dl.h2': 'Téléchargez<br>postulez en <span class="sa">2 minutes</span>.',
     'r.dl.desc': "Une seule app Chaskis pour candidater comme coursier ou chauffeur. Notre équipe vous revient rapidement.",
     'r.dl.step1': "Téléchargez l'app Chaskis", 'r.dl.step2': "Postulez depuis l'app (2 min)", 'r.dl.step3': "Notre équipe vous recontacte",
+    'r.dl.app.label': 'Disponible sur iOS et Android',
+    'r.dl.app.f1': 'Suivi de livraison en temps réel',
+    'r.dl.app.f2': 'Planning et disponibilités',
+    'r.dl.app.f3': 'Messagerie équipe intégrée',
+    'r.dl.store.dl': 'Télécharger sur', 'r.dl.store.on': 'Disponible sur', 'r.dl.store.also': 'Disponible aussi sur',
   },
   en: {
     'r.hero.overline': 'Be part of a more human delivery',
-    'r.hero.h1': 'Join a team where <span class="sa">every rider</span> counts.',
+    'r.hero.h1': 'Join a team where <span class="sa">every <span class="r-hero-rotate" aria-live="polite">courier</span></span> matters.',
     'r.hero.sub': "Bike courier or driver, we trust you from day one. Permanent contract, gear provided, full insurance. Geneva and Vaud cantons. Cross-border workers welcome.",
     'r.hero.cta': 'Download the app and apply',
     'r.hero.pill1': 'Tips 100% yours', 'r.hero.pill2': 'Gear provided on day 1', 'r.hero.pill3': 'Zero upfront costs', 'r.hero.pill4': 'Cross-border workers welcome',
@@ -998,19 +1096,76 @@ window.T = {
     'r.cmp.sl': 'What actually changes here', 'r.cmp.h2': 'What <span class="sa">really changes</span> with us',
     'r.cmp.sub': "No jargon. Just what you live, compared to what you may have known before.",
     'r.cmp.left': 'Elsewhere', 'r.cmp.right': 'At Chaskis',
+    'r.cmp.r1.l.m': 'Self-employed or renewable fixed-term contract', 'r.cmp.r1.l.s': 'No income guarantee, no social protection.',
+    'r.cmp.r1.r.m': 'Permanent contract on day one, fixed CCT salary', 'r.cmp.r1.r.s': 'Real contract, full coverage, stable income.',
+    'r.cmp.r2.l.m': 'Bike, scooter and phone at your own cost', 'r.cmp.r2.l.s': 'Upfront investment never refunded.',
+    'r.cmp.r2.r.m': 'Bike, bag, jacket and phone provided on day 1', 'r.cmp.r2.r.s': 'CHF 0 to pay upfront. Gear is waiting for you on morning one.',
+    'r.cmp.r3.l.m': 'Not covered if injured or sick', 'r.cmp.r3.l.s': 'No work = no income.',
+    'r.cmp.r3.r.m': 'Accident, sickness and bad-weather insurance', 'r.cmp.r3.r.s': "Covered and paid in every case. That's a Swiss permanent contract.",
+    'r.cmp.r4.l.m': 'A bot, a ticket, a FAQ', 'r.cmp.r4.l.s': 'No human answer when there\'s a problem on the ground.',
+    'r.cmp.r4.r.m': 'A dispatcher who picks up and knows your first name', 'r.cmp.r4.r.s': 'Problem on a run? Someone answers.',
+    'r.cmp.r5.l.m': 'Platform that skims part of your tips', 'r.cmp.r5.l.s': "Not every tip cent ends up in your pocket.",
+    'r.cmp.r5.r.m': '100% of tips passed on, no exception', 'r.cmp.r5.r.s': 'Every cent the client gives you, you keep.',
+    'r.cmp.r6.l.m': 'Collective agreement ignored or dodged', 'r.cmp.r6.l.s': 'Mandatory Sundays, leave paid out as salary: common illegal practices.',
+    'r.cmp.r6.r.m': 'Urban couriers CCT followed to the letter', 'r.cmp.r6.r.s': "Rest, leave, overtime: everything compliant. All in the contract.",
+    'r.cmp.r7.l.m': 'Figure it out from day one', 'r.cmp.r7.l.s': 'No training, thrown into autonomy with no safety net.',
+    'r.cmp.r7.r.m': 'Initial training included before your first mission', 'r.cmp.r7.r.s': "You start trained, not stranded. Field support from day one.",
     'r.mot.sl': 'Two jobs, one employer', 'r.mot.h2': 'Choose your <span class="sa">way to move</span>',
     'r.mot.sub': "Bike courier or driver, permanent contract from day one either way.",
+    'r.mot.co.tag': 'Bike courier',
+    'r.mot.co.h3': 'Deliver the city.<br><span class="sa">At your own pace.</span>',
+    'r.mot.co.p': 'Geneva, Nyon, Lausanne and the Riviera. Full-time or as extra income.',
+    'r.mot.co.f1': 'Permanent contract from day one', 'r.mot.co.f2': 'Fixed hourly CCT salary',
+    'r.mot.co.f3': 'Bike + gear provided on day 1', 'r.mot.co.f4': 'Tips 100% passed on',
+    'r.mot.co.f5': 'Initial training included', 'r.mot.co.f6': 'Accident insurance covered',
+    'r.mot.co.cta': 'Apply as a courier',
+    'r.mot.ch.tag': 'Driver',
+    'r.mot.ch.h3': 'Take the road.<br><span class="sa">With a real framework.</span>',
+    'r.mot.ch.p': 'Transfers, long-distance deliveries. Geneva and Vaud canton.',
+    'r.mot.ch.f1': 'Permanent contract from day one', 'r.mot.ch.f2': 'Fixed hourly CCT salary',
+    'r.mot.ch.f3': 'Flexible hours, chosen with you', 'r.mot.ch.f4': 'Professional expenses reimbursed',
+    'r.mot.ch.f5': 'Tips 100% passed on', 'r.mot.ch.f6': 'Targeted trainings funded',
+    'r.mot.ch.cta': 'Apply as a driver',
     'r.testi.sl': 'Voices from the field', 'r.testi.h2': "What they say about <span class=\"sa\">Chaskis</span>",
     'r.testi.sub': 'Six colleagues. Six stories. Six journeys.',
+    'r.testi.t1.tag': 'Courier · Geneva', 'r.testi.t1.q': "On day one I was handed a bike, a jacket and a bag. No deposit, no freelance contract to sign before starting. You start your day, not your business plan.",
+    'r.testi.t1.name': 'Abdel, 27', 'r.testi.t1.role': 'Courier in Geneva · at Chaskis since 2022',
+    'r.testi.t2.tag': 'Driver · Lausanne', 'r.testi.t2.q': "Before, I was chaining short gigs as a freelancer, never sure about next month. Here it's a permanent contract, hours, a fixed salary. I could sign a lease without being looked at sideways.",
+    'r.testi.t2.name': 'Amélia, 31', 'r.testi.t2.role': 'Driver in Lausanne · at Chaskis since 2021',
+    'r.testi.t3.tag': 'Courier · Geneva', 'r.testi.t3.q': "The real difference is that there's always someone on the other end of the line. Not a ticket, not a bot. A colleague who knows my first name and sorts out the problem with me.",
+    'r.testi.t3.name': 'Pierre, 34', 'r.testi.t3.role': 'Courier in Geneva · at Chaskis since 2020',
+    'r.testi.t4.tag': 'Driver · Nyon', 'r.testi.t4.q': "As a woman driver in a job that's still very male, I was expecting to have to prove twice as much. At Chaskis, no one has ever made me feel I had anything extra to prove. I'm spoken to like everyone else.",
+    'r.testi.t4.name': 'Chloé, 29', 'r.testi.t4.role': 'Driver in Nyon · at Chaskis since 2023',
+    'r.testi.t5.tag': 'Courier · Lausanne', 'r.testi.t5.q': "Here, tips are 100% mine. No \u201chandling fees,\u201d no cut taken along the way. It's written black on white in the contract, and it changes everything at the end of the month.",
+    'r.testi.t5.name': 'Karim, 31', 'r.testi.t5.role': 'Courier in Lausanne · at Chaskis since 2024',
+    'r.testi.t6.tag': 'Courier · Riviera', 'r.testi.t6.q': "Flat tire one Tuesday morning, one call, someone brought me a wheel. I also get preferred rates at partner shops. Those are the little things you notice after years in this job.",
+    'r.testi.t6.name': 'Thomas, 36', 'r.testi.t6.role': 'Courier on the Riviera · at Chaskis since 2022',
     'r.faq.sl': 'Applicants FAQ', 'r.faq.h2': 'The questions <span class="sa">you ask us</span>',
     'r.faq.sub': "Everything you need to know before applying. Another question? Write to us.",
+    'r.faq.q1': 'Do I need a residence permit or Swiss nationality to apply?',
+    'r.faq.a1': '<p>A valid Swiss work permit is required.</p><ul><li><span class="faq-badge">B, C, Ci</span><span>Accepted without conditions.</span></li><li><span class="faq-badge b-purple">EU / EFTA</span><span>Citizens accepted with valid permit.</span></li><li><span class="faq-badge b-ink">Permit L</span><span>Accepted depending on remaining duration.</span></li></ul>',
+    'r.faq.q2': 'How much does a Chaskis courier or driver earn?',
+    'r.faq.a2': "<p>Fixed hourly salary compliant with the Swiss CCT, plus performance bonuses and tips 100% passed on. The exact range is shared during the interview.</p>",
+    'r.faq.q3': 'What hours and how flexible?',
+    'r.faq.a3': "<p>Monthly schedule built with you based on your availability. Compatible with studies, children, side income or full-time.</p>",
+    'r.faq.q4': 'What gear do I need to provide?',
+    'r.faq.a4': '<p><strong>None.</strong> Couriers: bike, insulated bag, jacket and phone provided on day one. Drivers: vehicle depending on the role or expenses reimbursed.</p>',
+    'r.faq.q5': 'Which licence is required to become a driver?',
+    'r.faq.a5': '<ul><li><span class="faq-badge">Licence B</span><span>Mandatory, held for more than 2 years.</span></li><li><span class="faq-badge b-purple">B121 or D1</span><span>Depending on the mission type.</span></li><li><span class="faq-badge b-ink">VTC card</span><span>Required in Geneva. We support you through the process.</span></li></ul>',
+    'r.faq.q6': 'How does recruitment work?',
+    'r.faq.a6': "<p>Application through the app, quick feedback from our team, then an interview within the week. Initial training included before your first mission.</p>",
     'r.dl.sl': 'Ready?', 'r.dl.h2': 'Download and<br>apply in <span class="sa">2 minutes</span>.',
     'r.dl.desc': "One Chaskis app to apply as a courier or driver. Our team gets back to you quickly.",
     'r.dl.step1': 'Download the Chaskis app', 'r.dl.step2': 'Apply in-app (2 min)', 'r.dl.step3': 'Our team contacts you',
+    'r.dl.app.label': 'Available on iOS and Android',
+    'r.dl.app.f1': 'Real-time delivery tracking',
+    'r.dl.app.f2': 'Schedule and availability',
+    'r.dl.app.f3': 'Built-in team messaging',
+    'r.dl.store.dl': 'Download on', 'r.dl.store.on': 'Get it on', 'r.dl.store.also': 'Also available on',
   }
 };
 </script>
-<script src="shared.js?v=20260422d"></script>
+<script src="shared.js?v=20260422h"></script>
 <script src="auth.js"></script>
 <script>
 /* NAV OVER DARK */
@@ -1031,19 +1186,61 @@ window.T = {
   updateNav();
 })();
 
-/* HERO IMAGE */
+/* FLOAT CTA : apparaît quand le hero CTA sort du viewport */
 (function(){
-  const wrap = document.getElementById('heroImg');
-  if (!wrap) return;
-  const img = new Image();
-  img.onload = () => {
-    wrap.style.backgroundImage = 'url("' + wrap.dataset.src + '")';
-    wrap.style.backgroundSize = 'cover';
-    wrap.style.backgroundPosition = 'center';
-    const p = wrap.querySelector('.img-prompt');
-    if (p) p.style.display = 'none';
+  const heroCta = document.getElementById('rHeroCta');
+  const floatCta = document.getElementById('rFloatCta');
+  if (!heroCta || !floatCta) return;
+  new IntersectionObserver(([e]) => {
+    floatCta.classList.toggle('visible', !e.isIntersecting);
+  }).observe(heroCta);
+})();
+
+/* HERO TYPEWRITER : rotation coursier <-> chauffeur + crossfade photo + accent couleur */
+(function(){
+  const dict = {
+    fr: ['coursier', 'chauffeur'],
+    en: ['courier', 'driver']
   };
-  img.src = wrap.dataset.src;
+  const layers = document.querySelectorAll('.r-hero-img-layer');
+  if (layers.length < 2) return;
+  let idx = 0;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function getRot(){ return document.querySelector('.r-hero-rotate'); }
+  function applyColor(el, isDriver) {
+    // Toggle on parent .sa so "chaque X" swaps color as a whole
+    const sa = el.closest('.sa');
+    if (sa) sa.classList.toggle('is-driver', isDriver);
+  }
+  function cycle() {
+    const rot = getRot();
+    if (!rot) return;
+    const lang = (window._currentLang === 'en') ? 'en' : 'fr';
+    const words = dict[lang];
+    idx = (idx + 1) % words.length;
+    const next = words[idx];
+    const isDriver = (idx === 1);
+    if (reduced) {
+      rot.textContent = next;
+      applyColor(rot, isDriver);
+      layers.forEach((l, i) => l.classList.toggle('is-active', i === idx));
+      return;
+    }
+    rot.classList.add('is-leaving');
+    setTimeout(() => {
+      const r2 = getRot();
+      if (!r2) return;
+      r2.textContent = next;
+      applyColor(r2, isDriver);
+      r2.classList.remove('is-leaving');
+      r2.classList.add('is-entering');
+      requestAnimationFrame(() => requestAnimationFrame(() => r2.classList.remove('is-entering')));
+    }, 300);
+    setTimeout(() => {
+      layers.forEach((l, i) => l.classList.toggle('is-active', i === idx));
+    }, 500);
+  }
+  setInterval(cycle, 3400);
 })();
 
 /* HERO 3D TILT */

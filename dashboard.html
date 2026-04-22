@@ -15,7 +15,7 @@
 <meta name="theme-color" content="#3AAFA9">
 <link rel="icon" href="icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=20260422f">
 <style>
 .page-dash{padding:88px 0 60px;min-height:100vh}
 
@@ -98,9 +98,15 @@
 .pod-info-item .pii-v{font-weight:700;color:var(--ink);font-size:.82rem}
 .pod-close{width:100%;padding:11px;border-radius:var(--r);background:var(--bg);color:var(--ink-mid);font-weight:700;font-size:.82rem;cursor:pointer;border:none;font-family:inherit;transition:all .3s}
 .pod-close:hover{background:var(--sand)}
+
+/* ===== Page transition curtain ===== */
+#pageCurtain{position:fixed;inset:0;z-index:9999;background:#FAFAF7;transform:translateX(0);transition:transform .62s cubic-bezier(.4,0,.2,1);pointer-events:all}
+#pageCurtain.is-lifted{transform:translateX(-110%);pointer-events:none}
 </style>
 </head>
 <body class="page-dashboard">
+
+<div id="pageCurtain" aria-hidden="true"></div>
 
 <div class="mob-m" id="mm">
   <a href="index.html" onclick="cm()">Livraison</a>
@@ -287,7 +293,7 @@
 
 <footer class="footer" data-nav-dark data-shared></footer>
 
-<script src="shared.js?v=20260422d"></script>
+<script src="shared.js?v=20260422h"></script>
 <script src="auth.js"></script>
 <script>
 if ('serviceWorker' in navigator) {

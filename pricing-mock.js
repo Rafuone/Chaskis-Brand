@@ -46,46 +46,48 @@ const ZONES = [
   },
 ];
 
-/* ===== BRACKETS (copies 1:1 du CRM) ===== */
+/* ===== BRACKETS (grille tarifaire ponctuel, reflète une course à la carte)
+   Note : pour gros volumes, le tarif par course chute via les offres Flex/Dédié.
+   Ces prix sont les tarifs Express/à la carte. ===== */
 const BRACKETS = {
   1: { // Geneva
     bike: {
       pickup:   [{min:0,max:3,amount:0},{min:3,max:4,amount:2},{min:4,max:20,amount:5}],
-      segment:  [{min:0,max:3,amount:20},{min:3,max:4,amount:30},{min:4,max:20,amount:40}],
+      segment:  [{min:0,max:3,amount:10},{min:3,max:4,amount:15},{min:4,max:20,amount:22}],
     },
     car: {
       pickup:   [{min:0,max:5,amount:0},{min:5,max:10,amount:3},{min:10,max:30,amount:8}],
-      segment:  [{min:0,max:5,amount:25},{min:5,max:10,amount:35},{min:10,max:30,amount:50}],
+      segment:  [{min:0,max:5,amount:14},{min:5,max:10,amount:20},{min:10,max:30,amount:30}],
     },
   },
   2: { // Lausanne
     bike: {
       pickup:   [{min:0,max:3,amount:0},{min:3,max:4,amount:2},{min:4,max:20,amount:6}],
-      segment:  [{min:0,max:3,amount:22},{min:3,max:4,amount:32},{min:4,max:20,amount:45}],
+      segment:  [{min:0,max:3,amount:11},{min:3,max:4,amount:16},{min:4,max:20,amount:24}],
     },
     car: {
       pickup:   [{min:0,max:5,amount:0},{min:5,max:10,amount:4},{min:10,max:30,amount:10}],
-      segment:  [{min:0,max:5,amount:28},{min:5,max:10,amount:38},{min:10,max:30,amount:55}],
+      segment:  [{min:0,max:5,amount:15},{min:5,max:10,amount:21},{min:10,max:30,amount:32}],
     },
   },
   3: { // Nyon
     bike: {
       pickup:   [{min:0,max:3,amount:0},{min:3,max:5,amount:3},{min:5,max:20,amount:8}],
-      segment:  [{min:0,max:3,amount:24},{min:3,max:5,amount:35},{min:5,max:20,amount:50}],
+      segment:  [{min:0,max:3,amount:12},{min:3,max:5,amount:18},{min:5,max:20,amount:27}],
     },
     car: {
       pickup:   [{min:0,max:5,amount:0},{min:5,max:10,amount:5},{min:10,max:30,amount:12}],
-      segment:  [{min:0,max:5,amount:30},{min:5,max:10,amount:42},{min:10,max:30,amount:60}],
+      segment:  [{min:0,max:5,amount:16},{min:5,max:10,amount:23},{min:10,max:30,amount:34}],
     },
   },
   4: { // Riviera
     bike: {
       pickup:   [{min:0,max:3,amount:0},{min:3,max:5,amount:4},{min:5,max:25,amount:10}],
-      segment:  [{min:0,max:3,amount:26},{min:3,max:5,amount:38},{min:5,max:25,amount:54}],
+      segment:  [{min:0,max:3,amount:13},{min:3,max:5,amount:19},{min:5,max:25,amount:29}],
     },
     car: {
       pickup:   [{min:0,max:5,amount:0},{min:5,max:10,amount:6},{min:10,max:35,amount:14}],
-      segment:  [{min:0,max:5,amount:32},{min:5,max:10,amount:46},{min:10,max:35,amount:68}],
+      segment:  [{min:0,max:5,amount:17},{min:5,max:10,amount:25},{min:10,max:35,amount:37}],
     },
   },
 };

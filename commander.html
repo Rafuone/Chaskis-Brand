@@ -23,7 +23,7 @@
 <meta name="theme-color" content="#2FA594">
 <link rel="icon" href="icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=20260422f">
 
 <style>
 /* ===== COMMANDER — tokens admin CRM 1:1 ===== */
@@ -200,9 +200,9 @@ body.page-commander .nav{background:rgba(255,255,255,.92);backdrop-filter:blur(1
 
 /* Compact 2-col within blocks */
 .opt-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.opt-card{background:#fff;border:1px solid #E8E8EB;border-radius:10px;padding:14px;cursor:pointer;transition:all .2s ease;text-align:left;font-family:inherit;position:relative;display:flex;align-items:center;gap:12px}
+.opt-card{background:#fff;border:1px solid #E8E8EB;border-radius:10px;padding:14px;cursor:pointer;transition:border-color .2s ease, background .2s ease, box-shadow .2s ease;text-align:left;font-family:inherit;position:relative;display:flex;align-items:center;gap:12px;background-clip:padding-box}
 .opt-card:hover{border-color:#D8D6DB;background:#FCFCFC}
-.opt-card.selected{border-color:#2FA594;background:#EDF7F6;box-shadow:0 0 0 3px rgba(47,165,148,.1)}
+.opt-card.selected{border-color:#2FA594;background:#EDF7F6;box-shadow:inset 0 0 0 1px #2FA594}
 .opt-card-ic{width:36px;height:36px;border-radius:8px;background:#F8F8F9;color:#695C73;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
 .opt-card.selected .opt-card-ic{background:#fff;color:#2FA594}
 .opt-card-ic svg{width:18px;height:18px}
@@ -406,31 +406,58 @@ body.page-commander .nav{background:rgba(255,255,255,.92);backdrop-filter:blur(1
 .recap-route-item .rri-info strong{display:block;font-size:11px;font-weight:700;color:#9890A2;text-transform:uppercase;letter-spacing:.04em;margin-bottom:1px}
 
 /* ===== SUMMARY (sticky) ===== */
-.cmd-summary{position:sticky;top:96px;background:#fff;border-radius:16px;border:1px solid #E8E8EB;padding:18px}
-.sum-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #F0EFF2}
-.sum-hd h3{font-size:13px;font-weight:700;color:#261835}
-.sum-route{display:flex;flex-direction:column;gap:0;margin-bottom:14px}
-.sum-stop{display:flex;align-items:flex-start;gap:9px;position:relative;padding:5px 0}
-.sum-stop-dot{width:8px;height:8px;border-radius:50%;background:#2FA594;flex-shrink:0;margin-top:5px;box-shadow:0 0 0 3px #EDF7F6}
+.cmd-summary{position:sticky;top:96px;background:#fff;border-radius:18px;border:1px solid #ECEAEF;padding:22px;box-shadow:0 1px 2px rgba(38,24,53,.02), 0 12px 32px -20px rgba(38,24,53,.08)}
+.sum-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px}
+.sum-hd-lbl{display:block;font-size:10px;font-weight:700;color:#9890A2;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
+.sum-hd h3{font-size:17px;font-weight:700;color:#261835;letter-spacing:-.01em;line-height:1.1}
+
+.sum-section{padding:14px 0;border-top:1px solid #F4F3F5}
+.sum-section:first-of-type{border-top:none;padding-top:0}
+.sum-section-lbl{display:block;font-size:10px;font-weight:700;color:#9890A2;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+
+.sum-route{display:flex;flex-direction:column;gap:0}
+.sum-stop{display:flex;align-items:flex-start;gap:11px;position:relative;padding:7px 0}
+.sum-stop-dot{width:9px;height:9px;border-radius:50%;background:#2FA594;flex-shrink:0;margin-top:6px;box-shadow:0 0 0 3px #EDF7F6;position:relative;z-index:2}
 .sum-stop.pickup .sum-stop-dot{background:#261835;box-shadow:0 0 0 3px rgba(38,24,53,.08)}
-.sum-stop-line{position:absolute;left:3.5px;top:16px;bottom:-5px;width:1px;background:#E8E8EB}
+.sum-stop-line{position:absolute;left:4px;top:14px;bottom:-7px;width:1px;background:#E8E8EB;z-index:1}
 .sum-stop:last-child .sum-stop-line{display:none}
-.sum-stop-txt{flex:1;min-width:0;font-size:12px;line-height:1.35;color:#695C73}
-.sum-stop-txt strong{display:block;font-size:10px;font-weight:700;color:#9890A2;text-transform:uppercase;letter-spacing:.04em;margin-bottom:1px}
-.sum-stop-txt .sum-addr{color:#261835;font-weight:500;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sum-empty{font-size:12px;color:#9890A2;text-align:center;padding:18px 8px;background:#F8F8F9;border-radius:8px;line-height:1.45;margin-bottom:12px}
-.sum-meta{display:flex;flex-direction:column;gap:5px;padding:10px 0;border-top:1px solid #F0EFF2;border-bottom:1px solid #F0EFF2;margin-bottom:10px}
-.sum-meta-row{display:flex;align-items:center;justify-content:space-between;font-size:12px}
-.sum-meta-row span:first-child{color:#695C73}
-.sum-meta-row span:last-child{color:#261835;font-weight:600}
-.sum-lines{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
-.sum-line{display:flex;align-items:baseline;justify-content:space-between;font-size:12px;color:#695C73}
-.sum-line strong{color:#261835;font-weight:600}
+.sum-stop-txt{flex:1;min-width:0;line-height:1.35}
+.sum-stop-txt strong{display:block;font-size:9.5px;font-weight:700;color:#A9A3B3;text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px}
+.sum-stop-txt .sum-addr{color:#261835;font-weight:600;font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.005em}
+.sum-empty{font-size:12.5px;color:#9890A2;text-align:center;padding:20px 8px;background:#FAF9FB;border-radius:10px;line-height:1.5;margin-bottom:12px}
+
+.sum-meta{display:flex;flex-direction:column;gap:10px}
+.sum-meta-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px}
+.sum-meta-row span:first-child{color:#8A8393;font-weight:500}
+.sum-meta-row span:last-child{color:#261835;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+
+/* Meta pills (vehicle, timing) — alignés tokens projet (teal + accent violet CRM) */
+.sum-pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:-.005em;line-height:1.25;white-space:nowrap}
+.sum-pill svg{width:13px;height:13px;flex-shrink:0}
+.sum-pill em{font-style:normal;opacity:.65;margin-left:2px;font-weight:600}
+.sum-pill-veh{background:#EDF7F6;color:#1A7A6E;border:1px solid rgba(47,165,148,.2)}
+.sum-pill-express{background:#F3F0F8;color:#5a3d8f;border:1px solid rgba(107,79,160,.22)}
+.sum-pill-planned{background:#F8F8F9;color:#4A3B6F;border:1px solid #ECEAEF}
+
+.sum-lines{display:flex;flex-direction:column;gap:6px}
+.sum-line{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-size:13px;color:#261835;font-weight:500;line-height:1.35}
+.sum-line-lbl{display:inline-flex;align-items:baseline;gap:8px;min-width:0;color:#4A3B6F;flex-wrap:wrap}
+.sum-line-lbl em{font-style:normal;font-size:11px;color:#A89EC0;letter-spacing:.01em;font-weight:500;text-transform:none}
+.sum-line strong{color:#261835;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;flex-shrink:0}
 .sum-line.discount{color:#1A7A6E}
-.sum-total{display:flex;align-items:baseline;justify-content:space-between;padding-top:10px;margin-top:6px;border-top:1px solid #E8E8EB}
-.sum-total-lbl{font-size:12px;font-weight:700;color:#261835}
-.sum-total-val{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;color:#261835}
-.sum-total-val small{font-size:11px;font-weight:700;color:#9890A2;margin-left:4px;vertical-align:baseline;letter-spacing:.02em}
+.sum-line.discount strong{color:#1A7A6E}
+/* Supplément : même famille violette que Super Express (cohérence CRM) */
+.sum-line-extra .sum-line-lbl{color:#5a3d8f;font-weight:600}
+.sum-line-extra .sum-line-lbl em{color:rgba(90,61,143,.55)}
+.sum-line-extra strong{color:#5a3d8f}
+/* Ligne taxe : discrète */
+.sum-line-tax .sum-line-lbl{color:#9890A2;font-weight:500}
+.sum-line-tax strong{color:#6E6880;font-weight:600}
+
+.sum-total{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:14px 0 2px;margin-top:12px;border-top:1px solid #ECEAEF}
+.sum-total-lbl{font-size:11px;font-weight:700;color:#8A8393;text-transform:uppercase;letter-spacing:.1em}
+.sum-total-val{font-size:1.55rem;font-weight:800;letter-spacing:-.025em;color:#261835;font-variant-numeric:tabular-nums;line-height:1;white-space:nowrap}
+.sum-total-val small{font-size:.55em;font-weight:700;color:#8A8393;margin-right:5px;vertical-align:baseline;letter-spacing:.04em;font-variant-numeric:normal}
 .sum-loading{display:none;align-items:center;gap:6px;font-size:12px;color:#9890A2;padding:6px 0}
 .sum-loading.show{display:flex}
 .sum-loading-spin{width:11px;height:11px;border:2px solid #E8E8EB;border-top-color:#2FA594;border-radius:50%;animation:cmd-spin .7s linear infinite}
@@ -517,9 +544,15 @@ body.page-commander .nav{background:rgba(255,255,255,.92);backdrop-filter:blur(1
   .pay-contact-grid{grid-template-columns:1fr;gap:14px}
   #devAutofillBtn{top:10px;right:10px;font-size:10px;padding:5px 9px}
 }
+
+/* ===== Page transition curtain ===== */
+#pageCurtain{position:fixed;inset:0;z-index:9999;background:#FAFAF9;transform:translateX(0);transition:transform .62s cubic-bezier(.4,0,.2,1);pointer-events:all}
+#pageCurtain.is-lifted{transform:translateX(-110%);pointer-events:none}
 </style>
 </head>
 <body class="page-commander">
+
+<div id="pageCurtain" aria-hidden="true"></div>
 
 <div class="mob-m" id="mm">
   <a href="index.html" onclick="cm()">Livraison</a>
@@ -874,16 +907,33 @@ body.page-commander .nav{background:rgba(255,255,255,.92);backdrop-filter:blur(1
     <!-- DESKTOP SUMMARY -->
     <aside class="cmd-summary cmd-scope" id="summary">
       <div class="sum-hd">
-        <h3 data-i18n="c.sum.title">Résumé</h3>
+        <div>
+          <span class="sum-hd-lbl" data-i18n="c.sum.overtitle">Votre course</span>
+          <h3 data-i18n="c.sum.title">Résumé</h3>
+        </div>
         <span id="sumZoneSlot"></span>
       </div>
-      <div id="sumRoute"></div>
-      <div class="sum-meta" id="sumMeta" style="display:none">
-        <div class="sum-meta-row"><span data-i18n="c.sum.vehicle">Véhicule</span><span id="sumVehicle">—</span></div>
-        <div class="sum-meta-row"><span data-i18n="c.sum.timing">Moment</span><span id="sumTiming">—</span></div>
+
+      <div class="sum-section">
+        <span class="sum-section-lbl" data-i18n="c.sum.route">Itinéraire</span>
+        <div id="sumRoute"></div>
       </div>
-      <div class="sum-lines" id="sumLines" style="display:none"></div>
+
+      <div class="sum-section" id="sumMetaWrap" style="display:none">
+        <span class="sum-section-lbl" data-i18n="c.sum.details">Détails</span>
+        <div class="sum-meta" id="sumMeta">
+          <div class="sum-meta-row"><span data-i18n="c.sum.vehicle">Véhicule</span><span id="sumVehicle">—</span></div>
+          <div class="sum-meta-row"><span data-i18n="c.sum.timing">Moment</span><span id="sumTiming">—</span></div>
+        </div>
+      </div>
+
+      <div class="sum-section" id="sumLinesWrap" style="display:none">
+        <span class="sum-section-lbl" data-i18n="c.sum.pricing">Tarif</span>
+        <div class="sum-lines" id="sumLines"></div>
+      </div>
+
       <div class="sum-loading" id="sumLoading"><div class="sum-loading-spin"></div><span data-i18n="c.sum.loading">Calcul du prix...</span></div>
+
       <div class="sum-total" id="sumTotal" style="display:none">
         <div class="sum-total-lbl" data-i18n="c.sum.total">Total TTC</div>
         <div class="sum-total-val" id="sumTotalVal">—</div>
@@ -964,7 +1014,9 @@ window.T = {
     'c.head.sub': "Dites-nous d'où partir et où livrer, on s'occupe du reste.",
     'c.step1': 'Itinéraire', 'c.step2': 'Détails', 'c.step3': 'Paiement',
     'c.block.pickup': 'Collecte', 'c.block.delivs': 'Livraisons',
-    'c.sum.title': 'Résumé', 'c.sum.vehicle': 'Véhicule', 'c.sum.timing': 'Moment',
+    'c.sum.title': 'Résumé', 'c.sum.overtitle': 'Votre course',
+    'c.sum.route': 'Itinéraire', 'c.sum.details': 'Détails', 'c.sum.pricing': 'Tarif',
+    'c.sum.vehicle': 'Véhicule', 'c.sum.timing': 'Moment',
     'c.sum.loading': 'Calcul du prix...', 'c.sum.total': 'Total TTC',
     'c.cta.back': 'Retour', 'c.cta.next': 'Continuer',
   },
@@ -973,15 +1025,17 @@ window.T = {
     'c.head.sub': "Tell us where to start and where to deliver, we handle the rest.",
     'c.step1': 'Itinerary', 'c.step2': 'Details', 'c.step3': 'Payment',
     'c.block.pickup': 'Pickup', 'c.block.delivs': 'Deliveries',
-    'c.sum.title': 'Summary', 'c.sum.vehicle': 'Vehicle', 'c.sum.timing': 'Timing',
+    'c.sum.title': 'Summary', 'c.sum.overtitle': 'Your ride',
+    'c.sum.route': 'Itinerary', 'c.sum.details': 'Details', 'c.sum.pricing': 'Pricing',
+    'c.sum.vehicle': 'Vehicle', 'c.sum.timing': 'Timing',
     'c.sum.loading': 'Calculating price...', 'c.sum.total': 'Total incl. VAT',
     'c.cta.back': 'Back', 'c.cta.next': 'Continue',
   }
 };
 </script>
-<script src="shared.js?v=20260422d"></script>
-<script src="pricing-mock.js?v=6"></script>
-<script src="commander.js?v=7"></script>
+<script src="shared.js?v=20260422h"></script>
+<script src="pricing-mock.js?v=7"></script>
+<script src="commander.js?v=9"></script>
 
 </body>
 </html>

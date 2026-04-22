@@ -35,7 +35,7 @@
 <meta name="theme-color" content="#F5B800">
 <link rel="icon" href="icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=20260422f">
 
 <!-- ===== Performance ===== -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -198,7 +198,7 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 .mob-proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;align-items:center;border-top:1px solid var(--line);padding-top:60px}
 .mob-proof-stat{text-align:center;border-right:1px solid var(--line);padding:8px 0}
 .mob-proof-stat:last-child{border-right:none}
-.mob-proof-stat strong{display:block;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800;color:var(--my);letter-spacing:-.03em;line-height:1;margin-bottom:6px;font-variant-numeric:tabular-nums}
+.mob-proof-stat strong{display:block;font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:var(--my);letter-spacing:-.05em;line-height:1;margin-bottom:10px;font-variant-numeric:tabular-nums}
 .mob-proof-stat span{font-size:.72rem;color:var(--t3);font-weight:500;letter-spacing:.02em;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center}
 .mob-stat-tbd{font-style:normal;font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:4px;background:rgba(245,184,0,.15);color:var(--my);letter-spacing:.08em;border:1px solid rgba(245,184,0,.3)}
 
@@ -563,7 +563,7 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
       <div class="mob-hero-grid">
         <div class="mob-hero-text">
           <div class="mob-hero-overline" data-i18n="m.hero.overline">Votre chauffeur à Genève, Nyon, Lausanne et la Riviera</div>
-          <h1>
+          <h1 data-i18n-html="m.hero.h1">
             <span class="word" style="animation-delay:.1s">Des</span>
             <span class="word" style="animation-delay:.2s">chauffeurs</span>
             <span class="word" style="animation-delay:.3s">d'exception,</span>
@@ -603,9 +603,9 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 <section class="mob-proof">
   <div class="ct">
     <div class="mob-proof-grid">
-      <div class="mob-proof-stat rev"><strong data-count="200" data-suffix="+">0</strong><span>Chauffeurs salariés</span></div>
-      <div class="mob-proof-stat rev"><strong data-count="700000" data-suffix="+">0</strong><span>Courses effectuées depuis 2023</span></div>
-      <div class="mob-proof-stat rev"><strong>&lt;1h</strong><span>Délai de réponse</span></div>
+      <div class="mob-proof-stat rev"><strong data-count="200" data-suffix="+">0</strong><span data-i18n="m.proof.s1">Chauffeurs salariés</span></div>
+      <div class="mob-proof-stat rev"><strong data-count="700000" data-suffix="+">0</strong><span data-i18n="m.proof.s2">Courses effectuées depuis 2023</span></div>
+      <div class="mob-proof-stat rev"><strong>&lt;1h</strong><span data-i18n="m.proof.s3">Délai de réponse</span></div>
     </div>
   </div>
 </section>
@@ -614,9 +614,9 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 <section class="mob-pillars" id="mobPillars">
   <div class="ct">
     <div class="mob-pillars-header rev">
-      <span class="mob-pillars-label">Nos services</span>
-      <h2>Un chauffeur pour <span class="ac">chaque besoin</span>.</h2>
-      <p class="mob-pillars-desc">Déplacements privés ou professionnels, transferts, mise à disposition. Et pour vos objets précieux, un service de collecte discret en option.</p>
+      <span class="mob-pillars-label" data-i18n="m.pil.lbl">Nos services</span>
+      <h2 data-i18n-html="m.pil.h2">Un chauffeur pour <span class="ac">chaque besoin</span>.</h2>
+      <p class="mob-pillars-desc" data-i18n="m.pil.desc">Déplacements privés ou professionnels, transferts, mise à disposition. Et pour vos objets précieux, un service de collecte discret en option.</p>
     </div>
 
     <div class="mob-pillars-grid">
@@ -624,15 +624,15 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
       <article class="mob-pillar mob-pillar-1 rev">
         <div class="mob-pillar-bg" style="background-image:url('transport.png');background-size:cover;background-position:center top"></div>
         <div class="mob-pillar-content">
-          <span class="mob-pillar-type">Transport de personnes</span>
-          <h3>Votre chauffeur, quand et où vous en avez besoin.</h3>
-          <p>Course ponctuelle, mise à disposition à la journée, transfert aéroport, station de ski, événement professionnel ou sortie privée. On s'adapte à votre planning.</p>
+          <span class="mob-pillar-type" data-i18n="m.pil.p1.type">Transport de personnes</span>
+          <h3 data-i18n="m.pil.p1.h3">Votre chauffeur, quand et où vous en avez besoin.</h3>
+          <p data-i18n="m.pil.p1.p">Course ponctuelle, mise à disposition à la journée, transfert aéroport, station de ski, événement professionnel ou sortie privée. On s'adapte à votre planning.</p>
           <div class="mob-pillar-uses">
-            <span>Transfert aéroport</span>
-            <span>Mise à disposition</span>
-            <span>Événementiel</span>
-            <span>Mobilité réduite</span>
-            <span>Ski resort</span>
+            <span data-i18n="m.pil.p1.u1">Transfert aéroport</span>
+            <span data-i18n="m.pil.p1.u2">Mise à disposition</span>
+            <span data-i18n="m.pil.p1.u3">Événementiel</span>
+            <span data-i18n="m.pil.p1.u4">Mobilité réduite</span>
+            <span data-i18n="m.pil.p1.u5">Ski resort</span>
           </div>
         </div>
       </article>
@@ -641,15 +641,15 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
       <article class="mob-pillar mob-pillar-2 rev">
         <div class="mob-pillar-bg" style="background-image:url('Watch.png');background-size:cover;background-position:center 15%"></div>
         <div class="mob-pillar-content">
-          <div class="mob-pillar-badges"><span class="mob-pillar-type">Collecte prestige</span><span class="mob-pillar-new">Nouveauté</span></div>
-          <h3>Vos objets récupérés, livrés. Vous restez où vous êtes.</h3>
-          <p>Vous attendez une montre chez le réparateur, une pièce de haute couture ou une caisse de grands crus ? On collecte à votre place et vous livre avec toutes les précautions.</p>
+          <div class="mob-pillar-badges"><span class="mob-pillar-type" data-i18n="m.pil.p2.type">Collecte prestige</span><span class="mob-pillar-new" data-i18n="m.pil.p2.new">Nouveauté</span></div>
+          <h3 data-i18n="m.pil.p2.h3">Vos objets récupérés, livrés. Vous restez où vous êtes.</h3>
+          <p data-i18n="m.pil.p2.p">Vous attendez une montre chez le réparateur, une pièce de haute couture ou une caisse de grands crus ? On collecte à votre place et vous livre avec toutes les précautions.</p>
           <div class="mob-pillar-uses">
-            <span>Horlogerie</span>
-            <span>Joaillerie</span>
-            <span>Haute couture</span>
-            <span>Grands crus</span>
-            <span>Pièces d'exception</span>
+            <span data-i18n="m.pil.p2.u1">Horlogerie</span>
+            <span data-i18n="m.pil.p2.u2">Joaillerie</span>
+            <span data-i18n="m.pil.p2.u3">Haute couture</span>
+            <span data-i18n="m.pil.p2.u4">Grands crus</span>
+            <span data-i18n="m.pil.p2.u5">Pièces d'exception</span>
           </div>
         </div>
       </article>
@@ -662,9 +662,9 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 <section class="mob-diff">
   <div class="ct">
     <div class="mob-pillars-header rev">
-      <span class="mob-pillars-label">Pourquoi Chaskis Mobilité</span>
-      <h2>Trois raisons de <span class="ac">nous choisir</span>.</h2>
-      <p class="mob-pillars-desc">Ce qui nous distingue des plateformes VTC classiques : des chauffeurs salariés, des véhicules entretenus, une facturation pensée pour les pros.</p>
+      <span class="mob-pillars-label" data-i18n="m.diff.lbl">Pourquoi Chaskis Mobilité</span>
+      <h2 data-i18n-html="m.diff.h2">Trois raisons de <span class="ac">nous choisir</span>.</h2>
+      <p class="mob-pillars-desc" data-i18n="m.diff.desc">Ce qui nous distingue des plateformes VTC classiques : des chauffeurs salariés, des véhicules entretenus, une facturation pensée pour les pros.</p>
     </div>
 
     <div class="mob-diff-grid">
@@ -675,12 +675,12 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
           </div>
           <span class="mob-diff-num">01</span>
         </div>
-        <h4>Chauffeurs salariés CDI</h4>
-        <p>Aucun freelance, aucune rotation. Des chauffeurs formés aux standards des hôtels 5 étoiles.</p>
+        <h4 data-i18n="m.diff.c1.h">Chauffeurs salariés CDI</h4>
+        <p data-i18n="m.diff.c1.p">Aucun freelance, aucune rotation. Des chauffeurs formés aux standards des hôtels 5 étoiles.</p>
         <ul class="mob-diff-list">
-          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Remplacement garanti en cas d'absence</span></li>
-          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Formation prestige continue</span></li>
-          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Assurés et encadrés en interne</span></li>
+          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="m.diff.c1.l1">Remplacement garanti en cas d'absence</span></li>
+          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="m.diff.c1.l2">Formation prestige continue</span></li>
+          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="m.diff.c1.l3">Assurés et encadrés en interne</span></li>
         </ul>
       </div>
 
@@ -691,12 +691,12 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
           </div>
           <span class="mob-diff-num">02</span>
         </div>
-        <h4>Véhicules premium, standards hôtel</h4>
-        <p>Berlines classe affaires et vans VIP, une expérience soignée dans chaque détail.</p>
+        <h4 data-i18n="m.diff.c2.h">Véhicules premium, standards hôtel</h4>
+        <p data-i18n="m.diff.c2.p">Berlines classe affaires et vans VIP, une expérience soignée dans chaque détail.</p>
         <ul class="mob-diff-list">
-          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Eau fraîche, chargeurs, climatisation ajustée</span></li>
-          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Coffres sécurisés pour objets de valeur</span></li>
-          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Flotte entretenue en atelier partenaire</span></li>
+          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="m.diff.c2.l1">Eau fraîche, chargeurs, climatisation ajustée</span></li>
+          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="m.diff.c2.l2">Coffres sécurisés pour objets de valeur</span></li>
+          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="m.diff.c2.l3">Flotte entretenue en atelier partenaire</span></li>
         </ul>
       </div>
 
@@ -707,12 +707,12 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
           </div>
           <span class="mob-diff-num">03</span>
         </div>
-        <h4>Facturation entreprise native</h4>
-        <p>Pensée pour les équipes finance. Adaptée aux cadres, RH, dirigeants.</p>
+        <h4 data-i18n="m.diff.c3.h">Facturation entreprise native</h4>
+        <p data-i18n="m.diff.c3.p">Pensée pour les équipes finance. Adaptée aux cadres, RH, dirigeants.</p>
         <ul class="mob-diff-list">
-          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Factures mensuelles consolidées</span></li>
-          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>TVA détaillée, export comptable</span></li>
-          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Notes de frais automatisées</span></li>
+          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="m.diff.c3.l1">Factures mensuelles consolidées</span></li>
+          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="m.diff.c3.l2">TVA détaillée, export comptable</span></li>
+          <li><span class="mob-diff-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="m.diff.c3.l3">Notes de frais automatisées</span></li>
         </ul>
       </div>
     </div>
@@ -725,27 +725,27 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
     <div class="ct">
       <div class="mob-prestige-layout">
         <div class="mob-prestige-text">
-          <span class="mob-prestige-badge"><span class="mob-prestige-badge-pill">Collecte Prestige</span><span class="mob-pillar-new">Nouveauté</span></span>
-          <h2>Pour vos pièces <span class="ac">les plus précieuses</span>, un service sans faille.</h2>
-          <p class="mob-prestige-lead">Vous n'avez pas toujours le temps, l'envie ou la possibilité de vous déplacer pour récupérer un objet de valeur. Confiez-nous la collecte : on y va à votre place, on ramène en sécurité.</p>
+          <span class="mob-prestige-badge"><span class="mob-prestige-badge-pill" data-i18n="m.prest.badge">Collecte Prestige</span><span class="mob-pillar-new" data-i18n="m.prest.new">Nouveauté</span></span>
+          <h2 data-i18n-html="m.prest.h2">Pour vos pièces <span class="ac">les plus précieuses</span>, un service sans faille.</h2>
+          <p class="mob-prestige-lead" data-i18n="m.prest.lead">Vous n'avez pas toujours le temps, l'envie ou la possibilité de vous déplacer pour récupérer un objet de valeur. Confiez-nous la collecte : on y va à votre place, on ramène en sécurité.</p>
 
           <ul class="mob-prestige-list">
             <li>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              <div><strong>Collecte sur instruction</strong>Vous nous indiquez où, quand et quoi. On s'occupe du reste.</div>
+              <div data-i18n-html="m.prest.l1"><strong>Collecte sur instruction</strong>Vous nous indiquez où, quand et quoi. On s'occupe du reste.</div>
             </li>
             <li>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              <div><strong>Transport sécurisé</strong>Coffres adaptés, contrôle de température, suivi en temps réel.</div>
+              <div data-i18n-html="m.prest.l2"><strong>Transport sécurisé</strong>Coffres adaptés, contrôle de température, suivi en temps réel.</div>
             </li>
             <li>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              <div><strong>Discrétion totale</strong>Assurance haute valeur, aucun sous-traitant, traçabilité interne.</div>
+              <div data-i18n-html="m.prest.l3"><strong>Discrétion totale</strong>Assurance haute valeur, aucun sous-traitant, traçabilité interne.</div>
             </li>
           </ul>
 
           <a href="#mobForm" class="mob-hero-btn-primary">
-            <span>Parler à un account manager</span>
+            <span data-i18n="m.prest.cta">Parler à un account manager</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
@@ -760,21 +760,21 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
             <img class="mob-signature-bg-img" data-word="grands-crus" src="grandcru.png" alt="" loading="lazy">
           </div>
           <div class="mob-signature-inner">
-            <div class="mob-signature-top">Service Prestige</div>
+            <div class="mob-signature-top" data-i18n="m.sig.top">Service Prestige</div>
             <div class="mob-signature-mid">
-              <span class="mob-signature-prefix">nous collectons</span>
+              <span class="mob-signature-prefix" data-i18n="m.sig.prefix">nous collectons</span>
               <div class="mob-signature-rotator" id="mobSignatureRotator">
-                <div class="sig-word is-active" data-word="horlogerie">l'horlogerie.</div>
-                <div class="sig-word" data-word="joaillerie">la joaillerie.</div>
-                <div class="sig-word" data-word="haute-couture">la haute couture.</div>
-                <div class="sig-word" data-word="oeuvres-art">les œuvres d'art.</div>
-                <div class="sig-word" data-word="grands-crus">les grands crus.</div>
+                <div class="sig-word is-active" data-word="horlogerie" data-i18n="m.sig.w1">l'horlogerie.</div>
+                <div class="sig-word" data-word="joaillerie" data-i18n="m.sig.w2">la joaillerie.</div>
+                <div class="sig-word" data-word="haute-couture" data-i18n="m.sig.w3">la haute couture.</div>
+                <div class="sig-word" data-word="oeuvres-art" data-i18n="m.sig.w4">les œuvres d'art.</div>
+                <div class="sig-word" data-word="grands-crus" data-i18n="m.sig.w5">les grands crus.</div>
               </div>
             </div>
             <div class="mob-signature-bot">
               <div class="mob-signature-bot-l">
-                <strong>Genève · Nyon · Lausanne</strong>
-                <span>Riviera vaudoise incluse</span>
+                <strong data-i18n="m.sig.bot1">Genève · Nyon · Lausanne</strong>
+                <span data-i18n="m.sig.bot2">Riviera vaudoise incluse</span>
               </div>
               <div class="mob-signature-dot" aria-hidden="true"></div>
             </div>
@@ -790,17 +790,17 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 <section class="mob-how">
   <div class="ct">
     <div class="mob-pillars-header rev">
-      <span class="mob-pillars-label">Comment ça marche</span>
-      <h2>De la demande au trajet, <span class="ac">quatre étapes</span>.</h2>
-      <p class="mob-pillars-desc">Tout se fait en ligne ou par téléphone. Un account manager reprend la main pour les demandes complexes.</p>
+      <span class="mob-pillars-label" data-i18n="m.how.lbl">Comment ça marche</span>
+      <h2 data-i18n-html="m.how.h2">De la demande au trajet, <span class="ac">quatre étapes</span>.</h2>
+      <p class="mob-pillars-desc" data-i18n="m.how.desc">Tout se fait en ligne ou par téléphone. Un account manager reprend la main pour les demandes complexes.</p>
     </div>
 
     <div class="mob-how-steps" id="mobHowSteps">
       <div class="mob-how-track"><div class="mob-how-track-fill" id="mobHowFill"></div></div>
-      <div class="mob-how-step"><div class="mob-how-num">1</div><h4>Vous demandez</h4><p>Formulaire en ligne, email ou téléphone. Quelques informations suffisent.</p></div>
-      <div class="mob-how-step"><div class="mob-how-num">2</div><h4>Devis &amp; validation</h4><p>Sous une heure en jours ouvrés, avec options et prix fermes à valider.</p></div>
-      <div class="mob-how-step"><div class="mob-how-num">3</div><h4>Facturation</h4><p>Paiement réglé avant la course, TVA détaillée, facture au nom de l'entreprise.</p></div>
-      <div class="mob-how-step"><div class="mob-how-num">4</div><h4>On exécute</h4><p>Chauffeur assigné, véhicule préparé, suivi temps réel partagé avec vous.</p></div>
+      <div class="mob-how-step"><div class="mob-how-num">1</div><h4 data-i18n="m.how.s1.h">Vous demandez</h4><p data-i18n="m.how.s1.p">Formulaire en ligne, email ou téléphone. Quelques informations suffisent.</p></div>
+      <div class="mob-how-step"><div class="mob-how-num">2</div><h4 data-i18n-html="m.how.s2.h">Devis &amp; validation</h4><p data-i18n="m.how.s2.p">Sous une heure en jours ouvrés, avec options et prix fermes à valider.</p></div>
+      <div class="mob-how-step"><div class="mob-how-num">3</div><h4 data-i18n="m.how.s3.h">Facturation</h4><p data-i18n="m.how.s3.p">Paiement réglé avant la course, TVA détaillée, facture au nom de l'entreprise.</p></div>
+      <div class="mob-how-step"><div class="mob-how-num">4</div><h4 data-i18n="m.how.s4.h">On exécute</h4><p data-i18n="m.how.s4.p">Chauffeur assigné, véhicule préparé, suivi temps réel partagé avec vous.</p></div>
     </div>
   </div>
 </section>
@@ -809,9 +809,9 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 <section class="mob-testi">
   <div class="ct">
     <div class="mob-pillars-header rev">
-      <span class="mob-pillars-label">Ils nous font confiance</span>
-      <h2>Entreprises, cadres, <span class="ac">particuliers exigeants</span>.</h2>
-      <p class="mob-pillars-desc">Des professionnels qui comptent sur nous chaque jour, partout en Suisse romande.</p>
+      <span class="mob-pillars-label" data-i18n="m.testi.lbl">Ils nous font confiance</span>
+      <h2 data-i18n-html="m.testi.h2">Entreprises, cadres, <span class="ac">particuliers exigeants</span>.</h2>
+      <p class="mob-pillars-desc" data-i18n="m.testi.desc">Des professionnels qui comptent sur nous chaque jour, partout en Suisse romande.</p>
     </div>
 
     <div class="mob-testi-grid">
@@ -823,12 +823,12 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
           <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </div>
-        <p class="mob-testi-text">Nos clients ont des vols tôt le matin et des standards élevés. Depuis qu'on travaille avec Chaskis, les transferts aéroport se font sans accroc. Aucune plainte, aucun retard.</p>
+        <p class="mob-testi-text" data-i18n="m.testi.c1.text">Nos clients ont des vols tôt le matin et des standards élevés. Depuis qu'on travaille avec Chaskis, les transferts aéroport se font sans accroc. Aucune plainte, aucun retard.</p>
         <div class="mob-testi-author">
           <div class="mob-testi-avatar"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Hélène G." loading="lazy"></div>
           <div class="mob-testi-info">
-            <strong>Hélène G.</strong>
-            <span>Concierge, hôtel 5 étoiles · Genève</span>
+            <strong data-i18n="m.testi.c1.name">Hélène G.</strong>
+            <span data-i18n="m.testi.c1.role">Concierge, hôtel 5 étoiles · Genève</span>
           </div>
         </div>
       </div>
@@ -841,12 +841,12 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
           <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </div>
-        <p class="mob-testi-text">J'avais besoin d'un chauffeur à disposition pour une semaine de déplacements entre Genève et Lausanne. Réservation simple, chauffeur ponctuel, facturation propre. Je recommande.</p>
+        <p class="mob-testi-text" data-i18n="m.testi.c2.text">J'avais besoin d'un chauffeur à disposition pour une semaine de déplacements entre Genève et Lausanne. Réservation simple, chauffeur ponctuel, facturation propre. Je recommande.</p>
         <div class="mob-testi-author">
           <div class="mob-testi-avatar"><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Thomas M." loading="lazy"></div>
           <div class="mob-testi-info">
-            <strong>Thomas M.</strong>
-            <span>Directeur commercial · PME romande</span>
+            <strong data-i18n="m.testi.c2.name">Thomas M.</strong>
+            <span data-i18n="m.testi.c2.role">Directeur commercial · PME romande</span>
           </div>
         </div>
       </div>
@@ -859,12 +859,12 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
           <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </div>
-        <p class="mob-testi-text">Nous avons 40 cadres en déplacement chaque semaine en Suisse romande. Avec Chaskis, une seule facture mensuelle, note de frais automatique. Nos équipes finance adorent.</p>
+        <p class="mob-testi-text" data-i18n="m.testi.c3.text">Nous avons 40 cadres en déplacement chaque semaine en Suisse romande. Avec Chaskis, une seule facture mensuelle, note de frais automatique. Nos équipes finance adorent.</p>
         <div class="mob-testi-author">
           <div class="mob-testi-avatar"><img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Sarah P." loading="lazy"></div>
           <div class="mob-testi-info">
-            <strong>Sarah P.</strong>
-            <span>Office Manager · Cabinet d'avocats</span>
+            <strong data-i18n="m.testi.c3.name">Sarah P.</strong>
+            <span data-i18n="m.testi.c3.role">Office Manager · Cabinet d'avocats</span>
           </div>
         </div>
       </div>
@@ -877,9 +877,9 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
   <div class="ct">
     <div class="mob-form-layout">
       <div class="mob-form-left rev">
-        <span class="mob-prestige-badge">Prendre contact</span>
-        <h2>Demander un <span class="ac">chauffeur</span>.</h2>
-        <p>Remplissez le formulaire. Un membre de notre équipe vous recontacte avec un devis et les options adaptées à votre besoin.</p>
+        <span class="mob-prestige-badge" data-i18n="m.form.badge">Prendre contact</span>
+        <h2 data-i18n-html="m.form.h2">Demander un <span class="ac">chauffeur</span>.</h2>
+        <p data-i18n="m.form.intro">Remplissez le formulaire. Un membre de notre équipe vous recontacte avec un devis et les options adaptées à votre besoin.</p>
 
         <div class="mob-form-contact">
           <a href="tel:+41227000127">
@@ -911,36 +911,36 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 
         <!-- STEP 1 : type de besoin -->
         <div class="mob-form-step is-active" data-step="1">
-          <div class="mob-form-stepnum">Étape 1 sur 3</div>
-          <h3 class="mob-form-steptitle">Quel est votre besoin ?</h3>
-          <p class="mob-form-stepsub">Choisissez ce qui correspond le mieux. Vous pourrez préciser ensuite.</p>
+          <div class="mob-form-stepnum" data-i18n="m.form.s1.num">Étape 1 sur 3</div>
+          <h3 class="mob-form-steptitle" data-i18n="m.form.s1.title">Quel est votre besoin ?</h3>
+          <p class="mob-form-stepsub" data-i18n="m.form.s1.sub">Choisissez ce qui correspond le mieux. Vous pourrez préciser ensuite.</p>
 
           <div class="mob-form-types">
             <button type="button" class="mob-form-type active" data-type="personnes" data-label="Transport de personnes">
               <span class="mft-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-              <div><strong>Transport de personnes</strong><em>Transferts, mise à disposition, événements</em></div>
+              <div data-i18n-html="m.form.t1"><strong>Transport de personnes</strong><em>Transferts, mise à disposition, événements</em></div>
               <span class="mft-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             </button>
             <button type="button" class="mob-form-type" data-type="prestige" data-label="Transport d'objets de valeur">
               <span class="mft-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/><circle cx="12" cy="14" r="2"/></svg></span>
-              <div><strong>Objets de valeur</strong><em>Horlogerie, joaillerie, pièces uniques</em></div>
+              <div data-i18n-html="m.form.t2"><strong>Objets de valeur</strong><em>Horlogerie, joaillerie, pièces uniques</em></div>
               <span class="mft-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             </button>
             <button type="button" class="mob-form-type" data-type="evenement" data-label="Événement">
               <span class="mft-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
-              <div><strong>Événement</strong><em>Flotte dédiée, invités, coordination</em></div>
+              <div data-i18n-html="m.form.t3"><strong>Événement</strong><em>Flotte dédiée, invités, coordination</em></div>
               <span class="mft-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             </button>
             <button type="button" class="mob-form-type" data-type="autre" data-label="Autre">
               <span class="mft-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
-              <div><strong>Autre besoin</strong><em>Décrivez librement votre projet</em></div>
+              <div data-i18n-html="m.form.t4"><strong>Autre besoin</strong><em>Décrivez librement votre projet</em></div>
               <span class="mft-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             </button>
           </div>
           <input type="hidden" name="type" id="mobRequestType" value="personnes">
 
           <button type="button" class="mob-form-next" data-goto="2">
-            <span>Continuer</span>
+            <span data-i18n="m.form.next">Continuer</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </div>
@@ -949,24 +949,24 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
         <div class="mob-form-step" data-step="2">
           <button type="button" class="mob-form-back" data-goto="1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            <span>Retour</span>
+            <span data-i18n="m.form.back">Retour</span>
           </button>
 
-          <div class="mob-form-stepnum">Étape 2 sur 3</div>
-          <h3 class="mob-form-steptitle">Votre trajet</h3>
-          <p class="mob-form-stepsub">Indiquez où récupérer et livrer, ainsi que la date souhaitée. <strong id="mobRequestTypeLabel" style="color:var(--my);font-weight:700">Transport de personnes</strong></p>
+          <div class="mob-form-stepnum" data-i18n="m.form.s2.num">Étape 2 sur 3</div>
+          <h3 class="mob-form-steptitle" data-i18n="m.form.s2.title">Votre trajet</h3>
+          <p class="mob-form-stepsub" data-i18n-html="m.form.s2.sub">Indiquez où récupérer et livrer, ainsi que la date souhaitée. <strong id="mobRequestTypeLabel" style="color:var(--my);font-weight:700">Transport de personnes</strong></p>
 
           <div class="mob-form-group">
-            <label for="mobPickup">Adresse de récupération<span class="req">*</span></label>
-            <input type="text" id="mobPickup" name="pickup" placeholder="Aéroport de Genève, bijouterie, hôtel..." autocomplete="off" required>
+            <label for="mobPickup" data-i18n-html="m.form.pickup.lbl">Adresse de récupération<span class="req">*</span></label>
+            <input type="text" id="mobPickup" name="pickup" placeholder="Aéroport de Genève, bijouterie, hôtel..." data-i18n-placeholder="m.form.pickup.ph" autocomplete="off" required>
           </div>
           <div class="mob-form-group">
-            <label for="mobDropoff">Adresse de livraison<span class="req">*</span></label>
-            <input type="text" id="mobDropoff" name="dropoff" placeholder="Votre adresse, hôtel, bureau..." autocomplete="off" required>
+            <label for="mobDropoff" data-i18n-html="m.form.dropoff.lbl">Adresse de livraison<span class="req">*</span></label>
+            <input type="text" id="mobDropoff" name="dropoff" placeholder="Votre adresse, hôtel, bureau..." data-i18n-placeholder="m.form.dropoff.ph" autocomplete="off" required>
           </div>
           <div class="mob-form-group mob-dp-wrap">
-            <label for="mobDateTime">Date et heure souhaitées<span class="req">*</span></label>
-            <input type="text" id="mobDateTime" name="datetime_display" placeholder="Choisir une date et une heure…" autocomplete="off" readonly class="mob-dp-trigger" required>
+            <label for="mobDateTime" data-i18n-html="m.form.dt.lbl">Date et heure souhaitées<span class="req">*</span></label>
+            <input type="text" id="mobDateTime" name="datetime_display" placeholder="Choisir une date et une heure…" data-i18n-placeholder="m.form.dt.ph" autocomplete="off" readonly class="mob-dp-trigger" required>
             <input type="hidden" id="mobDate" name="date">
             <input type="hidden" id="mobTime" name="time">
             <div class="mob-dp-panel" id="mobDateTimePanel" hidden>
@@ -991,16 +991,16 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
                   <button type="button" class="mob-dp-btn" id="mobDpMInc">+</button>
                 </div>
               </div>
-              <button type="button" class="mob-dp-confirm" id="mobDpConfirm">Confirmer</button>
+              <button type="button" class="mob-dp-confirm" id="mobDpConfirm" data-i18n="m.form.dp.confirm">Confirmer</button>
             </div>
           </div>
           <div class="mob-form-group">
-            <label for="mobDetails">Détails (optionnel)</label>
-            <textarea id="mobDetails" name="details" placeholder="Nombre de passagers, nature des objets, besoins particuliers..."></textarea>
+            <label for="mobDetails" data-i18n="m.form.details.lbl">Détails (optionnel)</label>
+            <textarea id="mobDetails" name="details" placeholder="Nombre de passagers, nature des objets, besoins particuliers..." data-i18n-placeholder="m.form.details.ph"></textarea>
           </div>
 
           <button type="button" class="mob-form-next" data-goto="3">
-            <span>Continuer</span>
+            <span data-i18n="m.form.next">Continuer</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </div>
@@ -1009,52 +1009,52 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
         <div class="mob-form-step" data-step="3">
           <button type="button" class="mob-form-back" data-goto="2">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            <span>Retour</span>
+            <span data-i18n="m.form.back">Retour</span>
           </button>
 
-          <div class="mob-form-stepnum">Étape 3 sur 3</div>
-          <h3 class="mob-form-steptitle">Vos coordonnées</h3>
-          <p class="mob-form-stepsub">Un conseiller vous recontacte avec un devis et les options adaptées.</p>
+          <div class="mob-form-stepnum" data-i18n="m.form.s3.num">Étape 3 sur 3</div>
+          <h3 class="mob-form-steptitle" data-i18n="m.form.s3.title">Vos coordonnées</h3>
+          <p class="mob-form-stepsub" data-i18n="m.form.s3.sub">Un conseiller vous recontacte avec un devis et les options adaptées.</p>
 
           <div class="mob-form-row">
             <div class="mob-form-group">
-              <label for="mobName">Nom complet<span class="req">*</span></label>
-              <input type="text" id="mobName" name="name" placeholder="Jean Dupont" required>
+              <label for="mobName" data-i18n-html="m.form.name.lbl">Nom complet<span class="req">*</span></label>
+              <input type="text" id="mobName" name="name" placeholder="Jean Dupont" data-i18n-placeholder="m.form.name.ph" required>
             </div>
             <div class="mob-form-group">
-              <label for="mobCompany">Entreprise</label>
-              <input type="text" id="mobCompany" name="company" placeholder="Votre société">
+              <label for="mobCompany" data-i18n="m.form.company.lbl">Entreprise</label>
+              <input type="text" id="mobCompany" name="company" placeholder="Votre société" data-i18n-placeholder="m.form.company.ph">
             </div>
           </div>
 
           <div class="mob-form-row">
             <div class="mob-form-group">
-              <label for="mobEmail">Email<span class="req">*</span></label>
-              <input type="email" id="mobEmail" name="email" placeholder="jean@exemple.ch" required>
+              <label for="mobEmail" data-i18n-html="m.form.email.lbl">Email<span class="req">*</span></label>
+              <input type="email" id="mobEmail" name="email" placeholder="jean@exemple.ch" data-i18n-placeholder="m.form.email.ph" required>
             </div>
             <div class="mob-form-group">
-              <label for="mobPhone">Téléphone<span class="req">*</span></label>
-              <input type="tel" id="mobPhone" name="phone" placeholder="+41 78 123 45 67" required>
+              <label for="mobPhone" data-i18n-html="m.form.phone.lbl">Téléphone<span class="req">*</span></label>
+              <input type="tel" id="mobPhone" name="phone" placeholder="+41 78 123 45 67" data-i18n-placeholder="m.form.phone.ph" required>
             </div>
           </div>
 
           <button type="submit" class="mob-form-submit" id="mobFormSubmitBtn" disabled>
-            <span>Envoyer ma demande</span>
+            <span data-i18n="m.form.submit">Envoyer ma demande</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
 
-          <p class="mob-form-promise">Un conseiller reprend la main dès réception de votre demande.</p>
+          <p class="mob-form-promise" data-i18n="m.form.promise">Un conseiller reprend la main dès réception de votre demande.</p>
         </div>
 
         <div class="mob-form-success" id="mobFormSuccess" aria-live="polite">
           <div class="mob-form-success-circle">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h4>Demande reçue.</h4>
-          <p class="mob-form-success-ref">Référence&nbsp;<strong id="mobOrderRef">CHK-XXXX</strong></p>
-          <p>Un account manager vous recontacte sous une heure.<br>Une copie a été envoyée à <strong id="mobSuccessEmail">votre adresse</strong>.</p>
-          <p class="mob-form-success-note">Pour une <strong>collecte prestige</strong>, transmettez ce numéro de référence à l'établissement afin qu'il autorise notre coursier à récupérer votre article.</p>
-          <button type="button" class="mob-form-success-reset" id="mobFormReset">Nouvelle demande</button>
+          <h4 data-i18n="m.form.ok.h">Demande reçue.</h4>
+          <p class="mob-form-success-ref" data-i18n-html="m.form.ok.ref">Référence&nbsp;<strong id="mobOrderRef">CHK-XXXX</strong></p>
+          <p data-i18n-html="m.form.ok.body">Un account manager vous recontacte sous une heure.<br>Une copie a été envoyée à <strong id="mobSuccessEmail">votre adresse</strong>.</p>
+          <p class="mob-form-success-note" data-i18n-html="m.form.ok.note">Pour une <strong>collecte prestige</strong>, transmettez ce numéro de référence à l'établissement afin qu'il autorise notre coursier à récupérer votre article.</p>
+          <button type="button" class="mob-form-success-reset" id="mobFormReset" data-i18n="m.form.ok.reset">Nouvelle demande</button>
         </div>
       </form>
     </div>
@@ -1065,49 +1065,49 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 <section class="mob-faq">
   <div class="ct">
     <div class="mob-pillars-header rev">
-      <span class="mob-pillars-label">Questions fréquentes</span>
-      <h2>Tout ce que vous voulez savoir.</h2>
+      <span class="mob-pillars-label" data-i18n="m.faq.lbl">Questions fréquentes</span>
+      <h2 data-i18n="m.faq.h2">Tout ce que vous voulez savoir.</h2>
     </div>
 
     <div class="mob-faq-list">
       <div class="mob-faq-item rev">
         <div class="mob-faq-q" role="button" tabindex="0">
-          <h3>Quel délai minimum pour réserver ?</h3>
+          <h3 data-i18n="m.faq.q1">Quel délai minimum pour réserver ?</h3>
           <span class="mob-faq-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
         </div>
-        <div class="mob-faq-a"><p>Nous traitons les demandes dès 2 heures d'anticipation. Pour les trajets prestige (horlogerie, joaillerie) ou événements, comptez 24 à 48 heures pour que tout soit calibré au millimètre.</p></div>
+        <div class="mob-faq-a"><p data-i18n="m.faq.a1">Nous traitons les demandes dès 2 heures d'anticipation. Pour les trajets prestige (horlogerie, joaillerie) ou événements, comptez 24 à 48 heures pour que tout soit calibré au millimètre.</p></div>
       </div>
 
       <div class="mob-faq-item rev">
         <div class="mob-faq-q" role="button" tabindex="0">
-          <h3>Comment fonctionne la facturation entreprise ?</h3>
+          <h3 data-i18n="m.faq.q2">Comment fonctionne la facturation entreprise ?</h3>
           <span class="mob-faq-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
         </div>
-        <div class="mob-faq-a"><p>Factures mensuelles consolidées au nom de l'entreprise, avec détail par passager et par trajet. TVA séparée, export CSV et intégration directe à vos outils comptables (SAP, Sage, Bexio).</p></div>
+        <div class="mob-faq-a"><p data-i18n="m.faq.a2">Factures mensuelles consolidées au nom de l'entreprise, avec détail par passager et par trajet. TVA séparée, export CSV et intégration directe à vos outils comptables (SAP, Sage, Bexio).</p></div>
       </div>
 
       <div class="mob-faq-item rev">
         <div class="mob-faq-q" role="button" tabindex="0">
-          <h3>Vos véhicules sont-ils adaptés à la mobilité réduite ?</h3>
+          <h3 data-i18n="m.faq.q3">Vos véhicules sont-ils adaptés à la mobilité réduite ?</h3>
           <span class="mob-faq-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
         </div>
-        <div class="mob-faq-a"><p>Oui. Nous disposons de véhicules aménagés pour les personnes à mobilité réduite, avec chauffeurs formés à l'accompagnement. Précisez le besoin à la réservation, on prépare tout en amont.</p></div>
+        <div class="mob-faq-a"><p data-i18n="m.faq.a3">Oui. Nous disposons de véhicules aménagés pour les personnes à mobilité réduite, avec chauffeurs formés à l'accompagnement. Précisez le besoin à la réservation, on prépare tout en amont.</p></div>
       </div>
 
       <div class="mob-faq-item rev">
         <div class="mob-faq-q" role="button" tabindex="0">
-          <h3>Quelle est votre politique d'annulation ?</h3>
+          <h3 data-i18n="m.faq.q4">Quelle est votre politique d'annulation ?</h3>
           <span class="mob-faq-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
         </div>
-        <div class="mob-faq-a"><p>Annulation gratuite jusqu'à 4 heures avant le trajet pour les transports de personnes, 24 heures avant pour les missions prestige. Au-delà, une part du forfait reste due pour couvrir la préparation du chauffeur.</p></div>
+        <div class="mob-faq-a"><p data-i18n="m.faq.a4">Annulation gratuite jusqu'à 4 heures avant le trajet pour les transports de personnes, 24 heures avant pour les missions prestige. Au-delà, une part du forfait reste due pour couvrir la préparation du chauffeur.</p></div>
       </div>
 
       <div class="mob-faq-item rev">
         <div class="mob-faq-q" role="button" tabindex="0">
-          <h3>Êtes-vous assurés pour les objets de grande valeur ?</h3>
+          <h3 data-i18n="m.faq.q5">Êtes-vous assurés pour les objets de grande valeur ?</h3>
           <span class="mob-faq-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>
         </div>
-        <div class="mob-faq-a"><p>Oui. Nos missions prestige sont couvertes par une assurance spécifique jusqu'à plusieurs millions de CHF. Attestation fournie systématiquement au départ, avec numéro de police et conditions.</p></div>
+        <div class="mob-faq-a"><p data-i18n="m.faq.a5">Oui. Nos missions prestige sont couvertes par une assurance spécifique jusqu'à plusieurs millions de CHF. Attestation fournie systématiquement au départ, avec numéro de police et conditions.</p></div>
       </div>
     </div>
   </div>
@@ -1121,17 +1121,187 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 window.T = {
   fr: {
     'm.hero.overline': 'Votre chauffeur à Genève, Nyon, Lausanne et la Riviera',
+    'm.hero.h1': '<span class="word" style="animation-delay:.1s">Des</span> <span class="word" style="animation-delay:.2s">chauffeurs</span> <span class="word" style="animation-delay:.3s">d\'exception,</span><br><span class="word" style="animation-delay:.4s">pour</span> <span class="word" style="animation-delay:.48s">vos</span> <span class="mob-hero-rot" id="mobHeroRot"><span class="hero-rot-word is-active" data-word="trajets">trajets</span><span class="hero-rot-word" data-word="transferts">transferts</span><span class="hero-rot-word" data-word="invites">invités</span><span class="hero-rot-word" data-word="missions">missions</span><span class="hero-rot-word" data-word="rendezvous">rendez-vous</span></span><span class="word" style="animation-delay:.58s">.</span>',
     'm.hero.sub': "Aéroport, événements, stations de ski, mise à disposition : nos chauffeurs salariés s'adaptent à votre agenda, à l'aller comme au retour, avec une facturation directe pour votre entreprise.",
     'm.hero.cta1': 'Demander un chauffeur', 'm.hero.cta2': 'Découvrir nos services',
+    'm.proof.s1': 'Chauffeurs salariés', 'm.proof.s2': 'Courses effectuées depuis 2023', 'm.proof.s3': 'Délai de réponse',
+    'm.pil.lbl': 'Nos services', 'm.pil.h2': 'Un chauffeur pour <span class="ac">chaque besoin</span>.',
+    'm.pil.desc': 'Déplacements privés ou professionnels, transferts, mise à disposition. Et pour vos objets précieux, un service de collecte discret en option.',
+    'm.pil.p1.type': 'Transport de personnes',
+    'm.pil.p1.h3': 'Votre chauffeur, quand et où vous en avez besoin.',
+    'm.pil.p1.p': "Course ponctuelle, mise à disposition à la journée, transfert aéroport, station de ski, événement professionnel ou sortie privée. On s'adapte à votre planning.",
+    'm.pil.p1.u1': 'Transfert aéroport', 'm.pil.p1.u2': 'Mise à disposition', 'm.pil.p1.u3': 'Événementiel', 'm.pil.p1.u4': 'Mobilité réduite', 'm.pil.p1.u5': 'Stations de ski',
+    'm.pil.p2.type': 'Collecte prestige', 'm.pil.p2.new': 'Nouveauté',
+    'm.pil.p2.h3': 'Vos objets récupérés, livrés. Vous restez où vous êtes.',
+    'm.pil.p2.p': "Vous attendez une montre chez le réparateur, une pièce de haute couture ou une caisse de grands crus ? On collecte à votre place et vous livre avec toutes les précautions.",
+    'm.pil.p2.u1': 'Horlogerie', 'm.pil.p2.u2': 'Joaillerie', 'm.pil.p2.u3': 'Haute couture', 'm.pil.p2.u4': 'Grands crus', 'm.pil.p2.u5': "Pièces d'exception",
+    'm.diff.lbl': 'Pourquoi Chaskis Mobilité', 'm.diff.h2': 'Trois raisons de <span class="ac">nous choisir</span>.',
+    'm.diff.desc': 'Ce qui nous distingue des plateformes VTC classiques : des chauffeurs salariés, des véhicules entretenus, une facturation pensée pour les pros.',
+    'm.diff.c1.h': 'Chauffeurs salariés CDI',
+    'm.diff.c1.p': 'Aucun freelance, aucune rotation. Des chauffeurs formés aux standards des hôtels 5 étoiles.',
+    'm.diff.c1.l1': "Remplacement garanti en cas d'absence", 'm.diff.c1.l2': 'Formation prestige continue', 'm.diff.c1.l3': 'Assurés et encadrés en interne',
+    'm.diff.c2.h': 'Véhicules premium, standards hôtel',
+    'm.diff.c2.p': 'Berlines classe affaires et vans VIP, une expérience soignée dans chaque détail.',
+    'm.diff.c2.l1': 'Eau fraîche, chargeurs, climatisation ajustée', 'm.diff.c2.l2': 'Coffres sécurisés pour objets de valeur', 'm.diff.c2.l3': 'Flotte entretenue en atelier partenaire',
+    'm.diff.c3.h': 'Facturation entreprise native',
+    'm.diff.c3.p': 'Pensée pour les équipes finance. Adaptée aux cadres, RH, dirigeants.',
+    'm.diff.c3.l1': 'Factures mensuelles consolidées', 'm.diff.c3.l2': 'TVA détaillée, export comptable', 'm.diff.c3.l3': 'Notes de frais automatisées',
+    'm.prest.badge': 'Collecte Prestige', 'm.prest.new': 'Nouveauté',
+    'm.prest.h2': 'Pour vos pièces <span class="ac">les plus précieuses</span>, un service sans faille.',
+    'm.prest.lead': "Vous n'avez pas toujours le temps, l'envie ou la possibilité de vous déplacer pour récupérer un objet de valeur. Confiez-nous la collecte : on y va à votre place, on ramène en sécurité.",
+    'm.prest.l1': "<strong>Collecte sur instruction</strong>Vous nous indiquez où, quand et quoi. On s'occupe du reste.",
+    'm.prest.l2': '<strong>Transport sécurisé</strong>Coffres adaptés, contrôle de température, suivi en temps réel.',
+    'm.prest.l3': '<strong>Discrétion totale</strong>Assurance haute valeur, aucun sous-traitant, traçabilité interne.',
+    'm.prest.cta': 'Parler à un account manager',
+    'm.sig.top': 'Service Prestige', 'm.sig.prefix': 'nous collectons',
+    'm.sig.w1': "l'horlogerie.", 'm.sig.w2': 'la joaillerie.', 'm.sig.w3': 'la haute couture.', 'm.sig.w4': "les œuvres d'art.", 'm.sig.w5': 'les grands crus.',
+    'm.sig.bot1': 'Genève · Nyon · Lausanne', 'm.sig.bot2': 'Riviera vaudoise incluse',
+    'm.how.lbl': 'Comment ça marche', 'm.how.h2': 'De la demande au trajet, <span class="ac">quatre étapes</span>.',
+    'm.how.desc': 'Tout se fait en ligne ou par téléphone. Un account manager reprend la main pour les demandes complexes.',
+    'm.how.s1.h': 'Vous demandez', 'm.how.s1.p': 'Formulaire en ligne, email ou téléphone. Quelques informations suffisent.',
+    'm.how.s2.h': 'Devis &amp; validation', 'm.how.s2.p': 'Sous une heure en jours ouvrés, avec options et prix fermes à valider.',
+    'm.how.s3.h': 'Facturation', 'm.how.s3.p': "Paiement réglé avant la course, TVA détaillée, facture au nom de l'entreprise.",
+    'm.how.s4.h': 'On exécute', 'm.how.s4.p': 'Chauffeur assigné, véhicule préparé, suivi temps réel partagé avec vous.',
+    'm.testi.lbl': 'Ils nous font confiance', 'm.testi.h2': 'Entreprises, cadres, <span class="ac">particuliers exigeants</span>.',
+    'm.testi.desc': 'Des professionnels qui comptent sur nous chaque jour, partout en Suisse romande.',
+    'm.testi.c1.text': "Nos clients ont des vols tôt le matin et des standards élevés. Depuis qu'on travaille avec Chaskis, les transferts aéroport se font sans accroc. Aucune plainte, aucun retard.",
+    'm.testi.c1.name': 'Hélène G.', 'm.testi.c1.role': 'Concierge, hôtel 5 étoiles · Genève',
+    'm.testi.c2.text': "J'avais besoin d'un chauffeur à disposition pour une semaine de déplacements entre Genève et Lausanne. Réservation simple, chauffeur ponctuel, facturation propre. Je recommande.",
+    'm.testi.c2.name': 'Thomas M.', 'm.testi.c2.role': 'Directeur commercial · PME romande',
+    'm.testi.c3.text': 'Nous avons 40 cadres en déplacement chaque semaine en Suisse romande. Avec Chaskis, une seule facture mensuelle, note de frais automatique. Nos équipes finance adorent.',
+    'm.testi.c3.name': 'Sarah P.', 'm.testi.c3.role': "Office Manager · Cabinet d'avocats",
+    'm.form.badge': 'Prendre contact', 'm.form.h2': 'Demander un <span class="ac">chauffeur</span>.',
+    'm.form.intro': 'Remplissez le formulaire. Un membre de notre équipe vous recontacte avec un devis et les options adaptées à votre besoin.',
+    'm.form.s1.num': 'Étape 1 sur 3', 'm.form.s1.title': 'Quel est votre besoin ?', 'm.form.s1.sub': 'Choisissez ce qui correspond le mieux. Vous pourrez préciser ensuite.',
+    'm.form.t1': '<strong>Transport de personnes</strong><em>Transferts, mise à disposition, événements</em>',
+    'm.form.t2': "<strong>Objets de valeur</strong><em>Horlogerie, joaillerie, pièces uniques</em>",
+    'm.form.t3': '<strong>Événement</strong><em>Flotte dédiée, invités, coordination</em>',
+    'm.form.t4': '<strong>Autre besoin</strong><em>Décrivez librement votre projet</em>',
+    'm.form.next': 'Continuer', 'm.form.back': 'Retour',
+    'm.form.s2.num': 'Étape 2 sur 3', 'm.form.s2.title': 'Votre trajet',
+    'm.form.s2.sub': 'Indiquez où récupérer et livrer, ainsi que la date souhaitée. <strong id="mobRequestTypeLabel" style="color:var(--my);font-weight:700">Transport de personnes</strong>',
+    'm.form.pickup.lbl': 'Adresse de récupération<span class="req">*</span>', 'm.form.pickup.ph': 'Aéroport de Genève, bijouterie, hôtel...',
+    'm.form.dropoff.lbl': 'Adresse de livraison<span class="req">*</span>', 'm.form.dropoff.ph': 'Votre adresse, hôtel, bureau...',
+    'm.form.dt.lbl': 'Date et heure souhaitées<span class="req">*</span>', 'm.form.dt.ph': 'Choisir une date et une heure…',
+    'm.form.dp.confirm': 'Confirmer',
+    'm.form.details.lbl': 'Détails (optionnel)', 'm.form.details.ph': 'Nombre de passagers, nature des objets, besoins particuliers...',
+    'm.form.s3.num': 'Étape 3 sur 3', 'm.form.s3.title': 'Vos coordonnées', 'm.form.s3.sub': 'Un conseiller vous recontacte avec un devis et les options adaptées.',
+    'm.form.name.lbl': 'Nom complet<span class="req">*</span>', 'm.form.name.ph': 'Jean Dupont',
+    'm.form.company.lbl': 'Entreprise', 'm.form.company.ph': 'Votre société',
+    'm.form.email.lbl': 'Email<span class="req">*</span>', 'm.form.email.ph': 'jean@exemple.ch',
+    'm.form.phone.lbl': 'Téléphone<span class="req">*</span>', 'm.form.phone.ph': '+41 78 123 45 67',
+    'm.form.submit': 'Envoyer ma demande',
+    'm.form.promise': 'Un conseiller reprend la main dès réception de votre demande.',
+    'm.form.ok.h': 'Demande reçue.',
+    'm.form.ok.ref': 'Référence&nbsp;<strong id="mobOrderRef">CHK-XXXX</strong>',
+    'm.form.ok.body': 'Un account manager vous recontacte sous une heure.<br>Une copie a été envoyée à <strong id="mobSuccessEmail">votre adresse</strong>.',
+    'm.form.ok.note': "Pour une <strong>collecte prestige</strong>, transmettez ce numéro de référence à l'établissement afin qu'il autorise notre coursier à récupérer votre article.",
+    'm.form.ok.reset': 'Nouvelle demande',
+    'm.faq.lbl': 'Questions fréquentes', 'm.faq.h2': 'Tout ce que vous voulez savoir.',
+    'm.faq.q1': 'Quel délai minimum pour réserver ?',
+    'm.faq.a1': "Nous traitons les demandes dès 2 heures d'anticipation. Pour les trajets prestige (horlogerie, joaillerie) ou événements, comptez 24 à 48 heures pour que tout soit calibré au millimètre.",
+    'm.faq.q2': 'Comment fonctionne la facturation entreprise ?',
+    'm.faq.a2': "Factures mensuelles consolidées au nom de l'entreprise, avec détail par passager et par trajet. TVA séparée, export CSV et intégration directe à vos outils comptables (SAP, Sage, Bexio).",
+    'm.faq.q3': 'Vos véhicules sont-ils adaptés à la mobilité réduite ?',
+    'm.faq.a3': "Oui. Nous disposons de véhicules aménagés pour les personnes à mobilité réduite, avec chauffeurs formés à l'accompagnement. Précisez le besoin à la réservation, on prépare tout en amont.",
+    'm.faq.q4': "Quelle est votre politique d'annulation ?",
+    'm.faq.a4': "Annulation gratuite jusqu'à 4 heures avant le trajet pour les transports de personnes, 24 heures avant pour les missions prestige. Au-delà, une part du forfait reste due pour couvrir la préparation du chauffeur.",
+    'm.faq.q5': 'Êtes-vous assurés pour les objets de grande valeur ?',
+    'm.faq.a5': 'Oui. Nos missions prestige sont couvertes par une assurance spécifique jusqu\'à plusieurs millions de CHF. Attestation fournie systématiquement au départ, avec numéro de police et conditions.',
   },
   en: {
     'm.hero.overline': 'Your driver in Geneva, Nyon, Lausanne and the Riviera',
+    'm.hero.h1': '<span class="word" style="animation-delay:.1s">Exceptional</span> <span class="word" style="animation-delay:.2s">drivers,</span><br><span class="word" style="animation-delay:.3s">for</span> <span class="word" style="animation-delay:.4s">your</span> <span class="mob-hero-rot" id="mobHeroRot"><span class="hero-rot-word is-active" data-word="trajets">rides</span><span class="hero-rot-word" data-word="transferts">transfers</span><span class="hero-rot-word" data-word="invites">guests</span><span class="hero-rot-word" data-word="missions">missions</span><span class="hero-rot-word" data-word="rendezvous">meetings</span></span><span class="word" style="animation-delay:.48s">.</span>',
     'm.hero.sub': "Airport, events, ski resorts, on-call service: our salaried drivers adapt to your schedule, outbound and return, with direct billing for your company.",
     'm.hero.cta1': 'Request a driver', 'm.hero.cta2': 'Discover our services',
+    'm.proof.s1': 'Salaried drivers', 'm.proof.s2': 'Rides completed since 2023', 'm.proof.s3': 'Response time',
+    'm.pil.lbl': 'Our services', 'm.pil.h2': 'A driver for <span class="ac">every need</span>.',
+    'm.pil.desc': 'Private or professional trips, transfers, on-call hires. And for your precious items, a discreet pickup service as an option.',
+    'm.pil.p1.type': 'People transport',
+    'm.pil.p1.h3': 'Your driver, when and where you need them.',
+    'm.pil.p1.p': "One-off ride, day-long booking, airport transfer, ski resort, professional event or private outing. We adapt to your schedule.",
+    'm.pil.p1.u1': 'Airport transfer', 'm.pil.p1.u2': 'On-call booking', 'm.pil.p1.u3': 'Events', 'm.pil.p1.u4': 'Reduced mobility', 'm.pil.p1.u5': 'Ski resorts',
+    'm.pil.p2.type': 'Prestige pickup', 'm.pil.p2.new': 'New',
+    'm.pil.p2.h3': 'Your items picked up, delivered. You stay where you are.',
+    'm.pil.p2.p': "Waiting on a watch from the repairer, a couture piece or a case of fine wines? We pick it up for you and deliver with every precaution.",
+    'm.pil.p2.u1': 'Watchmaking', 'm.pil.p2.u2': 'Jewellery', 'm.pil.p2.u3': 'Haute couture', 'm.pil.p2.u4': 'Fine wines', 'm.pil.p2.u5': 'Exceptional pieces',
+    'm.diff.lbl': 'Why Chaskis Mobility', 'm.diff.h2': 'Three reasons to <span class="ac">choose us</span>.',
+    'm.diff.desc': 'What sets us apart from standard VTC platforms: salaried drivers, maintained vehicles, billing built for pros.',
+    'm.diff.c1.h': 'Salaried drivers on permanent contracts',
+    'm.diff.c1.p': 'No freelancers, no rotation. Drivers trained to five-star hotel standards.',
+    'm.diff.c1.l1': 'Guaranteed replacement if absent', 'm.diff.c1.l2': 'Continuous prestige training', 'm.diff.c1.l3': 'Insured and managed in-house',
+    'm.diff.c2.h': 'Premium vehicles, hotel standards',
+    'm.diff.c2.p': 'Business-class sedans and VIP vans, a polished experience in every detail.',
+    'm.diff.c2.l1': 'Cold water, chargers, tuned climate', 'm.diff.c2.l2': 'Secure safes for valuables', 'm.diff.c2.l3': 'Fleet serviced at partner workshop',
+    'm.diff.c3.h': 'Native enterprise billing',
+    'm.diff.c3.p': 'Built for finance teams. Adapted to executives, HR, leadership.',
+    'm.diff.c3.l1': 'Consolidated monthly invoices', 'm.diff.c3.l2': 'Itemised VAT, accounting export', 'm.diff.c3.l3': 'Automated expense reports',
+    'm.prest.badge': 'Prestige Pickup', 'm.prest.new': 'New',
+    'm.prest.h2': 'For your <span class="ac">most precious pieces</span>, a flawless service.',
+    'm.prest.lead': "You don't always have the time, the will or the option to go pick up a valuable item yourself. Entrust us with the pickup: we go for you, we bring it back safely.",
+    'm.prest.l1': "<strong>Pickup on instruction</strong>You tell us where, when and what. We handle the rest.",
+    'm.prest.l2': '<strong>Secure transport</strong>Suited safes, temperature control, real-time tracking.',
+    'm.prest.l3': '<strong>Full discretion</strong>High-value insurance, no subcontractor, in-house traceability.',
+    'm.prest.cta': 'Speak to an account manager',
+    'm.sig.top': 'Prestige Service', 'm.sig.prefix': 'we pick up',
+    'm.sig.w1': 'watchmaking.', 'm.sig.w2': 'jewellery.', 'm.sig.w3': 'haute couture.', 'm.sig.w4': 'artworks.', 'm.sig.w5': 'fine wines.',
+    'm.sig.bot1': 'Geneva · Nyon · Lausanne', 'm.sig.bot2': 'Vaud Riviera included',
+    'm.how.lbl': 'How it works', 'm.how.h2': 'From request to ride, <span class="ac">four steps</span>.',
+    'm.how.desc': 'Everything is done online or by phone. An account manager takes over for complex requests.',
+    'm.how.s1.h': 'You request', 'm.how.s1.p': 'Online form, email or phone. A few details are enough.',
+    'm.how.s2.h': 'Quote &amp; approval', 'm.how.s2.p': 'Within an hour on business days, with options and firm pricing to approve.',
+    'm.how.s3.h': 'Billing', 'm.how.s3.p': "Payment settled before the ride, itemised VAT, invoice to your company.",
+    'm.how.s4.h': 'We execute', 'm.how.s4.p': 'Driver assigned, vehicle prepared, real-time tracking shared with you.',
+    'm.testi.lbl': 'They trust us', 'm.testi.h2': 'Companies, executives, <span class="ac">discerning individuals</span>.',
+    'm.testi.desc': 'Professionals who rely on us every day, all across French-speaking Switzerland.',
+    'm.testi.c1.text': "Our guests have early flights and high standards. Since we started working with Chaskis, airport transfers go off without a hitch. No complaints, no delays.",
+    'm.testi.c1.name': 'Hélène G.', 'm.testi.c1.role': 'Concierge, 5-star hotel · Geneva',
+    'm.testi.c2.text': "I needed a driver on call for a week of travel between Geneva and Lausanne. Simple booking, punctual driver, clean invoicing. I recommend them.",
+    'm.testi.c2.name': 'Thomas M.', 'm.testi.c2.role': 'Commercial Director · Swiss SME',
+    'm.testi.c3.text': 'We have 40 executives travelling across French-speaking Switzerland every week. With Chaskis, one monthly invoice, automatic expense reports. Our finance teams love it.',
+    'm.testi.c3.name': 'Sarah P.', 'm.testi.c3.role': 'Office Manager · Law firm',
+    'm.form.badge': 'Get in touch', 'm.form.h2': 'Request a <span class="ac">driver</span>.',
+    'm.form.intro': 'Fill in the form. A member of our team gets back to you with a quote and options suited to your need.',
+    'm.form.s1.num': 'Step 1 of 3', 'm.form.s1.title': 'What do you need?', 'm.form.s1.sub': 'Pick the option that fits best. You\'ll be able to specify later.',
+    'm.form.t1': '<strong>People transport</strong><em>Transfers, on-call, events</em>',
+    'm.form.t2': '<strong>Valuables</strong><em>Watchmaking, jewellery, unique pieces</em>',
+    'm.form.t3': '<strong>Event</strong><em>Dedicated fleet, guests, coordination</em>',
+    'm.form.t4': '<strong>Other need</strong><em>Describe your project freely</em>',
+    'm.form.next': 'Continue', 'm.form.back': 'Back',
+    'm.form.s2.num': 'Step 2 of 3', 'm.form.s2.title': 'Your trip',
+    'm.form.s2.sub': 'Tell us where to pick up and drop off, and the desired date. <strong id="mobRequestTypeLabel" style="color:var(--my);font-weight:700">People transport</strong>',
+    'm.form.pickup.lbl': 'Pickup address<span class="req">*</span>', 'm.form.pickup.ph': 'Geneva Airport, jewellery shop, hotel...',
+    'm.form.dropoff.lbl': 'Drop-off address<span class="req">*</span>', 'm.form.dropoff.ph': 'Your address, hotel, office...',
+    'm.form.dt.lbl': 'Desired date and time<span class="req">*</span>', 'm.form.dt.ph': 'Choose a date and time…',
+    'm.form.dp.confirm': 'Confirm',
+    'm.form.details.lbl': 'Details (optional)', 'm.form.details.ph': 'Number of passengers, nature of items, specific needs...',
+    'm.form.s3.num': 'Step 3 of 3', 'm.form.s3.title': 'Your details', 'm.form.s3.sub': 'An advisor gets back to you with a quote and tailored options.',
+    'm.form.name.lbl': 'Full name<span class="req">*</span>', 'm.form.name.ph': 'John Smith',
+    'm.form.company.lbl': 'Company', 'm.form.company.ph': 'Your company',
+    'm.form.email.lbl': 'Email<span class="req">*</span>', 'm.form.email.ph': 'john@example.ch',
+    'm.form.phone.lbl': 'Phone<span class="req">*</span>', 'm.form.phone.ph': '+41 78 123 45 67',
+    'm.form.submit': 'Send my request',
+    'm.form.promise': 'An advisor takes over as soon as your request arrives.',
+    'm.form.ok.h': 'Request received.',
+    'm.form.ok.ref': 'Reference&nbsp;<strong id="mobOrderRef">CHK-XXXX</strong>',
+    'm.form.ok.body': 'An account manager will get back to you within an hour.<br>A copy has been sent to <strong id="mobSuccessEmail">your address</strong>.',
+    'm.form.ok.note': "For a <strong>prestige pickup</strong>, forward this reference number to the establishment so they can authorise our courier to pick up your item.",
+    'm.form.ok.reset': 'New request',
+    'm.faq.lbl': 'Frequently asked questions', 'm.faq.h2': 'Everything you want to know.',
+    'm.faq.q1': 'What is the minimum booking notice?',
+    'm.faq.a1': "We handle requests from 2 hours' notice. For prestige trips (watchmaking, jewellery) or events, plan 24 to 48 hours so everything is calibrated to the millimetre.",
+    'm.faq.q2': 'How does enterprise billing work?',
+    'm.faq.a2': "Consolidated monthly invoices in the company's name, with detail per passenger and per trip. Separate VAT, CSV export, and direct integration with your accounting tools (SAP, Sage, Bexio).",
+    'm.faq.q3': 'Are your vehicles adapted to reduced mobility?',
+    'm.faq.a3': "Yes. We have vehicles adapted for people with reduced mobility, with drivers trained in assistance. Specify the need when booking, we prepare everything ahead.",
+    'm.faq.q4': 'What is your cancellation policy?',
+    'm.faq.a4': "Free cancellation up to 4 hours before the ride for people transport, 24 hours before for prestige missions. Beyond that, a share of the flat rate remains due to cover the driver's preparation.",
+    'm.faq.q5': 'Are you insured for high-value items?',
+    'm.faq.a5': 'Yes. Our prestige missions are covered by specific insurance up to several million CHF. Certificate systematically provided at departure, with policy number and conditions.',
   }
 };
 </script>
-<script src="shared.js?v=20260422d"></script>
+<script src="shared.js?v=20260422h"></script>
 <script src="auth.js"></script>
 
 <script>
@@ -1490,13 +1660,13 @@ document.querySelectorAll('.mob-faq-q').forEach(q => {
 
 // ===== HERO H1 rotator (time-based) =====
 (function() {
-  const rot = document.getElementById('mobHeroRot');
-  if (!rot) return;
-  const words = rot.querySelectorAll('.hero-rot-word');
-  if (words.length < 2) return;
   let i = 0;
   setInterval(() => {
-    const current = words[i];
+    const rot = document.getElementById('mobHeroRot');
+    if (!rot) return;
+    const words = rot.querySelectorAll('.hero-rot-word');
+    if (words.length < 2) return;
+    const current = words[i % words.length];
     i = (i + 1) % words.length;
     const next = words[i];
     current.classList.remove('is-active');

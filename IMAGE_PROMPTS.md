@@ -71,6 +71,34 @@ Use these prompts in Midjourney, DALL-E, or Ideogram to generate photos for the 
 
 **Prompt :** Authentic editorial photograph of a Chaskis bike courier in action, three-quarter rear view (not facing camera), insulated delivery backpack visible on shoulders, teal Chaskis branded uniform, riding through a narrow cobblestone street in old-town Geneva or Lausanne, late afternoon golden hour light, warm bokeh of European stone buildings and soft street lamps in the background, candid reportage style, no people in foreground, no group shots, no repeated faces, shallow depth of field on the courier, motion subtle, 35mm film look, natural colors, cinematic yet realistic, 4:5 portrait ratio.
 
+### chauffeur-hero.png (variante hero chauffeur — crossfade typewriter)
+**Fichier :** `chauffeur-hero.png` · **Ratio :** 4:5 (portrait, 520×650) · **Placement :** même emplacement que `postulation-hero.png`, alterne en crossfade quand le typewriter bascule sur "chauffeur" / "driver"
+
+**IMPORTANT : c'est un chauffeur VTC (Uber-like), PAS un livreur Amazon.** Berline classe affaires noire ou gris anthracite (Tesla, Mercedes Classe E, Audi A6, BMW Série 5, Škoda Superb). **Pas de van, pas d'utilitaire, pas de coffre arrière.**
+
+**Inspiration obligatoire :** regarder `postulation-hero.png` (coursier à vélo, rue pavée old-town Genève/Lausanne, golden hour, grain 35mm, ambiance reportage non posée, vue trois-quarts dos). Le hero chauffeur doit **répondre visuellement** : même heure, même grain, même palette chaude, même logique "candid reportage non posé" — mais sujet berline + chauffeur professionnel en tenue sombre.
+
+**Variante 1 — Accueil passager (portière arrière ouverte) :**
+Authentic editorial photograph of a Chaskis professional driver in a dark suit standing next to the open rear passenger door of a sleek black executive sedan (Mercedes E-Class or Audi A6, clean and recent), three-quarter back view, right hand on the door frame in a welcoming gesture, head slightly turned showing profile only, no eye contact with camera, waiting for a client on a cobblestone Geneva old-town street at golden hour, warm late afternoon sun raking from the left, reflections on the car's paint, shallow depth of field on the driver and the door frame, soft bokeh of European stone facades behind, documentary reportage 35mm film look, warm natural tones, quiet premium mood, not posed, not stock-photo, 4:5 portrait ratio.
+
+**Variante 2 — Derrière le volant, vue depuis la banquette arrière :**
+Cinematic over-the-shoulder shot from inside an executive black sedan, looking forward past the headrest of a Chaskis driver in a dark suit, hands calmly on the leather steering wheel at 9-and-3, focused profile lit by the warm late afternoon sun coming through the windshield, the Geneva lake shoreline or Lausanne old-town slightly out of focus through the glass, clean uncluttered dashboard, shallow depth of field on the driver's shoulder and hands, natural lens flare, documentary 35mm grain, warm cinematic palette, no eye contact, premium and restrained, 4:5 portrait ratio.
+
+**Variante 3 — Entre deux courses, adossé à la berline :**
+Candid reportage photograph of a Chaskis driver in a dark tailored suit standing next to his parked black executive saloon on a quiet cobblestone street in old-town Geneva, right hand in pocket, left hand holding a discreet smartphone checking the next ride, relaxed three-quarter profile, calm focused expression looking down at the phone, late afternoon golden hour light washing over the suit and the car's glossy flank, warm reflections on the bodywork, soft bokeh of European facades and a sliver of lake water in the distance, shallow depth of field, 35mm film grain, warm natural tones, premium but not flashy, no eye contact with camera, not stock-photo, 4:5 portrait ratio.
+
+**Variante 4 — Pickup hôtel 5 étoiles (ambiance Uber Black) :**
+Editorial candid photograph of a Chaskis chauffeur in a dark well-cut suit stepping out of the driver's side of a sleek black executive sedan parked in front of the glass entrance of a luxury Geneva hotel, three-quarter rear view, left hand still on the door handle, looking toward the hotel lobby (never toward camera), late afternoon golden light bouncing off the car and the hotel's marble facade, warm premium atmosphere, shallow depth of field, documentary 35mm feel, discreet and professional, no logos visible, 4:5 portrait ratio.
+
+**Anti-patterns (ne JAMAIS faire) :**
+- **Pas de van, pas d'utilitaire, pas de Sprinter, pas de porte latérale coulissante.** C'est une berline classe affaires uniquement.
+- Pas de regard caméra direct, pas de sourire commercial, pas de pose "bras croisés devant la voiture".
+- Pas de costume bleu marine cravate flashy : costume sombre discret, sobre, bien coupé.
+- Pas de voiture américaine, pas de SUV bling-bling, pas de Rolls/Bentley (trop luxueux, on n'est pas un service de limousine). Berline affaires européenne récente et propre.
+- Pas de stock-photo studio : lumière reportage réelle, golden hour.
+- Pas de fond New York / Paris / Tokyo : Genève ou Lausanne, rues pavées old-town ou vue lac.
+- Pas de logos de marque visibles (enlever les logos constructeur si possible, ou les flouter).
+
 **Anti-patterns (ne pas faire) :**
 - Pas de collage multi visages, pas de foule dupliquée
 - Pas de regard caméra

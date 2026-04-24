@@ -21,21 +21,21 @@
 <meta property="og:title" content="Chauffeur privé en Suisse romande | Chaskis Mobilité">
 <meta property="og:description" content="Transferts aéroport, événements, transport sécurisé d'objets de valeur. Service premium en Suisse romande.">
 <meta property="og:url" content="https://www.chaskis.ch/mobilite">
-<meta property="og:image" content="https://www.chaskis.ch/hero-courier.png">
+<meta property="og:image" content="https://www.chaskis.ch/assets/img/hero-courier.webp">
 <meta property="og:locale" content="fr_CH">
 
 <!-- ===== Twitter ===== -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Chauffeur privé en Suisse romande | Chaskis Mobilité">
 <meta name="twitter:description" content="Transferts aéroport, événements, transport sécurisé d'objets de valeur. Service premium en Suisse romande.">
-<meta name="twitter:image" content="https://www.chaskis.ch/hero-courier.png">
+<meta name="twitter:image" content="https://www.chaskis.ch/assets/img/hero-courier.webp">
 
 <!-- ===== PWA & Assets ===== -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#F5B800">
-<link rel="icon" href="icon-192.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=20260422f">
+<link rel="icon" href="assets/icons/icon-192.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<link rel="stylesheet" href="assets/css/styles.css?v=20260422f">
 
 <!-- ===== Performance ===== -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -84,7 +84,7 @@ body.page-mobilite{
 }
 body.page-mobilite .footer{background:#07050E}
 /* Logo jaune pour page Mobilité (emblème C en or, texte reste blanc) */
-body.page-mobilite #nav .nav-logo img{content:url('Chaskis-logo-mobilite.svg')}
+body.page-mobilite #nav .nav-logo img{content:url('assets/img/Chaskis-logo-mobilite.svg')}
 
 /* CTA navbar style secondaire sur page sombre (blanc ghost, hover jaune) */
 body.page-mobilite #nav .nav-cta-btn{border-color:rgba(255,255,255,.22)!important;color:#fff!important;background:rgba(255,255,255,.02)!important}
@@ -521,14 +521,14 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
   <a href="index.html#booking" onclick="cm()">Planifier un appel</a>
   <a href="index.html#faq" onclick="cm()">FAQ</a>
   <div class="mob-lang-opts">
-    <button class="mob-lang-btn active" data-lang="fr" onclick="__chaskisSetLang('fr');cm()"><span class="mob-lang-flag"><img src="flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
-    <button class="mob-lang-btn" data-lang="en" onclick="__chaskisSetLang('en');cm()"><span class="mob-lang-flag"><img src="flag-gb.svg" alt="" width="18" height="13"></span> English</button>
+    <button class="mob-lang-btn active" data-lang="fr" onclick="__chaskisSetLang('fr');cm()"><span class="mob-lang-flag"><img src="assets/img/flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
+    <button class="mob-lang-btn" data-lang="en" onclick="__chaskisSetLang('en');cm()"><span class="mob-lang-flag"><img src="assets/img/flag-gb.svg" alt="" width="18" height="13"></span> English</button>
   </div>
 </div>
 
 <nav class="nav" id="nav">
   <div class="ct nav-in">
-    <a href="index.html" class="nav-logo" aria-label="Chaskis, accueil"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
+    <a href="index.html" class="nav-logo" aria-label="Chaskis, accueil"><img src="assets/img/Chaskis-logo.svg" alt="Chaskis" height="22"></a>
     <div class="nav-mid" style="margin-left:auto">
       <a href="index.html" data-i18n="nav.livraison">Livraison</a>
       <a href="mobilite.html" class="active" data-i18n="nav.mobilite">Mobilit&eacute;</a>
@@ -537,15 +537,15 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
     <a href="commander.html" class="btn btn-o nav-cta-btn"><span data-i18n="nav.commander">Commander une course</span></a>
     <div class="lang-drop" id="langDrop">
       <button class="lang-drop-trigger" id="langTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Changer de langue">
-        <span class="lang-drop-flag" id="langFlag"><img src="flag-fr.svg" alt="Français" width="18" height="13"></span>
+        <span class="lang-drop-flag" id="langFlag"><img src="assets/img/flag-fr.svg" alt="Français" width="18" height="13"></span>
         <svg class="lang-drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       <div class="lang-drop-menu" id="langMenu" role="listbox" aria-label="Langue">
         <button class="lang-drop-item active" role="option" data-lang="fr" data-flag="fr" data-code="FR" aria-selected="true">
-          <span class="lang-drop-item-flag"><img src="flag-fr.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">Français</span>
+          <span class="lang-drop-item-flag"><img src="assets/img/flag-fr.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">Français</span>
         </button>
         <button class="lang-drop-item" role="option" data-lang="en" data-flag="gb" data-code="EN" aria-selected="false">
-          <span class="lang-drop-item-flag"><img src="flag-gb.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">English</span>
+          <span class="lang-drop-item-flag"><img src="assets/img/flag-gb.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">English</span>
         </button>
       </div>
     </div>
@@ -591,7 +591,7 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
         </div>
 
         <div class="mob-hero-visual" id="mobHeroVis">
-          <img src="hero-2.png" alt="Chauffeur Chaskis Mobilité" loading="eager" decoding="async">
+          <img src="assets/img/hero-2.webp" alt="Chauffeur Chaskis Mobilité" loading="eager" decoding="async">
         </div>
       </div>
     </div>
@@ -622,7 +622,7 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
     <div class="mob-pillars-grid">
       <!-- Pillar 1: Personnes -->
       <article class="mob-pillar mob-pillar-1 rev">
-        <div class="mob-pillar-bg" style="background-image:url('transport.png');background-size:cover;background-position:center top"></div>
+        <div class="mob-pillar-bg" style="background-image:url('assets/img/transport.webp');background-size:cover;background-position:center top"></div>
         <div class="mob-pillar-content">
           <span class="mob-pillar-type" data-i18n="m.pil.p1.type">Transport de personnes</span>
           <h3 data-i18n="m.pil.p1.h3">Votre chauffeur, quand et où vous en avez besoin.</h3>
@@ -639,7 +639,7 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
 
       <!-- Pillar 2: Collecte prestige -->
       <article class="mob-pillar mob-pillar-2 rev">
-        <div class="mob-pillar-bg" style="background-image:url('Watch.png');background-size:cover;background-position:center 15%"></div>
+        <div class="mob-pillar-bg" style="background-image:url('assets/img/Watch.webp');background-size:cover;background-position:center 15%"></div>
         <div class="mob-pillar-content">
           <div class="mob-pillar-badges"><span class="mob-pillar-type" data-i18n="m.pil.p2.type">Collecte prestige</span><span class="mob-pillar-new" data-i18n="m.pil.p2.new">Nouveauté</span></div>
           <h3 data-i18n="m.pil.p2.h3">Vos objets récupérés, livrés. Vous restez où vous êtes.</h3>
@@ -753,11 +753,11 @@ body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-dee
         <div class="mob-signature" id="mobSignature">
           <div class="mob-signature-bg" id="mobSignatureBg">
             <!-- Images à placer : signature-horlogerie.jpg, signature-joaillerie.jpg, etc. (prompts listés en-dessous) -->
-            <img class="mob-signature-bg-img is-active" data-word="horlogerie" src="signature-horlogerie.png" alt="" loading="lazy">
-            <img class="mob-signature-bg-img" data-word="joaillerie" src="collier.png" alt="" loading="lazy">
-            <img class="mob-signature-bg-img" data-word="haute-couture" src="couture.png" alt="" loading="lazy">
-            <img class="mob-signature-bg-img" data-word="oeuvres-art" src="art.png" alt="" loading="lazy">
-            <img class="mob-signature-bg-img" data-word="grands-crus" src="grandcru.png" alt="" loading="lazy">
+            <img class="mob-signature-bg-img is-active" data-word="horlogerie" src="assets/img/signature-horlogerie.webp" alt="" loading="lazy">
+            <img class="mob-signature-bg-img" data-word="joaillerie" src="assets/img/collier.webp" alt="" loading="lazy">
+            <img class="mob-signature-bg-img" data-word="haute-couture" src="assets/img/couture.webp" alt="" loading="lazy">
+            <img class="mob-signature-bg-img" data-word="oeuvres-art" src="assets/img/art.webp" alt="" loading="lazy">
+            <img class="mob-signature-bg-img" data-word="grands-crus" src="assets/img/grandcru.webp" alt="" loading="lazy">
           </div>
           <div class="mob-signature-inner">
             <div class="mob-signature-top" data-i18n="m.sig.top">Service Prestige</div>
@@ -1301,8 +1301,8 @@ window.T = {
   }
 };
 </script>
-<script src="shared.js?v=20260422h"></script>
-<script src="auth.js"></script>
+<script src="assets/js/shared.js?v=20260422h"></script>
+<script src="assets/js/auth.js"></script>
 
 <script>
 // ===== FORM : type toggle + 3-step stepper =====
@@ -1429,7 +1429,7 @@ window.T = {
   });
 })();
 
-// PAGE TRANSITION : géré par shared.js
+// PAGE TRANSITION : géré par assets/js/shared.js
 
 // ===== ORBS parallax (background) =====
 (function() {

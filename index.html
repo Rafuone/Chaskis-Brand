@@ -23,7 +23,7 @@
 <meta property="og:title" content="Chaskis : livraison pour les entreprises en Suisse romande">
 <meta property="og:description" content="800 coursiers salariés CDI, tarifs fixes dès CHF 8, zéro commission. Genève, Nyon, Lausanne, Riviera.">
 <meta property="og:url" content="https://www.chaskis.ch/">
-<meta property="og:image" content="https://www.chaskis.ch/hero-courier.png">
+<meta property="og:image" content="https://www.chaskis.ch/assets/img/hero-courier.webp">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Coursier Chaskis qui remet une livraison en Suisse romande">
@@ -34,10 +34,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Chaskis : livraison pour les entreprises en Suisse romande">
 <meta name="twitter:description" content="800 coursiers salariés CDI, tarifs fixes dès CHF 8, zéro commission. Genève, Nyon, Lausanne, Riviera.">
-<meta name="twitter:image" content="https://www.chaskis.ch/hero-courier.png">
+<meta name="twitter:image" content="https://www.chaskis.ch/assets/img/hero-courier.webp">
 
 <!-- ===== Performance ===== -->
-<link rel="preload" as="image" href="hero-courier.png" fetchpriority="high">
+<link rel="preload" as="image" href="assets/img/hero-courier.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
@@ -46,9 +46,9 @@
 <!-- ===== PWA & Assets ===== -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#4BB3A4">
-<link rel="icon" href="icon-192.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=20260422f">
+<link rel="icon" href="assets/icons/icon-192.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<link rel="stylesheet" href="assets/css/styles.css?v=20260422f">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 
 <!-- ===== Structured Data ===== -->
@@ -62,8 +62,8 @@
       "name": "Chaskis",
       "legalName": "Chaskis SA",
       "url": "https://www.chaskis.ch/",
-      "logo": "https://www.chaskis.ch/Chaskis-logo.svg",
-      "image": "https://www.chaskis.ch/hero-courier.png",
+      "logo": "https://www.chaskis.ch/assets/img/Chaskis-logo.svg",
+      "image": "https://www.chaskis.ch/assets/img/hero-courier.webp",
       "description": "Infrastructure de livraison pour les entreprises de Suisse romande. Coursiers salariés, dispatch automatique, preuve photo, tarifs fixes.",
       "email": "hello@chaskis.ch",
       "telephone": "+41227000127",
@@ -215,7 +215,7 @@
 .nav.over-dark .nav-cta-btn{border-color:rgba(44,32,82,.35)!important;color:var(--ink)!important}
 .nav.over-dark .nav-cta-btn:hover{border-color:rgba(44,32,82,.7)!important;background:rgba(44,32,82,.08)!important}
 @media(max-width:767px){.nav-cta-btn{display:none}}
-/* .nav-cta-float styles mutualisés dans styles.css (nav-cta-float block) */
+/* .nav-cta-float styles mutualisés dans assets/css/styles.css (nav-cta-float block) */
 
 /* ===== CTA PULSE ===== */
 @keyframes cta-pulse{
@@ -588,7 +588,7 @@
 
 /* FAQ banner + left column */
 .faq-banner{margin-bottom:clamp(36px,4vw,52px);border-radius:var(--rxl);overflow:hidden}
-.faq-banner-img{width:100%;height:clamp(220px,26vw,360px);background-image:url('Geneva.png');background-size:cover;background-position:center 40%;background-repeat:no-repeat}
+.faq-banner-img{width:100%;height:clamp(220px,26vw,360px);background-image:url('assets/img/Geneva.webp');background-size:cover;background-position:center 40%;background-repeat:no-repeat}
 .faq-contact{display:flex;flex-direction:column;gap:10px;margin-top:28px}
 .faq-ci{display:flex;align-items:center;gap:14px;font-size:.92rem;line-height:1.5;color:var(--ink);padding:14px 18px;background:var(--white);border:1px solid var(--sand);border-radius:12px;transition:background .25s ease,border-color .25s ease}
 .faq-ci:hover{background:var(--teal-bg);border-color:rgba(75,179,164,.3)}
@@ -859,8 +859,8 @@ span.ast{color:#e53e3e!important;font-weight:700}
   <a href="postuler.html" onclick="cm()" data-i18n="nav.join">Postuler</a>
   <a href="commander.html" onclick="cm()" data-i18n="nav.order">Commander une course</a>
   <div class="mob-lang-opts">
-    <button class="mob-lang-btn active" data-lang="fr" onclick="__chaskisSetLang('fr');cm()"><span class="mob-lang-flag"><img src="flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
-    <button class="mob-lang-btn" data-lang="en" onclick="__chaskisSetLang('en');cm()"><span class="mob-lang-flag"><img src="flag-gb.svg" alt="" width="18" height="13"></span> English</button>
+    <button class="mob-lang-btn active" data-lang="fr" onclick="__chaskisSetLang('fr');cm()"><span class="mob-lang-flag"><img src="assets/img/flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
+    <button class="mob-lang-btn" data-lang="en" onclick="__chaskisSetLang('en');cm()"><span class="mob-lang-flag"><img src="assets/img/flag-gb.svg" alt="" width="18" height="13"></span> English</button>
   </div>
 </div>
 
@@ -879,7 +879,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
 
 <nav class="nav" id="nav">
   <div class="ct nav-in">
-    <a href="index.html" class="nav-logo" aria-label="Chaskis, accueil"><img src="Chaskis-logo.svg" alt="Chaskis" height="22"></a>
+    <a href="index.html" class="nav-logo" aria-label="Chaskis, accueil"><img src="assets/img/Chaskis-logo.svg" alt="Chaskis" height="22"></a>
     <div class="nav-mid" style="margin-left:auto">
       <a href="index.html" class="active" data-i18n="nav.delivery">Livraison</a>
       <a href="mobilite.html" data-i18n="nav.mobility">Mobilit&eacute;</a>
@@ -888,15 +888,15 @@ span.ast{color:#e53e3e!important;font-weight:700}
     <a href="commander.html" class="btn btn-o nav-cta-btn"><span data-i18n="nav.order">Commander une course</span></a>
     <div class="lang-drop" id="langDrop">
       <button class="lang-drop-trigger" id="langTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Changer de langue">
-        <span class="lang-drop-flag" id="langFlag"><img src="flag-fr.svg" alt="Français" width="18" height="13"></span>
+        <span class="lang-drop-flag" id="langFlag"><img src="assets/img/flag-fr.svg" alt="Français" width="18" height="13"></span>
         <svg class="lang-drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       <div class="lang-drop-menu" id="langMenu" role="listbox" aria-label="Langue">
         <button class="lang-drop-item active" role="option" data-lang="fr" data-flag="fr" data-code="FR" aria-selected="true">
-          <span class="lang-drop-item-flag"><img src="flag-fr.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">Français</span>
+          <span class="lang-drop-item-flag"><img src="assets/img/flag-fr.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">Français</span>
         </button>
         <button class="lang-drop-item" role="option" data-lang="en" data-flag="gb" data-code="EN" aria-selected="false">
-          <span class="lang-drop-item-flag"><img src="flag-gb.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">English</span>
+          <span class="lang-drop-item-flag"><img src="assets/img/flag-gb.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">English</span>
         </button>
       </div>
     </div>
@@ -935,7 +935,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
     </div>
     <div class="hero-vis" id="heroVis">
       <div class="hv-photo-wrap">
-        <img src="hero-courier.png" alt="Coursier Chaskis remettant un colis en ville" class="hv-photo" fetchpriority="high" decoding="async" width="620" height="520">
+        <img src="assets/img/hero-courier.webp" alt="Coursier Chaskis remettant un colis en ville" class="hv-photo" fetchpriority="high" decoding="async" width="620" height="520">
       </div>
     </div>
   </div>
@@ -946,32 +946,32 @@ span.ast{color:#e53e3e!important;font-weight:700}
   <div class="partners-head"><p><em>60+</em> <span data-i18n="partners.headline">entreprises nous font confiance</span></p></div>
   <div class="mq-w"><div class="mq" aria-hidden="true">
     <div class="mq-inner">
-      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
-      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
-      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
-      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
-      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
-      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
-      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
-      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
-      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
-      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
-      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
-      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/proton.svg" alt="Proton" class="mq-logo"></span>
     </div>
     <div class="mq-inner">
-      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
-      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
-      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
-      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
-      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
-      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
-      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
-      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
-      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
-      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
-      <span class="mq-i"><img src="uber.svg" alt="Uber" class="mq-logo"></span>
-      <span class="mq-i"><img src="proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/proton.svg" alt="Proton" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/uber.svg" alt="Uber" class="mq-logo"></span>
+      <span class="mq-i"><img src="assets/img/proton.svg" alt="Proton" class="mq-logo"></span>
     </div>
   </div></div>
   <div class="ct">
@@ -1382,8 +1382,8 @@ span.ast{color:#e53e3e!important;font-weight:700}
 <a href="#booking" class="btn btn-p pulse nav-cta-float"><span data-i18n="float.cta">Planifier un appel</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-<script src="shared.js?v=20260422h"></script>
-<script src="auth.js"></script>
+<script src="assets/js/shared.js?v=20260422h"></script>
+<script src="assets/js/auth.js"></script>
 <script>
 
 // ===== BOOKING CALENDAR (3 steps, dynamic) =====
@@ -1747,13 +1747,13 @@ if (zoomBg) {
   }, { passive: true });
 }
 
-// Observe .vpc and .pipe-step (custom animated elements not covered by shared.js selector)
+// Observe .vpc and .pipe-step (custom animated elements not covered by assets/js/shared.js selector)
 const extraReveal = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('v'); extraReveal.unobserve(e.target); } });
 }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.vpc, .pipe-step').forEach(el => extraReveal.observe(el));
 
-// PAGE TRANSITION : géré par shared.js
+// PAGE TRANSITION : géré par assets/js/shared.js
 
 // ===== NAV DARK DETECTION (auto, no manual tagging needed) =====
 (function() {
@@ -2088,7 +2088,7 @@ function setLang(lang) {
   const triggerFlag = document.getElementById('langFlag');
   const triggerCode = document.getElementById('langCode');
   if (triggerFlag) {
-    const flagSrc = lang === 'en' ? 'flag-gb.svg' : 'flag-fr.svg';
+    const flagSrc = lang === 'en' ? 'assets/img/flag-gb.svg' : 'assets/img/flag-fr.svg';
     const flagAlt = lang === 'en' ? 'English' : 'Français';
     triggerFlag.innerHTML = '<img src="' + flagSrc + '" alt="' + flagAlt + '" width="18" height="13">';
   }
@@ -2108,7 +2108,7 @@ function setLang(lang) {
   if (window._testiRebuild) window._testiRebuild(lang);
 }
 
-// Lang drop toggle : géré par shared.js (window.__chaskisSetLang). Ne pas dupliquer ici.
+// Lang drop toggle : géré par assets/js/shared.js (window.__chaskisSetLang). Ne pas dupliquer ici.
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));

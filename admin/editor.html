@@ -288,6 +288,7 @@
   .rdv-hero .hi{flex:1;min-width:0}
   .rdv-hero .lbl{font-size:11px;font-weight:600;color:var(--teal-d)}
   .rdv-hero .cl{font-size:16px;font-weight:700;margin:2px 0 1px}
+  .rdv-hero .hero-ct{font-size:12.5px;color:var(--muted);margin:0 0 2px}
   .rdv-hero .meta{font-size:12.5px;color:var(--ink-soft)}
   .rdv-hero .acts{display:flex;gap:8px;flex-shrink:0}
   .stdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:middle}
@@ -370,19 +371,16 @@
   .rdv-up{margin-top:12px}
   .rdv-up-h{font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:9px}
   .rdv-up-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:3px}
-  .up-card{flex:0 0 auto;width:194px;border:1px solid var(--border);border-radius:12px;background:var(--panel);padding:12px 14px;box-shadow:0 1px 2px rgba(40,32,60,.035)}
-  .up-date{display:flex;align-items:baseline;gap:8px;font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.01em;white-space:nowrap}
+  .up-card{flex:0 0 auto;width:224px;border:1px solid var(--border);border-radius:12px;background:var(--panel);padding:12px 14px;box-shadow:0 1px 2px rgba(40,32,60,.035)}
+  .up-date{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.01em;white-space:nowrap}
   .up-time{font-size:12.5px;font-weight:600;color:var(--teal-d)}
   .up-c{font-size:13px;font-weight:600;color:var(--ink);margin-top:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .up-mode{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-soft);margin-top:5px}
-  .up-mode svg{width:13px;height:13px;color:var(--muted)}
+  .up-ct{font-size:11.5px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .up-div{height:1px;background:var(--border);margin:11px 0}
   .up-w{display:flex;align-items:center;font-size:12px;color:var(--ink-soft);font-weight:500}
-  /* mode du rendez-vous : chip (hero) + icône (table) */
-  .mode-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--teal-d);background:#E1F5EE;border-radius:20px;padding:4px 11px;margin-top:9px}
-  .mode-chip svg{width:14px;height:14px}
-  .mode-ic{display:inline-flex;vertical-align:-3px;margin-right:8px;color:var(--muted)}
-  .mode-ic svg{width:15px;height:15px}
+  /* colonne client : entreprise + interlocuteur sur 2 lignes */
+  .cl-co{font-weight:600;color:var(--ink);line-height:1.3}
+  .cl-ct{font-size:12px;color:var(--muted);margin-top:1px}
   .up-more{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:50px;border:1px dashed var(--border-2);border-radius:11px;color:var(--muted);font-weight:600;font-size:12px}
   /* sélection / relance en masse */
   td.chk,th.chk{width:34px;text-align:center}
@@ -397,6 +395,28 @@
   .rel-sent svg{width:16px;height:16px;flex-shrink:0}
   .detail-close{all:unset;cursor:pointer;font-size:12px;color:var(--muted);margin-top:12px;display:inline-block}
   .detail-close:hover{color:var(--ink)}
+  /* fiche rendez-vous : coordonnées actionnables + suivi, sur 2 colonnes */
+  .rdv-row{cursor:pointer}
+  .rdv-row.row-open{background:var(--bg)}
+  .rdv-fiche{padding:16px 16px 14px}
+  .fiche-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:15px}
+  .fiche-head .fh-co{font-size:14px;font-weight:700;color:var(--ink)}
+  .fiche-head .fh-sub{font-size:12.5px;color:var(--muted);margin-left:9px}
+  .fiche-head .fh-when{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-soft)}
+  .fiche-head .fh-when svg{width:14px;height:14px;flex-shrink:0}
+  .fiche-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px}
+  @media(max-width:900px){.fiche-cols{grid-template-columns:1fr;gap:18px}}
+  .fiche-lbl{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px}
+  .fiche-acts{display:flex;flex-direction:column;gap:8px}
+  .fiche-act{display:flex;align-items:center;gap:11px;text-decoration:none;border:1px solid var(--border-2);border-radius:10px;padding:9px 12px;background:#fff;transition:border-color .12s,background .12s}
+  .fiche-act:hover{border-color:var(--teal);background:#E1F5EE}
+  .fiche-act .fa-ic{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;background:#E1F5EE;color:var(--teal-d);flex-shrink:0}
+  .fiche-act:hover .fa-ic{background:#fff}
+  .fiche-act .fa-ic svg{width:16px;height:16px}
+  .fiche-act .fa-tx{display:flex;flex-direction:column;min-width:0}
+  .fiche-act .fa-l{font-size:11px;color:var(--muted)}
+  .fiche-act .fa-v{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fiche-hint{font-size:12.5px;color:var(--muted);margin:0}
   .relmark{display:inline-block;margin-top:4px;font-size:10.5px;font-weight:600;color:#0F6E56;background:#E1F5EE;border-radius:20px;padding:1px 8px}
   /* workflow de connexion en modale */
   .flow-steps{display:flex;align-items:center;gap:8px;margin:4px 0 16px}
@@ -1475,16 +1495,15 @@ const RDV_STC={
 const RDV_REASONS=[["Tarif jugé trop élevé",38],["Pas le bon moment",27],["Parti à la concurrence",19],["Sans réponse / injoignable",16]];
 const MFULL={"janv.":"janvier","févr.":"février","mars":"mars","avr.":"avril","avril":"avril","mai":"mai","juin":"juin","juil.":"juillet","août":"août","sept.":"septembre","oct.":"octobre","nov.":"novembre","déc.":"décembre"};
 let rdvData=[
-  {day:"2",mon:"juil.",time:"10:00",client:"Boucherie Dubois",sujet:"Appel découverte",who:"Sarah",mode:"place",lieu:"12 rue du Marché, Genève",st:"avenir",note:""},
-  {day:"2",mon:"juil.",time:"15:00",client:"Pharmacie du Lac",sujet:"Mise en place Flex",who:"Marc",mode:"tel",st:"avenir",note:""},
-  {day:"4",mon:"juil.",time:"09:00",client:"Atelier Vélo Plus",sujet:"Devis Dédié",who:"Sarah",mode:"place",lieu:"Z.I. de Meyrin",st:"avenir",note:""},
-  {day:"7",mon:"juil.",time:"11:00",client:"Café des Bains",sujet:"Découverte",who:"Marc",mode:"tel",st:"avenir",note:""},
-  {day:"28",mon:"juin",time:"11:00",client:"Cabinet Morand",sujet:"Appel découverte",who:"Sarah",mode:"tel",st:"honore",note:"Devis envoyé, relance le 5 juil."},
-  {day:"27",mon:"juin",time:"15:30",client:"Restaurant Sole",sujet:"Suivi mensuel",who:"Marc",mode:"place",lieu:"Quai du Mont-Blanc, Genève",st:"honore",note:"Satisfait, passe en Dédié"},
-  {day:"26",mon:"juin",time:"16:00",client:"Fleuriste Camélia",sujet:"Question tarifs",who:"Sarah",mode:"tel",st:"refuse",note:"Trouve l'offre trop chère, ne souhaite pas être relancée."},
-  {day:"25",mon:"juin",time:"09:30",client:"Librairie Page 12",sujet:"Découverte",who:"Marc",mode:"tel",st:"noshow",note:"Relancer par mail"}
+  {day:"2",mon:"juil.",time:"10:00",client:"Boucherie Dubois",contact:"Pierre Dubois",tel:"+41 22 311 22 09",email:"contact@boucherie-dubois.ch",sujet:"Appel découverte",who:"Sarah",mode:"tel",st:"avenir",note:""},
+  {day:"2",mon:"juil.",time:"15:00",client:"Pharmacie du Lac",contact:"Claire Fontaine",tel:"+41 22 736 44 10",email:"accueil@pharmaciedulac.ch",sujet:"Mise en place Flex",who:"Marc",mode:"tel",st:"avenir",note:""},
+  {day:"4",mon:"juil.",time:"09:00",client:"Atelier Vélo Plus",contact:"Thomas Girard",tel:"+41 22 782 09 55",email:"hello@atelierveloplus.ch",sujet:"Devis Dédié",who:"Sarah",mode:"tel",st:"avenir",note:""},
+  {day:"7",mon:"juil.",time:"11:00",client:"Café des Bains",contact:"Sofia Marchetti",tel:"+41 22 321 57 30",email:"resa@cafedesbains.ch",sujet:"Appel découverte",who:"Marc",mode:"tel",st:"avenir",note:""},
+  {day:"28",mon:"juin",time:"11:00",client:"Cabinet Morand",contact:"Antoine Morand",tel:"+41 22 819 03 12",email:"contact@cabinet-morand.ch",sujet:"Appel découverte",who:"Sarah",mode:"tel",st:"honore",note:"Devis envoyé, relance le 5 juil."},
+  {day:"27",mon:"juin",time:"15:30",client:"Restaurant Sole",contact:"Luca Bianchi",tel:"+41 22 738 16 24",email:"info@restaurant-sole.ch",sujet:"Suivi mensuel",who:"Marc",mode:"tel",st:"honore",note:"Satisfait, passe en Dédié"},
+  {day:"26",mon:"juin",time:"16:00",client:"Fleuriste Camélia",contact:"Nadia Berger",tel:"+41 22 344 28 71",email:"bonjour@camelia-fleurs.ch",sujet:"Question tarifs",who:"Sarah",mode:"tel",st:"refuse",note:"Trouve l'offre trop chère, ne souhaite pas être relancée."},
+  {day:"25",mon:"juin",time:"09:30",client:"Librairie Page 12",contact:"Élise Favre",tel:"+41 22 700 11 42",email:"libraire@page12.ch",sujet:"Appel découverte",who:"Marc",mode:"tel",st:"noshow",note:"Relancer par mail"}
 ];
-const RDV_MODE={ tel:{l:"Par téléphone",ic:"phone"}, place:{l:"Sur place",ic:"map-pin"} };
 const RDV_PERIODS={
   "30j":{curR:"1-30 juin",prevR:"1-31 mai",chart:{labels:["2-8 juin","9-15 juin","16-22 juin","23-30 juin"],vals:[5,7,6,9]}},
   "3m":{curR:"avr-juin 2026",prevR:"janv-mars 2026",chart:{labels:["avril","mai","juin"],vals:[18,22,27]}},
@@ -1493,7 +1512,7 @@ const RDV_PERIODS={
 };
 let rdvKey="30j";
 let rdvWho="all";        // filtre "voir" : toute l'équipe ou une personne
-let rdvOpenRow=-1, rdvOpenKind="note";   // ligne dépliée + type de panneau (note | relance)
+let rdvOpenRow=-1;   // index de la ligne dépliée (fiche rendez-vous), -1 si aucune
 let rdvSel=new Set();                     // sélection pour relance en masse
 function escHtml(s){ const d=document.createElement("div"); d.textContent=s||""; return d.innerHTML; }
 
@@ -1568,29 +1587,32 @@ function renderRdvTable(){
     if(f!=="all" && r.st!==f) return; shown++;
     const sc=RDV_STC[r.st], past=(r.st!=="avenir"), sent=r.relance&&r.relance.sent;
     const relok = past && r.st!=="refuse";
-    const noteOpen=(rdvOpenRow===i&&rdvOpenKind==="note"), relOpen=(rdvOpenRow===i&&rdvOpenKind==="relance");
+    const open=(rdvOpenRow===i);
     const arrowSvg='<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="'+sc.c+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>';
     const sel='<select class="statusel" style="background-color:'+sc.bg+';color:'+sc.c+';border-color:'+sc.bg+';font-weight:500;background-image:url(\''+("data:image/svg+xml,"+encodeURIComponent(arrowSvg))+'\')">'+Object.keys(RDV_STC).map(k=>'<option value="'+k+'"'+(k===r.st?" selected":"")+'>'+RDV_STC[k].l+'</option>').join("")+'</select>';
     const preview = r.note ? escHtml(r.note.length>48?r.note.slice(0,48)+"…":r.note) : "+ Ajouter une note";
     let relCell;
     if(!relok){ relCell='<span style="color:var(--muted);font-size:12px">'+(r.st==="refuse"?"ne pas relancer":"—")+'</span>'; }
-    else if(sent){ relCell='<button class="iconbtn done'+(relOpen?' on':'')+'" title="Voir la relance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Relancé</button>'; }
-    else { relCell='<button class="iconbtn'+(relOpen?' on':'')+'" title="Relancer ce client"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Relancer</button>'; }
+    else if(sent){ relCell='<button class="iconbtn done" title="Voir la relance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Relancé</button>'; }
+    else { relCell='<button class="iconbtn" title="Relancer ce client"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Relancer</button>'; }
     const chk = (relok && !sent) ? '<input type="checkbox" class="rsel"'+(rdvSel.has(i)?" checked":"")+'>' : '';
-    const tr=document.createElement("tr"); if(noteOpen||relOpen) tr.className="row-open";
-    const rm=RDV_MODE[r.mode]||RDV_MODE.tel;
-    tr.innerHTML='<td class="chk">'+chk+'</td><td style="white-space:nowrap">'+r.day+' '+r.mon+' · '+r.time+'</td><td>'+r.client+'</td>'+
-      '<td><span class="mode-ic" title="'+rm.l+(r.mode==="place"&&r.lieu?(" · "+r.lieu):"")+'"><i data-lucide="'+rm.ic+'"></i></span>'+r.sujet+'</td>'+
+    const tr=document.createElement("tr"); tr.className="rdv-row"+(open?" row-open":"");
+    tr.innerHTML='<td class="chk">'+chk+'</td><td style="white-space:nowrap">'+r.day+' '+r.mon+' · '+r.time+'</td>'+
+      '<td><div class="cl-co">'+r.client+'</div>'+(r.contact?'<div class="cl-ct">'+r.contact+'</div>':'')+'</td>'+
+      '<td>'+r.sujet+'</td>'+
       '<td style="white-space:nowrap"><span class="who"><span class="avatar xs">'+initials(r.who)+'</span>'+r.who+'</span></td>'+
       '<td style="white-space:nowrap">'+sel+'</td>'+
       '<td><button class="notecell'+(r.note?'':' empty')+'">'+preview+'</button></td>'+
       '<td style="white-space:nowrap">'+relCell+'</td>';
-    tr.querySelector(".statusel").addEventListener("change",e=>{ rdvData[i].st=e.target.value; rdvSel.delete(i); renderRdv(); });
-    tr.querySelector(".notecell").addEventListener("click",()=>{ if(noteOpen){ rdvOpenRow=-1; } else { rdvOpenRow=i; rdvOpenKind="note"; } renderRdvTable(); });
-    const rb=tr.querySelector(".iconbtn"); if(rb) rb.addEventListener("click",()=>{ if(relOpen){ rdvOpenRow=-1; } else { rdvOpenRow=i; rdvOpenKind="relance"; } renderRdvTable(); });
-    const cb=tr.querySelector(".rsel"); if(cb) cb.addEventListener("change",e=>{ if(e.target.checked) rdvSel.add(i); else rdvSel.delete(i); renderRdvBulk(); });
+    const toggle=()=>{ rdvOpenRow = open ? -1 : i; renderRdvTable(); };
+    tr.addEventListener("click",toggle);
+    // les contrôles interactifs ne doivent pas déclencher l'ouverture/fermeture de la ligne
+    const st=tr.querySelector(".statusel");
+    st.addEventListener("click",e=>e.stopPropagation());
+    st.addEventListener("change",e=>{ e.stopPropagation(); rdvData[i].st=e.target.value; rdvSel.delete(i); renderRdv(); });
+    const cb=tr.querySelector(".rsel"); if(cb){ cb.addEventListener("click",e=>e.stopPropagation()); cb.addEventListener("change",e=>{ if(e.target.checked) rdvSel.add(i); else rdvSel.delete(i); renderRdvBulk(); }); }
     b.appendChild(tr);
-    if(noteOpen||relOpen) b.appendChild(rdvDetailRow(i, rdvOpenKind));
+    if(open) b.appendChild(rdvDetailRow(i));
   });
   if(!shown){ const tr=document.createElement("tr"); tr.innerHTML='<td colspan="8" style="color:var(--muted);padding:14px 8px">Aucun rendez-vous pour ce filtre.</td>'; b.appendChild(tr); }
   renderRdvBulk();
@@ -1605,30 +1627,48 @@ function renderRdvBulk(){
   el.querySelector("#bulkRel").onclick=()=>{ let c=0; rdvSel.forEach(i=>{ const r=rdvData[i]; if(r && r.st!=="avenir" && r.st!=="refuse" && !(r.relance&&r.relance.sent)){ r.relance={sent:true,date:r.day+" "+r.mon}; c++; } }); rdvSel.clear(); toast(c+" relance"+(c>1?"s":"")+" envoyée"+(c>1?"s":"")+" (simulé)"); renderRdv(); };
   el.querySelector("#bulkClear").onclick=()=>{ rdvSel.clear(); renderRdvTable(); };
 }
-function rdvDetailRow(i, kind){
+function rdvDetailRow(i){
   const r=rdvData[i];
-  const tr=document.createElement("tr"); tr.className="rdv-detail";
-  let inner;
-  if(kind==="note"){
-    inner='<div class="detail-head">Note · '+r.client+' · '+r.day+' '+r.mon+'</div>'+
-      '<textarea class="dArea" id="dNote" rows="6" placeholder="Compte-rendu de l\'échange, prochaines étapes, devis envoyé…">'+escHtml(r.note||"")+'</textarea>'+
-      '<div class="detail-foot"><button class="detail-close" id="dClose">Fermer</button><button class="btn primary" id="dNoteSave">Enregistrer la note</button></div>';
+  const past=(r.st!=="avenir"), sent=r.relance&&r.relance.sent, relok=past&&r.st!=="refuse";
+  const telClean=(r.tel||"").replace(/[^+0-9]/g,"");
+
+  // coordonnées : tout ce qu'il faut pour réaliser le rendez-vous
+  let acts="";
+  if(r.tel) acts+='<a class="fiche-act" href="tel:'+telClean+'"><span class="fa-ic"><i data-lucide="phone"></i></span><span class="fa-tx"><span class="fa-l">Appeler '+(r.contact||r.client)+'</span><span class="fa-v">'+r.tel+'</span></span></a>';
+  if(r.email) acts+='<a class="fiche-act" href="mailto:'+r.email+'"><span class="fa-ic"><i data-lucide="mail"></i></span><span class="fa-tx"><span class="fa-l">Écrire un email</span><span class="fa-v">'+r.email+'</span></span></a>';
+  if(!acts) acts='<p class="fiche-hint">Aucune coordonnée renseignée.</p>';
+
+  // relance
+  let relBlock;
+  if(sent){
+    relBlock='<div class="rel-sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Relance envoyée le '+r.relance.date+'</div>'+
+      '<button class="btn" id="dRelAgain" style="margin-top:9px">Renvoyer une relance</button>';
+  } else if(r.st==="refuse"){
+    relBlock='<p class="fiche-hint">Client à ne pas relancer (a décliné l\'offre).</p>';
+  } else if(!relok){
+    relBlock='<p class="fiche-hint">La relance sera disponible une fois le rendez-vous passé.</p>';
   } else {
-    const rel=r.relance||{};
-    if(rel.sent){
-      inner='<div class="detail-head">Relance · '+r.client+'</div>'+
-        '<div class="rel-sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Relance envoyée le '+rel.date+'</div>'+
-        '<div class="detail-foot"><button class="detail-close" id="dClose">Fermer</button><button class="btn" id="dRelAgain">Renvoyer une relance</button></div>';
-    } else {
-      const msg="Bonjour,\n\nMerci pour notre échange du "+r.day+" "+r.mon+" au sujet de « "+r.sujet+" ». Avez-vous pu avancer de votre côté ? Je reste disponible pour répondre à vos questions et caler les prochaines étapes.\n\nBien à vous,\n"+r.who+" – Chaskis";
-      inner='<div class="detail-head">Relancer '+r.client+' par mail</div>'+
-        '<label>Objet</label><input class="dInput" id="dRelSubj" value="Suite à notre rendez-vous chez Chaskis">'+
-        '<label>Message</label><textarea class="dArea" id="dRelMsg" rows="6">'+escHtml(msg)+'</textarea>'+
-        '<div class="detail-foot"><button class="detail-close" id="dClose">Fermer</button><button class="btn primary" id="dRelSend">Envoyer la relance</button></div>';
-    }
+    const msg="Bonjour,\n\nMerci pour notre échange du "+r.day+" "+r.mon+" au sujet de « "+r.sujet+" ». Avez-vous pu avancer de votre côté ? Je reste disponible pour répondre à vos questions et caler les prochaines étapes.\n\nBien à vous,\n"+r.who+" – Chaskis";
+    relBlock='<input class="dInput" id="dRelSubj" value="Suite à notre rendez-vous chez Chaskis">'+
+      '<textarea class="dArea" id="dRelMsg" rows="4">'+escHtml(msg)+'</textarea>'+
+      '<button class="btn primary" id="dRelSend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Envoyer la relance</button>';
   }
-  tr.innerHTML='<td colspan="8"><div class="detail-box detail-single">'+inner+'</div></td>';
-  const ns=tr.querySelector("#dNoteSave"); if(ns) ns.onclick=()=>{ rdvData[i].note=tr.querySelector("#dNote").value.trim(); toast("Note enregistrée"); rdvOpenRow=-1; renderRdv(); };
+
+  const head='<div class="fiche-head"><div class="fh-main"><span class="fh-co">'+r.client+'</span>'+(r.contact?'<span class="fh-sub">'+r.contact+'</span>':'')+'</div>'+
+    '<div class="fh-when"><i data-lucide="calendar"></i>'+r.day+' '+r.mon+' · '+r.time+' · '+r.sujet+' · avec '+r.who+'</div></div>';
+
+  const cols='<div class="fiche-cols">'+
+    '<div class="fiche-col"><div class="fiche-lbl">Pour réaliser ce rendez-vous</div><div class="fiche-acts">'+acts+'</div></div>'+
+    '<div class="fiche-col"><div class="fiche-lbl">Note de suivi</div>'+
+      '<textarea class="dArea" id="dNote" rows="4" placeholder="Compte-rendu de l\'échange, prochaines étapes, devis envoyé…">'+escHtml(r.note||"")+'</textarea>'+
+      '<button class="btn" id="dNoteSave">Enregistrer la note</button>'+
+      '<div class="fiche-lbl" style="margin-top:16px">Relance</div>'+relBlock+
+    '</div>'+
+  '</div>';
+
+  const tr=document.createElement("tr"); tr.className="rdv-detail";
+  tr.innerHTML='<td colspan="8"><div class="detail-box rdv-fiche">'+head+cols+'<button class="detail-close" id="dClose">Fermer la fiche</button></div></td>';
+  const ns=tr.querySelector("#dNoteSave"); if(ns) ns.onclick=()=>{ rdvData[i].note=tr.querySelector("#dNote").value.trim(); toast("Note enregistrée"); renderRdv(); };
   const send=tr.querySelector("#dRelSend"); if(send) send.onclick=()=>{ rdvData[i].relance={sent:true,date:r.day+" "+r.mon}; toast("Relance envoyée à "+r.client+" (simulé)"); rdvOpenRow=-1; renderRdv(); };
   const again=tr.querySelector("#dRelAgain"); if(again) again.onclick=()=>{ toast("Nouvelle relance envoyée à "+r.client+" (simulé)"); };
   tr.querySelector("#dClose").onclick=()=>{ rdvOpenRow=-1; renderRdvTable(); };
@@ -1657,15 +1697,13 @@ function renderRdv(){
   if(hero){
     let html;
     if(next){
-      const nm=RDV_MODE[next.mode]||RDV_MODE.tel;
       html='<div class="rdv-hero"><div class="rdv-tile"><span class="dn">'+next.day+'</span><span class="dm">'+next.mon+'</span></div>'+
-        '<div class="hi"><div class="lbl">Prochain rendez-vous</div><div class="cl">'+next.client+'</div><div class="meta">'+next.sujet+' · '+next.time+' · avec '+next.who+'</div>'+
-        '<div class="mode-chip"><i data-lucide="'+nm.ic+'"></i>'+nm.l+(next.mode==="place"&&next.lieu?(' · '+next.lieu):"")+'</div></div>'+
+        '<div class="hi"><div class="lbl">Prochain rendez-vous</div><div class="cl">'+next.client+'</div>'+(next.contact?'<div class="hero-ct">'+next.contact+'</div>':'')+'<div class="meta">'+next.sujet+' · '+next.time+' · avec '+next.who+'</div></div>'+
         '<div class="acts"><button class="btn" id="rdvHeroView">Voir</button><button class="btn primary" id="rdvHeroDone">Marquer honoré</button></div></div>';
       if(others.length){
         const sameDay=others.filter(o=>o.day===next.day&&o.mon===next.mon).length;
         html+='<div class="rdv-up"><div class="rdv-up-h">'+(sameDay?('Encore '+sameDay+' le '+next.day+' '+next.mon+' · '):"")+others.length+' rendez-vous à venir ensuite</div>'+
-          '<div class="rdv-up-row">'+others.slice(0,5).map(o=>{ const om=RDV_MODE[o.mode]||RDV_MODE.tel; return '<div class="up-card"><div class="up-date">'+o.day+' '+(MFULL[o.mon]||o.mon)+'<span class="up-time">'+o.time+'</span></div><div class="up-c">'+o.client+'</div><div class="up-mode"><i data-lucide="'+om.ic+'"></i>'+om.l+'</div><div class="up-div"></div><div class="up-w"><span class="avatar xs">'+initials(o.who)+'</span>'+o.who+'</div></div>'; }).join("")+
+          '<div class="rdv-up-row">'+others.slice(0,5).map(o=>{ return '<div class="up-card"><div class="up-date">'+o.day+' '+(MFULL[o.mon]||o.mon)+'<span class="up-time">'+o.time+'</span></div><div class="up-c">'+o.client+'</div>'+(o.contact?'<div class="up-ct">'+o.contact+'</div>':'')+'<div class="up-div"></div><div class="up-w"><span class="avatar xs">'+initials(o.who)+'</span>'+o.who+'</div></div>'; }).join("")+
           (others.length>5?'<div class="up-more">+'+(others.length-5)+'</div>':"")+'</div></div>';
       }
     } else {

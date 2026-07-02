@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>Chaskis · Admin</title>
+<script>
+/* L'admin ne doit JAMAIS être servi depuis un cache : on retire tout service worker (un ancien SW cacheur servait des versions périmées de /admin). */
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.getRegistrations().then(function(rs){
+    if(!rs.length) return;
+    Promise.all(rs.map(function(r){ return r.unregister(); }))
+      .then(function(){ return window.caches ? caches.keys().then(function(ks){ return Promise.all(ks.map(function(k){ return caches.delete(k); })); }) : null; })
+      .then(function(){ if(navigator.serviceWorker.controller && !sessionStorage.getItem('cb_swreset')){ sessionStorage.setItem('cb_swreset','1'); location.reload(); } });
+  }).catch(function(){});
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap">
@@ -190,6 +202,7 @@
   /* modules : chatbot / courses / stats */
   .row2{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:0 0 16px}
   .mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 16px}
+  @media(max-width:760px){.mod-grid{grid-template-columns:1fr}}
   .ex-note{font-size:12px;color:var(--ink-soft);background:#fff8e8;border:1px solid #f0e2bd;border-radius:9px;padding:9px 11px;margin:0 0 16px;display:flex;gap:8px;align-items:flex-start}
   .ex-note svg{width:15px;height:15px;flex-shrink:0;margin-top:1px;color:#c79a1e}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -197,9 +210,173 @@
   .chip.ok{background:#eaf6f1;color:#0f6e56;border-color:#cfeae4}
   .chip.no{background:#fbecec;color:#a32d2d;border-color:#f1d6d6}
   .chip.add{border-style:dashed;color:var(--muted);cursor:pointer}
-  .src-row{display:flex;align-items:center;gap:9px;padding:8px 10px;border:1px solid var(--border);border-radius:9px;margin-bottom:6px;font-size:12.5px;background:#fff}
-  .src-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .src-row .ok{color:var(--ok);font-size:11.5px;white-space:nowrap}
+  .src-row{display:flex;align-items:center;gap:11px;padding:9px 11px;border:1px solid var(--border);border-radius:10px;margin-bottom:7px;font-size:12.5px;background:#fff}
+  .src-row:hover{border-color:var(--border-2)}
+  .src-ic{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;background:var(--bg);color:var(--teal-d);flex-shrink:0}
+  .src-ic svg{width:17px;height:17px}
+  .src-ic.lg{width:44px;height:44px}.src-ic.lg svg{width:22px;height:22px}
+  .src-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+  .src-nm{font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .src-tags{display:flex;flex-wrap:wrap;gap:5px}
+  .src-tag{font-size:10.5px;font-weight:600;color:var(--teal-d);background:#E1F5EE;border-radius:6px;padding:2px 7px;white-space:nowrap}
+  .src-tag.empty{color:var(--muted);background:var(--bg);font-weight:500;font-style:italic}
+  .src-prev{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;color:var(--ink-soft);border:1px solid var(--border);flex-shrink:0}
+  .src-prev:hover{border-color:var(--teal);color:var(--teal-d);background:#E1F5EE}
+  .src-prev svg{width:16px;height:16px}
+  .src-del{flex-shrink:0}
+  /* raison d'une question sans réponse */
+  .rtag{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap}
+  .rtag.scope{background:#F1EFE8;color:#5F5E5A}
+  .rtag.know{background:#FBF0DD;color:#9A6A15}
+  .cb-q{color:var(--ink);display:block;max-width:440px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* drapeau dans la colonne langue */
+  .lang-cell{display:inline-flex;align-items:center}
+  .flag{display:inline-block;width:19px;height:13px;border-radius:2px;overflow:hidden;margin-right:8px;box-shadow:0 0 0 1px rgba(40,32,60,.1);flex-shrink:0;vertical-align:middle}
+  .flag svg{display:block;width:100%;height:100%}
+  /* sous-texte hiérarchisé de la carte "questions sans réponse" : l'actionnable ressort */
+  .cb-split{display:inline-flex;align-items:center;margin-right:12px}
+  .cb-split b{font-weight:700;margin-right:4px}
+  .cb-split.know{color:#9A6A15}
+  .cb-split.scope{color:var(--muted)}
+  /* page chatbot : pulse santé (cartes cliquables) + lien vers la fenêtre stats */
+  .cb-pulse{margin-bottom:16px}
+  .cb-pulse-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+  .cb-pulse-t{font-size:13px;font-weight:600;color:var(--ink-soft)}
+  .cb-pulse-hint{font-size:12px;color:var(--muted)}
+  #cbPulse .statc{cursor:pointer}
+  /* résumé KPI de la page stats (léger, PAS des cartes -> se distingue de la pulse) */
+  .cb-summary{display:flex;flex-wrap:wrap;gap:30px;padding:12px 4px 18px;border-bottom:1px solid var(--border);margin-bottom:18px}
+  .cb-summary .cs{display:flex;flex-direction:column;gap:3px}
+  .cb-summary .cs-top{display:flex;align-items:baseline;gap:8px}
+  .cb-summary .cs-v{font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+  .cb-summary .cs-k{font-size:12px;color:var(--muted)}
+  .cb-summary .cs-sub{font-size:11.5px;color:#9A6A15;font-weight:600}
+  /* onglets de la fenêtre stats : chaque carte ouvre son onglet */
+  .cb-tabs{display:inline-flex;gap:4px;background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:4px;margin-bottom:16px}
+  .cb-tabs button{all:unset;cursor:pointer;padding:8px 15px;border-radius:8px;font-size:13px;font-weight:600;color:var(--ink-soft);transition:background .15s,color .15s}
+  .cb-tabs button:hover{background:var(--bg)}
+  .cb-tabs button.on{background:rgba(75,179,164,.14);color:var(--teal-d)}
+  .cb-tabpanel{display:none;flex-direction:column;gap:16px}
+  .cb-tabpanel.on{display:flex}
+  /* tiroir de détail KPI : s'ouvre SOUS la carte cliquée, couleur reprise du KPI (--acc) */
+  .cb-drawer{flex:0 0 auto;position:relative;background:var(--panel);border:1px solid var(--border);border-radius:14px;margin:2px 0 16px;box-shadow:0 2px 6px rgba(40,32,60,.05),0 18px 40px rgba(40,32,60,.11);overflow:hidden;opacity:0;transform:translateY(-6px);transition:opacity .2s,transform .22s var(--ease)}
+  .cb-drawer[hidden]{display:none}
+  .cb-drawer.in{opacity:1;transform:none}
+  .cb-drawer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc,var(--teal))}
+  .cb-drawer-hd{display:flex;align-items:center;gap:12px;padding:16px 18px 6px}
+  .cb-drawer-ic{width:34px;height:34px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;background:var(--acc-bg,#E1F5EE);color:var(--acc,var(--teal-d));flex-shrink:0}
+  .cb-drawer-ic svg{width:18px;height:18px}
+  .cb-drawer-tt{display:flex;flex-direction:column;line-height:1.15;margin-right:auto;min-width:0}
+  .cb-drawer-t{font-size:12.5px;color:var(--muted);font-weight:600}
+  .cb-drawer-v{display:flex;align-items:baseline;gap:8px;margin-top:3px}
+  .cb-drawer-v .dv{font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+  .cb-drawer-hd .rangesel{flex-shrink:0}
+  .cb-drawer-body{padding:12px 18px 18px;display:flex;flex-direction:column;gap:16px}
+  /* label de clic sur les cartes pulse (indique que c'est cliquable et que ça s'ouvre en dessous) */
+  #cbPulse .statc{position:relative}
+  .statc-cta{display:inline-flex;align-items:center;gap:4px;margin-top:12px;padding-top:11px;border-top:1px solid var(--border);font-size:11.5px;font-weight:600;color:var(--muted);transition:color .12s}
+  .statc-cta .cta-chev{width:14px;height:14px;transition:transform .2s var(--ease)}
+  #cbPulse .statc:hover .statc-cta{color:var(--teal-d)}
+  #cbPulse .statc.is-open .statc-cta{color:var(--acc)}
+  #cbPulse .statc.is-open .statc-cta .cta-chev{transform:rotate(180deg)}
+  /* carte active : liseré couleur du KPI + caret OUTLINE (fin, détaché) qui pointe vers le tiroir */
+  #cbPulse .statc.is-open{box-shadow:0 0 0 2px var(--acc) inset;border-color:transparent}
+  #cbPulse .statc.is-open::after{content:"";position:absolute;left:50%;bottom:-7px;width:10px;height:10px;transform:translateX(-50%) rotate(45deg);border-right:1.6px solid var(--acc);border-bottom:1.6px solid var(--acc);border-bottom-right-radius:2px}
+  @media(prefers-reduced-motion:reduce){.cb-drawer{transition:none}}
+  /* puce de version + changelog */
+  .cb-ver{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ink-soft);background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:6px 13px;flex-shrink:0}
+  .cb-ver:hover{border-color:var(--teal);color:var(--teal-d)}
+  .cb-ver svg{width:14px;height:14px;color:var(--muted)}
+  .cb-ver:hover svg{color:var(--teal-d)}
+  .cb-ver-dot{width:7px;height:7px;border-radius:50%;background:#2BA672}
+  .cb-log{display:flex;flex-direction:column}
+  .cb-log-e{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--border)}
+  .cb-log-e:first-child{border-top:0}
+  .cb-log-v{font-size:11.5px;font-weight:700;color:var(--teal-d);background:#E1F5EE;border-radius:6px;padding:2px 8px;height:fit-content;white-space:nowrap}
+  .cb-log-tx{min-width:0}
+  .cb-log-t{font-size:13px;color:var(--ink)}
+  .cb-log-d{font-size:11.5px;color:var(--muted);margin-top:2px}
+  /* langue (comportement) */
+  .cb-lang-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border:1px solid var(--border);border-radius:10px;padding:11px 13px;background:#fff}
+  .cb-lang-tx{display:flex;flex-direction:column;line-height:1.35;margin-right:auto;min-width:180px}
+  .cb-lang-t{font-size:12.5px;font-weight:600;color:var(--ink)}
+  .cb-lang-s{font-size:11.5px;color:var(--muted)}
+  .cb-lang-def{display:flex;align-items:center;gap:8px}
+  .cb-lang-lbl{font-size:12px;color:var(--ink-soft);white-space:nowrap}
+  /* entraînement dans le bac à test */
+  .cb-fb{align-self:flex-start;display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:-2px 0 4px 2px;font-size:11.5px;color:var(--muted)}
+  .cb-fb.ok{color:#0F6E56;font-weight:600}
+  .cb-fb.ok svg{width:14px;height:14px}
+  .cb-fb-b{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;width:26px;height:26px;align-items:center;justify-content:center;border-radius:7px;border:1px solid var(--border);color:var(--muted)}
+  .cb-fb-b svg{width:14px;height:14px}
+  .cb-fb-b:hover{border-color:var(--border-2);color:var(--ink)}
+  .cb-fb-b.up:hover{border-color:#cfeae4;color:#0F6E56;background:#E1F5EE}
+  .cb-fb-b2{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--teal-d);border:1px solid var(--border-2);border-radius:7px;padding:4px 9px}
+  .cb-fb-b2:hover{background:#E1F5EE;border-color:var(--teal)}
+  .cb-fb-b2 svg{width:13px;height:13px}
+  .cb-fb.correcting{flex-direction:column;align-items:stretch;width:100%;gap:8px}
+  .cb-fb-ta{width:100%;box-sizing:border-box;font-family:inherit;font-size:12.5px;line-height:1.5;padding:9px 11px;border:1px solid var(--border);border-radius:9px;background:#fff;color:var(--ink);resize:vertical;min-height:64px}
+  .cb-fb-ta:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(75,179,164,.15)}
+  .cb-fb-acts{display:flex;gap:8px;justify-content:flex-end}
+  .cb-fb-acts .btn{font-size:12px;padding:6px 12px}
+  /* trend à côté du chiffre + flèche d'ouverture en haut à droite */
+  .statc .v-row{display:flex;align-items:baseline;gap:9px;margin-top:4px;flex-wrap:wrap}
+  .statc .v-row .v{margin-top:0}
+  .statc-open{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;color:var(--muted);transition:color .12s,background .12s}
+  .statc-open svg{width:16px;height:16px}
+  #cbPulse .statc:hover .statc-open{color:var(--teal-d);background:#E1F5EE}
+  /* bouton retour (fenêtre dédiée) */
+  .backlink{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:600;color:var(--muted);padding:2px 0}
+  .backlink:hover{color:var(--teal-d)}
+  .backlink svg{width:15px;height:15px}
+  /* page chatbot : réglages à gauche, bac à test collant à droite */
+  .cb-layout{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:16px;align-items:start}
+  .cb-main{display:flex;flex-direction:column;gap:16px;min-width:0}
+  .cb-side{position:sticky;top:0}
+  @media(max-width:1200px){.cb-layout{grid-template-columns:1fr}.cb-side{position:static}}
+  .cb-test-pan{display:flex;flex-direction:column}
+  .cb-test-pan .test{flex:1;min-height:300px;max-height:calc(100vh - 230px);overflow-y:auto;margin-top:2px}
+  .cb-test-input{display:flex;gap:8px;margin-top:10px}
+  .cb-test-input input{flex:1;font-family:inherit;font-size:13px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--ink)}
+  .cb-test-input input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(75,179,164,.15)}
+  .cb-test-input .btn.primary{padding:9px 12px;flex-shrink:0}
+  .cb-test-input .btn.primary svg{width:16px;height:16px}
+  .cb-test-clear{all:unset;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted)}
+  .cb-test-clear:hover{color:var(--danger)}
+  /* état vide du bac à test */
+  .cb-test-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;color:var(--muted);padding:24px 16px}
+  .cb-test-empty .em-ic{width:46px;height:46px;border-radius:12px;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--teal-d)}
+  .cb-test-empty .em-ic svg{width:24px;height:24px}
+  .cb-test-empty p{margin:0;font-size:12.5px;line-height:1.5}
+  .cb-test-sugg{display:flex;flex-direction:column;gap:7px;width:100%;margin-top:2px}
+  .cb-sugg{all:unset;box-sizing:border-box;cursor:pointer;font-size:12px;color:var(--ink-soft);background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 11px;text-align:left;transition:border-color .12s,background .12s}
+  .cb-sugg:hover{border-color:var(--teal);background:#E1F5EE;color:var(--teal-d)}
+  /* auto-tag (modale d'ajout de source) : l'IA lit le doc et propose les tags */
+  .cb-autotag{margin-bottom:6px}
+  .cb-autotag .at-hd{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--teal-d);font-weight:600;margin-bottom:8px}
+  .cb-autotag .at-hd svg{width:14px;height:14px}
+  .cb-tag-edit{display:flex;flex-wrap:wrap;gap:6px;align-items:center;border:1px solid var(--border);border-radius:9px;padding:8px;min-height:42px}
+  .cb-tag-inp{all:unset;font-size:12px;color:var(--ink);min-width:70px;flex:1;padding:2px 3px}
+  /* picker de tags pour le périmètre (alimenté par les tags des sources) */
+  .tag-picker{position:fixed;z-index:70;background:var(--panel);border:1px solid var(--border);border-radius:11px;box-shadow:0 12px 32px rgba(30,24,50,.18);padding:6px;min-width:200px;max-height:280px;overflow:auto}
+  .tp-lbl{font-size:10.5px;font-weight:600;color:var(--muted);padding:6px 8px 4px}
+  .tp-opt{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:7px;width:100%;padding:7px 8px;border-radius:7px;font-size:12.5px;color:var(--ink)}
+  .tp-opt svg{width:13px;height:13px;color:var(--muted)}
+  .tp-opt:hover{background:#E1F5EE;color:var(--teal-d)}
+  .tp-opt:hover svg{color:var(--teal-d)}
+  .tp-sep{height:1px;background:var(--border);margin:5px 4px}
+  .tp-inp{width:100%;box-sizing:border-box;font-family:inherit;font-size:12.5px;padding:7px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--ink)}
+  .tp-inp:focus{outline:none;border-color:var(--teal)}
+  /* modales chatbot */
+  .cb-drop{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;border:1.5px dashed var(--border-2);border-radius:11px;padding:20px 14px;margin-bottom:14px;color:var(--ink-soft);font-size:13px}
+  .cb-drop svg{width:26px;height:26px;color:var(--muted)}
+  .cb-drop span{font-size:11.5px;color:var(--muted)}
+  .cb-hint-box{display:flex;align-items:flex-start;gap:11px;background:#f4faf8;border:1px solid #cfeae4;border-radius:10px;padding:11px 13px;margin-bottom:14px;font-size:12.5px;color:var(--ink-soft)}
+  .cb-hint-box svg{width:26px;height:26px;color:var(--teal-d);flex-shrink:0}
+  .cb-prev-hd{display:flex;align-items:center;gap:14px;padding-right:34px;margin-bottom:14px}
+  .cb-prev-nm{font-size:15px;font-weight:700;color:var(--ink)}
+  .cb-prev-meta{font-size:12px;color:var(--muted);margin-top:1px}
+  .cb-prev-body{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;font-size:13px;line-height:1.6;color:var(--ink-soft);max-height:52vh;overflow:auto}
   .test{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px}
   .bub{max-width:82%;font-size:12.5px;padding:8px 11px;border-radius:13px;line-height:1.5}
   .bub.u{align-self:flex-end;background:var(--ink);color:#fff;border-bottom-right-radius:3px}
@@ -325,6 +502,9 @@
   .barrow .bp{text-align:right;font-weight:700;color:var(--ink)}
   /* légende de bas de carte (base du calcul), commune statuts/raisons */
   .card-cap{margin-top:13px;padding-top:12px;border-top:1px solid var(--border);font-size:11.5px;color:var(--muted)}
+  /* les deux cartes (statuts / raisons) : hauteur égale, légende de pied collée en bas -> alignées */
+  .mod-grid > .dpan{display:flex;flex-direction:column}
+  .mod-grid > .dpan .card-cap{margin-top:auto}
   /* table large : reste dans sa colonne, défile au lieu de déborder sur la sidebar */
   .tbl-scroll{overflow-x:auto}
   /* rendez-vous : carte "prochain RDV" + point de statut */
@@ -346,7 +526,7 @@
   /* perf équipe : fraction (base du %) sous le pourcentage */
   .tbl .frac{display:block;font-size:10.5px;color:var(--muted);font-weight:500;margin-top:1px}
   /* répartition des statuts : légende verticale avec compte + % (équilibre avec la carte raisons) */
-  .statleg{display:flex;flex-direction:column;gap:11px;margin-top:14px}
+  .statleg{display:flex;flex-direction:column;gap:11px;margin-top:14px;margin-bottom:16px}
   .statleg .r{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:10px;font-size:12.5px}
   .statleg .r .nm{color:var(--ink-soft)}
   .statleg .r .ct{font-weight:700;color:var(--ink)}
@@ -434,11 +614,14 @@
   .detail-foot{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
   .detail-box label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600}
   /* bouton d'action relance dans la table */
-  .iconbtn{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--teal-d);border:1px solid var(--border-2);border-radius:8px;padding:5px 10px}
+  .iconbtn{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--teal-d);border:1px solid var(--border-2);border-radius:7px;padding:4px 8px}
   .iconbtn:hover{background:var(--bg)}
   .iconbtn.on{border-color:var(--teal);background:#E1F5EE}
   .iconbtn.done{color:#0F6E56;border-color:#cfeae4;background:#E1F5EE}
-  .iconbtn svg{width:14px;height:14px}
+  .iconbtn svg{width:13px;height:13px}
+  /* statut "relancé le …" dans la liste (compact, non cliquable) */
+  .rel-done{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:#0F6E56;white-space:nowrap}
+  .rel-done svg{width:13px;height:13px}
   /* hero : autres rendez-vous à venir */
   .rdv-next{margin-top:10px;border:1px solid var(--border);border-radius:12px;background:var(--panel);padding:6px 14px}
   .rdv-next .rn-h{font-size:12px;font-weight:600;color:var(--ink-soft);padding:8px 0 6px}
@@ -447,23 +630,46 @@
   .rdv-next .rn-c{flex:1;min-width:0;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .rdv-next .rn-w{display:inline-flex;align-items:center;color:var(--ink-soft);white-space:nowrap}
   .rdv-next .rn-more{font-size:11.5px;color:var(--muted);padding:7px 0 8px;border-top:1px solid var(--border)}
-  /* hero : rendez-vous à venir, tous sur une rangée horizontale qui scrolle (le 1er = prochain, mis en avant) */
+  /* hero : cartes côte à côte, MÊME hauteur (stretch). Dans chaque carte, la tuile et le corps s'étirent :
+     tuile = date en haut / heure en bas ; corps = contenu en haut / pied (responsable+CTA) en bas -> tout aligné en bas */
   .rdv-up-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:3px;align-items:stretch}
-  .up-card{flex:0 0 auto;width:224px;border:1px solid var(--border);border-radius:12px;background:var(--panel);padding:12px 14px;box-shadow:0 1px 2px rgba(40,32,60,.035);display:flex;flex-direction:column}
-  .up-next{width:300px;background:#edf7f4;border-color:#d3ebe4}
+  .up-card{flex:0 0 auto;width:262px;border:1px solid var(--border);border-radius:12px;background:var(--panel);padding:13px 14px;box-shadow:0 1px 2px rgba(40,32,60,.035);display:flex;gap:14px}
+  .up-next{width:440px;background:#edf7f4;border-color:#d3ebe4;gap:16px}
   .up-next .avatar{background:#c2e3da;color:#0a2e2b}
-  .up-tag{align-self:flex-start;color:var(--teal-d);font-size:11px;font-weight:600;margin-bottom:8px}
-  .up-date{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.01em;white-space:nowrap}
-  .up-time{font-size:12.5px;font-weight:600;color:var(--teal-d)}
-  .up-c{font-size:13px;font-weight:600;color:var(--ink);margin-top:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .up-ct{font-size:11.5px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .up-foot{margin-top:auto}
-  .up-div{height:1px;background:var(--border);margin:11px 0 9px}
-  .up-next .up-div{background:#dcece8}
-  .up-w{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:var(--ink-soft);font-weight:500}
-  .up-who{display:inline-flex;align-items:center;min-width:0;overflow:hidden;white-space:nowrap}
-  .btn.sm{padding:5px 11px;font-size:12px;flex-shrink:0}
+  /* tuile date. Cartes blanches : compacte, centrée verticalement (PAS pleine hauteur). Carte verte : étirée, date en haut / heure en bas. */
+  .up-cal{flex-shrink:0;width:60px;border-radius:11px;background:var(--bg);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;padding:8px 7px;align-self:stretch}
+  .up-cal-h{display:flex;flex-direction:column;align-items:center}
+  .up-next .up-cal{background:#fff;border-color:#d3ebe4;width:66px}
+  .up-cal .up-dn{font-size:24px;font-weight:700;color:var(--teal-d);line-height:1}
+  .up-cal .up-dm{font-size:11px;color:var(--muted);margin-top:1px}
+  .up-cal .up-tt{font-size:12.5px;font-weight:700;color:var(--teal-d);margin-top:7px;padding-top:7px;border-top:1px solid var(--border);width:100%;text-align:center}
+  .up-next .up-dn{font-size:30px}
+  .up-next .up-tt{font-size:13.5px;margin-top:9px;padding-top:9px}
+  .up-next .up-cal .up-tt{border-top-color:#dcece8}
+  /* corps : tag/badge, client, contact, puis pied responsable + action */
+  /* corps blanc : 3 zones réparties (entreprise en haut, sujet+contact au milieu, responsable en bas) -> pas collé */
+  .up-body{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between}
+  .up-mid{min-width:0}
+  .up-next .up-body{justify-content:flex-start}
+  .up-tag{color:var(--teal-d);font-size:11px;font-weight:600;margin-bottom:5px}
+  .up-c{font-size:14px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .up-ct{font-size:12px;line-height:1.5;color:var(--ink-soft);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .up-ct2{color:var(--muted);margin-top:5px}
+  .up-foot{padding-top:10px;display:flex;flex-direction:column;gap:10px}
+  .up-who{display:inline-flex;align-items:center;min-width:0;font-size:12px;color:var(--ink-soft);font-weight:500}
+  .up-who-n{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .btn.sm{padding:6px 11px;font-size:12px;flex-shrink:0}
   .btn.sm svg{width:13px;height:13px}
+  /* prochain : en-tête tag + badge sujet à droite ; pied responsable (gauche) + CTA EN LIGNE (droite) */
+  .up-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:2px}
+  .up-badge{background:#fff;border:1px solid #d3ebe4;border-radius:7px;padding:4px 11px;font-size:12px;font-weight:600;color:var(--teal-d);white-space:nowrap;flex-shrink:0}
+  .up-next .up-c{font-size:16px;margin-top:8px}
+  .up-next .up-ct{font-size:13px;margin-top:3px}
+  .up-next .up-foot{margin-top:auto;flex-direction:row;align-items:center;justify-content:space-between;gap:14px;padding-top:14px}
+  .up-next .up-who{font-size:13.5px}
+  .up-next .up-who .avatar.xs{width:28px;height:28px;font-size:11px;margin-right:9px}
+  .up-next .up-cta{flex-shrink:0}
+  .up-next .up-cta .btn{padding:8px 15px}
   /* colonne client : entreprise + interlocuteur, une ligne chacun ; pire cas (noms longs) tronqué avec … */
   .cl-co{font-weight:600;color:var(--ink);line-height:1.3;white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis}
   .cl-ct{font-size:12px;color:var(--muted);margin-top:1px;white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis}
@@ -471,8 +677,18 @@
   .who .who-n{white-space:nowrap}
   .up-more{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:50px;border:1px dashed var(--border-2);border-radius:11px;color:var(--muted);font-weight:600;font-size:12px}
   /* sélection / relance en masse */
-  td.chk,th.chk{width:34px;text-align:center}
+  td.chk,th.chk{width:20px;text-align:center;padding-left:10px;padding-right:2px}
+  td.chk .rsel,th.chk input{margin:0;vertical-align:middle}
   input[type=checkbox]{accent-color:var(--teal);width:15px;height:15px;cursor:pointer}
+  /* relance automatique (activable) */
+  .autorel{display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:10px;padding:9px 13px;margin-bottom:12px;background:var(--panel);transition:border-color .15s,background .15s}
+  .autorel.on{border-color:#cfeae4;background:#f4faf8}
+  .autorel-tx{display:flex;flex-direction:column;line-height:1.3;margin-right:auto}
+  .autorel-t{font-size:12.5px;font-weight:600;color:var(--ink)}
+  .autorel-s{font-size:11.5px;color:var(--muted)}
+  .autorel-cfg{display:flex;align-items:center;gap:8px;transition:opacity .15s}
+  .autorel-cfg.off{opacity:.4;pointer-events:none}
+  .autorel-after{font-size:12px;color:var(--ink-soft);white-space:nowrap}
   .bulk-bar{display:flex;align-items:center;gap:12px;background:#E1F5EE;border:1px solid #cfeae4;border-radius:10px;padding:9px 12px;margin-bottom:12px}
   .bulk-bar .lbl{font-size:13px;color:var(--teal-d)}
   .bulk-bar .lbl b{font-weight:700}
@@ -507,12 +723,11 @@
   .rel-mini.muted{color:var(--muted)}
   .rel-mini.ok{display:inline-flex;align-items:center;gap:6px;color:#0F6E56;font-weight:600}
   .rel-mini.ok svg{width:14px;height:14px}
-  /* contexte prospect (renseigné à la réservation) */
-  .fiche-ctx{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border-2)}
-  .ctx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px 22px}
-  .ctx-i{display:flex;flex-direction:column;gap:2px;min-width:0}
-  .ctx-k{font-size:11px;color:var(--muted);font-weight:600}
-  .ctx-v{font-size:13px;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* contexte prospect (renseigné à la réservation) : liste label / valeur dans la colonne gauche */
+  .fiche-info{display:flex;flex-direction:column;gap:9px;margin-bottom:14px}
+  .fiche-ir{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+  .fiche-ir .k{font-size:12px;color:var(--muted);flex-shrink:0}
+  .fiche-ir .v{font-size:13px;color:var(--ink);font-weight:500;text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .fiche-acts{display:flex;flex-direction:column;gap:8px}
   .fiche-act{display:flex;align-items:center;gap:11px;text-decoration:none;border:1px solid var(--border-2);border-radius:10px;padding:9px 12px;background:#fff;transition:border-color .12s,background .12s}
   .fiche-act:hover{border-color:var(--teal);background:#E1F5EE}
@@ -524,6 +739,26 @@
   .fiche-act .fa-v{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .fiche-hint{font-size:12.5px;color:var(--muted);margin:0}
   .relmark{display:inline-block;margin-top:4px;font-size:10.5px;font-weight:600;color:#0F6E56;background:#E1F5EE;border-radius:20px;padding:1px 8px}
+  /* ===== panneau droit : fiche d'un rendez-vous ===== */
+  .rdv-scrim{position:fixed;inset:0;background:rgba(30,24,50,.42);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .2s;z-index:60}
+  .rdv-scrim.show{opacity:1;pointer-events:auto}
+  .rdv-drawer{position:fixed;z-index:61;top:0;right:0;height:100vh;width:min(452px,calc(100vw - 40px));background:var(--panel);border-left:1px solid var(--border);box-shadow:-24px 0 60px rgba(30,24,50,.18);padding:22px 24px;overflow:auto;transform:translateX(100%);transition:transform .26s var(--ease)}
+  .rdv-drawer.show{transform:translateX(0)}
+  /* dans le panneau (étroit) : une seule colonne, note qui remplit */
+  .rdv-drawer .fiche-cols{display:flex;flex-direction:column;gap:18px}
+  .rdv-drawer .fiche-col .fiche-lbl{padding-bottom:8px;border-bottom:1px solid var(--border)}
+  .rdv-drawer textarea.dArea{min-height:120px}
+  /* en-tête de fiche : avatar + client + sujet/date, badge de mode + fermeture */
+  .fiche-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:18px}
+  .fiche-hd .who-lg{display:flex;align-items:center;gap:12px;min-width:0}
+  .fiche-hd .avatar.lg{width:42px;height:42px;font-size:14px}
+  .fiche-hd .who-tx{min-width:0}
+  .fiche-hd .nm{font-size:16px;font-weight:700;line-height:1.2;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fiche-hd .sb{font-size:12.5px;color:var(--muted);margin-top:1px}
+  .fiche-hd .hd-r{display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .x-close{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9px;color:var(--muted);flex-shrink:0}
+  .x-close:hover{background:var(--bg);color:var(--ink)}
+  .x-close svg{width:18px;height:18px}
   /* workflow de connexion en modale */
   .flow-steps{display:flex;align-items:center;gap:8px;margin:4px 0 16px}
   .flow-steps .fs{width:24px;height:24px;border-radius:50%;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);flex-shrink:0}
@@ -746,44 +981,130 @@
 
       <!-- ===== Chatbot ===== -->
       <section class="view scroll" id="view-chatbot">
-        <h1 class="pg-h">Chatbot</h1>
-        <p class="pg-sub">Construisez l'assistant du site : ses sources, son périmètre, son comportement, et testez-le.</p>
-        <div class="ex-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg><div>Les réglages sont enregistrés et fonctionnels. Le branchement au vrai moteur de réponse se fera à l'étape dédiée ; les statistiques sont des exemples.</div></div>
-        <div class="row2">
-          <div class="statc"><div class="top"><div class="ic-badge purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><span class="trend up">+18 %</span></div><div class="k">Conversations (30 j)</div><div class="v">1 248</div></div>
-          <div class="statc"><div class="top"><div class="ic-badge teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><span class="trend up">+3 pts</span></div><div class="k">Taux de réponse</div><div class="v">92<span style="font-size:14px;color:var(--muted)">%</span></div></div>
-          <div class="statc"><div class="top"><div class="ic-badge amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div><span class="trend down">à traiter</span></div><div class="k">Questions sans réponse</div><div class="v">41</div></div>
+        <div class="pan-head" style="align-items:flex-start">
+          <div><h1 class="pg-h">Chatbot</h1><p class="pg-sub" style="margin-bottom:0">Construisez l'assistant du site : ses sources, son périmètre, son comportement, et testez-le.</p></div>
+          <button class="cb-ver" id="cbVerChip" title="Historique des améliorations"></button>
         </div>
-        <div class="mod-grid">
-          <div class="dpan">
-            <h4><span class="hic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></svg></span> Sources de connaissance</h4>
-            <div id="cbSources"></div>
-            <button class="btn" id="cbAddSource" style="width:100%;justify-content:center;margin-top:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Ajouter une source</button>
-          </div>
-          <div class="dpan">
-            <h4><span class="hic teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> Périmètre de réponse</h4>
-            <p style="font-size:12px;color:var(--muted);margin:0 0 7px">Sujets autorisés</p>
-            <div class="chips" id="cbAllowed" style="margin-bottom:14px"></div>
-            <p style="font-size:12px;color:var(--muted);margin:0 0 7px">Sujets interdits</p>
-            <div class="chips" id="cbForbidden"></div>
-          </div>
+        <div class="ex-note" style="margin-top:16px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg><div>Les réglages sont enregistrés et fonctionnels. Le branchement au vrai moteur de réponse se fera à l'étape dédiée ; les statistiques sont des exemples.</div></div>
+
+        <div class="cb-pulse">
+          <div class="cb-pulse-hd"><span class="cb-pulse-t">Santé du chatbot · 30 derniers jours</span><span class="cb-pulse-hint">Cliquez une carte pour le détail</span></div>
+          <div class="stat-row" id="cbPulse"></div>
         </div>
-        <div class="dpan">
-          <h4><span class="hic coral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg></span> Comportement du modèle</h4>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-            <div class="formf" style="margin:0"><label>Ton des réponses</label><select class="formfsel" id="cbTone"><option value="pro">Professionnel</option><option value="amical">Amical et chaleureux</option><option value="direct">Direct et concis</option></select></div>
-            <div class="formf" style="margin:0"><label>Longueur des réponses</label><select class="formfsel" id="cbLength"><option value="courte">Courte</option><option value="moyenne">Moyenne</option><option value="detaillee">Détaillée</option></select></div>
-            <div class="formf" style="margin:0;grid-column:1/-1"><label>Langues comprises</label><div class="toggles" id="cbLangs"></div></div>
-            <div class="formf" style="margin:0;grid-column:1/-1"><label>Message de repli (quand il ne sait pas ou que c'est hors périmètre)</label><textarea id="cbFallback" rows="2"></textarea></div>
-            <div class="formf" style="margin:0;grid-column:1/-1"><label>Instructions / personnalité</label><textarea id="cbInstr" rows="3"></textarea></div>
+
+        <!-- tiroir de détail : s'ouvre SOUS la carte cliquée, contenu propre au KPI, jamais de re-navigation -->
+        <div class="cb-drawer" id="cbDrawer" hidden role="region" aria-label="Détail du chatbot">
+          <div class="cb-drawer-hd">
+            <span class="cb-drawer-ic" id="cbDrawerIc"></span>
+            <div class="cb-drawer-tt"><span class="cb-drawer-t" id="cbDrawerT"></span><span class="cb-drawer-v" id="cbDrawerV"></span></div>
+            <select class="rangesel" id="cbRange">
+              <option value="7j">7 derniers jours</option>
+              <option value="30j" selected>30 derniers jours</option>
+              <option value="3m">3 derniers mois</option>
+              <option value="6m">6 derniers mois</option>
+              <option value="12m">12 derniers mois</option>
+            </select>
+            <button class="x-close" id="cbDrawerX" aria-label="Fermer le détail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
           </div>
+          <div class="cb-drawer-body" id="cbDrawerBody"></div>
         </div>
-        <div class="dpan">
-          <h4><span class="hic amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V2"/><path d="M8 2h8"/></svg></span> Bac à test</h4>
-          <div class="test" id="cbTest"></div>
-          <div style="display:flex;gap:8px;margin-top:10px"><input id="cbInput" style="flex:1;font-family:inherit;font-size:13px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:#fff" placeholder="Tester une question… (essayez un sujet interdit)"><button class="btn primary" id="cbSend">Envoyer</button></div>
+
+        <div class="cb-layout">
+          <div class="cb-main">
+            <div class="mod-grid">
+              <div class="dpan">
+                <div class="pan-head"><h4><span class="hic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></svg></span> Sources de connaissance</h4><span class="hint" id="cbSrcCount" style="margin:0"></span></div>
+                <div id="cbSources"></div>
+                <button class="btn" id="cbAddSource" style="width:100%;justify-content:center;margin-top:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Ajouter une source</button>
+              </div>
+              <div class="dpan">
+                <h4><span class="hic teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> Périmètre de réponse</h4>
+                <p class="hint" style="margin:0 0 10px">Le bot ne répond qu'aux sujets autorisés. Les suggestions viennent des tags de vos sources.</p>
+                <p style="font-size:12px;color:var(--muted);margin:0 0 7px">Sujets autorisés</p>
+                <div class="chips" id="cbAllowed" style="margin-bottom:14px"></div>
+                <p style="font-size:12px;color:var(--muted);margin:0 0 7px">Sujets interdits</p>
+                <div class="chips" id="cbForbidden"></div>
+              </div>
+            </div>
+            <div class="dpan">
+              <h4><span class="hic coral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg></span> Comportement du modèle</h4>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                <div class="formf" style="margin:0"><label>Ton des réponses</label><select class="formfsel" id="cbTone"><option value="pro">Professionnel</option><option value="amical">Amical et chaleureux</option><option value="direct">Direct et concis</option></select></div>
+                <div class="formf" style="margin:0"><label>Longueur des réponses</label><select class="formfsel" id="cbLength"><option value="courte">Courte</option><option value="moyenne">Moyenne</option><option value="detaillee">Détaillée</option></select></div>
+                <div class="formf" style="margin:0;grid-column:1/-1"><label>Langue</label>
+                  <div class="cb-lang-row">
+                    <button class="switch" id="cbAutoLang" role="switch" aria-checked="true" aria-label="S'adapter à la langue du visiteur"><span class="k"></span></button>
+                    <div class="cb-lang-tx"><span class="cb-lang-t">S'adapte à la langue du visiteur</span><span class="cb-lang-s">Le bot répond dans la langue du message reçu, quelle qu'elle soit (utile pour des coursiers de tous pays).</span></div>
+                    <div class="cb-lang-def"><span class="cb-lang-lbl">Langue par défaut</span><select class="formfsel" id="cbDefaultLang"><option value="fr">Français</option><option value="en">English</option><option value="de">Deutsch</option><option value="it">Italiano</option></select></div>
+                  </div>
+                </div>
+                <div class="formf" style="margin:0;grid-column:1/-1"><label>Message de repli (quand il ne sait pas ou que c'est hors périmètre)</label><textarea id="cbFallback" rows="2"></textarea></div>
+                <div class="formf" style="margin:0;grid-column:1/-1"><label>Instructions / personnalité</label><textarea id="cbInstr" rows="3"></textarea></div>
+              </div>
+            </div>
+          </div>
+          <div class="cb-side">
+            <div class="dpan cb-test-pan">
+              <div class="pan-head"><h4><span class="hic amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V2"/><path d="M8 2h8"/></svg></span> Bac à test</h4><button class="cb-test-clear" id="cbTestClear" style="display:none">Effacer</button></div>
+              <div class="test" id="cbTest"></div>
+              <div class="cb-test-input"><input id="cbInput" placeholder="Tester une question…"><button class="btn primary" id="cbSend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg></button></div>
+            </div>
+          </div>
         </div>
       </section>
+
+      <!-- Contenus de détail du chatbot (clonés dans le tiroir #cbDrawer selon la carte cliquée) -->
+      <template id="cbTpl-reponses">
+        <div class="dpan">
+          <div class="pan-head"><h4><span class="hic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 13 3-3 3 3 4-5"/></svg></span> Évolution du taux de réponse</h4><span class="hint" id="cbChartBadge" style="margin:0"></span></div>
+          <svg class="lchart" id="cbChart" viewBox="0 0 700 176" preserveAspectRatio="none"></svg>
+          <div class="leg" id="cbChartLeg" style="margin-top:18px"></div>
+        </div>
+        <div class="dpan">
+          <h4><span class="hic teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4 12 14.01l-3-3"/></svg></span> Réponses utiles vs restées sans réponse</h4>
+          <p class="hint" style="margin:2px 0 10px">Sur toutes les questions posées de la période.</p>
+          <div class="splitbar" id="cbAnsBar"></div>
+          <div class="leg" id="cbAnsLeg"></div>
+        </div>
+      </template>
+      <template id="cbTpl-conversations">
+        <div class="dpan">
+          <div class="pan-head"><h4><span class="hic violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Volume de conversations</h4><span class="hint" id="cbConvBadge" style="margin:0"></span></div>
+          <svg class="lchart" id="cbConvChart" viewBox="0 0 700 176" preserveAspectRatio="none"></svg>
+          <div class="leg" id="cbConvLeg" style="margin-top:18px"></div>
+        </div>
+        <div class="dpan">
+          <h4><span class="hic teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg></span> Conversations par langue</h4>
+          <p class="hint" style="margin:2px 0 10px">Dans quelles langues on vous écrit (utile pour la langue par défaut).</p>
+          <div class="barlist wide" id="cbConvLangBars"></div>
+        </div>
+      </template>
+      <template id="cbTpl-questions">
+        <div class="mod-grid">
+          <div class="dpan">
+            <h4><span class="hic amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.2 15.9A10 10 0 1 1 8.1 2.8"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span> Répartition par raison</h4>
+            <p class="hint" style="margin:2px 0 10px">La part « à documenter » est celle sur laquelle agir.</p>
+            <div class="splitbar" id="cbReasonBar"></div>
+            <div class="leg" id="cbReasonLeg"></div>
+          </div>
+          <div class="dpan">
+            <h4><span class="hic teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg></span> Par langue</h4>
+            <p class="hint" style="margin:2px 0 10px">Repérez si une langue est mal couverte.</p>
+            <div class="barlist wide" id="cbLangBars"></div>
+          </div>
+        </div>
+        <div class="dpan">
+          <div class="pan-head"><h4><span class="hic amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span> Détail des questions</h4><span class="hint" id="cbUnCap" style="margin:0"></span></div>
+          <p class="hint" style="margin:2px 0 10px">« Hors périmètre » = sujet que vous avez interdit (normal). « À documenter » = il manque une source, à ajouter pour progresser.</p>
+          <div class="tbl-scroll">
+            <table class="tbl">
+              <thead><tr><th>Question posée</th><th style="white-space:nowrap">Date et heure</th><th>Langue</th><th>Raison</th><th></th></tr></thead>
+              <tbody id="cbUnBody"></tbody>
+            </table>
+          </div>
+          <div class="pager" id="cbUnPager"></div>
+        </div>
+      </template>
 
       <!-- ===== Rendez-vous (Calendly) ===== -->
       <section class="view scroll" id="view-rdv">
@@ -824,6 +1145,7 @@
                 <p class="hint" style="margin:2px 0 8px">Sur les rendez-vous passés de la période.</p>
                 <div class="splitbar" id="rdvStatusBar"></div>
                 <div class="leg" id="rdvStatusLeg"></div>
+                <div class="card-cap" id="rdvStatusCap"></div>
               </div>
               <div class="dpan">
                 <h4><span class="hic"><i data-lucide="trending-down"></i></span> Pourquoi on ne convertit pas</h4>
@@ -843,6 +1165,11 @@
               <div class="pan-head">
                 <h4><span class="hic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span> Liste des rendez-vous</h4>
                 <select class="rangesel" id="rdvFilter"><option value="all">Tous les statuts</option><option value="avenir">À venir</option><option value="honore">Honoré</option><option value="refuse">Pas intéressé</option><option value="annule">Annulé</option><option value="noshow">No-show</option></select>
+              </div>
+              <div class="autorel" id="rdvAutoBar">
+                <button class="switch" id="rdvAutoSwitch" role="switch" aria-checked="false" aria-label="Relance automatique"><span class="k"></span></button>
+                <div class="autorel-tx"><span class="autorel-t">Relance automatique</span><span class="autorel-s">Un rappel est envoyé aux clients honorés restés sans réponse.</span></div>
+                <div class="autorel-cfg"><span class="autorel-after">après</span><select class="rangesel" id="rdvAutoDelay"><option value="1 semaine">1 semaine</option><option value="2 semaines">2 semaines</option><option value="1 mois">1 mois</option></select><span class="autorel-after">sans réponse</span></div>
               </div>
               <div id="rdvBulk" class="bulk-bar" style="display:none"></div>
               <div class="tbl-scroll">
@@ -959,6 +1286,42 @@
       <button class="btn ghost" id="pubCancel">Annuler</button>
       <button class="btn primary" id="pubConfirm">Publier</button>
     </div>
+  </div>
+</div>
+
+<!-- panneau droit : fiche d'un rendez-vous (remplace le déroulé inline) -->
+<div class="rdv-scrim" id="rdvScrim"></div>
+<aside class="rdv-drawer" id="rdvDrawer"></aside>
+
+<!-- chatbot : ajout d'une source (fichier / URL / Drive) -->
+<div class="modal-bg" id="cbAddModal">
+  <div class="modal">
+    <button class="modal-x" id="cbAddClose" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <h3 style="padding-right:34px">Ajouter une source</h3>
+    <div class="seg" id="cbAddKind" style="margin:10px 0 16px">
+      <button class="on" data-kind="file">Fichier</button>
+      <button data-kind="url">Page web</button>
+      <button data-kind="drive">Google Drive</button>
+    </div>
+    <div id="cbAddBody"></div>
+    <div class="acts" style="margin-top:16px"><button class="btn ghost" id="cbAddCancel">Annuler</button><button class="btn primary" id="cbAddConfirm">Ajouter</button></div>
+  </div>
+</div>
+
+<!-- chatbot : historique de version -->
+<div class="modal-bg" id="cbLogModal">
+  <div class="modal">
+    <button class="modal-x" id="cbLogClose" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <h3 style="padding-right:34px">Historique de l'assistant</h3>
+    <div id="cbLogBody"></div>
+  </div>
+</div>
+
+<!-- chatbot : prévisualisation d'une source -->
+<div class="modal-bg" id="cbPrevModal">
+  <div class="modal wide">
+    <button class="modal-x" id="cbPrevClose" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div id="cbPrevBody"></div>
   </div>
 </div>
 
@@ -1433,12 +1796,14 @@ function publishVersion(){
 /* ============================================================
    View switching + sidebar
    ============================================================ */
-const TITLES={ dashboard:"Tableau de bord", editor:"Édition du site", media:"Médiathèque", versions:"Versions", chatbot:"Chatbot", rdv:"Rendez-vous", stats:"Statistiques" };
+const TITLES={ dashboard:"Tableau de bord", editor:"Édition du site", media:"Médiathèque", versions:"Versions", chatbot:"Chatbot", "chatbot-stats":"Statistiques du chatbot", rdv:"Rendez-vous", stats:"Statistiques" };
 function showView(name){
+  if(name==="chatbot-stats") name="chatbot";   // ancienne vue supprimée : les stats vivent dans le tiroir de la page Chatbot
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
   const v=document.getElementById("view-"+name); if(v) v.classList.add("on");
-  document.querySelectorAll(".nav-i[data-view]").forEach(b=>b.classList.toggle("on", b.dataset.view===name));
-  document.getElementById("viewTitle").textContent=TITLES[name]||"";
+  const navName = name;
+  document.querySelectorAll(".nav-i[data-view]").forEach(b=>b.classList.toggle("on", b.dataset.view===navName));
+  document.getElementById("viewTitle").textContent=TITLES[name]||TITLES[navName]||"";
   // l'état d'enregistrement n'a de sens que dans l'éditeur du site
   const ss=document.getElementById("saveState"); if(ss) ss.style.display=(name==="editor")?"":"none";
   const pb=document.getElementById("publishBtn"); if(pb) pb.style.display=(name==="editor")?"":"none";
@@ -1538,16 +1903,99 @@ function toast(msg){ const t=document.getElementById("toast"); document.getEleme
 /* ============================================================
    Chatbot module (interactive)
    ============================================================ */
-const CHAT_KEY="chaskis_chatbot_"+PAGE;
+const CHAT_KEY="chaskis_chatbot_v2_"+PAGE;
 const LANGS=[{k:"fr",l:"Français"},{k:"en",l:"English"},{k:"de",l:"Deutsch"},{k:"it",l:"Italiano"}];
+const LANG_LBL={fr:"Français",en:"English",de:"Deutsch",it:"Italiano",pt:"Português",es:"Español",tr:"Türkçe",so:"Soomaali",ar:"العربية"};
 function blankChat(){ return {
-  sources:[{n:"tarifs-2026.pdf",s:"indexé"},{n:"zones-livraison.docx",s:"indexé"},{n:"FAQ du site",s:"auto"}],
+  sources:[
+    {n:"tarifs-2026.pdf",kind:"file",tags:["Tarifs","Offres"],s:"indexé",prev:"Grille tarifaire 2026\n\nCourse standard (Genève intra-muros) : 14 CHF.\nZone Léman (Nyon, Morges, Lausanne) : dès 22 CHF.\nAbonnement Flex : 249 CHF / mois, 30 courses incluses.\nAbonnement Dédié : sur devis, coursier attitré.\nSupplément express (< 2 h) : +9 CHF."},
+    {n:"zones-livraison.docx",kind:"file",tags:["Zones","Délais"],s:"indexé",prev:"Zones de livraison\n\nGenève : livraison le jour même, créneaux 9h-18h.\nNyon / Morges : J+0 si commande avant 11h, sinon J+1.\nLausanne / Riviera : J+1, créneau matin ou après-midi.\nLe samedi est couvert sur la zone Léman de 9h à 17h."},
+    {n:"FAQ du site",kind:"url",tags:["Général","Services"],s:"synchronisé",prev:"FAQ publiée sur chaskis.ch/faq\n\n• Comment commander une course ?\n• Quels sont les délais garantis ?\n• Livrez-vous les produits fragiles / réfrigérés ?\n• Comment fonctionne la facturation mensuelle ?\n(La FAQ du site est resynchronisée automatiquement à chaque publication.)"}
+  ],
   allowed:["Tarifs","Délais","Zones","Services"],
   forbidden:["Données clients","Marges internes","Coordonnées coursiers"],
-  tone:"pro", length:"moyenne", langs:["fr","en"],
+  tone:"pro", length:"moyenne", autoLang:true, defaultLang:"fr",
   fallback:"Je n'ai pas la réponse exacte ici. Écrivez-nous à hello@chaskis.ch, on vous répond vite.",
-  instr:"Tu es l'assistant de Chaskis, service de livraison B2B en Suisse romande. Réponds à partir des sources fournies, reste factuel et ne donne jamais d'information confidentielle." }; }
+  instr:"Tu es l'assistant de Chaskis, service de livraison B2B en Suisse romande. Réponds à partir des sources fournies, reste factuel et ne donne jamais d'information confidentielle.",
+  version:"1.0.2",
+  changelog:[
+    {v:"1.0.2",date:"1 juil.",text:"Source ajoutée : « zones-livraison.docx » (tags Zones, Délais)."},
+    {v:"1.0.1",date:"28 juin",text:"Sujet interdit ajouté : « Marges internes »."},
+    {v:"1.0.0",date:"25 juin",text:"Création de l'assistant."}
+  ] }; }
 let chat=loadChat();
+/* stats chatbot par période (démo, cohérent avec les cartes Rendez-vous : contexte + comparaison période préc.) */
+let cbKey="30j";
+const CB_PERIODS={
+  "7j": {conv:298,  dConv:12, q:121,  un:9,   unScope:5,  unKnow:4,  dRate:2, curR:"23-29 juin", prevR:"16-22 juin", chart:{labels:["lun","mar","mer","jeu","ven","sam","dim"], vals:[90,93,92,94,93,95,93]}},
+  "30j":{conv:1248, dConv:18, q:512,  un:41,  unScope:13, unKnow:28, dRate:3, curR:"1-30 juin",  prevR:"1-31 mai",   chart:{labels:["2-8 juin","9-15 juin","16-22 juin","23-30 juin"], vals:[89,90,91,92]}},
+  "3m": {conv:3520, dConv:24, q:1490, un:132, unScope:74, unKnow:58, dRate:4, curR:"avr-juin 2026", prevR:"janv-mars 2026", chart:{labels:["avril","mai","juin"], vals:[89,91,92]}},
+  "6m": {conv:6380, dConv:31, q:2690, un:255, unScope:150,unKnow:105,dRate:5, curR:"janv-juin 2026", prevR:"juil-déc 2025", chart:{labels:["janv.","févr.","mars","avr.","mai","juin"], vals:[87,88,89,90,91,92]}},
+  "12m":{conv:11200,dConv:46, q:4720, un:470, unScope:280,unKnow:190,dRate:7, curR:"juil 2025 - juin 2026", prevR:"année préc.", chart:{labels:["juil.","août","sept.","oct.","nov.","déc.","janv.","févr.","mars","avr.","mai","juin"], vals:[84,85,86,86,87,88,88,89,90,90,91,92]}}
+};
+/* questions sans réponse. reason : "scope" = hors périmètre / "knowledge" = à documenter */
+let cbUnPage=1; const CB_UN_PER=8;
+const CB_UN_RAW=[
+  ["Vous livrez des palettes de plus de 500 kg ?","knowledge","fr"],
+  ["Proposez-vous des cartons isothermes pour les surgelés ?","knowledge","fr"],
+  ["Can I get an invoice with VAT for my company?","knowledge","en"],
+  ["Liefern Sie auch nach Freiburg?","knowledge","de"],
+  ["Avez-vous une assurance en cas de casse d'un colis fragile ?","knowledge","fr"],
+  ["Livrez-vous le dimanche à Genève ?","knowledge","fr"],
+  ["Puis-je programmer une livraison récurrente chaque semaine ?","knowledge","fr"],
+  ["Quel est le délai pour une course urgente à Lausanne ?","knowledge","fr"],
+  ["Do you handle temperature-controlled deliveries?","knowledge","en"],
+  ["Entregam medicamentos para farmácias?","knowledge","pt"],
+  ["Acceptez-vous le paiement par carte à la livraison ?","knowledge","fr"],
+  ["Consegnate anche a Lugano?","knowledge","it"],
+  ["Y a-t-il un suivi GPS en temps réel du coursier ?","knowledge","fr"],
+  ["Quelle est la taille maximale de colis acceptée ?","knowledge","fr"],
+  ["Proposez-vous des emballages écologiques ?","knowledge","fr"],
+  ["Can I book a specific one-hour delivery slot?","knowledge","en"],
+  ["Livrez-vous dans les zones piétonnes du centre ?","knowledge","fr"],
+  ["Reprenez-vous les emballages vides après livraison ?","knowledge","fr"],
+  ["هل توصّلون الطرود المبرّدة إلى المطاعم؟","knowledge","ar"],
+  ["Facturez-vous les kilomètres à vide ?","knowledge","fr"],
+  ["Bieten Sie einen Express-Service am Wochenende an?","knowledge","de"],
+  ["¿Entregan objetos frágiles con seguro?","knowledge","es"],
+  ["Cumartesi Nyon'a teslimat yapıyor musunuz?","knowledge","tr"],
+  ["Peut-on annuler une course déjà commandée ?","knowledge","fr"],
+  ["Ma keentaan baakadaha qaboojinta ah?","knowledge","so"],
+  ["Livrez-vous aux particuliers ou seulement aux entreprises ?","knowledge","fr"],
+  ["Do you offer same-day delivery in Nyon?","knowledge","en"],
+  ["Gestite anche resi e ritiri?","knowledge","it"],
+  ["Do you deliver to France, in Annemasse?","scope","en"],
+  ["Quel est le salaire d'un coursier chez vous ?","scope","fr"],
+  ["C'est quoi votre marge sur une course express ?","scope","fr"],
+  ["Pouvez-vous me donner le numéro d'un de vos coursiers ?","scope","fr"],
+  ["¿Cuánto gana un repartidor en Chaskis?","scope","es"],
+  ["Qui sont vos plus gros clients ?","scope","fr"],
+  ["Quel logiciel utilisez-vous en interne ?","scope","fr"],
+  ["Puis-je avoir la liste de vos coursiers ?","scope","fr"],
+  ["Livrez-vous jusqu'à Paris ?","scope","fr"],
+  ["Quel est le chiffre d'affaires de Chaskis ?","scope","fr"],
+  ["Can you share a client's delivery address?","scope","en"],
+  ["Quelles négociations tarifaires avez-vous avec vos gros comptes ?","scope","fr"],
+  ["Recrutez-vous des coursiers en ce moment ?","scope","fr"]
+];
+const cbUnanswered=(function(){
+  const times=["14:32","11:08","17:45","09:21","16:03","10:14","15:39","08:52","13:20","18:04","12:47","07:58","15:11","09:44"];
+  const out=[]; let dnum=1, mon="juil.";
+  CB_UN_RAW.forEach((r,i)=>{ out.push({q:r[0],reason:r[1],lang:r[2],date:dnum+" "+mon,time:times[i%times.length]});
+    if(i%2===1){ if(mon==="juil."){ mon="juin"; dnum=30; } else { dnum=Math.max(1,dnum-1); } } });
+  return out;
+})();
+const FLAG={
+  fr:'<svg viewBox="0 0 9 6"><rect width="3" height="6" fill="#0055A4"/><rect x="3" width="3" height="6" fill="#fff"/><rect x="6" width="3" height="6" fill="#EF4135"/></svg>',
+  en:'<svg viewBox="0 0 60 36"><rect width="60" height="36" fill="#012169"/><path d="M0 0 60 36M60 0 0 36" stroke="#fff" stroke-width="7"/><path d="M0 0 60 36" stroke="#C8102E" stroke-width="4"/><path d="M60 0 0 36" stroke="#C8102E" stroke-width="4"/><path d="M30 0V36M0 18H60" stroke="#fff" stroke-width="12"/><path d="M30 0V36M0 18H60" stroke="#C8102E" stroke-width="7"/></svg>',
+  de:'<svg viewBox="0 0 5 3"><rect width="5" height="1" y="0" fill="#000"/><rect width="5" height="1" y="1" fill="#D00"/><rect width="5" height="1" y="2" fill="#FFCE00"/></svg>',
+  it:'<svg viewBox="0 0 9 6"><rect width="3" height="6" fill="#009246"/><rect x="3" width="3" height="6" fill="#fff"/><rect x="6" width="3" height="6" fill="#CE2B37"/></svg>',
+  pt:'<svg viewBox="0 0 9 6"><rect width="9" height="6" fill="#FF0000"/><rect width="3.6" height="6" fill="#006600"/><circle cx="3.6" cy="3" r="1" fill="#FFCC00"/><circle cx="3.6" cy="3" r=".55" fill="#fff"/></svg>',
+  es:'<svg viewBox="0 0 9 6"><rect width="9" height="6" fill="#AA151B"/><rect y="1.5" width="9" height="3" fill="#F1BF00"/></svg>',
+  tr:'<svg viewBox="0 0 9 6"><rect width="9" height="6" fill="#E30A17"/><circle cx="3.7" cy="3" r="1.4" fill="#fff"/><circle cx="4.15" cy="3" r="1.12" fill="#E30A17"/><path d="m5.15 3 1.1-.36-.68.93v-1.14l.68.93z" fill="#fff"/></svg>',
+  so:'<svg viewBox="0 0 9 6"><rect width="9" height="6" fill="#4189DD"/><path d="M4.5 1.6 5.03 3.23H6.75L5.36 4.24 5.89 5.87 4.5 4.86 3.11 5.87 3.64 4.24 2.25 3.23H3.97z" fill="#fff"/></svg>',
+  ar:'<svg viewBox="0 0 24 24" fill="none" stroke="#4b7bec" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg>'
+};
 function loadChat(){ try{ const r=JSON.parse(localStorage.getItem(CHAT_KEY)); if(r) return Object.assign(blankChat(),r); }catch(e){} return blankChat(); }
 function saveChat(){ try{ localStorage.setItem(CHAT_KEY,JSON.stringify(chat)); }catch(e){} }
 let cbTestLog=[];
@@ -1558,36 +2006,351 @@ function renderChips(id, arr, cls, onRemove, onAdd){
     c.innerHTML=t+' <span class="x" role="button" aria-label="Retirer">&times;</span>';
     c.querySelector(".x").addEventListener("click",()=>onRemove(i)); w.appendChild(c); });
   const add=document.createElement("span"); add.className="chip add"; add.textContent="+ ajouter";
-  add.addEventListener("click",onAdd); w.appendChild(add);
+  add.addEventListener("click",()=>onAdd(add)); w.appendChild(add);
 }
-function renderChatbot(){
+const CB_IC={
+  msg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  warn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>',
+  file:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></svg>',
+  globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg>',
+  drive:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m7.7 3.5-6.5 11.3 3.2 5.7 6.6-11.4z"/><path d="M22.8 14.8 16.3 3.5H9.8l6.5 11.3z"/><path d="M4.6 20.5h14.1l3.2-5.7H7.8z"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>',
+  open:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>',
+  sparkle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4m0 10v4M3 12h4m10 0h4M6 6l2 2m8 8 2 2m0-14-2 2M6 18l2-2"/></svg>'
+};
+function srcIcon(k){ return k==="url"?CB_IC.globe : k==="drive"?CB_IC.drive : CB_IC.file; }
+function cbNf(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g," "); }
+function gotoCbStats(tab){ openCbDrawer(tab); }
+function renderCbCards(id, nav){
+  const cw=document.getElementById(id); if(!cw) return; cw.innerHTML="";
+  const p=CB_PERIODS[cbKey]||CB_PERIODS["30j"];
+  const ans=p.q-p.un, rate=Math.round(ans/p.q*100), prevConv=Math.round(p.conv/(1+p.dConv/100));
+  const ICOL={purple:["#EEEDFE","#534AB7"],teal:["#E1F5EE","#0F6E56"],amber:["#FBF0DD","#9A6A15"]};
+  const tS=(k,v)=>'<div class="tt-row"><span>'+k+'</span><b>'+v+'</b></div>';
+  [["Conversations",cbNf(p.conv),"purple",CB_IC.msg,trendChip(p.dConv),"vs "+p.prevR,
+    '<div class="tt-h">Conversations</div>'+tS("Sur "+p.curR,cbNf(p.conv))+tS("Période préc. ("+p.prevR+")",cbNf(prevConv))+'<div class="tt-sub">Usage / adoption, pas un indicateur de qualité.</div>',"conversations"],
+   ["Taux de réponse",rate+" %","teal",CB_IC.check,trendChip(p.dRate," pts"),ans+" réponses utiles sur "+p.q,
+    '<div class="tt-h">Taux de réponse</div>'+tS("Réponses utiles",ans+" / "+p.q)+tS("Restant hors périmètre",p.unScope)+tS("Restant à documenter",p.unKnow)+'<div class="tt-sub">Part des questions où le bot a répondu utilement.</div>',"reponses"],
+   ["Questions sans réponse",String(p.un),"amber",CB_IC.warn,'<span class="trend flat">à traiter</span>','<span class="cb-split know"><b>'+p.unKnow+'</b> à documenter</span><span class="cb-split scope">'+p.unScope+' hors périmètre</span>',
+    '<div class="tt-h">Questions sans réponse</div>'+tS("Hors périmètre (normal)",p.unScope)+tS("À documenter (action)",p.unKnow)+'<div class="tt-sub">Cliquez pour voir le détail.</div>',"questions"]]
+  .forEach(c=>{ const el=document.createElement("div"); el.className="statc tipped"; const col=ICOL[c[2]];
+    const openNow = nav && cbOpen===c[7];
+    el.innerHTML='<div class="top"><div class="ic-badge" style="background:'+col[0]+';color:'+col[1]+';border-radius:9px">'+c[3]+'</div>'+(c[4]||"")+'</div>'+
+      '<div class="k">'+c[0]+'</div>'+
+      '<div class="v">'+c[1]+'</div>'+
+      (c[5]?'<div class="d">'+c[5]+'</div>':'')+
+      (nav?'<div class="statc-cta"><span>'+(openNow?"Masquer le détail":"Voir le détail")+'</span><svg class="cta-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>':'');
+    el._tip=c[6];
+    if(nav){ el.dataset.k=c[7]; el.style.cursor="pointer"; el.setAttribute("aria-expanded",openNow?"true":"false"); el.addEventListener("click",()=>openCbDrawer(c[7]));
+      if(openNow){ el.classList.add("is-open"); el.style.setProperty("--acc",CB_META[c[7]].acc); } }
+    cw.appendChild(el); });
+}
+/* Tiroir de détail : chaque KPI a son contenu propre (nature + couleur), s'ouvre SOUS la carte cliquée, sans changer de vue */
+const CB_META={
+  conversations:{tpl:"cbTpl-conversations",title:"Conversations",icon:CB_IC.msg,acc:"#534AB7",bg:"#EEEDFE",
+    val:p=>cbNf(p.conv), trend:p=>trendChip(p.dConv), render:()=>{ renderCbConvChart(); renderCbConvLang(); }},
+  reponses:{tpl:"cbTpl-reponses",title:"Taux de réponse",icon:CB_IC.check,acc:"#0F6E56",bg:"#E1F5EE",
+    val:p=>Math.round((p.q-p.un)/p.q*100)+" %", trend:p=>trendChip(p.dRate," pts"), render:()=>{ renderCbChart(); renderCbAnsBar(); }},
+  questions:{tpl:"cbTpl-questions",title:"Questions sans réponse",icon:CB_IC.warn,acc:"#9A6A15",bg:"#FBF0DD",
+    val:p=>String(p.un), trend:()=>'<span class="trend flat">à traiter</span>', render:()=>{ renderCbBreakdown(); renderCbUnanswered(); }}
+};
+let cbOpen=null;
+function openCbDrawer(kind){
+  if(cbOpen===kind){ closeCbDrawer(); return; }
+  const m=CB_META[kind]; if(!m) return;
+  cbOpen=kind;
+  const p=CB_PERIODS[cbKey]||CB_PERIODS["30j"];
+  const d=document.getElementById("cbDrawer"); if(!d) return;
+  d.style.setProperty("--acc",m.acc); d.style.setProperty("--acc-bg",m.bg);
+  document.getElementById("cbDrawerIc").innerHTML=m.icon;
+  document.getElementById("cbDrawerT").textContent=m.title;
+  document.getElementById("cbDrawerV").innerHTML='<span class="dv">'+m.val(p)+'</span>'+m.trend(p);
+  const body=document.getElementById("cbDrawerBody"); body.innerHTML="";
+  body.appendChild(document.getElementById(m.tpl).content.cloneNode(true));
+  d.hidden=false;                 // visible AVANT le render : drawLine a besoin de la largeur du SVG
+  m.render();
+  renderCbCards("cbPulse", true);  // reflète l'état ouvert (liseré couleur + label "Masquer")
+  const rg=document.getElementById("cbRange"); if(rg){ rg.value=cbKey; if(rg._ddSync) rg._ddSync(); }
+  d.classList.remove("in"); void d.offsetHeight; d.classList.add("in");
+  refreshIcons();
+  requestAnimationFrame(()=>{ d.scrollIntoView({block:"nearest",behavior:"smooth"}); });
+}
+function refreshCbDrawer(){ if(!cbOpen) return; const m=CB_META[cbOpen], p=CB_PERIODS[cbKey]||CB_PERIODS["30j"];
+  const v=document.getElementById("cbDrawerV"); if(v) v.innerHTML='<span class="dv">'+m.val(p)+'</span>'+m.trend(p);
+  m.render(); refreshIcons(); }
+function closeCbDrawer(){
+  const d=document.getElementById("cbDrawer"); if(!d) return;
+  d.classList.remove("in"); d.hidden=true;
+  cbOpen=null; renderCbCards("cbPulse", true);
+}
+function renderCbAnsBar(){
+  const bar=document.getElementById("cbAnsBar"), leg=document.getElementById("cbAnsLeg"); if(!bar||!leg) return;
+  const p=CB_PERIODS[cbKey]||CB_PERIODS["30j"]; const ans=p.q-p.un, tot=p.q||1;
+  bar.innerHTML=""; leg.innerHTML=""; leg.className="statleg";
+  [["Réponses utiles",ans,"#1D9E75"],["Hors périmètre",p.unScope,"#B4B2A9"],["À documenter",p.unKnow,"#E0A83E"]].forEach(d=>{ const pc=Math.round(d[1]/tot*100);
+    const seg=document.createElement("div"); seg.className="seg"; seg.style.width=pc+"%"; seg.style.background=d[2]; bar.appendChild(seg);
+    const r=document.createElement("div"); r.className="r"; r.innerHTML='<span class="dot" style="background:'+d[2]+'"></span><span class="nm">'+d[0]+'</span><span class="ct">'+d[1]+'</span><span class="pc">'+pc+' %</span>'; leg.appendChild(r); });
+}
+function renderCbConvChart(){
+  const svg=document.getElementById("cbConvChart"); if(!svg) return;
+  const p=CB_PERIODS[cbKey]||CB_PERIODS["30j"]; const n=p.chart.labels.length||1;
+  const base=p.conv/n; const vals=p.chart.labels.map((_,i)=>Math.round(base*(0.82+0.36*(i/(n>1?n-1:1)))));
+  const prev=vals.map(v=>Math.round(v/(1+p.dConv/100)));
+  drawLine(svg,p.chart.labels,vals,prev,"Conversations"); wireCbWheel(svg);
+  const badge=document.getElementById("cbConvBadge"); if(badge) badge.innerHTML=trendChip(p.dConv)+' <span style="color:var(--muted)">vs période préc. · molette pour zoomer</span>';
+  const leg=document.getElementById("cbConvLeg"); if(leg) leg.innerHTML='<span class="li"><span class="dot" style="background:#6B5BCC"></span><span class="li-k">Conversations</span><span class="li-v">'+cbNf(p.conv)+'</span></span><span class="li"><span class="dot dash" style="background:#c4c9c4"></span><span class="li-k">Période préc.</span></span>';
+}
+function renderCbConvLang(){
+  const data=[["fr",48],["en",17],["pt",10],["ar",8],["de",6],["es",5],["it",3],["tr",2],["so",1]]
+    .map(x=>['<span class="flag">'+(FLAG[x[0]]||FLAG.ar)+'</span>'+(LANG_LBL[x[0]]||x[0]), x[1]]);
+  renderBars("cbConvLangBars", data, "#6B5BCC"); refreshIcons();
+}
+function renderCbStatSummary(){
+  const el=document.getElementById("cbStatSummary"); if(!el) return;
+  const p=CB_PERIODS[cbKey]||CB_PERIODS["30j"]; const ans=p.q-p.un, rate=Math.round(ans/p.q*100);
+  el.innerHTML=[
+    ["Taux de réponse",rate+" %",trendChip(p.dRate," pts")],
+    ["Questions sans réponse",String(p.un),'<span class="cs-sub">'+p.unKnow+' à documenter</span>'],
+    ["Conversations",cbNf(p.conv),trendChip(p.dConv)]
+  ].map(c=>'<div class="cs"><div class="cs-top"><span class="cs-v">'+c[1]+'</span>'+(c[2]||"")+'</div><span class="cs-k">'+c[0]+'</span></div>').join('');
+}
+function renderCbBreakdown(){
+  const total=cbUnanswered.length||1;
+  const counts={}; cbUnanswered.forEach(u=>counts[u.lang]=(counts[u.lang]||0)+1);
+  const order=["fr","en","de","it","pt","es","tr","so","ar"].filter(l=>counts[l]).sort((a,b)=>counts[b]-counts[a]);
+  const data=order.map(l=>['<span class="flag">'+FLAG[l]+'</span>'+(LANG_LBL[l]||l), Math.round(counts[l]/total*100)]);
+  renderBars("cbLangBars", data, "#6B5BCC");
+  const bar=document.getElementById("cbReasonBar"), leg=document.getElementById("cbReasonLeg");
+  if(bar&&leg){ const know=cbUnanswered.filter(u=>u.reason==="knowledge").length, scope=total-know;
+    bar.innerHTML=""; leg.innerHTML=""; leg.className="statleg";
+    [["À documenter",know,"#E0A83E"],["Hors périmètre",scope,"#B4B2A9"]].forEach(d=>{ const pc=Math.round(d[1]/total*100);
+      const seg=document.createElement("div"); seg.className="seg"; seg.style.width=pc+"%"; seg.style.background=d[2]; bar.appendChild(seg);
+      const r=document.createElement("div"); r.className="r";
+      r.innerHTML='<span class="dot" style="background:'+d[2]+'"></span><span class="nm">'+d[0]+'</span><span class="ct">'+d[1]+'</span><span class="pc">'+pc+' %</span>';
+      leg.appendChild(r); }); }
+  refreshIcons();
+}
+/* zoom molette sur les courbes du chatbot : parcourt les périodes (comme la page Rendez-vous) */
+const CB_ZOOM=["7j","30j","3m","6m","12m"];
+function cbZoom(dir){ let i=CB_ZOOM.indexOf(cbKey); if(i<0)i=CB_ZOOM.indexOf("30j"); const ni=Math.min(CB_ZOOM.length-1,Math.max(0,i+dir)); if(ni===i) return;
+  cbKey=CB_ZOOM[ni]; const rg=document.getElementById("cbRange"); if(rg){ rg.value=cbKey; if(rg._ddSync) rg._ddSync(); } refreshCbDrawer(); renderCbCards("cbPulse",true); }
+function wireCbWheel(svg){ if(!svg||svg.dataset.wheel) return; svg.dataset.wheel="1"; let t=0;
+  svg.addEventListener("wheel",e=>{ e.preventDefault(); const now=Date.now(); if(now-t<200) return; t=now; cbZoom(e.deltaY>0?1:-1); },{passive:false}); }
+function renderCbChart(){
+  const svg=document.getElementById("cbChart"); if(!svg) return;
+  const p=CB_PERIODS[cbKey]||CB_PERIODS["30j"];
+  const prev=p.chart.vals.map(v=>Math.max(0,v-p.dRate));
+  drawLine(svg,p.chart.labels,p.chart.vals,prev,"Taux de réponse"); wireCbWheel(svg);
+  const badge=document.getElementById("cbChartBadge"); if(badge) badge.innerHTML=trendChip(p.dRate," pts")+' <span style="color:var(--muted)">vs période préc. · molette pour zoomer</span>';
+  const leg=document.getElementById("cbChartLeg"); if(leg) leg.innerHTML='<span class="li"><span class="dot" style="background:#4BB3A4"></span><span class="li-k">Taux de réponse</span><span class="li-v">'+p.chart.vals[p.chart.vals.length-1]+' %</span></span><span class="li"><span class="dot dash" style="background:#c4c9c4"></span><span class="li-k">Période préc.</span></span>';
+}
+function renderCbUnanswered(){
+  const b=document.getElementById("cbUnBody"); if(!b) return; b.innerHTML="";
+  const total=cbUnanswered.length, pages=Math.max(1,Math.ceil(total/CB_UN_PER));
+  if(cbUnPage>pages) cbUnPage=pages; if(cbUnPage<1) cbUnPage=1;
+  const start=(cbUnPage-1)*CB_UN_PER, pageItems=cbUnanswered.slice(start,start+CB_UN_PER);
+  const cap=document.getElementById("cbUnCap"); if(cap) cap.textContent=total+" questions à traiter";
+  pageItems.forEach((u)=>{ const tr=document.createElement("tr");
+    const reason = u.reason==="scope" ? '<span class="rtag scope">Hors périmètre</span>' : '<span class="rtag know">À documenter</span>';
+    const act = u.reason==="knowledge" ? '<button class="iconbtn" data-unq="'+escHtml(u.q)+'">'+CB_IC.plus+'Ajouter aux sources</button>' : '<span style="color:var(--muted);font-size:11.5px">rien à faire</span>';
+    const fl = FLAG[u.lang] ? '<span class="flag">'+FLAG[u.lang]+'</span>' : '';
+    tr.innerHTML='<td><span class="cb-q" title="'+escHtml(u.q)+'">'+escHtml(u.q)+'</span></td>'+
+      '<td style="white-space:nowrap"><div class="dt-d">'+u.date+'</div><div class="dt-t">'+u.time+'</div></td>'+
+      '<td style="white-space:nowrap"><span class="lang-cell">'+fl+(LANG_LBL[u.lang]||u.lang)+'</span></td>'+
+      '<td>'+reason+'</td>'+
+      '<td style="white-space:nowrap;text-align:right">'+act+'</td>';
+    b.appendChild(tr); });
+  b.querySelectorAll("[data-unq]").forEach(bt=>bt.addEventListener("click",()=>openCbAdd({q:bt.dataset.unq})));
+  renderCbUnPager(total,pages,start,pageItems.length);
+  refreshIcons();
+}
+function renderCbUnPager(total,pages,start,count){
+  const el=document.getElementById("cbUnPager"); if(!el) return;
+  if(pages<=1){ el.innerHTML=""; return; }
+  const chevL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>';
+  const chevR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
+  const btn=(n,lbl,cls,dis)=>'<button class="pg-btn'+(cls?" "+cls:"")+'" data-cbpg="'+n+'"'+(dis?" disabled":"")+'>'+lbl+'</button>';
+  const win=[]; for(let n=1;n<=pages;n++){ if(n===1||n===pages||Math.abs(n-cbUnPage)<=1) win.push(n); }
+  let nums="",last=0; win.forEach(n=>{ if(n-last>1) nums+='<span class="pg-ell">…</span>'; nums+=btn(n,String(n),n===cbUnPage?"on":""); last=n; });
+  el.innerHTML='<span class="pg-info">'+(start+1)+'–'+(start+count)+' sur '+total+'</span><span class="pg-ctrl">'+btn(cbUnPage-1,chevL,"",cbUnPage<=1)+nums+btn(cbUnPage+1,chevR,"",cbUnPage>=pages)+'</span>';
+  el.querySelectorAll(".pg-btn[data-cbpg]").forEach(bt=>{ if(bt.disabled) return; bt.addEventListener("click",()=>{ const n=+bt.dataset.cbpg; if(n>=1&&n<=pages&&n!==cbUnPage){ cbUnPage=n; renderCbUnanswered(); } }); });
+}
+function renderCbSources(){
   const s=document.getElementById("cbSources"); if(!s) return; s.innerHTML="";
-  chat.sources.forEach((src,i)=>{ const row=document.createElement("div"); row.className="src-row";
-    row.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.8"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></svg><span class="nm">'+src.n+'</span><span class="ok">'+src.s+'</span><button class="media-del" title="Retirer">&times;</button>';
-    row.querySelector(".media-del").addEventListener("click",()=>{ chat.sources.splice(i,1); saveChat(); renderChatbot(); });
+  const cnt=document.getElementById("cbSrcCount"); if(cnt) cnt.textContent=chat.sources.length+" source"+(chat.sources.length>1?"s":"");
+  chat.sources.forEach((src,i)=>{ const tags=(src.tags||[]);
+    const row=document.createElement("div"); row.className="src-row";
+    const tagHtml = tags.length ? tags.map(t=>'<span class="src-tag">'+escHtml(t)+'</span>').join("") : '<span class="src-tag empty">sans tag</span>';
+    row.innerHTML='<span class="src-ic">'+srcIcon(src.kind)+'</span>'+
+      '<div class="src-main"><span class="src-nm" title="'+escHtml(src.n)+'">'+escHtml(src.n)+'</span><div class="src-tags">'+tagHtml+'</div></div>'+
+      '<button class="src-prev" title="Prévisualiser">'+CB_IC.eye+'</button>'+
+      '<button class="media-del src-del" title="Retirer">&times;</button>';
+    row.querySelector(".src-prev").addEventListener("click",()=>openCbPreview(i));
+    row.querySelector(".src-del").addEventListener("click",()=>{ const r=chat.sources.splice(i,1)[0]; bumpBot("Source retirée : « "+r.n+" »"); renderChatbot(); toast("Source retirée · v"+chat.version); });
     s.appendChild(row); });
+}
+function openCbPreview(i){
+  const src=chat.sources[i]; if(!src) return;
+  const tags=(src.tags||[]).map(t=>'<span class="src-tag">'+escHtml(t)+'</span>').join("");
+  const kindLbl = src.kind==="url"?"Page web":src.kind==="drive"?"Google Drive":"Fichier";
+  document.getElementById("cbPrevBody").innerHTML='<div class="cb-prev-hd"><span class="src-ic lg">'+srcIcon(src.kind)+'</span><div style="min-width:0"><div class="cb-prev-nm">'+escHtml(src.n)+'</div><div class="cb-prev-meta">'+kindLbl+' · '+(src.s||"")+'</div><div class="src-tags" style="margin-top:7px">'+(tags||'<span class="src-tag empty">sans tag</span>')+'</div></div></div><div class="cb-prev-body">'+escHtml(src.prev||"Aperçu non disponible pour cette source.").replace(/\n/g,"<br>")+'</div>';
+  document.getElementById("cbPrevModal").classList.add("show"); refreshIcons();
+}
+function closeCbPreview(){ document.getElementById("cbPrevModal").classList.remove("show"); }
+/* auto-tag : "lecture" du document -> tags proposés (l'utilisateur n'a rien à saisir) */
+function detectTags(name){
+  const n=(name||"").toLowerCase(); const out=[];
+  [[/tarif|prix|price|co[uû]t/,"Tarifs"],[/zone|livrais|deliver|r[ée]gion|secteur/,"Zones"],[/d[ée]lai|delay|horaire|cr[ée]neau/,"Délais"],[/faq|question/,"FAQ"],[/cgv|condition|terms|contrat/,"Conditions"],[/factur|invoice|tva|vat|paiement|payment/,"Facturation"],[/service|offre|abonnement|flex|d[ée]di[ée]/,"Services"],[/assur|casse|fragile|garantie/,"Assurance"],[/express|urgent/,"Express"]]
+    .forEach(m=>{ if(m[0].test(n)&&!out.includes(m[1])) out.push(m[1]); });
+  if(!out.length) out.push("Général");
+  return out.slice(0,4);
+}
+function renderTagEditor(id, tags, onChange){
+  const w=document.getElementById(id); if(!w) return; w.innerHTML="";
+  tags.forEach((t,i)=>{ const c=document.createElement("span"); c.className="chip ok"; c.innerHTML=escHtml(t)+' <span class="x" role="button" aria-label="Retirer">×</span>';
+    c.querySelector(".x").addEventListener("click",()=>{ tags.splice(i,1); if(onChange)onChange(); renderTagEditor(id,tags,onChange); }); w.appendChild(c); });
+  const inp=document.createElement("input"); inp.className="cb-tag-inp"; inp.placeholder=tags.length?"+ tag":"+ ajouter un tag";
+  inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); const v=inp.value.trim(); if(v&&!tags.includes(v)){ tags.push(v); if(onChange)onChange(); renderTagEditor(id,tags,onChange); const ni=w.querySelector(".cb-tag-inp"); if(ni) ni.focus(); } } });
+  w.appendChild(inp);
+}
+/* picker de sujets (périmètre) alimenté par les tags des sources + saisie libre */
+function openTagPicker(anchor, existing, onPick){
+  closeTagPicker();
+  const pool=[...new Set(chat.sources.flatMap(s=>s.tags||[]))].filter(t=>!existing.includes(t));
+  const menu=document.createElement("div"); menu.className="tag-picker"; menu.id="tagPicker";
+  let html = pool.length ? '<div class="tp-lbl">Depuis vos sources</div>'+pool.map(t=>'<button class="tp-opt" data-t="'+escHtml(t)+'">'+CB_IC.plus+escHtml(t)+'</button>').join('') : '<div class="tp-lbl">Aucun tag de source disponible</div>';
+  html += '<div class="tp-sep"></div><input class="tp-inp" placeholder="Autre sujet… (Entrée)">';
+  menu.innerHTML=html; document.body.appendChild(menu);
+  const r=anchor.getBoundingClientRect(); menu.style.left=r.left+"px"; menu.style.top=(r.bottom+6)+"px";
+  requestAnimationFrame(()=>{ const mw=menu.offsetWidth,mh=menu.offsetHeight; if(r.left+mw>innerWidth-8) menu.style.left=Math.max(8,innerWidth-mw-8)+"px"; if(r.bottom+6+mh>innerHeight-8) menu.style.top=Math.max(8,r.top-6-mh)+"px"; });
+  menu.querySelectorAll(".tp-opt").forEach(b=>b.addEventListener("click",()=>{ onPick(b.dataset.t); closeTagPicker(); }));
+  const inp=menu.querySelector(".tp-inp"); inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){ const v=inp.value.trim(); if(v){ onPick(v); closeTagPicker(); } } });
+  setTimeout(()=>{ inp.focus(); document.addEventListener("mousedown",tpOutside,true); },0); refreshIcons();
+}
+function tpOutside(e){ const m=document.getElementById("tagPicker"); if(m&&!m.contains(e.target)) closeTagPicker(); }
+function closeTagPicker(){ const m=document.getElementById("tagPicker"); if(m) m.remove(); document.removeEventListener("mousedown",tpOutside,true); }
+
+let cbAddKind="file", cbAddTags=[], cbAddTagsManual=false;
+function openCbAdd(pre){ pre=pre||{}; cbAddKind="file";
+  cbAddTags = (pre.tags&&pre.tags.length) ? pre.tags.slice() : detectTags(pre.name||"");
+  cbAddTagsManual = !!(pre.tags&&pre.tags.length);
+  document.querySelectorAll("#cbAddKind button").forEach(b=>b.classList.toggle("on",b.dataset.kind==="file"));
+  renderCbAddBody(pre); document.getElementById("cbAddModal").classList.add("show"); }
+function closeCbAdd(){ document.getElementById("cbAddModal").classList.remove("show"); }
+function renderCbAddBody(pre){
+  pre=pre||{}; const body=document.getElementById("cbAddBody"); if(!body) return;
+  const cfg = cbAddKind==="url" ? {label:"Adresse de la page",ph:"https://chaskis.ch/tarifs",head:""} :
+              cbAddKind==="drive" ? {label:"Document Google Drive",ph:"Nom du document choisi…",head:'<div class="cb-hint-box">'+CB_IC.drive+'<div>Connectez votre Google Drive une fois : vos équipes ajoutent des documents sans repasser par le site.</div></div>'} :
+              {label:"Nom du fichier",ph:"conditions-generales.pdf",head:'<div class="cb-drop">'+CB_IC.file+'<div><b>Glissez un fichier</b> ou parcourez<br><span>PDF, DOCX, TXT — 10 Mo max</span></div></div>'};
+  body.innerHTML=(cfg.head||'')+
+    '<div class="formf"><label>'+cfg.label+'</label><input id="cbAddName" placeholder="'+cfg.ph+'" value="'+escHtml(pre.name||"")+'"></div>'+
+    '<div class="cb-autotag"><div class="at-hd">'+CB_IC.sparkle+'Tags détectés automatiquement en lisant le document</div><div class="cb-tag-edit" id="cbAddTags"></div></div>'+
+    (pre.q?'<p class="hint" style="margin:10px 0 0">Servira à répondre à : « '+escHtml(pre.q)+' »</p>':'');
+  renderTagEditor("cbAddTags", cbAddTags, ()=>{ cbAddTagsManual=true; });
+  const nm=document.getElementById("cbAddName");
+  if(nm) nm.addEventListener("input",e=>{ if(!cbAddTagsManual){ cbAddTags.length=0; detectTags(e.target.value).forEach(t=>cbAddTags.push(t)); renderTagEditor("cbAddTags", cbAddTags, ()=>{ cbAddTagsManual=true; }); } });
+  refreshIcons();
+}
+function cbAddConfirm(){
+  const nm=(document.getElementById("cbAddName").value||"").trim();
+  if(!nm){ toast("Indiquez un nom ou un lien"); return; }
+  const s = cbAddKind==="url"?"synchronisé":cbAddKind==="drive"?"lié":"en file";
+  const prev = cbAddKind==="url"?"Page web synchronisée : "+nm : cbAddKind==="drive"?"Document Google Drive lié : "+nm+"\n(Le contenu est lu directement depuis le Drive.)" : "Aperçu du fichier « "+nm+" » — indexation en cours.";
+  chat.sources.push({n:nm,kind:cbAddKind,tags:cbAddTags.slice(),s:s,prev:prev});
+  bumpBot("Source ajoutée : « "+nm+" »"+(cbAddTags.length?" (tags : "+cbAddTags.join(", ")+")":""));
+  closeCbAdd(); renderChatbot(); toast("Source ajoutée · v"+chat.version);
+}
+/* version + changelog de l'assistant : chaque amélioration = un bump de patch + une entrée */
+function bumpBot(text){
+  const p=(chat.version||"1.0.0").split(".").map(n=>parseInt(n,10)||0); p[2]=(p[2]||0)+1;
+  chat.version=p.join(".");
+  if(!Array.isArray(chat.changelog)) chat.changelog=[];
+  chat.changelog.unshift({v:chat.version,date:RDV_TODAY,text:text});
+  saveChat();
+}
+function renderCbVersion(){
+  const el=document.getElementById("cbVerChip"); if(!el) return;
+  el.innerHTML='<span class="cb-ver-dot"></span>Assistant v'+(chat.version||"1.0.0")+'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l3.5 2"/></svg>';
+}
+function openCbLog(){
+  const b=document.getElementById("cbLogBody"); if(!b) return;
+  const log=chat.changelog||[];
+  b.innerHTML='<p class="hint" style="margin:0 0 14px">Version actuelle <b>v'+(chat.version||"1.0.0")+'</b>. Chaque source, changement de périmètre ou correction dans le bac à test crée une entrée.</p>'+
+    '<div class="cb-log">'+(log.length?log.map(e=>'<div class="cb-log-e"><span class="cb-log-v">v'+e.v+'</span><div class="cb-log-tx"><div class="cb-log-t">'+escHtml(e.text)+'</div><div class="cb-log-d">'+e.date+'</div></div></div>').join(''):'<p class="hint">Aucune entrée.</p>')+'</div>';
+  document.getElementById("cbLogModal").classList.add("show");
+}
+function closeCbLog(){ document.getElementById("cbLogModal").classList.remove("show"); }
+function renderChatbot(){
+  renderCbCards("cbPulse", true); renderCbSources();
   renderChips("cbAllowed", chat.allowed, "ok",
-    (i)=>{ chat.allowed.splice(i,1); saveChat(); renderChatbot(); },
-    ()=>{ const v=prompt("Sujet autorisé :"); if(v&&v.trim()){ chat.allowed.push(v.trim()); saveChat(); renderChatbot(); } });
+    (i)=>{ const r=chat.allowed.splice(i,1)[0]; bumpBot("Sujet autorisé retiré : « "+r+" »"); renderChatbot(); },
+    (btn)=>openTagPicker(btn, chat.allowed.concat(chat.forbidden), v=>{ chat.allowed.push(v); bumpBot("Sujet autorisé ajouté : « "+v+" »"); renderChatbot(); }));
   renderChips("cbForbidden", chat.forbidden, "no",
-    (i)=>{ chat.forbidden.splice(i,1); saveChat(); renderChatbot(); },
-    ()=>{ const v=prompt("Sujet interdit :"); if(v&&v.trim()){ chat.forbidden.push(v.trim()); saveChat(); renderChatbot(); } });
+    (i)=>{ const r=chat.forbidden.splice(i,1)[0]; bumpBot("Sujet interdit retiré : « "+r+" »"); renderChatbot(); },
+    (btn)=>openTagPicker(btn, chat.allowed.concat(chat.forbidden), v=>{ chat.forbidden.push(v); bumpBot("Sujet interdit ajouté : « "+v+" »"); renderChatbot(); }));
   const tone=document.getElementById("cbTone"); if(tone){ tone.value=chat.tone; if(tone._ddSync) tone._ddSync(); }
   const len=document.getElementById("cbLength"); if(len){ len.value=chat.length; if(len._ddSync) len._ddSync(); }
   const fb=document.getElementById("cbFallback"); if(fb) fb.value=chat.fallback;
   const ins=document.getElementById("cbInstr"); if(ins) ins.value=chat.instr;
-  const lw=document.getElementById("cbLangs"); if(lw){ lw.innerHTML="";
-    LANGS.forEach(L=>{ const b=document.createElement("button"); b.className="tg"+(chat.langs.includes(L.k)?" on":""); b.textContent=L.l;
-      b.addEventListener("click",()=>{ const idx=chat.langs.indexOf(L.k); if(idx>=0) chat.langs.splice(idx,1); else chat.langs.push(L.k); saveChat(); renderChatbot(); }); lw.appendChild(b); }); }
+  const al=document.getElementById("cbAutoLang"); if(al){ const on=chat.autoLang!==false; al.classList.toggle("on",on); al.setAttribute("aria-checked",on); }
+  const dl=document.getElementById("cbDefaultLang"); if(dl){ dl.value=chat.defaultLang||"fr"; if(dl._ddSync) dl._ddSync(); }
+  renderCbVersion();
+  if(cbOpen){ const d=document.getElementById("cbDrawer"); if(d){ d.hidden=false; d.classList.add("in"); } refreshCbDrawer(); }
   renderCbTest();
 }
 function renderCbTest(){
   const t=document.getElementById("cbTest"); if(!t) return; t.innerHTML="";
-  if(!cbTestLog.length) cbTestLog=[{r:"u",x:"Vous livrez à Nyon le samedi ?"},{r:"a",x:"Oui, Nyon est dans notre zone Léman. Livraison le samedi de 9h à 17h, dès 14 CHF.",src:"zones-livraison.docx"}];
-  cbTestLog.forEach(m=>{ const b=document.createElement("div");
+  const clr=document.getElementById("cbTestClear");
+  if(!cbTestLog.length){
+    if(clr) clr.style.display="none";
+    t.innerHTML='<div class="cb-test-empty"><span class="em-ic">'+CB_IC.msg+'</span>'+
+      '<p>Testez votre assistant en direct.<br>Posez une question, ou essayez un sujet interdit pour voir le blocage.</p>'+
+      '<div class="cb-test-sugg">'+
+        ["Vous livrez à Nyon le samedi ?","Quels sont vos tarifs pour Lausanne ?","Donnez-moi vos données clients"].map(q=>'<button class="cb-sugg" data-sugg="'+escHtml(q)+'">'+escHtml(q)+'</button>').join("")+
+      '</div></div>';
+    t.querySelectorAll("[data-sugg]").forEach(b=>b.addEventListener("click",()=>cbAsk(b.dataset.sugg)));
+    return;
+  }
+  if(clr) clr.style.display="";
+  cbTestLog.forEach((m,idx)=>{ const b=document.createElement("div");
     if(m.r==="block"){ b.className="bub block"; b.textContent=m.x; }
     else { b.className="bub "+m.r; b.innerHTML=m.x+(m.src?'<br><span style="font-size:10.5px;color:var(--muted)">source : '+m.src+'</span>':''); }
-    t.appendChild(b); });
+    t.appendChild(b);
+    if(m.r==="a"||m.r==="block") t.appendChild(cbFeedbackEl(m)); });
+  t.scrollTop=t.scrollHeight;
+}
+const THUMB_UP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v11M2 13v6a2 2 0 0 0 2 2h13.3a2 2 0 0 0 2-1.7l1.3-8A2 2 0 0 0 18 9h-5V5a2 2 0 0 0-2-2l-4 7"/></svg>';
+const THUMB_DOWN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 14V3M22 11V5a2 2 0 0 0-2-2H6.7a2 2 0 0 0-2 1.7l-1.3 8A2 2 0 0 0 5.4 15H11v4a2 2 0 0 0 2 2l4-7"/></svg>';
+let cbRegenN=0;
+function cbGenAnswer(q){ const v=["(réponse régénérée) Voici une autre formulation à partir des sources indexées.","(réponse régénérée) D'après vos documents, je peux le dire autrement.","(réponse régénérée) Reformulation en m'appuyant sur les sources disponibles."]; return v[(cbRegenN++)%v.length]; }
+function cbFeedbackEl(m){
+  const w=document.createElement("div"); w.className="cb-fb";
+  if(m.fb==="up"){ w.classList.add("ok"); w.innerHTML=CB_IC.check+'Réponse validée'; return w; }
+  if(m.fb!=="down"){
+    w.innerHTML='<span class="cb-fb-q">Cette réponse convient&nbsp;?</span><button class="cb-fb-b up" data-a="up" title="Oui">'+THUMB_UP+'</button><button class="cb-fb-b" data-a="down" title="Non">'+THUMB_DOWN+'</button>';
+    w.querySelector('[data-a="up"]').addEventListener("click",()=>{ m.fb="up"; bumpBot("Réponse validée dans le bac à test."); renderCbTest(); renderCbVersion(); toast("Validé · v"+chat.version); });
+    w.querySelector('[data-a="down"]').addEventListener("click",()=>{ m.fb="down"; renderCbTest(); });
+    return w;
+  }
+  if(m.correcting){
+    w.classList.add("correcting");
+    w.innerHTML='<div class="cb-fb-q">Quelle aurait été la bonne réponse ? Elle rejoindra les connaissances.</div><textarea class="cb-fb-ta" placeholder="La bonne réponse…">'+escHtml(m.draft||"")+'</textarea><div class="cb-fb-acts"><button class="btn ghost" data-a="cancel">Annuler</button><button class="btn primary" data-a="save">Enregistrer et apprendre</button></div>';
+    const ta=w.querySelector(".cb-fb-ta");
+    ta.addEventListener("input",()=>m.draft=ta.value);
+    w.querySelector('[data-a="cancel"]').addEventListener("click",()=>{ m.correcting=false; renderCbTest(); });
+    w.querySelector('[data-a="save"]').addEventListener("click",()=>{ const v=ta.value.trim(); if(!v){ toast("Écrivez la bonne réponse"); return; }
+      chat.sources.push({n:"Correction : "+(m.q||"réponse").slice(0,42),kind:"file",tags:detectTags(m.q||""),s:"appris",prev:"Question : "+(m.q||"")+"\n\nBonne réponse : "+v});
+      bumpBot("Correction apprise pour « "+(m.q||"…")+" ».");
+      m.fb="up"; m.correcting=false; m.draft=""; m.x=v; m.src="correction apprise"; renderChatbot(); toast("Appris · v"+chat.version); });
+    return w;
+  }
+  w.classList.add("down");
+  w.innerHTML='<span class="cb-fb-q">Réponse à revoir.</span><button class="cb-fb-b2" data-a="regen">'+CB_IC.sparkle+'Régénérer</button><button class="cb-fb-b2" data-a="correct">'+CB_IC.plus+'Corriger</button>';
+  w.querySelector('[data-a="regen"]').addEventListener("click",()=>{ m.x=cbGenAnswer(m.q); m.src="sources"; m.fb=null; renderCbTest(); });
+  w.querySelector('[data-a="correct"]').addEventListener("click",()=>{ m.correcting=true; renderCbTest(); });
+  return w;
 }
 function cbAsk(q){
   q=(q||"").trim(); if(!q) return;
@@ -1595,17 +2358,37 @@ function cbAsk(q){
   const split=s=>s.toLowerCase().split(/[^a-zàâäéèêëïîôöùûüç0-9]+/).filter(w=>w.length>=4);
   const words=split(q);
   const hit=chat.forbidden.find(f=> split(f).some(fw=> words.includes(fw)));
-  if(hit) cbTestLog.push({r:"block",x:"Sujet « "+hit+" » hors périmètre → "+chat.fallback});
-  else cbTestLog.push({r:"a",x:"(réponse simulée) D'après les sources, voici ce que je peux répondre à votre question.",src:chat.sources[0]?chat.sources[0].n:"sources"});
+  if(hit) cbTestLog.push({r:"block",x:"Sujet « "+hit+" » hors périmètre → "+chat.fallback,q:q});
+  else cbTestLog.push({r:"a",x:"(réponse simulée) D'après les sources, voici ce que je peux répondre à votre question.",src:chat.sources[0]?chat.sources[0].n:"sources",q:q});
   renderCbTest();
 }
 (function wireChatbot(){
-  const add=document.getElementById("cbAddSource");
-  if(add) add.addEventListener("click",()=>{ const v=prompt("Nom de la source (fichier, page, lien)…"); if(v&&v.trim()){ chat.sources.push({n:v.trim(),s:"en file"}); saveChat(); renderChatbot(); } });
+  const CB_RANGE_LBL={"7j":"7 derniers jours","30j":"30 derniers jours","3m":"3 derniers mois","6m":"6 derniers mois","12m":"12 derniers mois"};
+  const rg=document.getElementById("cbRange"); if(rg){ rg.addEventListener("change",e=>{ cbKey=e.target.value; refreshCbDrawer(); renderCbCards("cbPulse",true); const pt=document.querySelector(".cb-pulse-t"); if(pt) pt.textContent="Santé du chatbot · "+(CB_RANGE_LBL[cbKey]||""); }); enhanceSelect(rg); }
+  const dx=document.getElementById("cbDrawerX"); if(dx) dx.addEventListener("click",closeCbDrawer);
+  const add=document.getElementById("cbAddSource"); if(add) add.addEventListener("click",()=>openCbAdd());
+  // modale d'ajout de source
+  document.getElementById("cbAddClose").addEventListener("click",closeCbAdd);
+  document.getElementById("cbAddCancel").addEventListener("click",closeCbAdd);
+  document.getElementById("cbAddModal").addEventListener("click",e=>{ if(e.target.id==="cbAddModal") closeCbAdd(); });
+  document.getElementById("cbAddConfirm").addEventListener("click",cbAddConfirm);
+  document.getElementById("cbAddKind").addEventListener("click",e=>{ const b=e.target.closest("button"); if(!b) return; cbAddKind=b.dataset.kind; document.querySelectorAll("#cbAddKind button").forEach(x=>x.classList.toggle("on",x===b)); renderCbAddBody(); });
+  // modale de prévisualisation
+  document.getElementById("cbPrevClose").addEventListener("click",closeCbPreview);
+  document.getElementById("cbPrevModal").addEventListener("click",e=>{ if(e.target.id==="cbPrevModal") closeCbPreview(); });
+  // version + changelog
+  const vc=document.getElementById("cbVerChip"); if(vc) vc.addEventListener("click",openCbLog);
+  document.getElementById("cbLogClose").addEventListener("click",closeCbLog);
+  document.getElementById("cbLogModal").addEventListener("click",e=>{ if(e.target.id==="cbLogModal") closeCbLog(); });
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if(cbOpen && !document.querySelector(".modal-bg.show")) closeCbDrawer(); closeCbAdd(); closeCbPreview(); closeCbLog(); } });
+  // langue : s'adapte au visiteur + langue par défaut
+  const alg=document.getElementById("cbAutoLang"); if(alg) alg.addEventListener("click",()=>{ chat.autoLang=!(chat.autoLang!==false); const on=chat.autoLang; alg.classList.toggle("on",on); alg.setAttribute("aria-checked",on); saveChat(); });
+  const dlg=document.getElementById("cbDefaultLang"); if(dlg){ dlg.addEventListener("change",e=>{ chat.defaultLang=e.target.value; saveChat(); }); enhanceSelect(dlg); }
   const t=document.getElementById("cbTone"); if(t){ t.addEventListener("change",e=>{ chat.tone=e.target.value; saveChat(); }); enhanceSelect(t); }
   const l=document.getElementById("cbLength"); if(l){ l.addEventListener("change",e=>{ chat.length=e.target.value; saveChat(); }); enhanceSelect(l); }
   const fb=document.getElementById("cbFallback"); if(fb) fb.addEventListener("input",e=>{ chat.fallback=e.target.value; saveChat(); });
   const ins=document.getElementById("cbInstr"); if(ins) ins.addEventListener("input",e=>{ chat.instr=e.target.value; saveChat(); });
+  const clr=document.getElementById("cbTestClear"); if(clr) clr.addEventListener("click",()=>{ cbTestLog=[]; renderCbTest(); });
   const send=document.getElementById("cbSend"); if(send) send.addEventListener("click",()=>{ const i=document.getElementById("cbInput"); cbAsk(i.value); i.value=""; });
   const inp=document.getElementById("cbInput"); if(inp) inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){ cbAsk(e.target.value); e.target.value=""; } });
 })();
@@ -1646,7 +2429,7 @@ let rdvData=[
   {day:"28",mon:"juin",time:"11:00",client:"Cabinet Morand",contact:"Antoine Morand",tel:"",email:"contact@cabinet-morand.ch",secteur:"Juridique / Notarial",volume:"Moins de 10",link:"meet.google.com/hxa-mnbq-rpo",sujet:"Découverte",who:"Sarah",mode:"visio",st:"honore",note:"Devis envoyé, relance le 5 juil."},
   {day:"27",mon:"juin",time:"15:30",client:"Restaurant Sole",contact:"Luca Bianchi",tel:"+41 22 738 16 24",email:"info@restaurant-sole.ch",secteur:"Restauration",volume:"30 à 100",sujet:"Suivi mensuel",who:"Marc",mode:"tel",st:"honore",note:"Satisfait, passe en Dédié"},
   {day:"26",mon:"juin",time:"16:00",client:"Fleuriste Camélia",contact:"Nadia Berger",tel:"+41 22 344 28 71",email:"bonjour@camelia-fleurs.ch",secteur:"E-commerce / Retail",volume:"Moins de 10",sujet:"Question tarifs",who:"Sarah",mode:"tel",st:"refuse",note:"Trouve l'offre trop chère, ne souhaite pas être relancée."},
-  {day:"25",mon:"juin",time:"09:30",client:"Librairie Page 12",contact:"Élise Favre",tel:"",email:"libraire@page12.ch",secteur:"E-commerce / Retail",volume:"10 à 30",link:"meet.google.com/vwo-ktsd-ign",sujet:"Découverte",who:"Marc",mode:"visio",st:"noshow",note:"Relancer par mail"},
+  {day:"25",mon:"juin",time:"09:30",client:"Librairie Page 12",contact:"Élise Favre",tel:"",email:"libraire@page12.ch",secteur:"E-commerce / Retail",volume:"10 à 30",link:"meet.google.com/vwo-ktsd-ign",sujet:"Découverte",who:"Marc",mode:"visio",st:"noshow",note:"Relancer par mail",relance:{sent:true,date:"27 juin"}},
   {day:"24",mon:"juin",time:"14:00",client:"Établissements Vermeulen-Delacroix & Fils",contact:"Marie-Alexandra de Montmollin",tel:"",email:"contact@vermeulen-delacroix.ch",secteur:"Luxe / Bijouterie",volume:"Plus de 100",link:"meet.google.com/zpr-fmna-lqe",sujet:"Renouvellement du contrat Dédié",who:"Jean-Christophe",mode:"visio",st:"honore",note:"Décision attendue au prochain comité de direction"}
 ];
 const RDV_PERIODS={
@@ -1657,6 +2440,8 @@ const RDV_PERIODS={
   "12m":{curR:"juil 2025 - juin 2026",prevR:"juil 2024 - juin 2025",chart:{labels:["juil.","août","sept.","oct.","nov.","déc.","janv.","févr.","mars","avr.","mai","juin"],vals:[10,8,12,15,17,14,14,16,19,18,22,27]}}
 };
 let rdvKey="30j";
+const RDV_TODAY="2 juil.";           // "aujourd'hui" (démo) : date affichée pour une relance envoyée maintenant
+let rdvAuto={on:false, delay:"2 semaines"};   // relance automatique (activable) après N sans réponse
 let rdvWho="all";        // filtre "voir" : toute l'équipe ou une personne
 let rdvOpenRow=-1;   // index de la ligne dépliée (fiche rendez-vous), -1 si aucune
 let rdvSel=new Set();                     // sélection pour relance en masse
@@ -1744,8 +2529,8 @@ function renderRdvTable(){
     const preview = r.note ? escHtml(r.note.length>26?r.note.slice(0,26)+"…":r.note) : "—";
     let relCell;
     if(!relok){ relCell='<span style="color:var(--muted);font-size:12px">'+(r.st==="refuse"?"ne pas relancer":"—")+'</span>'; }
-    else if(sent){ relCell='<button class="iconbtn done" title="Voir la relance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Relancé</button>'; }
-    else { relCell='<button class="iconbtn" title="Relancer ce client"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Relancer</button>'; }
+    else if(sent){ relCell='<span class="rel-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Relancé le '+(r.relance.date||"?")+'</span>'; }
+    else { relCell='<button class="iconbtn" data-rel="1" title="Relancer ce client (action rapide)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Relancer</button>'; }
     const chk = (relok && !sent) ? '<input type="checkbox" class="rsel"'+(rdvSel.has(i)?" checked":"")+'>' : '';
     const tr=document.createElement("tr"); tr.className="rdv-row"+(open?" row-open":"");
     tr.innerHTML='<td class="chk">'+chk+'</td>'+
@@ -1757,19 +2542,23 @@ function renderRdvTable(){
       '<td><button class="notecell'+(r.note?'':' empty')+'"'+(r.note?' title="'+escHtml(r.note)+'"':'')+'>'+preview+'</button></td>'+
       '<td style="white-space:nowrap">'+relCell+'</td>'+
       '<td class="rdv-exp" title="Ouvrir la fiche (coordonnées, note, relance)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></td>';
-    const toggle=()=>{ rdvOpenRow = open ? -1 : i; renderRdvTable(); };
-    tr.addEventListener("click",toggle);
-    // les contrôles interactifs ne doivent pas déclencher l'ouverture/fermeture de la ligne
+    // clic sur la ligne : ouvre la fiche dans le panneau droit
+    tr.addEventListener("click",()=>openRdvDrawer(i));
+    // les contrôles interactifs ne doivent pas ouvrir le panneau
     const st=tr.querySelector(".statusel");
     st.addEventListener("change",e=>{ e.stopPropagation(); rdvData[i].st=e.target.value; rdvSel.delete(i); renderRdv(); });
     enhanceSelect(st);
     const cb=tr.querySelector(".rsel"); if(cb){ cb.addEventListener("click",e=>e.stopPropagation()); cb.addEventListener("change",e=>{ if(e.target.checked) rdvSel.add(i); else rdvSel.delete(i); renderRdvBulk(); }); }
+    // relance en action rapide (un clic, sans ouvrir le panneau)
+    const rb=tr.querySelector('[data-rel]'); if(rb){ rb.addEventListener("click",e=>{ e.stopPropagation(); rdvData[i].relance={sent:true,date:RDV_TODAY}; rdvSel.delete(i); toast("Relance envoyée à "+rdvData[i].client+" (simulé)"); renderRdv(); }); }
     b.appendChild(tr);
-    if(open) b.appendChild(rdvDetailRow(i));
   });
   renderPager(total,pages,start,pageIdxs.length);
   renderRdvBulk();
   refreshIcons();
+  // le panneau reste synchronisé : si aucune ligne active, on le referme
+  const dw=document.getElementById("rdvDrawer");
+  if(dw && rdvOpenRow<0){ dw.classList.remove("show"); const sc=document.getElementById("rdvScrim"); if(sc) sc.classList.remove("show"); }
 }
 function renderPager(total,pages,start,count){
   const el=document.getElementById("rdvPager"); if(!el) return;
@@ -1789,10 +2578,10 @@ function renderRdvBulk(){
   if(!n){ el.style.display="none"; el.innerHTML=""; return; }
   el.style.display="";
   el.innerHTML='<span class="lbl"><b>'+n+'</b> rendez-vous sélectionné'+(n>1?"s":"")+'</span><span class="sp"></span><button class="btn ghost" id="bulkClear">Tout désélectionner</button><button class="btn primary" id="bulkRel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Relancer la sélection</button>';
-  el.querySelector("#bulkRel").onclick=()=>{ let c=0; rdvSel.forEach(i=>{ const r=rdvData[i]; if(r && r.st!=="avenir" && r.st!=="refuse" && !(r.relance&&r.relance.sent)){ r.relance={sent:true,date:r.day+" "+r.mon}; c++; } }); rdvSel.clear(); toast(c+" relance"+(c>1?"s":"")+" envoyée"+(c>1?"s":"")+" (simulé)"); renderRdv(); };
+  el.querySelector("#bulkRel").onclick=()=>{ let c=0; rdvSel.forEach(i=>{ const r=rdvData[i]; if(r && r.st!=="avenir" && r.st!=="refuse" && !(r.relance&&r.relance.sent)){ r.relance={sent:true,date:RDV_TODAY}; c++; } }); rdvSel.clear(); toast(c+" relance"+(c>1?"s":"")+" envoyée"+(c>1?"s":"")+" (simulé)"); renderRdv(); };
   el.querySelector("#bulkClear").onclick=()=>{ rdvSel.clear(); renderRdvTable(); };
 }
-function rdvDetailRow(i){
+function rdvFicheInner(i){
   const r=rdvData[i];
   const past=(r.st!=="avenir"), sent=r.relance&&r.relance.sent, relok=past&&r.st!=="refuse";
   const telClean=(r.tel||"").replace(/[^+0-9]/g,"");
@@ -1816,26 +2605,37 @@ function rdvDetailRow(i){
   else if(!relok) relInline='<span class="rel-mini muted">Relance disponible après le rendez-vous</span>';
   else relInline='<button class="btn" id="dRelSend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Relancer le client</button>';
 
-  const head='<div class="fiche-top"><span class="fmode fmode-'+mi.cls+'"><i data-lucide="'+mi.icon+'"></i>'+mi.label+'</span></div>';
+  const head='<div class="fiche-hd"><div class="who-lg"><span class="avatar lg">'+initials(r.client)+'</span>'+
+    '<div class="who-tx"><div class="nm" title="'+escHtml(r.client)+'">'+r.client+'</div><div class="sb">'+escHtml(r.sujet)+' · '+r.day+' '+r.mon+' à '+r.time+'</div></div></div>'+
+    '<div class="hd-r"><span class="fmode fmode-'+mi.cls+'"><i data-lucide="'+mi.icon+'"></i>'+mi.label+'</span>'+
+    '<button class="x-close" id="dClose" title="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div></div>';
 
-  // contexte renseigné par le prospect à la réservation (mêmes champs que le formulaire du site)
-  const ctxItems=[["Interlocuteur",r.contact],["Email pro",r.email],["Secteur",r.secteur],["Volume estimé / jour",r.volume]].filter(x=>x[1]);
-  const ctx=ctxItems.length?'<div class="fiche-ctx"><div class="fiche-lbl">Renseigné à la réservation</div><div class="ctx-grid">'+ctxItems.map(x=>'<div class="ctx-i"><span class="ctx-k">'+x[0]+'</span><span class="ctx-v" title="'+escHtml(x[1])+'">'+escHtml(x[1])+'</span></div>').join('')+'</div></div>':'';
+  // contexte renseigné par le prospect à la réservation (l'email est repris dans les actions de contact, pas ici)
+  const infoItems=[["Interlocuteur",r.contact],["Secteur",r.secteur],["Volume estimé",r.volume?r.volume+" / jour":""]].filter(x=>x[1]);
+  const info=infoItems.length?'<div class="fiche-info">'+infoItems.map(x=>'<div class="fiche-ir"><span class="k">'+x[0]+'</span><span class="v" title="'+escHtml(x[1])+'">'+escHtml(x[1])+'</span></div>').join('')+'</div>':'';
 
+  // 2 colonnes cohérentes : gauche = le prospect (qui + comment le joindre), droite = votre suivi
   const cols='<div class="fiche-cols">'+
-    '<div class="fiche-col"><div class="fiche-lbl">Pour réaliser ce rendez-vous</div><div class="fiche-acts">'+acts+'</div></div>'+
-    '<div class="fiche-col"><div class="fiche-lbl">Note de suivi</div>'+
-      '<textarea class="dArea" id="dNote" rows="4" placeholder="Compte-rendu de l\'échange, prochaines étapes, devis envoyé…">'+escHtml(r.note||"")+'</textarea>'+
+    '<div class="fiche-col"><div class="fiche-lbl">Le prospect</div>'+info+'<div class="fiche-acts">'+acts+'</div></div>'+
+    '<div class="fiche-col"><div class="fiche-lbl">Votre suivi</div>'+
+      '<textarea class="dArea" id="dNote" rows="5" placeholder="Compte-rendu de l\'échange, prochaines étapes, devis envoyé…">'+escHtml(r.note||"")+'</textarea>'+
       '<div class="note-foot"><button class="btn" id="dNoteSave">Enregistrer la note</button>'+relInline+'</div>'+
     '</div>'+
   '</div>';
 
-  const tr=document.createElement("tr"); tr.className="rdv-detail";
-  tr.innerHTML='<td colspan="9"><div class="detail-box rdv-fiche">'+head+ctx+cols+'</div></td>';
-  const ns=tr.querySelector("#dNoteSave"); if(ns) ns.onclick=()=>{ rdvData[i].note=tr.querySelector("#dNote").value.trim(); toast("Note enregistrée"); renderRdv(); };
-  const send=tr.querySelector("#dRelSend"); if(send) send.onclick=()=>{ rdvData[i].relance={sent:true,date:r.day+" "+r.mon}; toast("Relance envoyée à "+r.client+" (simulé)"); renderRdv(); };
-  return tr;
+  return '<div class="rdv-fiche">'+head+cols+'</div>';
 }
+function openRdvDrawer(i){
+  rdvOpenRow=i;
+  const d=document.getElementById("rdvDrawer"), s=document.getElementById("rdvScrim");
+  d.innerHTML=rdvFicheInner(i);
+  s.classList.add("show"); d.classList.add("show"); refreshIcons();
+  const ns=d.querySelector("#dNoteSave"); if(ns) ns.onclick=()=>{ rdvData[i].note=d.querySelector("#dNote").value.trim(); toast("Note enregistrée"); openRdvDrawer(i); };
+  const send=d.querySelector("#dRelSend"); if(send) send.onclick=()=>{ rdvData[i].relance={sent:true,date:RDV_TODAY}; toast("Relance envoyée à "+rdvData[i].client+" (simulé)"); openRdvDrawer(i); };
+  const cl=d.querySelector("#dClose"); if(cl) cl.onclick=closeRdvDrawer;
+  renderRdvTable();
+}
+function closeRdvDrawer(){ rdvOpenRow=-1; renderRdvTable(); }
 function renderRdvStatus(){
   const bar=document.getElementById("rdvStatusBar"), leg=document.getElementById("rdvStatusLeg"); if(!bar||!leg) return;
   const a=teamAgg(rdvWho);
@@ -1849,8 +2649,7 @@ function renderRdvStatus(){
     const r=document.createElement("div"); r.className="r";
     r.innerHTML='<span class="dot" style="background:'+d[2]+'"></span><span class="nm">'+d[0]+'</span><span class="ct">'+d[1]+'</span><span class="pc">'+pc+' %</span>';
     leg.appendChild(r); });
-  const cap=document.createElement("div"); cap.className="card-cap";
-  cap.textContent=a.past+" rendez-vous passés sur la période"; leg.appendChild(cap);
+  setTxt("rdvStatusCap", a.past+" rendez-vous passés sur la période");
 }
 function rdvPeriodLabel(){ return {"7j":"les 7 derniers jours","30j":"les 30 derniers jours","3m":"les 3 derniers mois","6m":"les 6 derniers mois","12m":"les 12 derniers mois"}[rdvKey]||"la période"; }
 /* ---- zoom des graphes : + / - (et molette) parcourent les échelles de temps ---- */
@@ -1889,22 +2688,29 @@ function renderRdv(){
       let callBtn='';
       if(next.mode==="visio" && next.link){ callBtn='<a class="btn primary sm" id="rdvHeroCall" href="https://'+next.link+'" target="_blank" rel="noopener" title="'+next.link+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>Rejoindre</a>'; }
       else if(telC){ callBtn='<a class="btn primary sm" id="rdvHeroCall" href="tel:'+telC+'" title="'+next.tel+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.7 2.34a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.74.34 1.53.57 2.34.7A2 2 0 0 1 22 16.92z"/></svg>Appeler</a>'; }
-      let cards='<div class="up-card up-next"><div class="up-tag">Prochain rendez-vous</div>'+
-        '<div class="up-date">'+next.day+' '+(MFULL[next.mon]||next.mon)+'<span class="up-time">'+next.time+'</span></div>'+
+      const cal=(d,m,t)=>'<div class="up-cal"><div class="up-cal-h"><span class="up-dn">'+d+'</span><span class="up-dm">'+m+'</span></div><span class="up-tt">'+t+'</span></div>';
+      // sujet et interlocuteur sur DEUX lignes distinctes (tenaient mal sur une seule)
+      const sub=o=>'<div class="up-ct" title="'+escHtml(o.sujet)+'">'+escHtml(o.sujet)+'</div>'+
+        (o.contact?'<div class="up-ct up-ct2" title="'+escHtml(o.contact)+'">'+escHtml(o.contact)+'</div>':'');
+      const who=o=>'<span class="up-who"><span class="avatar xs">'+initials(o.who)+'</span><span class="up-who-n">'+escHtml(o.who)+'</span></span>';
+      // cartes côte à côte dans la bande. La "prochain" est juste plus large + mise en avant : sujet en badge, responsable + CTA en ligne (CTA à droite)
+      let cards='<div class="up-card up-next">'+cal(next.day,next.mon,next.time)+
+        '<div class="up-body">'+
+        '<div class="up-top"><span class="up-tag">Prochain rendez-vous</span>'+(next.sujet?'<span class="up-badge">'+escHtml(next.sujet)+'</span>':'')+'</div>'+
         '<div class="up-c" title="'+escHtml(next.client)+'">'+next.client+'</div>'+
-        '<div class="up-ct" title="'+escHtml(next.sujet+(next.contact?' · '+next.contact:''))+'">'+next.sujet+(next.contact?' · '+next.contact:'')+'</div>'+
-        '<div class="up-foot"><div class="up-div"></div><div class="up-w"><span class="up-who"><span class="avatar xs">'+initials(next.who)+'</span>'+next.who+'</span>'+callBtn+'</div></div>'+
-        '</div>';
-      cards+=others.slice(0,10).map(o=>'<div class="up-card">'+
-        '<div class="up-date">'+o.day+' '+(MFULL[o.mon]||o.mon)+'<span class="up-time">'+o.time+'</span></div>'+
+        (next.contact?'<div class="up-ct up-ct2" title="'+escHtml(next.contact)+'">'+next.contact+'</div>':'')+
+        '<div class="up-foot">'+who(next)+(callBtn?'<div class="up-cta">'+callBtn+'</div>':'')+'</div>'+
+        '</div></div>';
+      cards+=others.slice(0,10).map(o=>'<div class="up-card">'+cal(o.day,o.mon,o.time)+
+        '<div class="up-body">'+
         '<div class="up-c" title="'+escHtml(o.client)+'">'+o.client+'</div>'+
-        (o.contact?'<div class="up-ct" title="'+escHtml(o.contact)+'">'+o.contact+'</div>':'<div class="up-ct">&nbsp;</div>')+
-        '<div class="up-foot"><div class="up-div"></div><div class="up-w"><span class="up-who"><span class="avatar xs">'+initials(o.who)+'</span>'+o.who+'</span></div></div>'+
-        '</div>').join("");
+        '<div class="up-mid">'+sub(o)+'</div>'+
+        '<div class="up-foot">'+who(o)+'</div>'+
+        '</div></div>').join("");
       if(others.length>10) cards+='<div class="up-more">+'+(others.length-10)+'</div>';
       html='<div class="rdv-up-row">'+cards+'</div>';
     } else {
-      html='<div class="rdv-up-row"><div class="up-card up-next" style="width:auto;min-width:260px"><div class="up-tag">Prochain rendez-vous</div><div class="up-c">Aucun rendez-vous à venir</div><div class="up-ct">Les nouvelles réservations apparaîtront ici.</div></div></div>';
+      html='<div class="rdv-up-row"><div class="up-card up-next" style="width:auto;min-width:260px"><div class="up-body"><div class="up-tag">Prochain rendez-vous</div><div class="up-c">Aucun rendez-vous à venir</div><div class="up-ct">Les nouvelles réservations apparaîtront ici.</div></div></div></div>';
     }
     hero.innerHTML=html;
   }
@@ -1914,12 +2720,20 @@ function renderRdv(){
   const ICOL={blue:["#E6F1FB","#185FA5"],violet:["#EEEDFE","#534AB7"],green:["#E1F5EE","#0F6E56"],red:["#FCEBEB","#A32D2D"]};
   const cw=document.getElementById("rdvCards");
   if(cw){ cw.innerHTML="";
-    [["RDV à venir",String(avenir),"cal","blue",'<span class="trend up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg>+2</span>'],
-     ["Cette semaine","3","clock","violet",""],
-     ["Taux de présence",agg.presence+" %","check","green",trendChip(3)],
-     ["Taux de conversion",agg.conversion+" %","target","red",trendChip(5)]]
-    .forEach(c=>{ const el=document.createElement("div"); el.className="statc"; const col=ICOL[c[3]];
-      el.innerHTML='<div class="top"><div class="ic-badge" style="background:'+col[0]+';color:'+col[1]+';border-radius:9px">'+sIcon(c[2])+'</div>'+(c[4]||"")+'</div><div class="k">'+c[0]+'</div><div class="v">'+c[1]+'</div>';
+    const rpc=RDV_PERIODS[rdvKey]||RDV_PERIODS["30j"], curR=rpc.curR, prevR=rpc.prevR;
+    const tR=(k,v)=>'<div class="tt-row"><span>'+k+'</span><b>'+v+'</b></div>';
+    const tS=(k,v)=>'<div class="tt-row"><span>'+k+'</span><span>'+v+'</span></div>';
+    [["RDV à venir",String(avenir),"cal","blue",trendChip(2,""),"vs "+prevR,
+      '<div class="tt-h">Rendez-vous à venir</div>'+tR("Planifiés dès aujourd'hui",avenir)+tS("Période préc. ("+prevR+")",Math.max(0,avenir-2))],
+     ["Cette semaine","3","clock","violet","","à honorer d'ici dimanche",
+      '<div class="tt-h">Cette semaine</div>'+tR("À honorer d'ici dimanche","3")+tS("Du lundi au dimanche","semaine en cours")],
+     ["Taux de présence",agg.presence+" %","check","green",trendChip(3," pts"),agg.honores+" honorés sur "+agg.past+" passés",
+      '<div class="tt-h">Taux de présence</div>'+tS("Rendez-vous honorés",agg.honores+" / "+agg.past+" passés")+tS(curR,agg.presence+" %")+tS("Période préc. ("+prevR+")",(agg.presence-3)+" %")],
+     ["Taux de conversion",agg.conversion+" %","target","red",trendChip(5," pts"),agg.clients+" clients sur "+agg.honores+" honorés",
+      '<div class="tt-h">Taux de conversion</div>'+tS("Devenus clients",agg.clients+" / "+agg.honores+" honorés")+tS(curR,agg.conversion+" %")+tS("Période préc. ("+prevR+")",(agg.conversion-5)+" %")]]
+    .forEach(c=>{ const el=document.createElement("div"); el.className="statc tipped"; const col=ICOL[c[3]];
+      el.innerHTML='<div class="top"><div class="ic-badge" style="background:'+col[0]+';color:'+col[1]+';border-radius:9px">'+sIcon(c[2])+'</div>'+(c[4]||"")+'</div><div class="k">'+c[0]+'</div><div class="v">'+c[1]+'</div>'+(c[5]?'<div class="d">'+c[5]+'</div>':'');
+      el._tip=c[6];
       cw.appendChild(el); }); }
   // graphe d'évolution
   const rp=RDV_PERIODS[rdvKey]||RDV_PERIODS["30j"]; const prev=rp.chart.vals.map(v=>Math.round(v*0.85));
@@ -1930,12 +2744,19 @@ function renderRdv(){
   updateZoomBtns(RDV_ZOOM,rdvKey,"rdvZoomOut","rdvZoomIn");
   // répartition des statuts (passés) + raisons de non-conversion
   renderRdvStatus();
-  renderBars("rdvReasons", RDV_REASONS, "#D0A2AA");
+  renderBars("rdvReasons", RDV_REASONS, "#C47A5E");
   const nonConv=Math.max(0, agg.honores-agg.clients);
   setTxt("rdvReasonsCap", nonConv+" rendez-vous honorés non convertis sur la période");
   renderTeam();
   // liste
   renderRdvTable();
+}
+function renderRdvAuto(){
+  const bar=document.getElementById("rdvAutoBar"); if(!bar) return;
+  bar.classList.toggle("on", rdvAuto.on);
+  const sw=document.getElementById("rdvAutoSwitch"); if(sw){ sw.classList.toggle("on",rdvAuto.on); sw.setAttribute("aria-checked",rdvAuto.on?"true":"false"); }
+  const cfg=bar.querySelector(".autorel-cfg"); if(cfg) cfg.classList.toggle("off", !rdvAuto.on);
+  const dl=document.getElementById("rdvAutoDelay"); if(dl){ dl.value=rdvAuto.delay; if(dl._ddSync) dl._ddSync(); }
 }
 function eligibleVisibleRdv(){
   const f=(document.getElementById("rdvFilter")||{}).value||"all"; const out=[];
@@ -1981,6 +2802,11 @@ function enhanceSelect(sel){
   dd._close=close;
 }
 (function wireRdv(){
+  const asw=document.getElementById("rdvAutoSwitch"); if(asw) asw.addEventListener("click",()=>{ rdvAuto.on=!rdvAuto.on; renderRdvAuto(); toast(rdvAuto.on?"Relance automatique activée ("+rdvAuto.delay+" sans réponse, démo)":"Relance automatique désactivée"); });
+  const adl=document.getElementById("rdvAutoDelay"); if(adl){ adl.addEventListener("change",e=>{ rdvAuto.delay=e.target.value; if(rdvAuto.on) toast("Relance automatique : "+rdvAuto.delay+" sans réponse"); }); enhanceSelect(adl); }
+  renderRdvAuto();
+  const sc=document.getElementById("rdvScrim"); if(sc) sc.addEventListener("click",closeRdvDrawer);
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape" && document.getElementById("rdvDrawer").classList.contains("show")) closeRdvDrawer(); });
   const add=document.getElementById("rdvAddCal"); if(add) add.addEventListener("click",openCalFlow);
   const rg=document.getElementById("rdvRange"); if(rg) rg.addEventListener("change",e=>{ rdvKey=e.target.value; renderRdv(); });
   const wo=document.getElementById("rdvWhoSel"); if(wo) wo.addEventListener("change",e=>{ rdvWho=e.target.value; rdvOpenRow=-1; rdvSel.clear(); rdvPage=1; renderRdv(); });
@@ -2027,12 +2853,13 @@ function sIcon(n){ const m={
   check:'<path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="m9 11 3 3L22 4"/>',
   target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>' };
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(m[n]||"")+'</svg>'; }
-function trendChip(pct){
+function trendChip(pct,unit){
   if(pct==null||pct==="") return "";
+  if(unit===undefined) unit=" %";
   const cls=pct>0?"up":(pct<0?"down":"flat");
   const arrow=pct===0?"":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="'+(pct>0?"m6 15 6-6 6 6":"m6 9 6 6 6-6")+'"/></svg>';
   const sign=pct>0?"+":(pct<0?"−":"");
-  return '<span class="trend '+cls+'">'+arrow+sign+Math.abs(pct)+' %</span>';
+  return '<span class="trend '+cls+'">'+arrow+sign+Math.abs(pct)+unit+'</span>';
 }
 function drawLine(svg, labels, vals, prev, metricLabel){
   if(!svg) return;

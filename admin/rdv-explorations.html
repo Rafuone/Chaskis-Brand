@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Explorations · Liste des rendez-vous</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --teal:#4BB3A4; --teal-d:#1A5C59; --purple:#6B5BCC; --ink:#2C2052;
+    --bg:#f7f8f7; --panel:#fff; --border:#e8eae8; --border-2:#dadedb;
+    --muted:#8a8c89; --ink-soft:#565a57; --ok:#22a06b; --danger:#d9534f;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:'Urbanist',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1240px;margin:0 auto;padding:26px 22px 90px}
+  button{font-family:inherit;cursor:pointer}
+
+  .head h1{font-size:22px;font-weight:700;margin:0 0 3px;letter-spacing:-.01em}
+  .head p{font-size:13px;color:var(--muted);margin:0 0 18px;max-width:720px}
+
+  /* selecteur de mode */
+  .modes{display:flex;gap:6px;flex-wrap:wrap;background:#fff;border:1px solid var(--border);border-radius:12px;padding:5px;box-shadow:0 1px 2px rgba(40,32,60,.04);margin-bottom:8px}
+  .mode-b{all:unset;display:inline-flex;flex-direction:column;gap:1px;padding:8px 14px;border-radius:9px;color:var(--ink-soft);transition:background .15s,color .15s}
+  .mode-b .mt{font-size:13px;font-weight:600}
+  .mode-b .ms{font-size:11px;color:var(--muted)}
+  .mode-b:hover{background:var(--bg)}
+  .mode-b.on{background:rgba(75,179,164,.14);color:var(--teal-d)}
+  .mode-b.on .ms{color:var(--teal-d);opacity:.72}
+  .mode-cap{font-size:12.5px;color:var(--muted);margin:10px 2px 18px;min-height:18px}
+
+  .pan{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:0 1px 2px rgba(40,32,60,.035),0 6px 20px rgba(40,32,60,.05)}
+  .pan-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .pan-h h2{font-size:14px;font-weight:600;margin:0;color:var(--ink)}
+  .cnt{font-size:12px;color:var(--muted)}
+
+  /* table (inline / modale / drawer) */
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;font-size:11.5px;font-weight:600;color:var(--muted);padding:0 12px 10px;border-bottom:1px solid var(--border)}
+  tbody td{padding:12px;border-bottom:1px solid var(--border);vertical-align:middle}
+  tbody tr{cursor:pointer;transition:background .12s}
+  tbody tr:hover{background:#f4faf8}
+  tbody tr.sel{background:#edf7f4}
+  tbody tr:last-child td{border-bottom:0}
+  .dt-d{font-weight:600;white-space:nowrap}
+  .dt-t{font-size:12px;color:var(--muted)}
+  .cl-co{font-weight:600;white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+  .cl-ct{font-size:12px;color:var(--muted);white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+  .col-subj{color:var(--ink-soft)}
+  .who{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;font-size:12.5px;color:var(--ink-soft)}
+  .avatar{width:24px;height:24px;border-radius:50%;background:#dcefe9;color:#1A5C59;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+  .avatar.lg{width:42px;height:42px;font-size:14px}
+  .chev{color:var(--muted);width:16px;height:16px;transition:transform .18s}
+  tr.open .chev{transform:rotate(180deg);color:var(--teal-d)}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap}
+  .pill .dot{width:7px;height:7px;border-radius:50%}
+
+  /* ================= FICHE PARTAGÉE ================= */
+  /* le conteneur pilote le nb de colonnes : 1 col si étroit (drawer/panneau), 2 col si large (modale/inline) */
+  .fiche{container-type:inline-size}
+  .fiche-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}
+  .fiche-hd .who-lg{display:flex;align-items:center;gap:12px;min-width:0}
+  .fiche-hd .nm{font-size:16px;font-weight:700;line-height:1.2;color:var(--ink)}
+  .fiche-hd .sb{font-size:12.5px;color:var(--muted);margin-top:1px}
+  .hd-r{display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .fmode{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:7px;white-space:nowrap}
+  .fmode svg{width:13px;height:13px}
+  .fmode-tel{background:#E6F1FB;color:#185FA5}
+  .fmode-visio{background:#EEEDFE;color:#534AB7}
+
+  .fiche-cols{display:grid;grid-template-columns:1fr;gap:16px}
+  @container (min-width:520px){ .fiche-cols{grid-template-columns:1fr 1fr;gap:26px;align-items:stretch} }
+  /* label de section : le seul texte "gras discret", 1 seul niveau au-dessus des champs */
+  .sec-lbl{font-size:11.5px;font-weight:600;color:var(--ink-soft);letter-spacing:.01em;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  .col-follow{display:flex;flex-direction:column}
+
+  /* le prospect : liste label / valeur, très lisible */
+  .fiche-info{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+  .fiche-ir{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+  .fiche-ir .k{font-size:12.5px;color:var(--muted);flex-shrink:0}
+  .fiche-ir .v{font-size:13px;color:var(--ink);font-weight:500;text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .fiche-acts{display:flex;flex-direction:column;gap:8px}
+  .fiche-act{display:flex;align-items:center;gap:11px;text-decoration:none;border:1px solid var(--border-2);border-radius:10px;padding:9px 12px;background:#fff;transition:border-color .12s,background .12s}
+  .fiche-act:hover{border-color:var(--teal);background:#E1F5EE}
+  .fiche-act .ic{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;background:#E1F5EE;color:var(--teal-d);flex-shrink:0}
+  .fiche-act:hover .ic{background:#fff}
+  .fiche-act .ic svg{width:16px;height:16px}
+  .fiche-act .tx{display:flex;flex-direction:column;min-width:0}
+  .fiche-act .l{font-size:11px;color:var(--muted)}
+  .fiche-act .val{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* votre suivi : la note remplit la hauteur -> plus de déséquilibre gauche/droite */
+  textarea.note{flex:1;width:100%;font-family:inherit;font-size:13px;line-height:1.55;padding:11px 13px;border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--ink);resize:none;min-height:140px}
+  textarea.note:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(75,179,164,.15)}
+  .note-foot{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}
+  .btn{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:9px;border:1px solid var(--border-2);color:var(--ink);background:#fff}
+  .btn:hover{background:var(--bg)}
+  .btn svg{width:14px;height:14px}
+  .btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+  .btn.primary:hover{background:var(--teal-d)}
+  .rel-mini{font-size:12px;color:var(--muted)}
+  .rel-mini.ok{display:inline-flex;align-items:center;gap:6px;color:#0F6E56;font-weight:600}
+  .rel-mini.ok svg{width:14px;height:14px}
+
+  /* déroulé inline */
+  tr.detail-row > td{padding:0;background:#fbfcfb;border-bottom:1px solid var(--border-2)}
+  .inline-box{padding:20px 22px}
+
+  /* modale centrée */
+  .scrim{position:fixed;inset:0;background:rgba(30,24,50,.42);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+  .scrim.show{opacity:1;pointer-events:auto}
+  .modal{position:fixed;z-index:41;left:50%;top:50%;transform:translate(-50%,-46%) scale(.98);opacity:0;pointer-events:none;
+    width:min(720px,calc(100vw - 32px));max-height:calc(100vh - 48px);overflow:auto;background:var(--panel);border:1px solid var(--border);border-radius:16px;
+    box-shadow:0 30px 80px rgba(30,24,50,.3);padding:24px 26px;transition:opacity .2s,transform .2s var(--ease)}
+  .modal.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+
+  /* panneau droit */
+  .drawer{position:fixed;z-index:41;top:0;right:0;height:100vh;width:min(440px,calc(100vw - 40px));
+    background:var(--panel);border-left:1px solid var(--border);box-shadow:-24px 0 60px rgba(30,24,50,.18);
+    padding:22px 24px;overflow:auto;transform:translateX(100%);transition:transform .26s var(--ease)}
+  .drawer.show{transform:translateX(0)}
+
+  .x-close{all:unset;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9px;color:var(--muted);flex-shrink:0}
+  .x-close:hover{background:var(--bg);color:var(--ink)}
+  .x-close svg{width:18px;height:18px}
+
+  /* master-détail : liste compacte à gauche (pas le tableau -> pas de colonnes perdues), détail à droite */
+  .split{display:grid;grid-template-columns:minmax(0,1fr) 428px;gap:16px;align-items:start}
+  .split .detail-pane{position:sticky;top:22px}
+  .md-list{display:flex;flex-direction:column;gap:7px}
+  .md-item{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:13px;align-items:center;padding:11px 13px;border:1px solid var(--border);border-radius:11px;background:#fff;transition:background .12s,border-color .12s}
+  .md-item:hover{background:#f4faf8;border-color:#d3ebe4}
+  .md-item.sel{background:#edf7f4;border-color:var(--teal)}
+  .md-date{text-align:center;line-height:1.15}
+  .md-date .d{font-weight:700;font-size:13px}
+  .md-date .t{font-size:11px;color:var(--muted)}
+  .md-main{min-width:0}
+  .md-main .c{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .md-main .s{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .md-side{display:flex;align-items:center}
+  .detail-pane .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;color:var(--muted);padding:54px 20px;min-height:300px}
+  .detail-pane .empty svg{width:34px;height:34px;color:var(--border-2)}
+  @media(max-width:1180px){ .split{grid-template-columns:1fr} .split .detail-pane{display:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>Liste des rendez-vous, explorations</h1>
+    <p>Mêmes données, 4 façons d'ouvrir la fiche d'un rendez-vous. La fiche s'adapte : 2 colonnes quand il y a de la largeur, 1 colonne quand c'est étroit. Clique une ligne, puis dis-moi laquelle garder.</p>
+  </div>
+
+  <div class="modes" id="modes">
+    <button class="mode-b on" data-mode="modal"><span class="mt">Modale centrée</span><span class="ms">au centre</span></button>
+    <button class="mode-b" data-mode="drawer"><span class="mt">Panneau droit</span><span class="ms">glisse de la droite</span></button>
+    <button class="mode-b" data-mode="split"><span class="mt">Master-détail</span><span class="ms">liste + détail</span></button>
+    <button class="mode-b" data-mode="inline"><span class="mt">Déroulé inline</span><span class="ms">sous la ligne</span></button>
+  </div>
+  <div class="mode-cap" id="modeCap"></div>
+
+  <div id="stage"></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="modal" id="modal"></div>
+<div class="drawer" id="drawer"></div>
+
+<script>
+const STC={
+  avenir:{l:"À venir",       c:"#185FA5", bg:"#E6F1FB", dot:"#378ADD"},
+  honore:{l:"Honoré",        c:"#0F6E56", bg:"#E1F5EE", dot:"#1D9E75"},
+  refuse:{l:"Pas intéressé", c:"#8a4b3a", bg:"#F6ECE7", dot:"#C47A5E"},
+  annule:{l:"Annulé",        c:"#5F5E5A", bg:"#F1EFE8", dot:"#B4B2A9"},
+  noshow:{l:"No-show",       c:"#A32D2D", bg:"#FCEBEB", dot:"#E24B4A"}
+};
+const DATA=[
+  {day:2,mon:"juil.",time:"10:00",client:"Boucherie Dubois",contact:"Pierre Dubois",tel:"+41 22 311 22 09",email:"contact@boucherie-dubois.ch",secteur:"Restauration",volume:"10 à 30",sujet:"Découverte",who:"Sarah",mode:"tel",st:"avenir",note:""},
+  {day:4,mon:"juil.",time:"09:00",client:"Atelier Vélo Plus",contact:"Thomas Girard",link:"meet.google.com/qdb-yrkp-xza",email:"hello@atelierveloplus.ch",secteur:"E-commerce / Retail",volume:"Moins de 10",sujet:"Devis Dédié",who:"Sarah",mode:"visio",st:"avenir",note:""},
+  {day:28,mon:"juin",time:"11:00",client:"Cabinet Morand",contact:"Antoine Morand",link:"meet.google.com/hxa-mnbq-rpo",email:"contact@cabinet-morand.ch",secteur:"Juridique / Notarial",volume:"Moins de 10",sujet:"Découverte",who:"Sarah",mode:"visio",st:"honore",note:"Devis envoyé, relance prévue le 5 juillet. Intéressé par la formule Dédié, attend le retour de son associé avant de signer.",relance:true},
+  {day:27,mon:"juin",time:"15:30",client:"Restaurant Sole",contact:"Luca Bianchi",tel:"+41 22 738 16 24",email:"info@restaurant-sole.ch",secteur:"Restauration",volume:"30 à 100",sujet:"Suivi mensuel",who:"Marc",mode:"tel",st:"honore",note:"Satisfait, passe en Dédié"},
+  {day:26,mon:"juin",time:"16:00",client:"Fleuriste Camélia",contact:"Nadia Berger",tel:"+41 22 344 28 71",email:"bonjour@camelia-fleurs.ch",secteur:"E-commerce / Retail",volume:"Moins de 10",sujet:"Question tarifs",who:"Sarah",mode:"tel",st:"refuse",note:"Trouve l'offre trop chère, ne souhaite pas être relancée."},
+  {day:25,mon:"juin",time:"09:30",client:"Librairie Page 12",contact:"Élise Favre",link:"meet.google.com/vwo-ktsd-ign",email:"libraire@page12.ch",secteur:"E-commerce / Retail",volume:"10 à 30",sujet:"Découverte",who:"Marc",mode:"visio",st:"noshow",note:"Relancer par mail"}
+];
+const CAPS={
+  inline:"Déroulé inline : la fiche s'ouvre sous la ligne, sans quitter la liste. Pratique, mais pousse les lignes du dessous vers le bas.",
+  modal:"Modale centrée : la fiche s'ouvre par-dessus, focus total sur un rendez-vous. Fermeture par la croix en haut à droite, clic dehors ou Échap.",
+  drawer:"Panneau droit : la fiche glisse depuis la droite en une seule colonne lisible, la liste reste visible à gauche pour enchaîner.",
+  split:"Master-détail : à gauche une liste compacte (pas le tableau, donc rien n'est perdu), à droite le détail. Sous 1180px, ça bascule en modale."
+};
+const ICON={
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.7 2.34a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.74.34 1.53.57 2.34.7A2 2 0 0 1 22 16.92z"/></svg>',
+  video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>',
+  mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+  chev:'<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'
+};
+function esc(s){ const d=document.createElement("div"); d.textContent=s==null?"":s; return d.innerHTML; }
+function initials(n){ return (n||"?").split(/\s+/).slice(0,2).map(w=>w[0]||"").join("").toUpperCase(); }
+function pill(st){ const s=STC[st]; return '<span class="pill" style="background:'+s.bg+';color:'+s.c+'"><span class="dot" style="background:'+s.dot+'"></span>'+s.l+'</span>'; }
+
+/* fiche partagée */
+function fiche(r,opts){
+  opts=opts||{};
+  const past=r.st!=="avenir", relok=past&&r.st!=="refuse";
+  const mi = r.mode==="visio" ? {l:"Visio",i:"video",c:"visio"} : {l:"Appel",i:"phone",c:"tel"};
+
+  let acts="";
+  if(r.mode==="visio" && r.link) acts+='<a class="fiche-act" href="https://'+r.link+'" target="_blank" rel="noopener"><span class="ic">'+ICON.video+'</span><span class="tx"><span class="l">Rejoindre la visio</span><span class="val">'+r.link+'</span></span></a>';
+  if(r.mode==="tel" && r.tel) acts+='<a class="fiche-act" href="tel:'+r.tel.replace(/[^+0-9]/g,"")+'"><span class="ic">'+ICON.phone+'</span><span class="tx"><span class="l">Appeler '+esc(r.contact)+'</span><span class="val">'+esc(r.tel)+'</span></span></a>';
+  if(r.email) acts+='<a class="fiche-act" href="mailto:'+r.email+'"><span class="ic">'+ICON.mail+'</span><span class="tx"><span class="l">Écrire un email</span><span class="val">'+esc(r.email)+'</span></span></a>';
+
+  const info=[["Interlocuteur",r.contact],["Secteur",r.secteur],["Volume estimé",r.volume?r.volume+" / jour":""]]
+    .filter(x=>x[1]).map(x=>'<div class="fiche-ir"><span class="k">'+x[0]+'</span><span class="v" title="'+esc(x[1])+'">'+esc(x[1])+'</span></div>').join("");
+
+  let rel;
+  if(r.relance) rel='<span class="rel-mini ok">'+ICON.mail+'Relancé le '+r.day+' '+r.mon+'</span>';
+  else if(r.st==="refuse") rel='<span class="rel-mini">Client à ne pas relancer</span>';
+  else if(!relok) rel='<span class="rel-mini">Relance disponible après le rendez-vous</span>';
+  else rel='<button class="btn">'+ICON.mail+'Relancer le client</button>';
+
+  const closeBtn = opts.close ? '<button class="x-close" data-close="1" title="Fermer">'+ICON.x+'</button>' : '';
+  const header = opts.header ?
+    '<div class="fiche-hd"><div class="who-lg"><span class="avatar lg">'+initials(r.client)+'</span><div><div class="nm">'+esc(r.client)+'</div><div class="sb">'+esc(r.sujet)+' · '+r.day+' '+r.mon+' à '+r.time+'</div></div></div>'+
+    '<div class="hd-r"><span class="fmode fmode-'+mi.c+'">'+ICON[mi.i]+mi.l+'</span>'+closeBtn+'</div></div>' : '';
+
+  return '<div class="fiche">'+header+
+    '<div class="fiche-cols">'+
+      '<div class="col-prospect"><div class="sec-lbl">Le prospect</div><div class="fiche-info">'+info+'</div><div class="fiche-acts">'+acts+'</div></div>'+
+      '<div class="col-follow"><div class="sec-lbl">Votre suivi</div>'+
+        '<textarea class="note" placeholder="Compte-rendu de l\'échange, prochaines étapes, devis envoyé…">'+esc(r.note)+'</textarea>'+
+        '<div class="note-foot"><button class="btn primary">Enregistrer la note</button>'+rel+'</div>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+
+/* listes */
+function tableHTML(withChev){
+  const rows=DATA.map((r,i)=>'<tr data-i="'+i+'">'+
+    '<td><div class="dt-d">'+r.day+' '+r.mon+'</div><div class="dt-t">'+r.time+'</div></td>'+
+    '<td><div class="cl-co">'+esc(r.client)+'</div><div class="cl-ct">'+esc(r.contact)+'</div></td>'+
+    '<td class="col-subj">'+esc(r.sujet)+'</td>'+
+    '<td><span class="who"><span class="avatar">'+initials(r.who)+'</span>'+esc(r.who)+'</span></td>'+
+    '<td>'+pill(r.st)+'</td>'+
+    (withChev?'<td class="chev-cell" style="text-align:center">'+ICON.chev+'</td>':'')+
+  '</tr>').join("");
+  return '<table><thead><tr><th>Date</th><th>Client</th><th>Sujet</th><th>Assigné</th><th>Statut</th>'+(withChev?'<th></th>':'')+'</tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function mdListHTML(){
+  return '<div class="md-list">'+DATA.map((r,i)=>'<button class="md-item" data-i="'+i+'">'+
+    '<span class="md-date"><span class="d">'+r.day+' '+r.mon.replace(".","")+'</span><span class="t">'+r.time+'</span></span>'+
+    '<span class="md-main"><span class="c">'+esc(r.client)+'</span><span class="s">'+esc(r.sujet)+' · '+esc(r.contact)+'</span></span>'+
+    '<span class="md-side">'+pill(r.st)+'</span>'+
+  '</button>').join("")+'</div>';
+}
+
+let mode="modal", openRow=-1;
+const stage=document.getElementById("stage");
+const scrim=document.getElementById("scrim"), modal=document.getElementById("modal"), drawer=document.getElementById("drawer");
+
+function closeOverlays(){ scrim.classList.remove("show"); modal.classList.remove("show"); drawer.classList.remove("show"); }
+function clearSel(){ stage.querySelectorAll(".sel").forEach(x=>x.classList.remove("sel")); }
+
+function render(){
+  document.getElementById("modeCap").textContent=CAPS[mode];
+  closeOverlays();
+  if(mode==="split"){
+    stage.innerHTML='<div class="split"><div class="pan"><div class="pan-h"><h2>Rendez-vous</h2><span class="cnt">'+DATA.length+' rendez-vous</span></div>'+mdListHTML()+'</div>'+
+      '<div class="detail-pane"><div class="pan" id="detailPane"></div></div></div>';
+    renderDetailPane();
+  } else {
+    stage.innerHTML='<div class="pan"><div class="pan-h"><h2>Rendez-vous</h2><span class="cnt">'+DATA.length+' rendez-vous</span></div>'+tableHTML(mode==="inline")+'</div>';
+  }
+  wireRows();
+}
+function renderDetailPane(){
+  const p=document.getElementById("detailPane"); if(!p) return;
+  if(openRow<0){ p.innerHTML='<div class="empty">'+ICON.cal+'<div>Sélectionne un rendez-vous<br>pour voir sa fiche ici.</div></div>'; return; }
+  p.innerHTML=fiche(DATA[openRow],{header:true});
+}
+function wireRows(){
+  stage.querySelectorAll("[data-i]").forEach(el=>{
+    el.addEventListener("click",()=>select(+el.dataset.i, el));
+    if(+el.dataset.i===openRow && (mode==="split"||mode==="drawer")) el.classList.add("sel");
+  });
+}
+function openModal(i){ openRow=i; modal.innerHTML=fiche(DATA[i],{header:true,close:true}); scrim.classList.add("show"); modal.classList.add("show"); }
+function openDrawer(i){ openRow=i; drawer.innerHTML=fiche(DATA[i],{header:true,close:true}); scrim.classList.add("show"); drawer.classList.add("show"); clearSel(); stage.querySelector('[data-i="'+i+'"]')?.classList.add("sel"); }
+
+function select(i, el){
+  if(mode==="inline"){
+    const tbody=el.parentNode, wasOpen=el.classList.contains("open");
+    tbody.querySelectorAll("tr.detail-row").forEach(x=>x.remove());
+    tbody.querySelectorAll("tr.open").forEach(x=>x.classList.remove("open"));
+    if(wasOpen){ openRow=-1; return; }
+    el.classList.add("open"); openRow=i;
+    const dr=document.createElement("tr"); dr.className="detail-row";
+    dr.innerHTML='<td colspan="6"><div class="inline-box">'+fiche(DATA[i],{header:true})+'</div></td>';
+    el.after(dr);
+  } else if(mode==="modal"){ openModal(i); }
+  else if(mode==="drawer"){ openDrawer(i); }
+  else if(mode==="split"){
+    if(window.innerWidth<=1180){ openModal(i); return; }
+    openRow=i; clearSel(); el.classList.add("sel"); renderDetailPane();
+  }
+}
+
+document.getElementById("modes").addEventListener("click",e=>{
+  const b=e.target.closest(".mode-b"); if(!b) return;
+  document.querySelectorAll(".mode-b").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+  mode=b.dataset.mode; openRow=-1; render();
+});
+function dismiss(){ closeOverlays(); openRow=-1; clearSel(); }
+scrim.addEventListener("click",dismiss);
+document.addEventListener("click",e=>{ if(e.target.closest("[data-close]")) dismiss(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") dismiss(); });
+render();
+</script>
+</body>
+</html>

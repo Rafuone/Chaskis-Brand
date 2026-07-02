@@ -206,8 +206,21 @@
   .bub.a{align-self:flex-start;background:#fff;border:1px solid var(--border);border-bottom-left-radius:3px}
   .bub.block{align-self:flex-start;background:#fbecec;color:#a32d2d;border:1px solid #f1d6d6}
   .tbl{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:2px}
-  .tbl th{text-align:left;color:var(--muted);font-weight:600;font-size:11.5px;padding:8px;border-bottom:1px solid var(--border)}
-  .tbl td{padding:9px 8px;border-bottom:1px solid var(--border)}
+  .tbl th{text-align:left;color:var(--muted);font-weight:600;font-size:11.5px;padding:8px 14px;border-bottom:1px solid var(--border)}
+  .tbl td{padding:9px 14px;border-bottom:1px solid var(--border)}
+  /* date empilée : date au-dessus, heure en dessous */
+  .dt-d{font-weight:600;color:var(--ink);white-space:nowrap}
+  .dt-t{font-size:11.5px;color:var(--muted);margin-top:1px}
+  /* pagination de la liste */
+  .pager{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;flex-wrap:wrap}
+  .pager .pg-info{font-size:12px;color:var(--muted)}
+  .pg-ctrl{display:flex;align-items:center;gap:6px}
+  .pg-btn{all:unset;box-sizing:border-box;cursor:pointer;min-width:30px;height:30px;padding:0 9px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border-2);border-radius:8px;font-size:12.5px;font-weight:600;color:var(--ink)}
+  .pg-btn:hover{background:var(--bg)}
+  .pg-btn.on{background:var(--teal);border-color:var(--teal);color:#fff}
+  .pg-btn[disabled]{opacity:.4;cursor:default}
+  .pg-btn svg{width:15px;height:15px}
+  .pg-ell{color:var(--muted);padding:0 2px}
   .pill{font-size:10.5px;padding:2px 9px;border-radius:20px;white-space:nowrap}
   .pill.green{background:#eaf6f1;color:#0f6e56}.pill.amber{background:#fdf1dc;color:#854f0b}.pill.gray{background:var(--bg);color:var(--muted)}
   .formf{margin-bottom:11px}
@@ -250,11 +263,40 @@
   .rangectl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .rangesel{font-family:inherit;font-size:13px;font-weight:600;padding:8px 12px;border:1px solid var(--border-2);border-radius:9px;background:var(--panel);color:var(--ink);cursor:pointer;box-shadow:var(--shadow)}
   .rangecustom{display:none;align-items:center;gap:8px}
+  /* dropdown maison on-brand (remplace les selects natifs gris) */
+  .dd{position:relative;display:inline-flex;vertical-align:middle}
+  .dd-btn{font-family:inherit;font-size:13px;font-weight:600;padding:8px 12px;border:1px solid var(--border-2);border-radius:9px;background:var(--panel);color:var(--ink);cursor:pointer;box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:8px;white-space:nowrap;line-height:1.2}
+  .dd-btn:hover{background:var(--bg)}
+  .dd.open .dd-btn{border-color:var(--teal);box-shadow:0 0 0 3px rgba(75,179,164,.16)}
+  .dd-lbl{flex:1;text-align:left}
+  .dd-caret{width:14px;height:14px;flex-shrink:0;transition:transform .16s}
+  .dd.open .dd-caret{transform:rotate(180deg)}
+  .dd-menu{position:fixed;background:var(--panel);border:1px solid var(--border-2);border-radius:11px;box-shadow:0 12px 34px rgba(40,32,60,.18);padding:6px;z-index:2000;opacity:0;transform:translateY(-6px);transition:opacity .13s,transform .13s}
+  .dd-menu.open{opacity:1;transform:none}
+  .dd-opt{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:8px;font-size:13px;font-weight:500;color:var(--ink);cursor:pointer;white-space:nowrap}
+  .dd-opt:hover{background:var(--bg)}
+  .dd-opt.sel{color:var(--teal-d);font-weight:700}
+  .dd-opt .dd-t{flex:1}
+  .dd-opt .dd-check{width:15px;height:15px;margin-left:14px;color:var(--teal-d);opacity:0;flex-shrink:0}
+  .dd-opt.sel .dd-check{opacity:1}
+  .dd-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+  /* pastille de statut : le bouton porte la couleur du statut */
+  .dd-status-btn{font-weight:600;padding:6px 11px;border-radius:8px;box-shadow:none}
+  .dd-status-btn:hover{filter:brightness(.98)}
+  .dd.dd-block{display:flex;width:100%}
+  .dd.dd-block .dd-btn{width:100%;box-shadow:none;border-color:var(--border);font-weight:500;padding:8px 11px}
   .rangecustom.show{display:flex}
   .rangecustom input{font-family:inherit;font-size:12.5px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--ink)}
   .rangecustom span{font-size:12.5px;color:var(--muted)}
   /* line/area chart */
   .lchart{width:100%;height:176px;display:block}
+  /* contrôles de zoom des graphes */
+  .ch-hd-r{display:flex;align-items:center;gap:12px}
+  .zoomctl{display:inline-flex;gap:4px}
+  .zoom-btn{all:unset;box-sizing:border-box;cursor:pointer;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border-2);border-radius:7px;color:var(--ink-soft)}
+  .zoom-btn:hover{background:var(--bg);color:var(--ink)}
+  .zoom-btn[disabled]{opacity:.35;cursor:default}
+  .zoom-btn svg{width:15px;height:15px}
   .lchart .axislbl{font-size:10px;fill:var(--muted)}
   .lchart .pt{fill:var(--teal)}
   .lchart .ptlbl{font-size:10px;fill:var(--ink-soft);font-weight:600}
@@ -269,28 +311,51 @@
   /* split bar (devices / regions) */
   .splitbar{display:flex;height:10px;border-radius:6px;overflow:hidden;margin:4px 0 10px}
   .splitbar .seg{height:100%}
-  .leg{display:flex;flex-wrap:wrap;gap:10px 16px}
+  .leg{display:flex;flex-wrap:wrap;gap:10px 30px}
   .leg .li{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-soft)}
+  .leg .li-k{font-weight:600;color:var(--ink)}
+  .leg .li-v{color:var(--muted);font-weight:500}
   .leg .dot{width:9px;height:9px;border-radius:3px}
   /* lignes labellisées (appareils, régions) : libellé + barre + valeur, une seule couleur */
   .barlist{display:flex;flex-direction:column;gap:10px}
   .barrow{display:grid;grid-template-columns:104px 1fr 46px;align-items:center;gap:11px;font-size:12.5px}
-  .barrow .bl{color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .barrow .bt{height:8px;border-radius:5px;background:#e9ebe9;overflow:hidden}
+  .barrow .bl{color:var(--ink);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .barrow .bt{height:8px;border-radius:5px;background:#eceae6;overflow:hidden}
   .barrow .bf{display:block;height:100%;border-radius:5px;background:var(--teal)}
-  .barrow .bp{text-align:right;font-weight:600;color:var(--ink)}
+  .barrow .bp{text-align:right;font-weight:700;color:var(--ink)}
+  /* légende de bas de carte (base du calcul), commune statuts/raisons */
+  .card-cap{margin-top:13px;padding-top:12px;border-top:1px solid var(--border);font-size:11.5px;color:var(--muted)}
+  /* table large : reste dans sa colonne, défile au lieu de déborder sur la sidebar */
+  .tbl-scroll{overflow-x:auto}
   /* rendez-vous : carte "prochain RDV" + point de statut */
   #rdvCards{grid-template-columns:repeat(4,1fr)}
   .rdv-hero{display:flex;align-items:center;gap:18px;background:linear-gradient(100deg,#f1faf8,#fff);border:1px solid #cfeae4;border-radius:14px;padding:16px 20px}
-  .rdv-tile{width:60px;height:62px;border-radius:12px;background:#fff;border:1px solid #cfeae4;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+  .rdv-tile{width:64px;border-radius:12px;background:#fff;border:1px solid #cfeae4;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;padding:10px 6px}
   .rdv-tile .dn{font-size:23px;font-weight:700;color:var(--teal-d);line-height:1.05}
   .rdv-tile .dm{font-size:11px;color:var(--muted)}
+  .rdv-tile .tt{font-size:12.5px;font-weight:700;color:var(--teal-d);margin-top:7px;padding-top:7px;border-top:1px solid #e4f1ed;width:100%;text-align:center}
   .rdv-hero .hi{flex:1;min-width:0}
   .rdv-hero .lbl{font-size:11px;font-weight:600;color:var(--teal-d)}
   .rdv-hero .cl{font-size:16px;font-weight:700;margin:2px 0 1px}
   .rdv-hero .hero-ct{font-size:12.5px;color:var(--muted);margin:0 0 2px}
   .rdv-hero .meta{font-size:12.5px;color:var(--ink-soft)}
   .rdv-hero .acts{display:flex;gap:8px;flex-shrink:0}
+  /* responsable sous les infos : équilibre la hauteur avec le badge date+heure */
+  .rdv-hero .owner{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink);margin-top:11px}
+  .rdv-hero .owner .avatar.xs{margin-right:0}
+  /* perf équipe : fraction (base du %) sous le pourcentage */
+  .tbl .frac{display:block;font-size:10.5px;color:var(--muted);font-weight:500;margin-top:1px}
+  /* répartition des statuts : légende verticale avec compte + % (équilibre avec la carte raisons) */
+  .statleg{display:flex;flex-direction:column;gap:11px;margin-top:14px}
+  .statleg .r{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:10px;font-size:12.5px}
+  .statleg .r .nm{color:var(--ink-soft)}
+  .statleg .r .ct{font-weight:700;color:var(--ink)}
+  .statleg .r .pc{color:var(--muted);font-weight:600;min-width:40px;text-align:right}
+  .statleg .dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+  /* liste RDV : chevron signalant l'ouverture de la fiche complète */
+  td.rdv-exp{width:34px;text-align:center;color:var(--muted)}
+  .rdv-exp svg{width:16px;height:16px;transition:transform .18s}
+  .row-open .rdv-exp svg{transform:rotate(180deg);color:var(--teal-d)}
   .stdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:middle}
   /* avatars + compte connecté + calendriers + workflow */
   .avatar{width:34px;height:34px;border-radius:50%;background:#dcefe9;color:#1A5C59;display:inline-flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;flex-shrink:0}
@@ -308,6 +373,22 @@
   .cal-chip .ci{flex:1;min-width:0}
   .cal-chip .cn{font-weight:700;font-size:13.5px}
   .cal-chip .ch{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* bandeau Calendly compact : titre + profils sur une seule ligne qui scrolle */
+  #rdvCalBar{padding:12px 14px}
+  .cal-bar-row{display:flex;align-items:center;gap:14px}
+  .cal-bar-title{font-size:13px;color:var(--ink-soft);font-weight:600;flex-shrink:0;display:flex;align-items:center;gap:8px}
+  .cal-bar-title .cnt{font-size:11px;color:var(--ink-soft);font-weight:700;background:var(--bg);border-radius:20px;padding:1px 9px}
+  .cal-strip{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;flex:1;min-width:0;padding-bottom:2px}
+  .cal-strip .cal-chip{margin:0;flex:0 0 auto;background:var(--bg);padding:6px 8px 6px 7px;gap:8px}
+  .cal-strip .cal-chip .cn{font-size:13px;font-weight:600;white-space:nowrap}
+  .cal-strip .cal-x2{margin-left:2px}
+  /* carte d'ajout compacte, en pointillés */
+  .cal-add{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:8px;padding:6px 12px 6px 7px;border:1.5px dashed var(--border-2);border-radius:11px;flex:0 0 auto}
+  .cal-add:hover{border-color:var(--teal);background:#E1F5EE}
+  .cal-add .cal-add-ic{width:26px;height:26px;border-radius:50%;background:#E1F5EE;color:var(--teal-d);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cal-add:hover .cal-add-ic{background:#fff}
+  .cal-add .cal-add-ic svg{width:16px;height:16px}
+  .cal-add .cn{font-weight:600;font-size:13px;color:var(--ink);white-space:nowrap}
   .cal-ok{font-size:11.5px;color:#2BA672;font-weight:600;white-space:nowrap}
   .cal-x{all:unset;cursor:pointer;font-size:12px;color:var(--muted);border:1px solid var(--border);border-radius:7px;padding:4px 9px;flex-shrink:0}
   .cal-x:hover{color:var(--danger);border-color:#f0d6d4}
@@ -323,19 +404,18 @@
   .flow-done .cn{font-weight:700;font-size:14px}
   .flow-done .ch{font-size:12px;color:var(--muted)}
   .barlist.wide .barrow{grid-template-columns:minmax(0,1fr) 84px 46px}
-  /* fix d'espacement : le bloc hero a besoin de sa marge */
-  #rdvHero{margin-bottom:16px}
   /* note en bouton (ouvre la modale longue) */
   .notecell{all:unset;cursor:pointer;display:block;width:100%;font-size:12px;color:var(--ink-soft);line-height:1.45;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:5px 8px;border-radius:7px;border:1px solid transparent}
   .notecell:hover{border-color:var(--border);background:var(--bg)}
-  .notecell.empty{color:var(--teal-d);font-weight:600}
+  .notecell.empty{color:var(--muted);font-weight:500}
   /* page rendez-vous en 2 colonnes : gauche scrolle, droite (calendriers) sticky */
   .rdv-layout{display:grid;grid-template-columns:minmax(0,1fr) 296px;gap:16px;align-items:start}
   .rdv-main{display:flex;flex-direction:column;gap:16px;min-width:0}
   .rdv-main > *{margin:0}
   .rdv-side{position:sticky;top:0}
-  @media(max-width:1080px){.rdv-layout{grid-template-columns:1fr}.rdv-side{position:static}}
+  /* Calendly en colonne seulement sur écran large ; en dessous il passe sous le contenu pour rendre toute la largeur au tableau */
+  @media(max-width:1499px){.rdv-layout{grid-template-columns:1fr}.rdv-side{position:static}}
   .side-h{font-size:13px;color:var(--ink-soft);font-weight:600;margin:0 0 12px;display:flex;align-items:center;gap:8px}
   .side-h .cnt{font-size:11px;color:var(--ink-soft);font-weight:700;background:var(--bg);border-radius:20px;padding:1px 9px}
   .cal-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#2BA672;margin-left:7px;vertical-align:middle}
@@ -367,20 +447,28 @@
   .rdv-next .rn-c{flex:1;min-width:0;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .rdv-next .rn-w{display:inline-flex;align-items:center;color:var(--ink-soft);white-space:nowrap}
   .rdv-next .rn-more{font-size:11.5px;color:var(--muted);padding:7px 0 8px;border-top:1px solid var(--border)}
-  /* hero : à venir ensuite (cartes horizontales) */
-  .rdv-up{margin-top:12px}
-  .rdv-up-h{font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:9px}
-  .rdv-up-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:3px}
-  .up-card{flex:0 0 auto;width:224px;border:1px solid var(--border);border-radius:12px;background:var(--panel);padding:12px 14px;box-shadow:0 1px 2px rgba(40,32,60,.035)}
+  /* hero : rendez-vous à venir, tous sur une rangée horizontale qui scrolle (le 1er = prochain, mis en avant) */
+  .rdv-up-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:3px;align-items:stretch}
+  .up-card{flex:0 0 auto;width:224px;border:1px solid var(--border);border-radius:12px;background:var(--panel);padding:12px 14px;box-shadow:0 1px 2px rgba(40,32,60,.035);display:flex;flex-direction:column}
+  .up-next{width:300px;background:#edf7f4;border-color:#d3ebe4}
+  .up-next .avatar{background:#c2e3da;color:#0a2e2b}
+  .up-tag{align-self:flex-start;color:var(--teal-d);font-size:11px;font-weight:600;margin-bottom:8px}
   .up-date{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.01em;white-space:nowrap}
   .up-time{font-size:12.5px;font-weight:600;color:var(--teal-d)}
   .up-c{font-size:13px;font-weight:600;color:var(--ink);margin-top:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .up-ct{font-size:11.5px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .up-div{height:1px;background:var(--border);margin:11px 0}
-  .up-w{display:flex;align-items:center;font-size:12px;color:var(--ink-soft);font-weight:500}
-  /* colonne client : entreprise + interlocuteur sur 2 lignes */
-  .cl-co{font-weight:600;color:var(--ink);line-height:1.3}
-  .cl-ct{font-size:12px;color:var(--muted);margin-top:1px}
+  .up-foot{margin-top:auto}
+  .up-div{height:1px;background:var(--border);margin:11px 0 9px}
+  .up-next .up-div{background:#dcece8}
+  .up-w{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:var(--ink-soft);font-weight:500}
+  .up-who{display:inline-flex;align-items:center;min-width:0;overflow:hidden;white-space:nowrap}
+  .btn.sm{padding:5px 11px;font-size:12px;flex-shrink:0}
+  .btn.sm svg{width:13px;height:13px}
+  /* colonne client : entreprise + interlocuteur, une ligne chacun ; pire cas (noms longs) tronqué avec … */
+  .cl-co{font-weight:600;color:var(--ink);line-height:1.3;white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+  .cl-ct{font-size:12px;color:var(--muted);margin-top:1px;white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+  /* colonne assigné : avatar + prénom, affiché en entier (la table scrolle si besoin) */
+  .who .who-n{white-space:nowrap}
   .up-more{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:50px;border:1px dashed var(--border-2);border-radius:11px;color:var(--muted);font-weight:600;font-size:12px}
   /* sélection / relance en masse */
   td.chk,th.chk{width:34px;text-align:center}
@@ -402,11 +490,29 @@
   .fiche-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:15px}
   .fiche-head .fh-co{font-size:14px;font-weight:700;color:var(--ink)}
   .fiche-head .fh-sub{font-size:12.5px;color:var(--muted);margin-left:9px}
-  .fiche-head .fh-when{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-soft)}
+  .fiche-head .fh-when{display:inline-flex;align-items:center;gap:11px;font-size:12px;color:var(--ink-soft);flex-wrap:wrap}
   .fiche-head .fh-when svg{width:14px;height:14px;flex-shrink:0}
+  .fw-when{display:inline-flex;align-items:center;gap:6px}
+  .fmode{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px 3px 8px;border-radius:7px}
+  .fmode svg{width:13px;height:13px}
+  .fmode-tel{background:#E6F1FB;color:#185FA5}
+  .fmode-visio{background:#EEEDFE;color:#534AB7}
   .fiche-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px}
   @media(max-width:900px){.fiche-cols{grid-template-columns:1fr;gap:18px}}
   .fiche-lbl{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px}
+  /* fiche : en-tête réduit au badge de mode, pied de note en ligne */
+  .fiche-top{display:flex;justify-content:flex-end;margin-bottom:14px}
+  .note-foot{display:flex;align-items:center;gap:16px;margin-top:10px;flex-wrap:wrap}
+  .rel-mini{font-size:12px}
+  .rel-mini.muted{color:var(--muted)}
+  .rel-mini.ok{display:inline-flex;align-items:center;gap:6px;color:#0F6E56;font-weight:600}
+  .rel-mini.ok svg{width:14px;height:14px}
+  /* contexte prospect (renseigné à la réservation) */
+  .fiche-ctx{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border-2)}
+  .ctx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px 22px}
+  .ctx-i{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .ctx-k{font-size:11px;color:var(--muted);font-weight:600}
+  .ctx-v{font-size:13px;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .fiche-acts{display:flex;flex-direction:column;gap:8px}
   .fiche-act{display:flex;align-items:center;gap:11px;text-decoration:none;border:1px solid var(--border-2);border-radius:10px;padding:9px 12px;background:#fff;transition:border-color .12s,background .12s}
   .fiche-act:hover{border-color:var(--teal);background:#E1F5EE}
@@ -492,7 +598,10 @@
   .toast svg{width:17px;height:17px;color:var(--teal)}
   .modal-bg{position:fixed;inset:0;background:rgba(28,22,42,.5);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
   .modal-bg.show{display:flex}
-  .modal{background:#fff;border-radius:16px;max-width:480px;width:100%;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .modal{position:relative;background:#fff;border-radius:16px;max-width:480px;width:100%;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .modal-x{position:absolute;top:14px;right:14px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:none;background:var(--bg);border-radius:9px;color:var(--muted);cursor:pointer;z-index:2}
+  .modal-x:hover{background:#efeef0;color:var(--ink)}
+  .modal-x svg{width:17px;height:17px}
   .modal.wide{max-width:640px}
   .modal h3{margin:0 0 8px;font-size:18px}
   .modal p{margin:0 0 12px;font-size:13.5px;line-height:1.6;color:var(--ink-soft)}
@@ -683,6 +792,7 @@
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
             <select class="rangesel" id="rdvWhoSel"><option value="all">Toute l'équipe</option><option value="Sarah">Sarah</option><option value="Marc">Marc</option></select>
             <select class="rangesel" id="rdvRange">
+              <option value="7j">7 derniers jours</option>
               <option value="30j" selected>30 derniers jours</option>
               <option value="3m">3 derniers mois</option>
               <option value="6m">6 derniers mois</option>
@@ -692,15 +802,20 @@
         </div>
         <div class="ex-note" style="margin-top:16px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg><div>Démo : la connexion Calendly est simulée (aucun compte requis). En vrai, la clé d'accès reste côté serveur, jamais exposée au visiteur.</div></div>
 
-        <div class="rdv-layout">
-          <div class="rdv-main">
+        <div class="rdv-main">
+            <div class="dpan" id="rdvCalBar">
+              <div class="cal-bar-row">
+                <div class="cal-bar-title">Calendly connectés <span class="cnt" id="rdvCalCount"></span></div>
+                <div class="cal-strip" id="rdvCalList"></div>
+              </div>
+            </div>
             <div id="rdvHero"></div>
             <div class="stat-row" id="rdvCards"></div>
 
             <div class="dpan">
-              <div class="pan-head"><h4><span class="hic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 13 3-3 3 3 4-5"/></svg></span> Évolution des rendez-vous</h4><span class="hint" id="rdvChartBadge"></span></div>
+              <div class="pan-head"><h4><span class="hic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 13 3-3 3 3 4-5"/></svg></span> Évolution des rendez-vous</h4><div class="ch-hd-r"><span class="hint" id="rdvChartBadge"></span><span class="zoomctl"><button class="zoom-btn" id="rdvZoomOut" title="Dézoomer (période plus large)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button><button class="zoom-btn" id="rdvZoomIn" title="Zoomer (période plus fine)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></span></div></div>
               <svg class="lchart" id="rdvChart" viewBox="0 0 700 176" preserveAspectRatio="none"></svg>
-              <div class="leg" id="rdvChartLeg" style="margin-top:12px"></div>
+              <div class="leg" id="rdvChartLeg" style="margin-top:18px"></div>
             </div>
 
             <div class="mod-grid">
@@ -714,13 +829,14 @@
                 <h4><span class="hic"><i data-lucide="trending-down"></i></span> Pourquoi on ne convertit pas</h4>
                 <p class="hint" style="margin:2px 0 10px">Raisons quand un rendez-vous honoré ne devient pas client.</p>
                 <div class="barlist wide" id="rdvReasons"></div>
+                <div class="card-cap" id="rdvReasonsCap"></div>
               </div>
             </div>
 
             <div class="dpan">
               <h4><span class="hic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Performance de l'équipe</h4>
-              <p class="hint" style="margin:2px 0 10px">Vue manager : les résultats de chaque personne. Dans sa propre session, chacun ne voit que les siens.</p>
-              <table class="tbl"><thead><tr><th>Personne</th><th style="text-align:center">À venir</th><th style="text-align:center">Honorés</th><th style="text-align:center">Présence</th><th style="text-align:center">Conversion</th></tr></thead><tbody id="rdvTeamBody"></tbody></table>
+              <p class="hint" style="margin:2px 0 10px">Sur <span id="rdvTeamPeriod">les 30 derniers jours</span>. Vue manager : les résultats de chaque personne (dans sa propre session, chacun ne voit que les siens). Les taux se lisent avec le nombre de rendez-vous indiqué à gauche.</p>
+              <table class="tbl"><thead><tr><th>Personne</th><th style="text-align:center">Rendez-vous</th><th style="text-align:center">À venir</th><th style="text-align:center">Honorés</th><th style="text-align:center">Présence</th><th style="text-align:center">Conversion</th></tr></thead><tbody id="rdvTeamBody"></tbody></table>
             </div>
 
             <div class="dpan">
@@ -729,23 +845,15 @@
                 <select class="rangesel" id="rdvFilter"><option value="all">Tous les statuts</option><option value="avenir">À venir</option><option value="honore">Honoré</option><option value="refuse">Pas intéressé</option><option value="annule">Annulé</option><option value="noshow">No-show</option></select>
               </div>
               <div id="rdvBulk" class="bulk-bar" style="display:none"></div>
-              <table class="tbl">
-                <thead><tr><th class="chk"><input type="checkbox" id="rdvSelAll" title="Tout sélectionner"></th><th>Date</th><th>Client</th><th>Sujet</th><th>Assigné à</th><th>Statut</th><th>Suite donnée</th><th>Relance</th></tr></thead>
-                <tbody id="rdvBody"></tbody>
-              </table>
+              <div class="tbl-scroll">
+                <table class="tbl">
+                  <thead><tr><th class="chk"><input type="checkbox" id="rdvSelAll" title="Tout sélectionner"></th><th>Date</th><th>Client</th><th>Sujet</th><th>Assigné à</th><th>Statut</th><th>Note de suivi</th><th>Relance</th><th></th></tr></thead>
+                  <tbody id="rdvBody"></tbody>
+                </table>
+              </div>
+              <div class="pager" id="rdvPager"></div>
             </div>
           </div>
-
-          <aside class="rdv-side">
-            <div class="dpan">
-              <div class="side-h">Calendly connectés <span class="cnt" id="rdvCalCount"></span></div>
-              <div id="rdvCalList"></div>
-              <button class="btn" id="rdvAddCal" style="width:100%;margin-top:10px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Ajouter un Calendly</button>
-              <div id="rdvCalFlow"></div>
-              <p class="hint" style="margin-top:12px">Chaque personne connecte son propre Calendly et ses disponibilités. Les statuts honoré / annulé / no-show remontent automatiquement.</p>
-            </div>
-          </aside>
-        </div>
       </section>
 
       <!-- ===== Statistiques ===== -->
@@ -769,9 +877,9 @@
         <div class="stat-row" id="statCards"></div>
         <p class="hint" style="margin:-6px 0 16px">Les évolutions (+%) se comparent à la période précédente : « 30 jours » vs les 30 jours d'avant, « 12 mois » vs l'année précédente, etc.</p>
         <div class="dpan">
-          <div class="pan-head"><h4><span class="hic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 13 3-3 3 3 4-5"/></svg></span> <span id="statChartTitle">Évolution des visites</span></h4><span class="hint" id="statChartPeriod" style="margin:0"></span></div>
+          <div class="pan-head"><h4><span class="hic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 13 3-3 3 3 4-5"/></svg></span> <span id="statChartTitle">Évolution des visites</span></h4><div class="ch-hd-r"><span class="hint" id="statChartPeriod" style="margin:0"></span><span class="zoomctl"><button class="zoom-btn" id="statZoomOut" title="Dézoomer (période plus large)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button><button class="zoom-btn" id="statZoomIn" title="Zoomer (période plus fine)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></span></div></div>
           <svg class="lchart" id="statChart" viewBox="0 0 700 176" preserveAspectRatio="none"></svg>
-          <div class="leg" id="statChartLeg" style="margin-top:12px"></div>
+          <div class="leg" id="statChartLeg" style="margin-top:18px"></div>
         </div>
         <div class="mod-grid">
           <div class="dpan">
@@ -821,10 +929,20 @@
 
 <div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span id="toastMsg"></span></div>
 
+<!-- modale d'ajout de Calendly -->
+<div class="modal-bg" id="calModalBg">
+  <div class="modal">
+    <button class="modal-x" id="calClose" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <h3 style="padding-right:34px">Ajouter un Calendly</h3>
+    <div id="calFlowBody"></div>
+  </div>
+</div>
+
 <!-- media modal (in-editor image replace) -->
 <div class="modal-bg" id="mediaModalBg">
   <div class="modal wide">
-    <div class="media-head"><h3>Médiathèque</h3><button class="btn ghost" id="mediaClose">Fermer</button></div>
+    <button class="modal-x" id="mediaClose" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="media-head"><h3>Médiathèque</h3></div>
     <button class="btn primary" id="mediaImport" style="width:100%;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M20 16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/></svg>Importer depuis l'ordinateur</button>
     <div class="media-grid" id="mediaGrid"></div>
   </div>
@@ -833,7 +951,8 @@
 <!-- publish modal -->
 <div class="modal-bg" id="pubModalBg">
   <div class="modal">
-    <h3>Publier les modifications</h3>
+    <button class="modal-x" id="pubCloseX" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <h3 style="padding-right:34px">Publier les modifications</h3>
     <p id="pubBody"></p>
     <div class="acts">
       <button class="btn ghost" id="pubExport">Exporter le JSON</button>
@@ -1341,8 +1460,17 @@ document.getElementById("navlist").addEventListener("click",(e)=>{
 });
 document.querySelectorAll("[data-goto]").forEach(b=> b.addEventListener("click",()=>showView(b.dataset.goto)));
 
-// collapse
+// collapse (+ repli automatique en dessous d'une certaine largeur, ré-ouvrable à la main)
 const app=document.getElementById("app");
+const NAV_BP=1200;
+let respNarrow=null;
+function applyResponsiveNav(){
+  const narrow = window.innerWidth < NAV_BP;
+  if(narrow===respNarrow) return; respNarrow=narrow;
+  if(narrow) app.classList.add("mini");
+  else app.classList.toggle("mini", !!loadUI().mini);
+}
+window.addEventListener("resize", applyResponsiveNav);
 document.getElementById("collapseBtn").addEventListener("click",()=>{ app.classList.toggle("mini"); saveUI({mini:app.classList.contains("mini")}); });
 
 /* ============================================================
@@ -1394,6 +1522,7 @@ function openPublish(){
 }
 document.getElementById("publishBtn").addEventListener("click",openPublish);
 document.getElementById("pubCancel").addEventListener("click",()=> pubBg.classList.remove("show"));
+document.getElementById("pubCloseX").addEventListener("click",()=> pubBg.classList.remove("show"));
 pubBg.addEventListener("click",(e)=>{ if(e.target===pubBg) pubBg.classList.remove("show"); });
 document.getElementById("pubConfirm").addEventListener("click",()=>{ publishVersion(); pubBg.classList.remove("show"); });
 document.getElementById("pubExport").addEventListener("click",()=>{
@@ -1443,8 +1572,8 @@ function renderChatbot(){
   renderChips("cbForbidden", chat.forbidden, "no",
     (i)=>{ chat.forbidden.splice(i,1); saveChat(); renderChatbot(); },
     ()=>{ const v=prompt("Sujet interdit :"); if(v&&v.trim()){ chat.forbidden.push(v.trim()); saveChat(); renderChatbot(); } });
-  const tone=document.getElementById("cbTone"); if(tone) tone.value=chat.tone;
-  const len=document.getElementById("cbLength"); if(len) len.value=chat.length;
+  const tone=document.getElementById("cbTone"); if(tone){ tone.value=chat.tone; if(tone._ddSync) tone._ddSync(); }
+  const len=document.getElementById("cbLength"); if(len){ len.value=chat.length; if(len._ddSync) len._ddSync(); }
   const fb=document.getElementById("cbFallback"); if(fb) fb.value=chat.fallback;
   const ins=document.getElementById("cbInstr"); if(ins) ins.value=chat.instr;
   const lw=document.getElementById("cbLangs"); if(lw){ lw.innerHTML="";
@@ -1473,8 +1602,8 @@ function cbAsk(q){
 (function wireChatbot(){
   const add=document.getElementById("cbAddSource");
   if(add) add.addEventListener("click",()=>{ const v=prompt("Nom de la source (fichier, page, lien)…"); if(v&&v.trim()){ chat.sources.push({n:v.trim(),s:"en file"}); saveChat(); renderChatbot(); } });
-  const t=document.getElementById("cbTone"); if(t) t.addEventListener("change",e=>{ chat.tone=e.target.value; saveChat(); });
-  const l=document.getElementById("cbLength"); if(l) l.addEventListener("change",e=>{ chat.length=e.target.value; saveChat(); });
+  const t=document.getElementById("cbTone"); if(t){ t.addEventListener("change",e=>{ chat.tone=e.target.value; saveChat(); }); enhanceSelect(t); }
+  const l=document.getElementById("cbLength"); if(l){ l.addEventListener("change",e=>{ chat.length=e.target.value; saveChat(); }); enhanceSelect(l); }
   const fb=document.getElementById("cbFallback"); if(fb) fb.addEventListener("input",e=>{ chat.fallback=e.target.value; saveChat(); });
   const ins=document.getElementById("cbInstr"); if(ins) ins.addEventListener("input",e=>{ chat.instr=e.target.value; saveChat(); });
   const send=document.getElementById("cbSend"); if(send) send.addEventListener("click",()=>{ const i=document.getElementById("cbInput"); cbAsk(i.value); i.value=""; });
@@ -1493,18 +1622,35 @@ const RDV_STC={
   noshow:{l:"No-show",       c:"#A32D2D", bg:"#FCEBEB", solid:"#E24B4A"}
 };
 const RDV_REASONS=[["Tarif jugé trop élevé",38],["Pas le bon moment",27],["Parti à la concurrence",19],["Sans réponse / injoignable",16]];
+/* agrégat 30 jours par personne (source unique et cohérente pour équipe + statuts + raisons + cartes).
+   Distinct de la liste ci-dessous, qui ne montre que les rendez-vous récents/à venir. */
+const TEAM_STATS={
+  Sarah:{avenir:2, honores:15, annules:3, noshow:2, clients:5},
+  Marc: {avenir:2, honores:11, annules:3, noshow:2, clients:3}
+};
+function teamAgg(who){
+  const a={avenir:0,honores:0,annules:0,noshow:0,clients:0};
+  Object.keys(TEAM_STATS).forEach(p=>{ if(who&&who!=="all"&&p!==who) return; const s=TEAM_STATS[p];
+    a.avenir+=s.avenir; a.honores+=s.honores; a.annules+=s.annules; a.noshow+=s.noshow; a.clients+=s.clients; });
+  a.past=a.honores+a.annules+a.noshow; a.total=a.past+a.avenir;
+  a.presence=a.past?Math.round(a.honores/a.past*100):0;
+  a.conversion=a.honores?Math.round(a.clients/a.honores*100):0;
+  return a;
+}
 const MFULL={"janv.":"janvier","févr.":"février","mars":"mars","avr.":"avril","avril":"avril","mai":"mai","juin":"juin","juil.":"juillet","août":"août","sept.":"septembre","oct.":"octobre","nov.":"novembre","déc.":"décembre"};
 let rdvData=[
-  {day:"2",mon:"juil.",time:"10:00",client:"Boucherie Dubois",contact:"Pierre Dubois",tel:"+41 22 311 22 09",email:"contact@boucherie-dubois.ch",sujet:"Appel découverte",who:"Sarah",mode:"tel",st:"avenir",note:""},
-  {day:"2",mon:"juil.",time:"15:00",client:"Pharmacie du Lac",contact:"Claire Fontaine",tel:"+41 22 736 44 10",email:"accueil@pharmaciedulac.ch",sujet:"Mise en place Flex",who:"Marc",mode:"tel",st:"avenir",note:""},
-  {day:"4",mon:"juil.",time:"09:00",client:"Atelier Vélo Plus",contact:"Thomas Girard",tel:"+41 22 782 09 55",email:"hello@atelierveloplus.ch",sujet:"Devis Dédié",who:"Sarah",mode:"tel",st:"avenir",note:""},
-  {day:"7",mon:"juil.",time:"11:00",client:"Café des Bains",contact:"Sofia Marchetti",tel:"+41 22 321 57 30",email:"resa@cafedesbains.ch",sujet:"Appel découverte",who:"Marc",mode:"tel",st:"avenir",note:""},
-  {day:"28",mon:"juin",time:"11:00",client:"Cabinet Morand",contact:"Antoine Morand",tel:"+41 22 819 03 12",email:"contact@cabinet-morand.ch",sujet:"Appel découverte",who:"Sarah",mode:"tel",st:"honore",note:"Devis envoyé, relance le 5 juil."},
-  {day:"27",mon:"juin",time:"15:30",client:"Restaurant Sole",contact:"Luca Bianchi",tel:"+41 22 738 16 24",email:"info@restaurant-sole.ch",sujet:"Suivi mensuel",who:"Marc",mode:"tel",st:"honore",note:"Satisfait, passe en Dédié"},
-  {day:"26",mon:"juin",time:"16:00",client:"Fleuriste Camélia",contact:"Nadia Berger",tel:"+41 22 344 28 71",email:"bonjour@camelia-fleurs.ch",sujet:"Question tarifs",who:"Sarah",mode:"tel",st:"refuse",note:"Trouve l'offre trop chère, ne souhaite pas être relancée."},
-  {day:"25",mon:"juin",time:"09:30",client:"Librairie Page 12",contact:"Élise Favre",tel:"+41 22 700 11 42",email:"libraire@page12.ch",sujet:"Appel découverte",who:"Marc",mode:"tel",st:"noshow",note:"Relancer par mail"}
+  {day:"2",mon:"juil.",time:"10:00",client:"Boucherie Dubois",contact:"Pierre Dubois",tel:"+41 22 311 22 09",email:"contact@boucherie-dubois.ch",secteur:"Restauration",volume:"10 à 30",sujet:"Découverte",who:"Sarah",mode:"tel",st:"avenir",note:""},
+  {day:"2",mon:"juil.",time:"15:00",client:"Pharmacie du Lac",contact:"Claire Fontaine",tel:"+41 22 736 44 10",email:"accueil@pharmaciedulac.ch",secteur:"Médical / Pharma",volume:"30 à 100",sujet:"Mise en place Flex",who:"Marc",mode:"tel",st:"avenir",note:""},
+  {day:"4",mon:"juil.",time:"09:00",client:"Atelier Vélo Plus",contact:"Thomas Girard",tel:"",email:"hello@atelierveloplus.ch",secteur:"E-commerce / Retail",volume:"Moins de 10",link:"meet.google.com/qdb-yrkp-xza",sujet:"Devis Dédié",who:"Sarah",mode:"visio",st:"avenir",note:""},
+  {day:"7",mon:"juil.",time:"11:00",client:"Café des Bains",contact:"Sofia Marchetti",tel:"+41 22 321 57 30",email:"resa@cafedesbains.ch",secteur:"Restauration",volume:"10 à 30",sujet:"Découverte",who:"Marc",mode:"tel",st:"avenir",note:""},
+  {day:"28",mon:"juin",time:"11:00",client:"Cabinet Morand",contact:"Antoine Morand",tel:"",email:"contact@cabinet-morand.ch",secteur:"Juridique / Notarial",volume:"Moins de 10",link:"meet.google.com/hxa-mnbq-rpo",sujet:"Découverte",who:"Sarah",mode:"visio",st:"honore",note:"Devis envoyé, relance le 5 juil."},
+  {day:"27",mon:"juin",time:"15:30",client:"Restaurant Sole",contact:"Luca Bianchi",tel:"+41 22 738 16 24",email:"info@restaurant-sole.ch",secteur:"Restauration",volume:"30 à 100",sujet:"Suivi mensuel",who:"Marc",mode:"tel",st:"honore",note:"Satisfait, passe en Dédié"},
+  {day:"26",mon:"juin",time:"16:00",client:"Fleuriste Camélia",contact:"Nadia Berger",tel:"+41 22 344 28 71",email:"bonjour@camelia-fleurs.ch",secteur:"E-commerce / Retail",volume:"Moins de 10",sujet:"Question tarifs",who:"Sarah",mode:"tel",st:"refuse",note:"Trouve l'offre trop chère, ne souhaite pas être relancée."},
+  {day:"25",mon:"juin",time:"09:30",client:"Librairie Page 12",contact:"Élise Favre",tel:"",email:"libraire@page12.ch",secteur:"E-commerce / Retail",volume:"10 à 30",link:"meet.google.com/vwo-ktsd-ign",sujet:"Découverte",who:"Marc",mode:"visio",st:"noshow",note:"Relancer par mail"},
+  {day:"24",mon:"juin",time:"14:00",client:"Établissements Vermeulen-Delacroix & Fils",contact:"Marie-Alexandra de Montmollin",tel:"",email:"contact@vermeulen-delacroix.ch",secteur:"Luxe / Bijouterie",volume:"Plus de 100",link:"meet.google.com/zpr-fmna-lqe",sujet:"Renouvellement du contrat Dédié",who:"Jean-Christophe",mode:"visio",st:"honore",note:"Décision attendue au prochain comité de direction"}
 ];
 const RDV_PERIODS={
+  "7j":{curR:"23-29 juin",prevR:"16-22 juin",chart:{labels:["lun 23","mar 24","mer 25","jeu 26","ven 27","sam 28","dim 29"],vals:[1,2,1,2,1,0,2]}},
   "30j":{curR:"1-30 juin",prevR:"1-31 mai",chart:{labels:["2-8 juin","9-15 juin","16-22 juin","23-30 juin"],vals:[5,7,6,9]}},
   "3m":{curR:"avr-juin 2026",prevR:"janv-mars 2026",chart:{labels:["avril","mai","juin"],vals:[18,22,27]}},
   "6m":{curR:"janv-juin 2026",prevR:"juil-déc 2025",chart:{labels:["janv.","févr.","mars","avr.","mai","juin"],vals:[14,16,19,18,22,27]}},
@@ -1514,6 +1660,7 @@ let rdvKey="30j";
 let rdvWho="all";        // filtre "voir" : toute l'équipe ou une personne
 let rdvOpenRow=-1;   // index de la ligne dépliée (fiche rendez-vous), -1 si aucune
 let rdvSel=new Set();                     // sélection pour relance en masse
+let rdvPage=1; const RDV_PER_PAGE=8;      // pagination de la liste
 function escHtml(s){ const d=document.createElement("div"); d.textContent=s||""; return d.innerHTML; }
 
 /* ---- calendriers connectés + workflow de connexion ---- */
@@ -1533,18 +1680,18 @@ function renderCalendars(){
   renderAccount();
   const cnt=document.getElementById("rdvCalCount"); if(cnt) cnt.textContent=rdvCalendars.length;
   const l=document.getElementById("rdvCalList"); if(!l) return; l.innerHTML="";
-  if(!rdvCalendars.length){ l.innerHTML='<p class="hint" style="margin:0">Aucun calendrier connecté.</p>'; return; }
-  rdvCalendars.forEach((c,i)=>{ const chip=document.createElement("div"); chip.className="cal-chip";
-    chip.innerHTML='<span class="avatar sm">'+initials(c.name)+'</span><div class="ci"><div class="cn">'+c.name+'</div><div class="ch">'+c.topic+'</div></div><button class="cal-x2" title="Déconnecter">✕</button>';
+  const add=document.createElement("button"); add.className="cal-add"; add.id="rdvAddCal"; add.title="Ajouter un Calendly";
+  add.innerHTML='<span class="cal-add-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span><span class="cn">Ajouter un Calendly</span>';
+  add.addEventListener("click", openCalFlow); l.appendChild(add);
+  rdvCalendars.forEach((c,i)=>{ const chip=document.createElement("div"); chip.className="cal-chip"; chip.title=c.topic;
+    chip.innerHTML='<span class="avatar sm">'+initials(c.name)+'</span><span class="cn">'+c.name+'</span><button class="cal-x2" title="Déconnecter">✕</button>';
     chip.querySelector(".cal-x2").addEventListener("click",()=>{ if(!confirm("Déconnecter le Calendly de "+c.name+" ? Ses rendez-vous ne remonteront plus.")) return; rdvCalendars.splice(i,1); renderRdv(); toast("Calendly déconnecté"); });
     l.appendChild(chip); });
-  renderCalFlow();
 }
-function openCalFlow(){ calFlow={open:true,step:1,name:"",link:""}; renderCalFlow(); }
+function openCalFlow(){ calFlow={open:true,step:1,name:"",link:""}; document.getElementById("calModalBg").classList.add("show"); renderCalFlow(); }
+function closeCalFlow(){ calFlow={open:false,step:1,name:"",link:""}; document.getElementById("calModalBg").classList.remove("show"); }
 function renderCalFlow(){
-  const f=document.getElementById("rdvCalFlow"), addBtn=document.getElementById("rdvAddCal"); if(!f) return;
-  if(!calFlow.open){ f.innerHTML=""; if(addBtn) addBtn.style.display=""; return; }
-  if(addBtn) addBtn.style.display="none";
+  const f=document.getElementById("calFlowBody"); if(!f) return;
   const steps='<div class="flow-steps">'+[1,2,3].map(s=>'<span class="fs'+(s<calFlow.step?" done":(s===calFlow.step?" on":""))+'">'+(s<calFlow.step?'✓':s)+'</span>').join('<i></i>')+'</div>';
   let body="";
   if(calFlow.step===1){
@@ -1556,17 +1703,19 @@ function renderCalFlow(){
   } else {
     body='<div class="flow-done"><span class="avatar lg">'+initials(calFlow.name)+'</span><div><div class="cn">'+calFlow.name+'</div><div class="ch">'+(calFlow.link||"calendly.com/…")+'</div><div class="cal-ok" style="margin-top:4px">● Connecté</div></div></div><div class="flow-acts"><button class="btn primary" id="cfFinish">Terminer</button></div>';
   }
-  f.innerHTML='<div class="flow">'+steps+body+'</div>';
+  f.innerHTML=steps+body;
   if(calFlow.step===1){
-    f.querySelector("#cfCancel").onclick=()=>{ calFlow={open:false,step:1,name:"",link:""}; renderCalFlow(); };
+    f.querySelector("#cfCancel").onclick=closeCalFlow;
     f.querySelector("#cfNext").onclick=()=>{ calFlow.name=f.querySelector("#cfName").value.trim(); calFlow.link=f.querySelector("#cfLink").value.trim(); if(!calFlow.name){ toast("Indiquez un nom"); return; } calFlow.step=2; renderCalFlow(); };
   } else if(calFlow.step===2){
     f.querySelector("#cfBack").onclick=()=>{ calFlow.step=1; renderCalFlow(); };
     f.querySelector("#cfNext").onclick=()=>{ calFlow.step=3; renderCalFlow(); };
   } else {
-    f.querySelector("#cfFinish").onclick=()=>{ rdvCalendars.push({name:calFlow.name,handle:calFlow.link||"calendly.com/…",topic:"Rendez-vous"}); calFlow={open:false,step:1,name:"",link:""}; renderRdv(); toast("Calendly connecté"); };
+    f.querySelector("#cfFinish").onclick=()=>{ rdvCalendars.push({name:calFlow.name,handle:calFlow.link||"calendly.com/…",topic:"Rendez-vous"}); closeCalFlow(); renderRdv(); toast("Calendly connecté"); };
   }
 }
+document.getElementById("calClose").addEventListener("click", closeCalFlow);
+document.getElementById("calModalBg").addEventListener("click",(e)=>{ if(e.target.id==="calModalBg") closeCalFlow(); });
 
 /* lignes labellisées compactes (raisons) */
 function renderBars(id, data, color){
@@ -1581,42 +1730,58 @@ function renderBars(id, data, color){
 function renderRdvTable(){
   const b=document.getElementById("rdvBody"); if(!b) return; b.innerHTML="";
   const f=(document.getElementById("rdvFilter")||{}).value||"all";
-  let shown=0;
-  rdvData.forEach((r,i)=>{
-    if(rdvWho!=="all" && r.who!==rdvWho) return;
-    if(f!=="all" && r.st!==f) return; shown++;
+  const idxs=[]; rdvData.forEach((r,i)=>{ if(rdvWho!=="all"&&r.who!==rdvWho) return; if(f!=="all"&&r.st!==f) return; idxs.push(i); });
+  const total=idxs.length, pages=Math.max(1,Math.ceil(total/RDV_PER_PAGE));
+  if(rdvPage>pages) rdvPage=pages; if(rdvPage<1) rdvPage=1;
+  const start=(rdvPage-1)*RDV_PER_PAGE, pageIdxs=idxs.slice(start,start+RDV_PER_PAGE);
+  if(!total){ const tr=document.createElement("tr"); tr.innerHTML='<td colspan="9" style="color:var(--muted);padding:14px">Aucun rendez-vous pour ce filtre.</td>'; b.appendChild(tr); }
+  pageIdxs.forEach(i=>{ const r=rdvData[i];
     const sc=RDV_STC[r.st], past=(r.st!=="avenir"), sent=r.relance&&r.relance.sent;
     const relok = past && r.st!=="refuse";
     const open=(rdvOpenRow===i);
     const arrowSvg='<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="'+sc.c+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>';
     const sel='<select class="statusel" style="background-color:'+sc.bg+';color:'+sc.c+';border-color:'+sc.bg+';font-weight:500;background-image:url(\''+("data:image/svg+xml,"+encodeURIComponent(arrowSvg))+'\')">'+Object.keys(RDV_STC).map(k=>'<option value="'+k+'"'+(k===r.st?" selected":"")+'>'+RDV_STC[k].l+'</option>').join("")+'</select>';
-    const preview = r.note ? escHtml(r.note.length>48?r.note.slice(0,48)+"…":r.note) : "+ Ajouter une note";
+    const preview = r.note ? escHtml(r.note.length>26?r.note.slice(0,26)+"…":r.note) : "—";
     let relCell;
     if(!relok){ relCell='<span style="color:var(--muted);font-size:12px">'+(r.st==="refuse"?"ne pas relancer":"—")+'</span>'; }
     else if(sent){ relCell='<button class="iconbtn done" title="Voir la relance"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Relancé</button>'; }
     else { relCell='<button class="iconbtn" title="Relancer ce client"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Relancer</button>'; }
     const chk = (relok && !sent) ? '<input type="checkbox" class="rsel"'+(rdvSel.has(i)?" checked":"")+'>' : '';
     const tr=document.createElement("tr"); tr.className="rdv-row"+(open?" row-open":"");
-    tr.innerHTML='<td class="chk">'+chk+'</td><td style="white-space:nowrap">'+r.day+' '+r.mon+' · '+r.time+'</td>'+
-      '<td><div class="cl-co">'+r.client+'</div>'+(r.contact?'<div class="cl-ct">'+r.contact+'</div>':'')+'</td>'+
+    tr.innerHTML='<td class="chk">'+chk+'</td>'+
+      '<td><div class="dt-d">'+r.day+' '+r.mon+'</div><div class="dt-t">'+r.time+'</div></td>'+
+      '<td><div class="cl-co" title="'+escHtml(r.client)+'">'+r.client+'</div>'+(r.contact?'<div class="cl-ct" title="'+escHtml(r.contact)+'">'+r.contact+'</div>':'')+'</td>'+
       '<td>'+r.sujet+'</td>'+
-      '<td style="white-space:nowrap"><span class="who"><span class="avatar xs">'+initials(r.who)+'</span>'+r.who+'</span></td>'+
+      '<td style="white-space:nowrap"><span class="who"><span class="avatar xs">'+initials(r.who)+'</span><span class="who-n" title="'+escHtml(r.who)+'">'+r.who+'</span></span></td>'+
       '<td style="white-space:nowrap">'+sel+'</td>'+
-      '<td><button class="notecell'+(r.note?'':' empty')+'">'+preview+'</button></td>'+
-      '<td style="white-space:nowrap">'+relCell+'</td>';
+      '<td><button class="notecell'+(r.note?'':' empty')+'"'+(r.note?' title="'+escHtml(r.note)+'"':'')+'>'+preview+'</button></td>'+
+      '<td style="white-space:nowrap">'+relCell+'</td>'+
+      '<td class="rdv-exp" title="Ouvrir la fiche (coordonnées, note, relance)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></td>';
     const toggle=()=>{ rdvOpenRow = open ? -1 : i; renderRdvTable(); };
     tr.addEventListener("click",toggle);
     // les contrôles interactifs ne doivent pas déclencher l'ouverture/fermeture de la ligne
     const st=tr.querySelector(".statusel");
-    st.addEventListener("click",e=>e.stopPropagation());
     st.addEventListener("change",e=>{ e.stopPropagation(); rdvData[i].st=e.target.value; rdvSel.delete(i); renderRdv(); });
+    enhanceSelect(st);
     const cb=tr.querySelector(".rsel"); if(cb){ cb.addEventListener("click",e=>e.stopPropagation()); cb.addEventListener("change",e=>{ if(e.target.checked) rdvSel.add(i); else rdvSel.delete(i); renderRdvBulk(); }); }
     b.appendChild(tr);
     if(open) b.appendChild(rdvDetailRow(i));
   });
-  if(!shown){ const tr=document.createElement("tr"); tr.innerHTML='<td colspan="8" style="color:var(--muted);padding:14px 8px">Aucun rendez-vous pour ce filtre.</td>'; b.appendChild(tr); }
+  renderPager(total,pages,start,pageIdxs.length);
   renderRdvBulk();
   refreshIcons();
+}
+function renderPager(total,pages,start,count){
+  const el=document.getElementById("rdvPager"); if(!el) return;
+  if(pages<=1){ el.innerHTML=""; return; }
+  const chevL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>';
+  const chevR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
+  const btn=(n,lbl,cls,dis)=>'<button class="pg-btn'+(cls?" "+cls:"")+'" data-pg="'+n+'"'+(dis?" disabled":"")+'>'+lbl+'</button>';
+  const win=[]; for(let n=1;n<=pages;n++){ if(n===1||n===pages||Math.abs(n-rdvPage)<=1) win.push(n); }
+  let nums="",last=0; win.forEach(n=>{ if(n-last>1) nums+='<span class="pg-ell">…</span>'; nums+=btn(n,String(n),n===rdvPage?"on":""); last=n; });
+  el.innerHTML='<span class="pg-info">'+(start+1)+'–'+(start+count)+' sur '+total+' rendez-vous</span>'+
+    '<span class="pg-ctrl">'+btn(rdvPage-1,chevL,"",rdvPage<=1)+nums+btn(rdvPage+1,chevR,"",rdvPage>=pages)+'</span>';
+  el.querySelectorAll(".pg-btn[data-pg]").forEach(bt=>{ if(bt.disabled) return; bt.addEventListener("click",()=>{ const n=+bt.dataset.pg; if(n>=1&&n<=pages&&n!==rdvPage){ rdvPage=n; rdvOpenRow=-1; renderRdvTable(); } }); });
 }
 function renderRdvBulk(){
   const el=document.getElementById("rdvBulk"); if(!el) return;
@@ -1632,61 +1797,84 @@ function rdvDetailRow(i){
   const past=(r.st!=="avenir"), sent=r.relance&&r.relance.sent, relok=past&&r.st!=="refuse";
   const telClean=(r.tel||"").replace(/[^+0-9]/g,"");
 
-  // coordonnées : tout ce qu'il faut pour réaliser le rendez-vous
+  const mi = r.mode==="visio" ? {label:"Visio",icon:"video",cls:"visio"} : {label:"Appel",icon:"phone",cls:"tel"};
+
+  // coordonnées : selon le mode (appel = numéro, visio = lien)
   let acts="";
-  if(r.tel) acts+='<a class="fiche-act" href="tel:'+telClean+'"><span class="fa-ic"><i data-lucide="phone"></i></span><span class="fa-tx"><span class="fa-l">Appeler '+(r.contact||r.client)+'</span><span class="fa-v">'+r.tel+'</span></span></a>';
+  if(r.mode==="visio"){
+    if(r.link) acts+='<a class="fiche-act" href="https://'+r.link+'" target="_blank" rel="noopener"><span class="fa-ic"><i data-lucide="video"></i></span><span class="fa-tx"><span class="fa-l">Rejoindre la visio</span><span class="fa-v">'+r.link+'</span></span></a>';
+  } else {
+    if(r.tel) acts+='<a class="fiche-act" href="tel:'+telClean+'"><span class="fa-ic"><i data-lucide="phone"></i></span><span class="fa-tx"><span class="fa-l">Appeler '+(r.contact||r.client)+'</span><span class="fa-v">'+r.tel+'</span></span></a>';
+  }
   if(r.email) acts+='<a class="fiche-act" href="mailto:'+r.email+'"><span class="fa-ic"><i data-lucide="mail"></i></span><span class="fa-tx"><span class="fa-l">Écrire un email</span><span class="fa-v">'+r.email+'</span></span></a>';
   if(!acts) acts='<p class="fiche-hint">Aucune coordonnée renseignée.</p>';
 
-  // relance
-  let relBlock;
-  if(sent){
-    relBlock='<div class="rel-sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Relance envoyée le '+r.relance.date+'</div>'+
-      '<button class="btn" id="dRelAgain" style="margin-top:9px">Renvoyer une relance</button>';
-  } else if(r.st==="refuse"){
-    relBlock='<p class="fiche-hint">Client à ne pas relancer (a décliné l\'offre).</p>';
-  } else if(!relok){
-    relBlock='<p class="fiche-hint">La relance sera disponible une fois le rendez-vous passé.</p>';
-  } else {
-    const msg="Bonjour,\n\nMerci pour notre échange du "+r.day+" "+r.mon+" au sujet de « "+r.sujet+" ». Avez-vous pu avancer de votre côté ? Je reste disponible pour répondre à vos questions et caler les prochaines étapes.\n\nBien à vous,\n"+r.who+" – Chaskis";
-    relBlock='<input class="dInput" id="dRelSubj" value="Suite à notre rendez-vous chez Chaskis">'+
-      '<textarea class="dArea" id="dRelMsg" rows="4">'+escHtml(msg)+'</textarea>'+
-      '<button class="btn primary" id="dRelSend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Envoyer la relance</button>';
-  }
+  // relance : état/action compact, en ligne avec l'enregistrement de la note
+  let relInline;
+  if(sent) relInline='<span class="rel-mini ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Relancé le '+r.relance.date+'</span>';
+  else if(r.st==="refuse") relInline='<span class="rel-mini muted">Client à ne pas relancer</span>';
+  else if(!relok) relInline='<span class="rel-mini muted">Relance disponible après le rendez-vous</span>';
+  else relInline='<button class="btn" id="dRelSend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Relancer le client</button>';
 
-  const head='<div class="fiche-head"><div class="fh-main"><span class="fh-co">'+r.client+'</span>'+(r.contact?'<span class="fh-sub">'+r.contact+'</span>':'')+'</div>'+
-    '<div class="fh-when"><i data-lucide="calendar"></i>'+r.day+' '+r.mon+' · '+r.time+' · '+r.sujet+' · avec '+r.who+'</div></div>';
+  const head='<div class="fiche-top"><span class="fmode fmode-'+mi.cls+'"><i data-lucide="'+mi.icon+'"></i>'+mi.label+'</span></div>';
+
+  // contexte renseigné par le prospect à la réservation (mêmes champs que le formulaire du site)
+  const ctxItems=[["Interlocuteur",r.contact],["Email pro",r.email],["Secteur",r.secteur],["Volume estimé / jour",r.volume]].filter(x=>x[1]);
+  const ctx=ctxItems.length?'<div class="fiche-ctx"><div class="fiche-lbl">Renseigné à la réservation</div><div class="ctx-grid">'+ctxItems.map(x=>'<div class="ctx-i"><span class="ctx-k">'+x[0]+'</span><span class="ctx-v" title="'+escHtml(x[1])+'">'+escHtml(x[1])+'</span></div>').join('')+'</div></div>':'';
 
   const cols='<div class="fiche-cols">'+
     '<div class="fiche-col"><div class="fiche-lbl">Pour réaliser ce rendez-vous</div><div class="fiche-acts">'+acts+'</div></div>'+
     '<div class="fiche-col"><div class="fiche-lbl">Note de suivi</div>'+
       '<textarea class="dArea" id="dNote" rows="4" placeholder="Compte-rendu de l\'échange, prochaines étapes, devis envoyé…">'+escHtml(r.note||"")+'</textarea>'+
-      '<button class="btn" id="dNoteSave">Enregistrer la note</button>'+
-      '<div class="fiche-lbl" style="margin-top:16px">Relance</div>'+relBlock+
+      '<div class="note-foot"><button class="btn" id="dNoteSave">Enregistrer la note</button>'+relInline+'</div>'+
     '</div>'+
   '</div>';
 
   const tr=document.createElement("tr"); tr.className="rdv-detail";
-  tr.innerHTML='<td colspan="8"><div class="detail-box rdv-fiche">'+head+cols+'<button class="detail-close" id="dClose">Fermer la fiche</button></div></td>';
+  tr.innerHTML='<td colspan="9"><div class="detail-box rdv-fiche">'+head+ctx+cols+'</div></td>';
   const ns=tr.querySelector("#dNoteSave"); if(ns) ns.onclick=()=>{ rdvData[i].note=tr.querySelector("#dNote").value.trim(); toast("Note enregistrée"); renderRdv(); };
-  const send=tr.querySelector("#dRelSend"); if(send) send.onclick=()=>{ rdvData[i].relance={sent:true,date:r.day+" "+r.mon}; toast("Relance envoyée à "+r.client+" (simulé)"); rdvOpenRow=-1; renderRdv(); };
-  const again=tr.querySelector("#dRelAgain"); if(again) again.onclick=()=>{ toast("Nouvelle relance envoyée à "+r.client+" (simulé)"); };
-  tr.querySelector("#dClose").onclick=()=>{ rdvOpenRow=-1; renderRdvTable(); };
+  const send=tr.querySelector("#dRelSend"); if(send) send.onclick=()=>{ rdvData[i].relance={sent:true,date:r.day+" "+r.mon}; toast("Relance envoyée à "+r.client+" (simulé)"); renderRdv(); };
   return tr;
 }
+function renderRdvStatus(){
+  const bar=document.getElementById("rdvStatusBar"), leg=document.getElementById("rdvStatusLeg"); if(!bar||!leg) return;
+  const a=teamAgg(rdvWho);
+  const data=[["Honorés",a.honores,"#1D9E75"],["Annulés",a.annules,"#B4B2A9"],["No-show",a.noshow,"#E24B4A"]];
+  const total=a.past||1;
+  bar.innerHTML=""; leg.innerHTML=""; leg.className="statleg";
+  data.forEach(d=>{ const pc=Math.round(d[1]/total*100);
+    const seg=document.createElement("div"); seg.className="seg tipped"; seg.style.width=pc+"%"; seg.style.background=d[2];
+    seg._tip='<div class="tt-h">'+d[0]+'</div><div class="tt-row"><span>Rendez-vous</span><b>'+d[1]+'</b></div><div class="tt-row"><span>Part</span><span>'+pc+' %</span></div>';
+    bar.appendChild(seg);
+    const r=document.createElement("div"); r.className="r";
+    r.innerHTML='<span class="dot" style="background:'+d[2]+'"></span><span class="nm">'+d[0]+'</span><span class="ct">'+d[1]+'</span><span class="pc">'+pc+' %</span>';
+    leg.appendChild(r); });
+  const cap=document.createElement("div"); cap.className="card-cap";
+  cap.textContent=a.past+" rendez-vous passés sur la période"; leg.appendChild(cap);
+}
+function rdvPeriodLabel(){ return {"7j":"les 7 derniers jours","30j":"les 30 derniers jours","3m":"les 3 derniers mois","6m":"les 6 derniers mois","12m":"les 12 derniers mois"}[rdvKey]||"la période"; }
+/* ---- zoom des graphes : + / - (et molette) parcourent les échelles de temps ---- */
+const RDV_ZOOM=["7j","30j","3m","6m","12m"];
+const STAT_ZOOM=["hier","7j","30j","3m","6m","12m"];
+function setSelectValue(id,val){ const s=document.getElementById(id); if(s){ s.value=val; if(s._ddSync) s._ddSync(); } }
+function updateZoomBtns(order,key,outId,inId){ const i=order.indexOf(key), out=document.getElementById(outId), inn=document.getElementById(inId); if(out) out.disabled=(i>=order.length-1); if(inn) inn.disabled=(i<=0); }
+function rdvZoom(dir){ let i=RDV_ZOOM.indexOf(rdvKey); if(i<0)i=RDV_ZOOM.indexOf("30j"); const ni=Math.min(RDV_ZOOM.length-1,Math.max(0,i+dir)); if(ni!==i){ rdvKey=RDV_ZOOM[ni]; setSelectValue("rdvRange",rdvKey); renderRdv(); } }
+function statZoom(dir){ let i=STAT_ZOOM.indexOf(statKey); if(i<0)i=STAT_ZOOM.indexOf("30j"); const ni=Math.min(STAT_ZOOM.length-1,Math.max(0,i+dir)); if(ni!==i){ statKey=STAT_ZOOM[ni]; setSelectValue("statRange",statKey); const c=document.getElementById("statCustom"); if(c)c.classList.remove("show"); renderStats(); } }
 function renderTeam(){
   const t=document.getElementById("rdvTeamBody"); if(!t) return; t.innerHTML="";
-  const people=[]; rdvData.forEach(r=>{ if(people.indexOf(r.who)<0) people.push(r.who); });
-  const conv={Sarah:35,Marc:28};
-  people.forEach(p=>{ const list=rdvData.filter(r=>r.who===p);
-    const av=list.filter(r=>r.st==="avenir").length, hon=list.filter(r=>r.st==="honore").length, past=list.filter(r=>r.st!=="avenir").length;
-    const pres=past?Math.round(hon/past*100):0;
+  Object.keys(TEAM_STATS).forEach(p=>{ const s=TEAM_STATS[p];
+    const past=s.honores+s.annules+s.noshow, total=past+s.avenir;
+    const pres=past?Math.round(s.honores/past*100):0;
+    const conv=s.honores?Math.round(s.clients/s.honores*100):0;
     const tr=document.createElement("tr");
     tr.innerHTML='<td><span class="who"><span class="avatar xs">'+initials(p)+'</span>'+p+'</span></td>'+
-      '<td style="text-align:center">'+av+'</td><td style="text-align:center">'+hon+'</td>'+
-      '<td style="text-align:center">'+pres+' %</td><td style="text-align:center;font-weight:600">'+(conv[p]||30)+' %</td>';
+      '<td style="text-align:center;font-weight:600">'+total+'</td>'+
+      '<td style="text-align:center">'+s.avenir+'</td><td style="text-align:center">'+s.honores+'</td>'+
+      '<td style="text-align:center">'+pres+' %<span class="frac">'+s.honores+' / '+past+' passés</span></td>'+
+      '<td style="text-align:center;font-weight:600">'+conv+' %<span class="frac">'+s.clients+' client'+(s.clients>1?'s':'')+' / '+s.honores+' honorés</span></td>';
     t.appendChild(tr);
   });
+  setTxt("rdvTeamPeriod", rdvPeriodLabel());
 }
 function renderRdv(){
   renderCalendars();
@@ -1697,33 +1885,39 @@ function renderRdv(){
   if(hero){
     let html;
     if(next){
-      html='<div class="rdv-hero"><div class="rdv-tile"><span class="dn">'+next.day+'</span><span class="dm">'+next.mon+'</span></div>'+
-        '<div class="hi"><div class="lbl">Prochain rendez-vous</div><div class="cl">'+next.client+'</div>'+(next.contact?'<div class="hero-ct">'+next.contact+'</div>':'')+'<div class="meta">'+next.sujet+' · '+next.time+' · avec '+next.who+'</div></div>'+
-        '<div class="acts"><button class="btn" id="rdvHeroView">Voir</button><button class="btn primary" id="rdvHeroDone">Marquer honoré</button></div></div>';
-      if(others.length){
-        const sameDay=others.filter(o=>o.day===next.day&&o.mon===next.mon).length;
-        html+='<div class="rdv-up"><div class="rdv-up-h">'+(sameDay?('Encore '+sameDay+' le '+next.day+' '+next.mon+' · '):"")+others.length+' rendez-vous à venir ensuite</div>'+
-          '<div class="rdv-up-row">'+others.slice(0,5).map(o=>{ return '<div class="up-card"><div class="up-date">'+o.day+' '+(MFULL[o.mon]||o.mon)+'<span class="up-time">'+o.time+'</span></div><div class="up-c">'+o.client+'</div>'+(o.contact?'<div class="up-ct">'+o.contact+'</div>':'')+'<div class="up-div"></div><div class="up-w"><span class="avatar xs">'+initials(o.who)+'</span>'+o.who+'</div></div>'; }).join("")+
-          (others.length>5?'<div class="up-more">+'+(others.length-5)+'</div>':"")+'</div></div>';
-      }
+      const telC=(next.tel||"").replace(/[^+0-9]/g,"");
+      let callBtn='';
+      if(next.mode==="visio" && next.link){ callBtn='<a class="btn primary sm" id="rdvHeroCall" href="https://'+next.link+'" target="_blank" rel="noopener" title="'+next.link+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>Rejoindre</a>'; }
+      else if(telC){ callBtn='<a class="btn primary sm" id="rdvHeroCall" href="tel:'+telC+'" title="'+next.tel+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.7 2.34a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.74.34 1.53.57 2.34.7A2 2 0 0 1 22 16.92z"/></svg>Appeler</a>'; }
+      let cards='<div class="up-card up-next"><div class="up-tag">Prochain rendez-vous</div>'+
+        '<div class="up-date">'+next.day+' '+(MFULL[next.mon]||next.mon)+'<span class="up-time">'+next.time+'</span></div>'+
+        '<div class="up-c" title="'+escHtml(next.client)+'">'+next.client+'</div>'+
+        '<div class="up-ct" title="'+escHtml(next.sujet+(next.contact?' · '+next.contact:''))+'">'+next.sujet+(next.contact?' · '+next.contact:'')+'</div>'+
+        '<div class="up-foot"><div class="up-div"></div><div class="up-w"><span class="up-who"><span class="avatar xs">'+initials(next.who)+'</span>'+next.who+'</span>'+callBtn+'</div></div>'+
+        '</div>';
+      cards+=others.slice(0,10).map(o=>'<div class="up-card">'+
+        '<div class="up-date">'+o.day+' '+(MFULL[o.mon]||o.mon)+'<span class="up-time">'+o.time+'</span></div>'+
+        '<div class="up-c" title="'+escHtml(o.client)+'">'+o.client+'</div>'+
+        (o.contact?'<div class="up-ct" title="'+escHtml(o.contact)+'">'+o.contact+'</div>':'<div class="up-ct">&nbsp;</div>')+
+        '<div class="up-foot"><div class="up-div"></div><div class="up-w"><span class="up-who"><span class="avatar xs">'+initials(o.who)+'</span>'+o.who+'</span></div></div>'+
+        '</div>').join("");
+      if(others.length>10) cards+='<div class="up-more">+'+(others.length-10)+'</div>';
+      html='<div class="rdv-up-row">'+cards+'</div>';
     } else {
-      html='<div class="rdv-hero"><div class="rdv-tile"><span class="dn">–</span></div><div class="hi"><div class="lbl">Prochain rendez-vous</div><div class="cl">Aucun rendez-vous à venir</div><div class="meta">Les nouvelles réservations apparaîtront ici.</div></div></div>';
+      html='<div class="rdv-up-row"><div class="up-card up-next" style="width:auto;min-width:260px"><div class="up-tag">Prochain rendez-vous</div><div class="up-c">Aucun rendez-vous à venir</div><div class="up-ct">Les nouvelles réservations apparaîtront ici.</div></div></div>';
     }
     hero.innerHTML=html;
-    const done=document.getElementById("rdvHeroDone"); if(done&&next) done.addEventListener("click",()=>{ next.st="honore"; renderRdv(); toast(next.client+" marqué honoré"); });
-    const view=document.getElementById("rdvHeroView"); if(view) view.addEventListener("click",()=> toast("Détail du rendez-vous (à brancher)"));
   }
   // cartes (selon le périmètre sélectionné) — icônes colorées par sens
   const avenir=ups.length;
-  const past=scoped.filter(r=>r.st!=="avenir").length, hon=scoped.filter(r=>r.st==="honore").length;
-  const pres=past?Math.round(hon/past*100):0;
+  const agg=teamAgg(rdvWho);
   const ICOL={blue:["#E6F1FB","#185FA5"],violet:["#EEEDFE","#534AB7"],green:["#E1F5EE","#0F6E56"],red:["#FCEBEB","#A32D2D"]};
   const cw=document.getElementById("rdvCards");
   if(cw){ cw.innerHTML="";
     [["RDV à venir",String(avenir),"cal","blue",'<span class="trend up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg>+2</span>'],
      ["Cette semaine","3","clock","violet",""],
-     ["Taux de présence",pres+" %","check","green",trendChip(3)],
-     ["Taux de conversion","32 %","target","red",trendChip(5)]]
+     ["Taux de présence",agg.presence+" %","check","green",trendChip(3)],
+     ["Taux de conversion",agg.conversion+" %","target","red",trendChip(5)]]
     .forEach(c=>{ const el=document.createElement("div"); el.className="statc"; const col=ICOL[c[3]];
       el.innerHTML='<div class="top"><div class="ic-badge" style="background:'+col[0]+';color:'+col[1]+';border-radius:9px">'+sIcon(c[2])+'</div>'+(c[4]||"")+'</div><div class="k">'+c[0]+'</div><div class="v">'+c[1]+'</div>';
       cw.appendChild(el); }); }
@@ -1732,10 +1926,13 @@ function renderRdv(){
   drawLine(document.getElementById("rdvChart"), rp.chart.labels, rp.chart.vals, prev, "Rendez-vous");
   const cur=rp.chart.vals.reduce((a,b)=>a+b,0), pre=prev.reduce((a,b)=>a+b,0), delta=pre?Math.round((cur-pre)/pre*100):0;
   const cb=document.getElementById("rdvChartBadge"); if(cb) cb.innerHTML=trendChip(delta)+' <span style="color:var(--muted)">vs période préc.</span>';
-  const cl=document.getElementById("rdvChartLeg"); if(cl) cl.innerHTML='<span class="li"><span class="dot" style="background:#4BB3A4"></span>Actuelle · '+rp.curR+'</span><span class="li"><span class="dot dash" style="background:#c4c9c4"></span>Précédente · '+rp.prevR+'</span>';
+  const cl=document.getElementById("rdvChartLeg"); if(cl) cl.innerHTML='<span class="li"><span class="dot" style="background:#4BB3A4"></span><span class="li-k">Actuelle</span><span class="li-v">'+rp.curR+'</span></span><span class="li"><span class="dot dash" style="background:#c4c9c4"></span><span class="li-k">Précédente</span><span class="li-v">'+rp.prevR+'</span></span>';
+  updateZoomBtns(RDV_ZOOM,rdvKey,"rdvZoomOut","rdvZoomIn");
   // répartition des statuts (passés) + raisons de non-conversion
-  renderSplit("rdvStatusBar","rdvStatusLeg",[["Honorés",72],["Annulés",18],["No-show",10]],["#1D9E75","#B4B2A9","#E24B4A"],"Part des rendez-vous");
-  renderBars("rdvReasons", RDV_REASONS, "#D88C73");
+  renderRdvStatus();
+  renderBars("rdvReasons", RDV_REASONS, "#D0A2AA");
+  const nonConv=Math.max(0, agg.honores-agg.clients);
+  setTxt("rdvReasonsCap", nonConv+" rendez-vous honorés non convertis sur la période");
   renderTeam();
   // liste
   renderRdvTable();
@@ -1746,12 +1943,53 @@ function eligibleVisibleRdv(){
     if(r.st!=="avenir" && r.st!=="refuse" && !(r.relance&&r.relance.sent)) out.push(i); });
   return out;
 }
+/* ---- dropdown maison : remplace un <select> natif par un menu stylé ---- */
+function closeAllDD(){ document.querySelectorAll(".dd.open").forEach(d=>{ if(d._close) d._close(); }); }
+function enhanceSelect(sel){
+  if(!sel || sel.dataset.enhanced) return; sel.dataset.enhanced="1";
+  const status = sel.classList.contains("statusel");
+  const block = sel.classList.contains("formfsel");
+  const dd=document.createElement("span"); dd.className="dd"+(status?" dd-status":"")+(block?" dd-block":"");
+  const btn=document.createElement("button"); btn.type="button"; btn.className="dd-btn"+(status?" dd-status-btn":"");
+  const lbl=document.createElement("span"); lbl.className="dd-lbl"; btn.appendChild(lbl);
+  btn.insertAdjacentHTML("beforeend",'<svg class="dd-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>');
+  const menu=document.createElement("div"); menu.className="dd-menu";
+  [...sel.options].forEach((op,i)=>{ const it=document.createElement("div"); it.className="dd-opt";
+    const dot = status && RDV_STC[op.value] ? '<span class="dd-dot" style="background:'+RDV_STC[op.value].solid+'"></span>' : '';
+    it.innerHTML=dot+'<span class="dd-t">'+op.text+'</span><svg class="dd-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    it.addEventListener("click",e=>{ e.stopPropagation(); if(sel.selectedIndex!==i){ sel.selectedIndex=i; sync(); sel.dispatchEvent(new Event("change",{bubbles:true})); } close(); });
+    menu.appendChild(it); });
+  function sync(){ const op=sel.options[sel.selectedIndex]; lbl.textContent=op?op.text:"";
+    menu.querySelectorAll(".dd-opt").forEach((el,i)=> el.classList.toggle("sel", i===sel.selectedIndex));
+    if(status){ const st=RDV_STC[sel.value]; if(st){ btn.style.backgroundColor=st.bg; btn.style.color=st.c; btn.style.borderColor=st.bg; } } }
+  sel.style.display="none"; sel.parentNode.insertBefore(dd,sel); dd.appendChild(btn); dd.appendChild(sel); sync(); sel._ddSync=sync;
+  function place(){ const r=btn.getBoundingClientRect(); menu.style.minWidth=Math.max(r.width,150)+"px";
+    const mw=menu.offsetWidth, mh=menu.offsetHeight; let left=r.left, top=r.bottom+6;
+    if(left+mw>window.innerWidth-8) left=Math.max(8, r.right-mw);
+    if(top+mh>window.innerHeight-8 && r.top-6-mh>8) top=r.top-6-mh;
+    menu.style.left=left+"px"; menu.style.top=top+"px"; }
+  function open(){ closeAllDD(); document.body.appendChild(menu); dd.classList.add("open"); place();
+    requestAnimationFrame(()=>menu.classList.add("open"));
+    document.addEventListener("mousedown",onDoc,true); document.addEventListener("keydown",onKey,true);
+    window.addEventListener("scroll",close,true); window.addEventListener("resize",close); }
+  function close(){ dd.classList.remove("open"); menu.classList.remove("open"); if(menu.parentNode) menu.parentNode.removeChild(menu);
+    document.removeEventListener("mousedown",onDoc,true); document.removeEventListener("keydown",onKey,true);
+    window.removeEventListener("scroll",close,true); window.removeEventListener("resize",close); }
+  function onDoc(e){ if(!dd.contains(e.target) && !menu.contains(e.target)) close(); }
+  function onKey(e){ if(e.key==="Escape") close(); }
+  btn.addEventListener("click",e=>{ e.stopPropagation(); dd.classList.contains("open")?close():open(); });
+  dd._close=close;
+}
 (function wireRdv(){
   const add=document.getElementById("rdvAddCal"); if(add) add.addEventListener("click",openCalFlow);
   const rg=document.getElementById("rdvRange"); if(rg) rg.addEventListener("change",e=>{ rdvKey=e.target.value; renderRdv(); });
-  const wo=document.getElementById("rdvWhoSel"); if(wo) wo.addEventListener("change",e=>{ rdvWho=e.target.value; rdvOpenRow=-1; rdvSel.clear(); renderRdv(); });
-  const ft=document.getElementById("rdvFilter"); if(ft) ft.addEventListener("change",()=>{ rdvOpenRow=-1; rdvSel.clear(); renderRdvTable(); });
+  const wo=document.getElementById("rdvWhoSel"); if(wo) wo.addEventListener("change",e=>{ rdvWho=e.target.value; rdvOpenRow=-1; rdvSel.clear(); rdvPage=1; renderRdv(); });
+  const ft=document.getElementById("rdvFilter"); if(ft) ft.addEventListener("change",()=>{ rdvOpenRow=-1; rdvSel.clear(); rdvPage=1; renderRdvTable(); });
+  enhanceSelect(wo); enhanceSelect(rg); enhanceSelect(ft);
   const sa=document.getElementById("rdvSelAll"); if(sa) sa.addEventListener("change",e=>{ rdvSel.clear(); if(e.target.checked) eligibleVisibleRdv().forEach(i=>rdvSel.add(i)); renderRdvTable(); });
+  document.getElementById("rdvZoomOut")&&document.getElementById("rdvZoomOut").addEventListener("click",()=>rdvZoom(1));
+  document.getElementById("rdvZoomIn")&&document.getElementById("rdvZoomIn").addEventListener("click",()=>rdvZoom(-1));
+  const rc=document.getElementById("rdvChart"); if(rc){ let t=0; rc.addEventListener("wheel",e=>{ e.preventDefault(); const now=Date.now(); if(now-t<220)return; t=now; rdvZoom(e.deltaY>0?1:-1); },{passive:false}); }
   window.addEventListener("resize",()=>{ const v=document.getElementById("view-rdv"); if(v&&v.classList.contains("on")){ const rp=RDV_PERIODS[rdvKey]||RDV_PERIODS["30j"]; drawLine(document.getElementById("rdvChart"),rp.chart.labels,rp.chart.vals,rp.chart.vals.map(x=>Math.round(x*0.85)),"Rendez-vous"); } });
 })();
 
@@ -1798,7 +2036,7 @@ function trendChip(pct){
 }
 function drawLine(svg, labels, vals, prev, metricLabel){
   if(!svg) return;
-  const W=Math.max(320, svg.clientWidth||700), H=176, padL=16,padR=16,padT=22,padB=26;
+  const W=Math.max(320, svg.clientWidth||700), H=176, padL=6,padR=6,padT=22,padB=26;
   svg.setAttribute("viewBox","0 0 "+W+" "+H);
   const all=prev?vals.concat(prev):vals, max=Math.max.apply(null,all)*1.14, n=vals.length;
   const X=i=> padL + (W-padL-padR)*(n===1?0.5:i/(n-1));
@@ -1840,7 +2078,8 @@ function renderStats(){
   drawLine(document.getElementById("statChart"), p.chart.labels, p.chart.vals, prevVals);
   const cur=p.chart.vals.reduce((a,b)=>a+b,0), pre=prevVals.reduce((a,b)=>a+b,0), delta=pre?Math.round((cur-pre)/pre*100):0;
   const cp=document.getElementById("statChartPeriod"); if(cp) cp.innerHTML=trendChip(delta)+' <span style="color:var(--muted)">vs période préc.</span>';
-  const cl=document.getElementById("statChartLeg"); if(cl) cl.innerHTML='<span class="li"><span class="dot" style="background:#4BB3A4"></span>Actuelle · '+p.curR+'</span><span class="li"><span class="dot dash" style="background:#c4c9c4"></span>Précédente · '+p.prevR+'</span>';
+  updateZoomBtns(STAT_ZOOM,statKey,"statZoomOut","statZoomIn");
+  const cl=document.getElementById("statChartLeg"); if(cl) cl.innerHTML='<span class="li"><span class="dot" style="background:#4BB3A4"></span><span class="li-k">Actuelle</span><span class="li-v">'+p.curR+'</span></span><span class="li"><span class="dot dash" style="background:#c4c9c4"></span><span class="li-k">Précédente</span><span class="li-v">'+p.prevR+'</span></span>';
   const gw=document.getElementById("statGoals");
   if(gw){ gw.innerHTML=""; STAT_BASE.goals.forEach(g=>{ const row=document.createElement("div"); row.className="goal";
     const rate=(g[2]/STAT_BASE.visits*100).toFixed(1).replace(".",",");
@@ -1881,9 +2120,13 @@ function renderStats(){
   if(sel) sel.addEventListener("change",e=>{ const v=e.target.value;
     document.getElementById("statCustom").classList.toggle("show", v==="custom");
     if(v!=="custom"){ statKey=v; } else { statKey="30j"; } renderStats(); });
+  enhanceSelect(sel);
   const apply=()=>{ statKey="30j"; renderStats(); toast("Plage personnalisée (données d'exemple)"); };
   const f=document.getElementById("statFrom"), t=document.getElementById("statTo");
   if(f) f.addEventListener("change",apply); if(t) t.addEventListener("change",apply);
+  document.getElementById("statZoomOut")&&document.getElementById("statZoomOut").addEventListener("click",()=>statZoom(1));
+  document.getElementById("statZoomIn")&&document.getElementById("statZoomIn").addEventListener("click",()=>statZoom(-1));
+  const sc=document.getElementById("statChart"); if(sc){ let t2=0; sc.addEventListener("wheel",e=>{ e.preventDefault(); const now=Date.now(); if(now-t2<220)return; t2=now; statZoom(e.deltaY>0?1:-1); },{passive:false}); }
   window.addEventListener("resize",()=>{ const sv=document.getElementById("view-stats"); if(sv&&sv.classList.contains("on")){ const p=STAT_PERIODS[statKey]; drawLine(document.getElementById("statChart"),p.chart.labels,p.chart.vals); } });
 })();
 
@@ -1893,7 +2136,7 @@ function renderStats(){
 function refreshIcons(){ try{ if(window.lucide) lucide.createIcons({ attrs:{ "stroke-width":1.5 } }); }catch(e){} }
 (function boot(){
   const ui=loadUI();
-  if(ui.mini) app.classList.add("mini");
+  applyResponsiveNav();
   refreshIcons();
   renderSecList();
   if(changeCount(draft).total) setSaved();

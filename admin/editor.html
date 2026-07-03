@@ -276,6 +276,26 @@
   .dbn-dates{display:grid;grid-template-columns:1fr 1fr;gap:11px}
   .dbn-code{display:flex;align-items:flex-end;gap:9px}
   .dbn-form input[type=date]{width:100%;font-family:inherit;font-size:12.5px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--ink)}
+  .dbn-manage{padding:0 0 13px;margin-bottom:13px;border-bottom:1px solid var(--border)}
+  .dbn-manage-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .dbn-manage-hd > span{font-size:11px;font-weight:700;color:var(--muted)}
+  .dbn-newbtn{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;color:var(--teal-d);padding:3px 9px;border-radius:20px;border:1px solid var(--border)}
+  .dbn-newbtn:hover{background:var(--bg);border-color:var(--border-2)}
+  .dbn-newbtn svg{width:13px;height:13px}
+  .dbn-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .dbn-chip{all:unset;box-sizing:border-box;cursor:pointer;font-size:12px;font-weight:600;color:var(--ink-soft);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 11px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:all .12s}
+  .dbn-chip:hover{border-color:var(--border-2);color:var(--ink)}
+  .dbn-chip.on{background:rgba(75,179,164,.13);border-color:var(--teal);color:var(--teal-d)}
+  .dbn-presets{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+  .dbn-presets-l{font-size:11px;color:var(--muted);margin-right:2px}
+  .dbn-preset{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:3px;font-size:11.5px;font-weight:600;color:var(--purple);background:#F1EFFC;border-radius:20px;padding:4px 10px 4px 8px;transition:background .12s}
+  .dbn-preset:hover{background:#E6E1FA}
+  .dbn-preset svg{width:12px;height:12px}
+  .dbn-hint{color:var(--muted);font-weight:400}
+  .dbn-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px}
+  .dbn-live{font-size:11px;color:var(--muted)}
+  .dbn-del{color:var(--danger);padding:6px 11px}
+  .dbn-del svg{width:14px;height:14px}
   .dash-team-avas{display:flex;align-items:center;margin-bottom:12px}
   .dash-team-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:14px}
   .dash-team-lg{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-soft)}
@@ -2033,7 +2053,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.9.0" };
+const ADMIN_BUILD = { version: "0.9.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -2173,6 +2193,8 @@ const EDIT_CSS = `
   *,*::before,*::after{animation-duration:0s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition:none!important}
   html{scroll-behavior:auto!important}
   .nav{position:static!important}
+  /* en edition, la nav est en flux normal : le bandeau doit l'etre aussi, sinon il se fixe par-dessus */
+  .promo-bar{position:static!important;top:auto!important}
   .hero{padding-top:64px!important}
   .faq-item .faq-a{display:block!important;height:auto!important;max-height:none!important;overflow:visible!important;opacity:1!important}
   .hero h1 .word,.rv,.vpc,.pipe-step,.bento-card,.sec-card,.diff-card,.vpc.v{opacity:1!important;transform:none!important}
@@ -2202,12 +2224,17 @@ const EDIT_CSS = `
   .ck-preview [data-ckimg]:hover,.ck-preview [data-ckbg]:hover{filter:none!important}
 `;
 
+/* affichage du bandeau : on pilote la classe native du site (has-promo) plutot que des display inline.
+   has-promo ajuste aussi le haut de page cote site ; en edition, tout est en flux statique donc pas de vide. */
+function setPromoVisible(on){ if(!DOC||!DOC.body) return; DOC.body.classList.toggle("has-promo", !!on);
+  const pb=DOC.getElementById("promoBar"); if(pb) pb.style.display=""; }
 function initEditMode(){
   if(!DOC) return;
   if(!DOC.getElementById("ck-edit-style")){
     const st=DOC.createElement("style"); st.id="ck-edit-style"; st.textContent=EDIT_CSS; DOC.head.appendChild(st);
   }
   const pb=DOC.getElementById("promoBar"); if(pb){ pb.style.display=""; pb.classList.remove("is-hidden","hidden"); }
+  setPromoVisible(!draft.promoHidden);
   killNavigation();
   markTexts(); markPromo(); markImages(); markBg(); seedMedia(); renderContentHealth();
   setupSections(); applyDraft(); renderSecList(); refreshSecToolbars();
@@ -2547,7 +2574,7 @@ function applyDraft(){
     if(anchor){ draft.order.forEach(id=>{ const el=secEl(id); if(el){ anchor.after(el); anchor=el; } }); }
   }
   (draft.hidden||[]).forEach(id=>{ applySecHiddenVisual(secEl(id), true); });
-  const pb=DOC.getElementById("promoBar"); if(pb&&draft.promoHidden) pb.style.display="none";
+  setPromoVisible(!draft.promoHidden);
   setPromoSwitch(!draft.promoHidden);
   Object.keys(draft.dom).forEach(k=>{ const el=DOC.querySelector('[data-ckkey="'+cssEsc(k)+'"]'); if(el) el.innerHTML=draft.dom[k]; });
   Object.keys(draft.images).forEach(id=>{ const el=DOC.querySelector('[data-ckimg="'+id+'"]'); if(el) el.src=draft.images[id]; });
@@ -2738,13 +2765,66 @@ function fillDashRdv(){ const el=document.getElementById("dashRdv"); if(!el) ret
       +'<div class="drr-side"><div class="drr-date">'+r.day+' '+r.mon+' · '+r.time+'</div><div class="drr-meta"><span class="fmode fmode-'+mi.cls+'"><i data-lucide="'+mi.i+'"></i>'+mi.l+'</span><span class="avatar xs drr-com" style="background:'+c.color+';color:#fff" title="Commercial attitré : '+escHtml(c.full)+'">'+c.ini+'</span></div></div></div>'; }).join("")
     +'<button class="btn" data-goto="rdv" style="width:100%;justify-content:center;margin-top:11px">Voir tous les rendez-vous</button>';
   const b=el.querySelector("[data-goto]"); if(b) b.addEventListener("click",()=>showView("rdv")); }
-function fillDashBanner(){ const el=document.getElementById("dashBanner"); if(!el) return; const p=draft.promo||{}; const on=!draft.promoHidden;
-  el.innerHTML='<div class="dbn-row"><button class="switch'+(on?" on":"")+'" id="dbnSwitch" role="switch" aria-checked="'+on+'"><span class="k"></span></button><div class="dbn-tx"><span class="dbn-t">Bandeau '+(on?"affiché":"masqué")+'</span><span class="dbn-s">'+escHtml(p.label||"-15 % sur Flex & Dédié")+'</span></div></div>'
-    +'<div class="dbn-form"><div class="formf" style="margin:0"><label>Texte de la promotion</label><input id="dbnLabel" value="'+escHtml(p.label||"")+'" placeholder="-15 % sur Flex & Dédié"></div>'
-      +'<div class="dbn-dates"><div class="formf" style="margin:0"><label>Du</label><input type="date" id="dbnFrom" value="'+escHtml(p.from||"")+'"></div><div class="formf" style="margin:0"><label>Au</label><input type="date" id="dbnTo" value="'+escHtml(p.to||"")+'"></div></div>'
-      +'<div class="dbn-code"><div class="formf" style="margin:0;flex:1"><label>Code promo</label><input id="dbnCode" value="'+escHtml(p.code||"")+'" placeholder="FLEX15" style="text-transform:uppercase"></div><button class="btn primary" id="dbnSave">Enregistrer</button></div></div>';
-  const sw=document.getElementById("dbnSwitch"); if(sw) sw.addEventListener("click",()=>{ const nowOn=!sw.classList.contains("on"); if(typeof setPromoSwitch==="function") setPromoSwitch(nowOn); draft.promoHidden=!nowOn; const pb=(typeof DOC!=="undefined")&&DOC&&DOC.getElementById("promoBar"); if(pb) pb.style.display=nowOn?"":"none"; if(typeof markDirty==="function") markDirty(); fillDashBanner(); });
-  const save=document.getElementById("dbnSave"); if(save) save.addEventListener("click",()=>{ draft.promo={ label:(document.getElementById("dbnLabel").value||"").trim(), from:document.getElementById("dbnFrom").value, to:document.getElementById("dbnTo").value, code:(document.getElementById("dbnCode").value||"").trim().toUpperCase() }; if(typeof markDirty==="function") markDirty(); toast("Promotion enregistrée"); fillDashBanner(); }); }
+/* ---- Bandeaux : plusieurs bandeaux enregistres + modeles prets a l'emploi, un seul actif a la fois ---- */
+const BANNER_PRESETS=[
+  {name:"Lancement", badge:"Nouveau site", emphasis:"-15%", text:"sur votre premier mois avec Flex & Dédié", cta:"Découvrir nos offres", href:"#offres", code:"FLEX15"},
+  {name:"Suivi en direct", badge:"Nouveau", emphasis:"", text:"Suivez votre livraison en temps réel, du départ à la remise", cta:"En savoir plus", href:"#services", code:""},
+  {name:"Offre de rentrée", badge:"Offre limitée", emphasis:"-20%", text:"sur l'abonnement Dédié jusqu'à fin septembre", cta:"J'en profite", href:"#offres", code:"DEDIE20"},
+  {name:"Recrutement", badge:"On recrute", emphasis:"", text:"Coursiers en CDI à Genève et Lausanne, salaire fixe", cta:"Postuler", href:"postuler.html", code:""}
+];
+function ensureBanners(){
+  if(!Array.isArray(draft.banners)||!draft.banners.length){
+    draft.banners=BANNER_PRESETS.map((b,i)=>Object.assign({id:"b"+(i+1)}, b, {from:"",to:""}));
+    if(draft.promo&&draft.promo.label){ draft.banners[0].emphasis=""; draft.banners[0].text=draft.promo.label; if(draft.promo.code) draft.banners[0].code=draft.promo.code; draft.banners[0].from=draft.promo.from||""; draft.banners[0].to=draft.promo.to||""; }
+    draft.activeBannerId=draft.activeBannerId||draft.banners[0].id;
+  }
+  if(!draft.banners.some(b=>b.id===draft.activeBannerId)) draft.activeBannerId=draft.banners[0].id;
+  return draft.banners;
+}
+function activeBanner(){ ensureBanners(); return draft.banners.find(b=>b.id===draft.activeBannerId)||draft.banners[0]; }
+function applyBannerToBar(){ const b=activeBanner(); if(!b) return;
+  draft.dom["promo.badge"]=escHtml(b.badge||"");
+  draft.dom["promo.text"]=(b.emphasis?'<strong>'+escHtml(b.emphasis)+'</strong> ':'')+escHtml(b.text||"");
+  draft.dom["promo.cta"]=escHtml(b.cta||"");
+  if(typeof DOC!=="undefined" && DOC){
+    const bd=DOC.querySelector(".promo-bar-badge"); if(bd){ bd.innerHTML=draft.dom["promo.badge"]; bd.style.display=b.badge?"":"none"; }
+    const tx=DOC.querySelector(".promo-bar-text"); if(tx) tx.innerHTML=draft.dom["promo.text"];
+    const ct=DOC.querySelector(".promo-bar-cta"); if(ct){ ct.textContent=b.cta||""; ct.style.display=b.cta?"":"none"; if(b.href) ct.setAttribute("href",b.href); }
+  }
+}
+function activateBanner(id){ ensureBanners(); if(!draft.banners.some(b=>b.id===id)) return; draft.activeBannerId=id; applyBannerToBar(); markDirty(); fillDashBanner(); }
+function addBannerFromPreset(i){ const p=BANNER_PRESETS[i]; if(!p) return; const b=Object.assign({id:"b"+Date.now()}, p, {from:"",to:""}); ensureBanners(); draft.banners.push(b); draft.activeBannerId=b.id; applyBannerToBar(); markDirty(); fillDashBanner(); toast("Bandeau « "+p.name+" » ajouté"); }
+function addBlankBanner(){ ensureBanners(); const b={id:"b"+Date.now(), name:"Nouveau bandeau", badge:"", emphasis:"", text:"", cta:"", href:"#offres", code:"", from:"", to:""}; draft.banners.push(b); draft.activeBannerId=b.id; applyBannerToBar(); markDirty(); fillDashBanner(); }
+function deleteBanner(id){ ensureBanners(); if(draft.banners.length<=1){ toast("Gardez au moins un bandeau"); return; } const b=draft.banners.find(x=>x.id===id); if(!b) return; if(!confirm("Supprimer le bandeau « "+(b.name||"sans nom")+" » ?")) return;
+  draft.banners=draft.banners.filter(x=>x.id!==id); if(draft.activeBannerId===id){ draft.activeBannerId=draft.banners[0].id; applyBannerToBar(); } markDirty(); fillDashBanner(); toast("Bandeau supprimé"); }
+function fillDashBanner(){ const el=document.getElementById("dashBanner"); if(!el) return; ensureBanners();
+  const on=!draft.promoHidden, b=activeBanner(), preview=(b.emphasis?b.emphasis+" ":"")+(b.text||"")||"Bandeau sans texte";
+  const chips=draft.banners.map(x=>'<button type="button" class="dbn-chip'+(x.id===b.id?" on":"")+'" data-act="'+x.id+'">'+escHtml(x.name||"Sans nom")+'</button>').join("");
+  const presets=BANNER_PRESETS.map((p,i)=>'<button type="button" class="dbn-preset" data-preset="'+i+'"><i data-lucide="plus"></i>'+escHtml(p.name)+'</button>').join("");
+  el.innerHTML='<div class="dbn-row"><button class="switch'+(on?" on":"")+'" id="dbnSwitch" role="switch" aria-checked="'+on+'"><span class="k"></span></button><div class="dbn-tx"><span class="dbn-t">Bandeau '+(on?"affiché":"masqué")+'</span><span class="dbn-s">'+escHtml(preview)+'</span></div></div>'
+    +'<div class="dbn-manage"><div class="dbn-manage-hd"><span>Vos bandeaux</span><button type="button" class="dbn-newbtn" id="dbnNew"><i data-lucide="plus"></i>Vide</button></div>'
+      +'<div class="dbn-chips">'+chips+'</div>'
+      +'<div class="dbn-presets"><span class="dbn-presets-l">Modèles</span>'+presets+'</div></div>'
+    +'<div class="dbn-form">'
+      +'<div class="formf" style="margin:0"><label>Nom du bandeau <span class="dbn-hint">(interne, pour vous)</span></label><input id="dbnName" value="'+escHtml(b.name||"")+'" placeholder="Ex. Offre de rentrée"></div>'
+      +'<div class="form-row" style="margin:0"><div class="formf" style="margin:0"><label>Étiquette</label><input id="dbnBadge" value="'+escHtml(b.badge||"")+'" placeholder="Nouveau site"></div><div class="formf" style="margin:0"><label>Accroche en gras <span class="dbn-hint">(optionnel)</span></label><input id="dbnEmph" value="'+escHtml(b.emphasis||"")+'" placeholder="-15%"></div></div>'
+      +'<div class="formf" style="margin:0"><label>Texte du bandeau</label><input id="dbnText" value="'+escHtml(b.text||"")+'" placeholder="sur votre premier mois avec Flex & Dédié"></div>'
+      +'<div class="form-row" style="margin:0"><div class="formf" style="margin:0"><label>Bouton</label><input id="dbnCta" value="'+escHtml(b.cta||"")+'" placeholder="Découvrir nos offres"></div><div class="formf" style="margin:0"><label>Lien du bouton</label><input id="dbnHref" value="'+escHtml(b.href||"")+'" placeholder="#offres"></div></div>'
+      +'<div class="dbn-dates"><div class="formf" style="margin:0"><label>Code promo</label><input id="dbnCode" value="'+escHtml(b.code||"")+'" placeholder="FLEX15" style="text-transform:uppercase"></div><div class="formf" style="margin:0"><label>Du</label><input type="date" id="dbnFrom" value="'+escHtml(b.from||"")+'"></div><div class="formf" style="margin:0"><label>Au</label><input type="date" id="dbnTo" value="'+escHtml(b.to||"")+'"></div></div>'
+      +'<div class="dbn-actions"><span class="dbn-live">Modifications appliquées en direct sur le site</span><button type="button" class="btn ghost dbn-del" id="dbnDel"><i data-lucide="trash-2"></i>Supprimer</button></div>'
+    +'</div>';
+  const sw=document.getElementById("dbnSwitch"); if(sw) sw.addEventListener("click",()=>{ const nowOn=!sw.classList.contains("on"); if(typeof setPromoSwitch==="function") setPromoSwitch(nowOn); draft.promoHidden=!nowOn; setPromoVisible(nowOn); markDirty(); fillDashBanner(); });
+  el.querySelectorAll("[data-act]").forEach(c=>c.addEventListener("click",()=>activateBanner(c.dataset.act)));
+  el.querySelectorAll("[data-preset]").forEach(p=>p.addEventListener("click",()=>addBannerFromPreset(+p.dataset.preset)));
+  const nb=document.getElementById("dbnNew"); if(nb) nb.addEventListener("click",addBlankBanner);
+  const dl=document.getElementById("dbnDel"); if(dl) dl.addEventListener("click",()=>deleteBanner(b.id));
+  const bind=(id,key,up)=>{ const inp=document.getElementById(id); if(!inp) return; inp.addEventListener("input",()=>{ let v=inp.value; if(up) v=v.toUpperCase(); b[key]=v; applyBannerToBar(); markDirty();
+    const pv=el.querySelector(".dbn-s"); if(pv&&(key==="text"||key==="emphasis")) pv.textContent=(b.emphasis?b.emphasis+" ":"")+(b.text||"");
+    const chip=el.querySelector('.dbn-chip.on'); if(chip&&key==="name") chip.textContent=v||"Sans nom"; }); };
+  bind("dbnName","name"); bind("dbnBadge","badge"); bind("dbnEmph","emphasis"); bind("dbnText","text"); bind("dbnCta","cta"); bind("dbnHref","href"); bind("dbnCode","code",true);
+  const fr=document.getElementById("dbnFrom"); if(fr) fr.addEventListener("change",()=>{ b.from=fr.value; markDirty(); });
+  const to=document.getElementById("dbnTo"); if(to) to.addEventListener("change",()=>{ b.to=to.value; markDirty(); });
+  refreshIcons(); }
 function fillDashCop(){ const el=document.getElementById("dashCop"); if(!el) return;
   el.innerHTML='<p class="hint" style="margin:0 0 11px">Préparez votre prochain rendez-vous : découverte guidée, chiffrage en direct et compte-rendu prêt en partant.</p><button class="btn primary" data-goto="copilot" style="width:100%;justify-content:center">Ouvrir le copilote</button>';
   const b=el.querySelector("[data-goto]"); if(b) b.addEventListener("click",()=>showView("copilot")); }
@@ -3568,7 +3648,7 @@ const promoSwitch=document.getElementById("promoSwitch");
 function setPromoSwitch(on){ promoSwitch.classList.toggle("on",on); promoSwitch.setAttribute("aria-checked",on); }
 promoSwitch.addEventListener("click",()=>{
   const on=!promoSwitch.classList.contains("on"); setPromoSwitch(on);
-  draft.promoHidden=!on; const pb=DOC&&DOC.getElementById("promoBar"); if(pb) pb.style.display=on?"":"none"; markDirty();
+  draft.promoHidden=!on; setPromoVisible(on); markDirty();
 });
 document.getElementById("resetBtn").addEventListener("click",()=>{
   if(!confirm("Réinitialiser toutes les modifications du brouillon ?")) return;

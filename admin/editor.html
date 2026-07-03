@@ -523,6 +523,52 @@
   .pc-plain{font-size:12px;color:var(--ink-soft);line-height:1.45;margin-top:3px}
   .pc-tip{font-size:11.5px;color:var(--teal-d);margin-top:5px;display:flex;gap:6px;align-items:flex-start}
   .pc-tip svg{width:13px;height:13px;flex-shrink:0;margin-top:1px}
+  /* ===== Performance : refonte (verdict granulaire, cards, vue simple/détaillée) ===== */
+  .pv-band{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;white-space:nowrap;margin-left:2px}
+  .pv-scale{margin-top:12px}
+  .pv-scale-bar{position:relative;height:7px;border-radius:20px;background:linear-gradient(90deg,#CF3B3B 0%,#DB7A2A 30%,#C79A0C 55%,#2E9E5B 80%,#0E7D48 100%)}
+  .pv-scale-mark{position:absolute;top:50%}
+  .pv-scale-mark > span{display:block;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid #0E7D48;box-shadow:0 1px 3px rgba(0,0,0,.28);transform:translate(-50%,-50%)}
+  .pv-scale-lbls{display:flex;justify-content:space-between;margin-top:7px;font-size:9.5px;color:var(--muted);font-weight:600}
+  .pv-scale-lbls span.on{font-weight:800}
+  @media(max-width:680px){.pv-scale-lbls span:nth-child(2),.pv-scale-lbls span:nth-child(4){visibility:hidden}}
+  .perf-acts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media(max-width:980px){.perf-acts{grid-template-columns:1fr}}
+  .pa-card{border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;background:#fff}
+  .pa-card-hd{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+  .pa-card .pa-ic{width:32px;height:32px;border-radius:9px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center}
+  .pa-card .pa-ic svg{width:16px;height:16px}
+  .pa-card .pa-impact{font-size:10.5px;font-weight:700;border-radius:20px;padding:2px 9px;white-space:nowrap}
+  .pa-card .pa-area{font-size:11px;color:var(--muted);font-weight:500;margin-left:auto;text-align:right}
+  .pa-card .pa-title{font-size:13.5px;font-weight:700;color:var(--ink);line-height:1.3}
+  .pa-card .pa-why{font-size:12px;color:var(--ink-soft);line-height:1.5;margin-top:6px}
+  .pa-sub{border-radius:9px;padding:9px 11px;margin-top:11px}
+  .pa-sub-h{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;margin-bottom:4px}
+  .pa-sub-h svg{width:14px;height:14px}
+  .pa-sub-b{font-size:12px;line-height:1.5;color:var(--ink)}
+  .pa-sub.self{background:#FBF6E7;border:1px solid #F0E3BC}
+  .pa-sub.self .pa-sub-h{color:#A9791A}
+  .pa-sub.gamma{background:#EEF3FB;border:1px solid #DCE6F5}
+  .pa-sub.gamma .pa-sub-h{color:#2F6FE0}
+  .pa-card .pa-cta{margin-top:auto;padding-top:12px;display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+  .pa-card .pa-cta .btn svg{width:14px;height:14px}
+  .pa-card .pa-self{font-size:11.5px;font-weight:600;color:#0F6E56;display:inline-flex;align-items:center;gap:4px}
+  .pa-card .pa-self svg{width:13px;height:13px}
+  .perf-allgood{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink-soft)}
+  .perf-allgood .pg-chk{width:22px;height:22px}
+  .pg-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--border)}
+  .pg-item:first-child{border-top:none}
+  .pg-chk{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;background:#E3F4EA;color:#0E7D48}
+  .pg-chk svg{width:13px;height:13px}
+  .pg-t{flex:1;min-width:0;font-size:12.5px;color:var(--ink);line-height:1.4}
+  .pg-cat{flex-shrink:0;font-size:10.5px;font-weight:600;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:2px 9px}
+  .pc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+  .pc-intro{font-size:12px;color:var(--ink-soft);line-height:1.45;flex:1;min-width:0}
+  .pc-intro b{color:#A9791A;font-weight:700}
+  .pc-toggle{flex-shrink:0}
+  .pc-toggle button{font-size:11.5px;padding:4px 11px}
+  .pc-krow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .pc-status{font-size:11px;font-weight:700;flex-shrink:0}
   /* ---- Structure & stratégie ---- */
   .struct-hero{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(100deg,#F2F0FC,#EAF2FB);border:1px solid #E2DAF5;border-radius:12px;padding:14px 16px;margin:16px 0 15px;font-size:13px;color:var(--ink-soft);line-height:1.55}
   .struct-hero > svg{width:20px;height:20px;color:#6B5BCC;flex-shrink:0;margin-top:1px}
@@ -2000,7 +2046,7 @@
             <div id="perfGood"></div>
           </div>
           <div class="dpan">
-            <div class="pan-head"><h4><span class="hic violet"><i data-lucide="pen-line"></i></span> Vos textes et Google</h4><span class="hint" style="margin:0">ce que vos mots changent</span></div>
+            <div class="pan-head"><h4><span class="hic violet"><i data-lucide="pen-line"></i></span> Vos textes et Google</h4></div>
             <div id="perfContent"></div>
           </div>
         </div>
@@ -2240,7 +2286,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.9.8" };
+const ADMIN_BUILD = { version: "0.9.9" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -3334,6 +3380,15 @@ function publishVersion(){
 /* Performance en langage non-initié : le sens d'abord, le terme technique en second (détail repliable). */
 const PF_C={good:{c:"#0F6E56",bg:"#E1F5EE",w:"Bon"},warn:{c:"#C7891B",bg:"#FBF0DD",w:"À améliorer"},bad:{c:"#B23B3B",bg:"#FBE4E4",w:"Problème"}};
 function pfStat(st){ return PF_C[st]||PF_C.good; }
+/* échelle granulaire par score (vert -> rouge), pour ne pas afficher un 82 en marron. */
+const PF_SCALE=[
+  {min:90, c:"#0E7D48", bg:"#E3F4EA", w:"Excellent"},
+  {min:80, c:"#2E9E5B", bg:"#E8F5EC", w:"Bon"},
+  {min:65, c:"#C79A0C", bg:"#FAF3D6", w:"Correct"},
+  {min:45, c:"#DB7A2A", bg:"#FBEBDB", w:"À surveiller"},
+  {min:0,  c:"#CF3B3B", bg:"#FBE4E4", w:"Critique"}
+];
+function pfScore(score){ for(let i=0;i<PF_SCALE.length;i++){ if(score>=PF_SCALE[i].min) return PF_SCALE[i]; } return PF_SCALE[PF_SCALE.length-1]; }
 const GAMMA="Gamma Project";
 /* anneau de score réutilisable (global + par pilier) */
 function perfRing(score, size, col){ const s=Math.max(0,Math.min(100,score)), r=(size-8)/2, cx=size/2, c=2*Math.PI*r, off=c*(1-s/100);
@@ -3394,13 +3449,13 @@ const PERF_ACTIONS=[
     fix:{mode:"gamma", note:"La couleur des textes fait partie du design, "+GAMMA+" l'ajuste."} }
 ];
 const PERF_GOOD=[
-  "Votre site s'affiche vite, vos visiteurs n'attendent pas.",
-  "Le titre et la description de vos pages sont complets.",
-  "Google a le plan de votre site et le parcourt bien.",
-  "Aucun lien cassé.",
-  "Votre site s'adapte au téléphone.",
-  "On peut naviguer entièrement au clavier.",
-  "Vos formulaires sont bien étiquetés."
+  {t:"Votre site s'affiche vite, vos visiteurs n'attendent pas.", cat:"Rapidité"},
+  {t:"Le titre et la description de vos pages sont complets.", cat:"Référencement"},
+  {t:"Google a le plan de votre site et le parcourt bien.", cat:"Référencement"},
+  {t:"Aucun lien cassé sur le site.", cat:"Référencement"},
+  {t:"Votre site s'adapte au téléphone.", cat:"Rapidité"},
+  {t:"On peut naviguer entièrement au clavier.", cat:"Lisibilité"},
+  {t:"Vos formulaires sont bien étiquetés.", cat:"Lisibilité"}
 ];
 const PERF_CONTENT_INTRO="Vos textes parlent à Google autant qu'à vos visiteurs. Quand vous ou votre équipe modifiez un texte, ces points peuvent bouger. Gardez-les au vert pour ne pas perdre en visibilité.";
 const PERF_CONTENT=[
@@ -3413,24 +3468,29 @@ const PERF_CONTENT=[
 function renderPerf(){
   const last=document.getElementById("perfLast"); if(last) last.textContent="Dernière analyse : hier, 09:12";
   const scores=PERF_PILLARS.map(p=>p.score), overall=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
-  const anyBad=PERF_PILLARS.some(p=>p.status==="bad"), anyWarn=PERF_PILLARS.some(p=>p.status==="warn");
-  renderPerfVerdict(anyBad?"bad":anyWarn?"warn":"good", overall);
+  renderPerfVerdict(overall);
   renderPerfPillars(); renderPerfActions(); renderPerfGood(); renderPerfContent();
   refreshIcons();
 }
-function renderPerfVerdict(vk, overall){ const w=document.getElementById("perfVerdict"); if(!w) return;
-  const map={ good:{ic:"check-circle-2", t:"Votre site est en bonne santé"}, warn:{ic:"sparkles", t:"Votre site va bien, quelques réglages à peaufiner"}, bad:{ic:"alert-triangle", t:"Des points importants sont à corriger"} };
-  const goodN=PERF_PILLARS.filter(p=>p.status==="good").length, actN=PERF_ACTIONS.length, m=map[vk], col=pfStat(vk).c;
-  const sub=goodN+" domaine"+(goodN>1?"s":"")+" au vert sur "+PERF_PILLARS.length+", et "+actN+" point"+(actN>1?"s":"")+" à améliorer, expliqués et guidés plus bas.";
+const PF_MARKS=[["Critique",0],["À surveiller",45],["Correct",65],["Bon",80],["Excellent",90]];
+function renderPerfVerdict(overall){ const w=document.getElementById("perfVerdict"); if(!w) return;
+  const b=pfScore(overall), col=b.c;
+  const heads={ Excellent:{ic:"check-circle-2", t:"Votre site est en excellente santé"}, Bon:{ic:"check-circle-2", t:"Votre site est en bonne santé"}, Correct:{ic:"sparkles", t:"Votre site va bien, quelques réglages à peaufiner"}, "À surveiller":{ic:"alert-triangle", t:"Quelques points sont à surveiller"}, Critique:{ic:"alert-triangle", t:"Des points importants sont à corriger"} };
+  const m=heads[b.w]||heads.Bon;
+  const goodN=PERF_PILLARS.filter(p=>p.score>=80).length, actN=PERF_ACTIONS.length;
+  const sub=goodN+" domaine"+(goodN>1?"s":"")+" au vert sur "+PERF_PILLARS.length+", "+actN+" point"+(actN>1?"s":"")+" à améliorer, expliqués et guidés plus bas.";
   w.className="perf-verdict";
   w.innerHTML='<div class="pv-gauge">'+perfRing(overall,66,col)+'<span class="pv-cap">note globale<br>sur 100</span></div>'
-    +'<div class="pv-main"><div class="pv-title"><span class="pv-dot" style="color:'+col+'"><i data-lucide="'+m.ic+'"></i></span>'+m.t+'</div><div class="pv-sub">'+sub+'</div></div>';
+    +'<div class="pv-main"><div class="pv-title"><span class="pv-dot" style="color:'+col+'"><i data-lucide="'+m.ic+'"></i></span>'+m.t+'<span class="pv-band" style="color:'+col+';background:'+b.bg+'">'+b.w+'</span></div>'
+    +'<div class="pv-sub">'+sub+'</div>'
+    +'<div class="pv-scale"><div class="pv-scale-bar"><span class="pv-scale-mark" style="left:'+Math.max(2,Math.min(98,overall))+'%"><span style="border-color:'+col+'"></span></span></div>'
+      +'<div class="pv-scale-lbls">'+PF_MARKS.map(mk=>'<span'+(mk[0]===b.w?' class="on" style="color:'+col+'"':'')+'>'+mk[0]+'</span>').join("")+'</div></div></div>';
 }
 function renderPerfPillars(){ const w=document.getElementById("perfPillars"); if(!w) return; w.innerHTML="";
-  PERF_PILLARS.forEach(p=>{ const s=pfStat(p.status); const el=document.createElement("div"); el.className="pcard";
-    el.innerHTML='<div class="pcard-top"><span class="pcard-ic" style="background:'+s.bg+';color:'+s.c+'"><i data-lucide="'+p.icon+'"></i></span><span class="pcard-t">'+p.title+'</span>'+perfRing(p.score,44,s.c)+'</div>'
+  PERF_PILLARS.forEach(p=>{ const b=pfScore(p.score); const el=document.createElement("div"); el.className="pcard";
+    el.innerHTML='<div class="pcard-top"><span class="pcard-ic" style="background:'+b.bg+';color:'+b.c+'"><i data-lucide="'+p.icon+'"></i></span><span class="pcard-t">'+p.title+'</span>'+perfRing(p.score,44,b.c)+'</div>'
       +'<div class="pcard-plain">'+p.plain+'</div>'
-      +'<span class="pf-pill pf-'+p.status+' pcard-pill">'+s.w+'</span>'
+      +'<span class="pf-pill pcard-pill" style="color:'+b.c+';background:'+b.bg+'">'+b.w+'</span>'
       +'<div class="pcard-benefit">'+p.benefit+'</div>'
       +'<button type="button" class="pcard-toggle">Voir le détail technique <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>'
       +'<div class="pcard-detail">'+p.detail.map(d=>{ const ds=pfStat(d.st); return '<div class="pdet-row"><span class="pdet-dot" style="background:'+ds.c+'"></span><span class="pd-k">'+d.k+'<span class="pd-tech"> · '+d.tech+'</span></span><span class="pd-v" style="color:'+ds.c+'">'+d.v+'</span></div>'; }).join("")+'</div>';
@@ -3439,29 +3499,36 @@ function renderPerfPillars(){ const w=document.getElementById("perfPillars"); if
 function renderPerfActions(){ const w=document.getElementById("perfActions"); if(!w) return; const hint=document.getElementById("perfActionsHint");
   const acts=PERF_ACTIONS.slice().sort((a,b)=>(PF_IMPACT_ORDER[a.impact]-PF_IMPACT_ORDER[b.impact]));
   if(hint) hint.textContent=acts.length+" point"+(acts.length>1?"s":"");
+  w.className="perf-acts";
+  if(!acts.length){ w.innerHTML='<div class="perf-allgood"><span class="pg-chk"><i data-lucide="check"></i></span><span>Rien à corriger, tout est au vert.</span></div>'; refreshIcons(); return; }
   w.innerHTML="";
-  if(!acts.length){ w.innerHTML='<div class="pg-item"><i data-lucide="check-circle-2"></i><span>Rien à corriger, tout est au vert.</span></div>'; refreshIcons(); return; }
-  acts.forEach(a=>{ const im=PF_IMPACT[a.impact]||PF_IMPACT.moyen, fx=a.fix||{mode:"gamma",note:""}; const el=document.createElement("div"); el.className="perf-act";
-    let fixHtml;
+  acts.forEach(a=>{ const im=PF_IMPACT[a.impact]||PF_IMPACT.moyen, fx=a.fix||{mode:"gamma",note:""}; const el=document.createElement("div"); el.className="pa-card";
+    let sub, cta;
     if(fx.mode==="self"){
-      fixHtml='<div class="pa-how"><i data-lucide="lightbulb"></i><span><b>Comment faire :</b> '+fx.guide+'</span></div>'
-        +'<div class="pa-cta"><button class="btn sm primary" data-fix="self"><i data-lucide="wand-2"></i>'+(fx.label||"Corriger")+'</button><span class="pa-self"><i data-lucide="check"></i>à votre portée</span></div>';
+      sub='<div class="pa-sub self"><div class="pa-sub-h"><i data-lucide="lightbulb"></i>Comment faire</div><div class="pa-sub-b">'+fx.guide+'</div></div>';
+      cta='<div class="pa-cta"><button class="btn sm primary" data-fix="self"><i data-lucide="wand-2"></i>'+(fx.label||"Corriger")+'</button><span class="pa-self"><i data-lucide="check"></i>à votre portée</span></div>';
     } else {
-      fixHtml='<div class="pa-gamma"><i data-lucide="life-buoy"></i><span>'+fx.note+'</span></div>'
-        +'<div class="pa-cta"><button class="btn sm" data-fix="gamma"><i data-lucide="send"></i>Le signaler à '+GAMMA+'</button></div>';
+      sub='<div class="pa-sub gamma"><div class="pa-sub-h"><i data-lucide="life-buoy"></i>À confier à '+GAMMA+'</div><div class="pa-sub-b">'+fx.note+'</div></div>';
+      cta='<div class="pa-cta"><button class="btn sm" data-fix="gamma"><i data-lucide="send"></i>Le signaler à '+GAMMA+'</button></div>';
     }
-    el.innerHTML='<span class="pa-ic" style="background:'+im.bg+';color:'+im.c+'"><i data-lucide="'+(a.icon||"triangle-alert")+'"></i></span>'
-      +'<div class="pa-body"><div class="pa-head"><span class="pa-title">'+a.title+'</span><span class="pa-impact" style="color:'+im.c+';background:'+im.bg+'">'+im.w+'</span><span class="pa-area">'+a.area+'</span></div>'
-      +'<div class="pa-why">'+a.why+'</div>'+fixHtml+'</div>';
+    el.innerHTML='<div class="pa-card-hd"><span class="pa-ic" style="background:'+im.bg+';color:'+im.c+'"><i data-lucide="'+(a.icon||"triangle-alert")+'"></i></span><span class="pa-impact" style="color:'+im.c+';background:'+im.bg+'">'+im.w+'</span><span class="pa-area">'+a.area+'</span></div>'
+      +'<div class="pa-title">'+a.title+'</div><div class="pa-why">'+a.why+'</div>'+sub+cta;
     const fb=el.querySelector("[data-fix]"); if(fb){ if(fx.mode==="self") fb.addEventListener("click",()=>perfFix(a)); else fb.addEventListener("click",perfSignalGamma); }
-    w.appendChild(el); }); }
+    w.appendChild(el); }); refreshIcons(); }
 function renderPerfGood(){ const w=document.getElementById("perfGood"); if(!w) return; w.className="perf-good-list";
-  w.innerHTML=PERF_GOOD.map(g=>'<div class="pg-item"><i data-lucide="check-circle-2"></i><span>'+g+'</span></div>').join(""); }
-function renderPerfContent(){ const w=document.getElementById("perfContent"); if(!w) return;
-  let h='<div class="perf-content-intro"><i data-lucide="info"></i><span>'+PERF_CONTENT_INTRO+'</span></div>';
-  h+=PERF_CONTENT.map(c=>{ const s=pfStat(c.st), ic=c.st==="good"?"check":"alert-triangle";
-    return '<div class="pc-item"><span class="pc-chk" style="background:'+s.bg+';color:'+s.c+'"><i data-lucide="'+ic+'"></i></span><div class="pc-body"><div class="pc-k">'+c.k+'</div><div class="pc-plain">'+c.plain+'</div><div class="pc-tip"><i data-lucide="lightbulb"></i><span>'+c.tip+'</span></div></div></div>'; }).join("");
-  w.innerHTML=h; }
+  w.innerHTML=PERF_GOOD.map(g=>'<div class="pg-item"><span class="pg-chk"><i data-lucide="check"></i></span><span class="pg-t">'+g.t+'</span><span class="pg-cat">'+g.cat+'</span></div>').join(""); }
+let perfContentMode="simple";
+function renderPerfContent(){ const w=document.getElementById("perfContent"); if(!w) return; const detailed=perfContentMode==="detailed";
+  const warnN=PERF_CONTENT.filter(c=>c.st!=="good").length;
+  let h='<div class="pc-top"><div class="pc-intro">Ce que vos textes changent pour Google et vos visiteurs. '+(warnN?('<b>'+warnN+' point'+(warnN>1?"s":"")+' à revoir.</b>'):'Tout est au point.')+'</div>'
+    +'<div class="seg pc-toggle" id="pcToggle"><button data-m="simple" class="'+(detailed?"":"on")+'">Simple</button><button data-m="detailed" class="'+(detailed?"on":"")+'">Détaillé</button></div></div>';
+  h+='<div class="pc-list">'+PERF_CONTENT.map(c=>{ const s=pfStat(c.st), ok=c.st==="good", ic=ok?"check":"alert-triangle";
+    return '<div class="pc-item"><span class="pc-chk" style="background:'+s.bg+';color:'+s.c+'"><i data-lucide="'+ic+'"></i></span><div class="pc-body"><div class="pc-krow"><span class="pc-k">'+c.k+'</span><span class="pc-status" style="color:'+s.c+'">'+(ok?"Au point":"À revoir")+'</span></div>'
+      +(detailed?('<div class="pc-plain">'+c.plain+'</div><div class="pc-tip"><i data-lucide="lightbulb"></i><span>'+c.tip+'</span></div>'):'')
+      +'</div></div>'; }).join("")+'</div>';
+  w.innerHTML=h;
+  w.querySelectorAll("#pcToggle button").forEach(b=>b.addEventListener("click",()=>{ perfContentMode=b.dataset.m; renderPerfContent(); }));
+  refreshIcons(); }
 
 /* ============================================================
    Structure & stratégie : expliquer le rôle de chaque section

@@ -406,6 +406,29 @@
   .pr-fixed{font-size:13px;color:var(--muted);width:76px;text-align:center}
   .pr-add{margin-top:4px}
   .pr-add svg{width:14px;height:14px}
+  /* éditeur d'avis */
+  .tm-list{display:flex;flex-direction:column;gap:12px;margin-bottom:14px}
+  .tm-item{border:1px solid var(--border);border-radius:12px;padding:12px;background:var(--panel)}
+  .tm-top{display:flex;align-items:flex-start;gap:11px;margin-bottom:9px}
+  .tm-photo{all:unset;cursor:pointer;width:46px;height:46px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+  .tm-photo img{width:100%;height:100%;object-fit:cover}
+  .tm-photo-ph svg{width:18px;height:18px}
+  .tm-photo:hover{border-color:var(--teal)}
+  .tm-id{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+  .tm-in{font-family:inherit;font-size:13px;font-weight:600;padding:6px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--ink)}
+  .tm-in:focus{outline:none;border-color:var(--teal)}
+  .tm-in.tm-comp{font-weight:500;font-size:12px;color:var(--ink-soft)}
+  .tm-ord{display:flex;align-items:center;gap:4px;flex-shrink:0}
+  .tm-mv{all:unset;box-sizing:border-box;cursor:pointer;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:7px;color:var(--muted)}
+  .tm-mv:hover:not([disabled]){background:var(--bg);color:var(--ink)}
+  .tm-mv[disabled]{opacity:.3;cursor:default}
+  .tm-mv svg{width:14px;height:14px}
+  .tm-stars{display:flex;gap:3px;margin-bottom:8px}
+  .tm-star{all:unset;cursor:pointer;color:#d8dad7;display:inline-flex}
+  .tm-star svg{width:19px;height:19px;fill:currentColor}
+  .tm-star.on{color:#F2B01E}
+  .tm-text{width:100%;box-sizing:border-box;font-family:inherit;font-size:12.5px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--ink);resize:vertical;line-height:1.5}
+  .tm-text:focus{outline:none;border-color:var(--teal)}
 
   /* modules : chatbot / courses / stats */
   .row2{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:0 0 16px}
@@ -2206,7 +2229,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.9.6" };
+const ADMIN_BUILD = { version: "0.9.7" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -2729,9 +2752,44 @@ function renderLogosEditor(){ const logos=getLogos(); const b=document.getElemen
   document.getElementById("logoAdd").addEventListener("click",()=>logoInput.click());
 }
 
-/* stub remplacé par l'éditeur Avis (sous-étape suivante) */
-function openTestiEditor(){ showContentGuide("neutral", SEC_SPECIAL.avis||""); }
-function applyTestimonials(){}
+/* ---- Avis clients : photo, nom, entreprise, note, texte (add / edit / delete / réordonner) ---- */
+let _testiWork=null, _testiPhotoTarget=null, _testiApplyT=null;
+function seedTesti(){ let src=null; try{ src=WIN&&WIN.CHASKIS_TESTI_DEFAULT; }catch(e){}
+  if(Array.isArray(src)&&src.length) return src.map((c,i)=>({id:"tm"+i, name:c.name||"", company:c.role||"", text:c.text||"", photo:c.photo||"", rating:c.rating||5}));
+  return [{id:"tm0",name:"Marie Laurent",company:"Pharmacie du Lac, Genève",text:"On est passé de 30% de commission à un tarif fixe. En 3 mois, la marge est récupérée sur chaque commande.",photo:"https://randomuser.me/api/portraits/women/44.jpg",rating:5}];
+}
+function getTesti(){ if(Array.isArray(draft.testimonials)) return draft.testimonials; if(!_testiWork) _testiWork=seedTesti(); return _testiWork; }
+function applyTestimonials(){ try{ if(typeof WIN!=="undefined" && WIN && Array.isArray(draft.testimonials)){ WIN.CHASKIS_TESTI=draft.testimonials.map(t=>({text:t.text, name:t.name, role:t.company, photo:t.photo, rating:t.rating})); if(typeof WIN._testiRebuild==="function") WIN._testiRebuild(currentLang); } }catch(e){} }
+function applyTestiDebounced(){ if(_testiApplyT) clearTimeout(_testiApplyT); _testiApplyT=setTimeout(applyTestimonials,260); }
+function commitTesti(){ draft.testimonials=getTesti(); markDirty(); applyTestimonials(); }
+const testiPhotoInput=(function(){ const i=document.createElement("input"); i.type="file"; i.accept="image/webp,image/png,image/jpeg"; i.style.display="none"; document.body.appendChild(i);
+  i.addEventListener("change",()=>{ const f=i.files&&i.files[0]; if(!f||_testiPhotoTarget==null){ i.value=""; return; } i.value=""; if(f.size>1048576){ toast("Photo trop lourde (max 1 Mo)"); return; } const rd=new FileReader(); rd.onload=()=>{ const t=getTesti()[_testiPhotoTarget]; if(t){ t.photo=rd.result; commitTesti(); renderTestiEditor(); } }; rd.readAsDataURL(f); });
+  return i; })();
+const STAR_POLY='<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/>';
+function starsPick(i, rating){ let s=""; for(let k=1;k<=5;k++){ s+='<button type="button" class="tm-star'+(k<=rating?" on":"")+'" data-star="'+i+'" data-v="'+k+'" aria-label="'+k+' sur 5"><svg viewBox="0 0 24 24">'+STAR_POLY+'</svg></button>'; } return s; }
+function openTestiEditor(){ openSpec("Avis clients","Ajoutez, modifiez ou retirez des témoignages : photo, nom, entreprise, note et texte. Le carrousel de la page d'accueil se met à jour."); renderTestiEditor(); }
+function renderTestiEditor(){ const arr=getTesti(); const b=document.getElementById("specBody");
+  const items=arr.map((t,i)=>'<div class="tm-item">'
+    +'<div class="tm-top"><button type="button" class="tm-photo" data-photo="'+i+'" title="Changer la photo">'+(t.photo?'<img src="'+escAttr(t.photo)+'" alt="">':'<span class="tm-photo-ph"><i data-lucide="camera"></i></span>')+'</button>'
+      +'<div class="tm-id"><input class="tm-in" data-name="'+i+'" value="'+escAttr(t.name)+'" placeholder="Nom du client"><input class="tm-in tm-comp" data-comp="'+i+'" value="'+escAttr(t.company)+'" placeholder="Entreprise, ville"></div>'
+      +'<div class="tm-ord"><button class="tm-mv" data-up="'+i+'"'+(i===0?" disabled":"")+' aria-label="Monter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg></button>'
+        +'<button class="tm-mv" data-down="'+i+'"'+(i===arr.length-1?" disabled":"")+' aria-label="Descendre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>'
+        +'<button class="logo-del" data-tmdel="'+i+'" title="Retirer">'+ICO_TRASH+'</button></div></div>'
+    +'<div class="tm-stars">'+starsPick(i,t.rating||5)+'</div>'
+    +'<textarea class="tm-text" data-text="'+i+'" rows="2" placeholder="Ce que dit le client…">'+escHtml(t.text)+'</textarea>'
+  +'</div>').join("");
+  b.innerHTML='<div class="tm-list">'+(items||'<p class="hint">Aucun avis.</p>')+'</div><button class="btn primary spec-add" id="tmAdd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Ajouter un avis</button>';
+  b.querySelectorAll("[data-photo]").forEach(el=>el.addEventListener("click",()=>{ _testiPhotoTarget=+el.dataset.photo; testiPhotoInput.click(); }));
+  b.querySelectorAll("[data-name]").forEach(el=>el.addEventListener("input",()=>{ arr[+el.dataset.name].name=el.value; draft.testimonials=arr; markDirty(); applyTestiDebounced(); }));
+  b.querySelectorAll("[data-comp]").forEach(el=>el.addEventListener("input",()=>{ arr[+el.dataset.comp].company=el.value; draft.testimonials=arr; markDirty(); applyTestiDebounced(); }));
+  b.querySelectorAll("[data-text]").forEach(el=>el.addEventListener("input",()=>{ arr[+el.dataset.text].text=el.value; draft.testimonials=arr; markDirty(); applyTestiDebounced(); }));
+  b.querySelectorAll("[data-star]").forEach(el=>el.addEventListener("click",()=>{ arr[+el.dataset.star].rating=+el.dataset.v; commitTesti(); renderTestiEditor(); }));
+  b.querySelectorAll("[data-up]").forEach(el=>el.addEventListener("click",()=>{ const i=+el.dataset.up; if(i<=0) return; const a=arr.splice(i,1)[0]; arr.splice(i-1,0,a); commitTesti(); renderTestiEditor(); }));
+  b.querySelectorAll("[data-down]").forEach(el=>el.addEventListener("click",()=>{ const i=+el.dataset.down; if(i>=arr.length-1) return; const a=arr.splice(i,1)[0]; arr.splice(i+1,0,a); commitTesti(); renderTestiEditor(); }));
+  b.querySelectorAll("[data-tmdel]").forEach(el=>el.addEventListener("click",()=>{ if(arr.length<=1){ toast("Gardez au moins un avis"); return; } arr.splice(+el.dataset.tmdel,1); commitTesti(); renderTestiEditor(); }));
+  const add=document.getElementById("tmAdd"); if(add) add.addEventListener("click",()=>{ arr.push({id:"tm"+Date.now(), name:"", company:"", text:"", photo:"", rating:5}); commitTesti(); renderTestiEditor(); });
+  refreshIcons();
+}
 
 /* ---- Simulateur & tarifs : source unique partagée (accueil + copilote) ---- */
 const PRICING_KEY="chaskis_pricing";

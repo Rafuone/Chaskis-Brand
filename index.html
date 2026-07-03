@@ -2728,11 +2728,14 @@ if ('serviceWorker' in navigator) {
     { text: "The real-time tracking interface replaced our three in-house tools. Our clients love getting the delivery SMS.", name: "Thomas Meier", role: "Atelier Horloger, La Chaux-de-Fonds", photo: "https://randomuser.me/api/portraits/men/45.jpg" },
   ];
   let testiLang = 'fr';
-  function getCards() { return testiLang === 'en' ? CARDS_EN : CARDS_FR; }
-  const STARS = '<div class="tc-stars">' + Array(5).fill('<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>').join('') + '</div>';
+  // Avis pilotables depuis le back-office (source unique). Repli sur les avis par défaut.
+  try { window.CHASKIS_TESTI_DEFAULT = CARDS_FR; } catch(e){}
+  function getCards() { if (window.CHASKIS_TESTI && window.CHASKIS_TESTI.length) return window.CHASKIS_TESTI; return testiLang === 'en' ? CARDS_EN : CARDS_FR; }
+  const STAR_PT = '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/>';
+  function starsHTML(n) { n = (n==null ? 5 : Math.max(0, Math.min(5, n))); var s=''; for (var i=0;i<5;i++){ s += '<svg viewBox="0 0 24 24"' + (i<n ? '' : ' style="opacity:.22"') + '>' + STAR_PT + '</svg>'; } return '<div class="tc-stars">' + s + '</div>'; }
 
   function makeCard(c) {
-    return '<article class="tc">' + STARS +
+    return '<article class="tc">' + starsHTML(c.rating) +
       '<p class="tc-text">' + c.text + '</p>' +
       '<div class="tc-author"><img class="tc-av" src="' + c.photo + '" alt="' + c.name + '" loading="lazy">' +
       '<div class="tc-info"><h4>' + c.name + '</h4><p>' + c.role + '</p></div></div></article>';
@@ -2746,11 +2749,12 @@ if ('serviceWorker' in navigator) {
   const CARD_STEP = CARD_W + GAP;
   // One "unit" = CARDS.length cards. The track shifts by exactly one unit per cycle.
   // Because the content is periodic with this unit, the reset is mathematically seamless.
-  const UNIT_STEP = getCards().length * CARD_STEP;   // e.g. 4 * 360 = 1440
+  let UNIT_STEP = getCards().length * CARD_STEP;   // recalculé à chaque build (le nombre d'avis peut changer)
   const SPEED = 60;            // px per second
   let styleEl = null;
 
   function build() {
+    UNIT_STEP = getCards().length * CARD_STEP;
     const vw = window.innerWidth;
     // Track must be >= viewport + UNIT_STEP so during the entire cycle the viewport is covered.
     const unitsNeeded = Math.ceil((vw + UNIT_STEP) / UNIT_STEP) + 1; // +1 safety buffer

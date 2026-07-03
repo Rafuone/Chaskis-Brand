@@ -1373,6 +1373,48 @@
   .modal .acts{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
   .media-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
   .media-head h3{margin:0}
+  /* ---- panneau Réglages (tiroir droit) ---- */
+  .set-scrim{position:fixed;inset:0;background:rgba(28,22,42,.42);opacity:0;pointer-events:none;transition:opacity .22s;z-index:190}
+  .set-scrim.show{opacity:1;pointer-events:auto}
+  .set-drawer{position:fixed;top:0;right:0;bottom:0;width:428px;max-width:93vw;background:var(--panel);border-left:1px solid var(--border);box-shadow:-14px 0 44px rgba(40,32,60,.17);transform:translateX(102%);transition:transform .26s cubic-bezier(.4,0,.2,1);z-index:200;display:flex;flex-direction:column}
+  .set-drawer.show{transform:none}
+  .set-hd{display:flex;align-items:center;justify-content:space-between;padding:17px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
+  .set-hd h3{margin:0;font-size:17px;color:var(--ink)}
+  .set-hd .modal-x{position:static}
+  .set-body{flex:1;overflow-y:auto;padding:18px 20px}
+  .set-sec{margin-bottom:22px}
+  .set-sec:last-child{margin-bottom:4px}
+  .set-sec-t{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:9px;display:flex;align-items:center;gap:7px}
+  .set-sec-t svg{width:14px;height:14px}
+  .set-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:4px 14px}
+  .set-row{display:flex;align-items:center;gap:12px;padding:12px 0}
+  .set-row + .set-row{border-top:1px solid var(--border)}
+  .set-row-tx{flex:1;min-width:0}
+  .set-row-t{font-size:13px;font-weight:600;color:var(--ink)}
+  .set-row-s{font-size:11.5px;color:var(--muted);margin-top:1px;line-height:1.4}
+  .set-prof{display:flex;align-items:center;gap:13px;padding:12px 0 14px}
+  .set-prof .avatar{width:46px;height:46px;font-size:16px;flex-shrink:0}
+  .set-prof-tx{min-width:0}
+  .set-prof-n{font-size:15px;font-weight:700;color:var(--ink)}
+  .set-prof-r{font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:6px;margin-top:2px}
+  .set-prof-r .dot{width:7px;height:7px;border-radius:50%}
+  .set-fields{padding:2px 0 12px;display:flex;flex-direction:column;gap:10px}
+  .set-env{display:flex;flex-direction:column;gap:8px}
+  .set-env-opt{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:11px;padding:12px 13px;border:1.5px solid var(--border);border-radius:11px;background:var(--panel)}
+  .set-env-opt:hover{border-color:var(--border-2)}
+  .set-env-opt.on{border-color:var(--teal);background:rgba(75,179,164,.06)}
+  .set-env-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+  .set-env-dot.dev{background:#9A6A15}.set-env-dot.prod{background:#0F6E56}
+  .set-env-tx{flex:1;min-width:0}
+  .set-env-n{font-size:13.5px;font-weight:600;color:var(--ink)}
+  .set-env-s{font-size:11.5px;color:var(--muted);margin-top:1px}
+  .set-env-chk{width:18px;height:18px;color:var(--teal-d);opacity:0;flex-shrink:0}
+  .set-env-opt.on .set-env-chk{opacity:1}
+  .set-seg{display:flex;gap:6px}
+  .set-about{font-size:12px;color:var(--muted);line-height:1.6}
+  .set-about b{color:var(--ink-soft);font-weight:600}
+  .set-about-v{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+  .set-about-v + .set-about-v{border-top:1px solid var(--border)}
 </style>
 </head>
 <body>
@@ -1418,7 +1460,7 @@
       <div class="save-state" id="saveState"><span class="dot"></span><span id="saveLabel">À jour</span></div>
       <button class="btn primary" id="publishBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M20 16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/></svg>Publier</button>
-      <button class="tb-icon-btn dis" title="Réglages · bientôt"><i data-lucide="settings"></i></button>
+      <button class="tb-icon-btn" id="settingsBtn" title="Réglages"><i data-lucide="settings"></i></button>
       <button class="tb-user" id="tbUser" aria-haspopup="true" title="Compte">
         <span class="avatar sm" id="tbAva"></span>
         <span class="tb-user-tx"><span class="tb-user-n" id="tbUserN"></span><span class="tb-user-r" id="tbUserR"></span></span>
@@ -1936,6 +1978,13 @@
   </div>
 </div>
 
+<!-- panneau Réglages (tiroir latéral) -->
+<div class="set-scrim" id="setScrim"></div>
+<aside class="set-drawer" id="setDrawer" aria-label="Réglages" aria-hidden="true">
+  <div class="set-hd"><h3>Réglages</h3><button class="modal-x" id="setClose" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+  <div class="set-body" id="setBody"></div>
+</aside>
+
 <div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span id="toastMsg"></span></div>
 
 <!-- modale ajout / édition d'un utilisateur -->
@@ -2053,7 +2102,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.9.1" };
+const ADMIN_BUILD = { version: "0.9.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -4941,12 +4990,60 @@ function openBuildMenu(){ closeBuildMenu(); const btn=document.getElementById("s
 function bmOutside(e){ const m=document.getElementById("buildMenu"), btn=document.getElementById("sbBuild"); if(m && !m.contains(e.target) && btn && !btn.contains(e.target)) closeBuildMenu(); }
 function closeBuildMenu(){ const m=document.getElementById("buildMenu"); if(m) m.remove(); document.removeEventListener("mousedown",bmOutside,true); }
 
+/* ============================================================
+   Panneau Réglages (tiroir droit)
+   ============================================================ */
+const NOTIF_DEFAULT={ weekly:true, newRdv:true, published:true };
+function getNotif(){ return Object.assign({}, NOTIF_DEFAULT, loadUI().notif||{}); }
+function setNotif(k,v){ const n=getNotif(); n[k]=v; saveUI({notif:n}); }
+function setToggleRow(t,s,on,attrs){ return '<div class="set-row"><div class="set-row-tx"><div class="set-row-t">'+t+'</div>'+(s?'<div class="set-row-s">'+s+'</div>':'')+'</div><button class="switch'+(on?" on":"")+'" role="switch" aria-checked="'+on+'" '+attrs+'><span class="k"></span></button></div>'; }
+function openSettings(){ renderSettings(); const sc=document.getElementById("setScrim"), dr=document.getElementById("setDrawer"); sc.classList.add("show"); dr.classList.add("show"); dr.setAttribute("aria-hidden","false"); document.addEventListener("keydown",setEsc); }
+function closeSettings(){ const sc=document.getElementById("setScrim"), dr=document.getElementById("setDrawer"); if(sc) sc.classList.remove("show"); if(dr){ dr.classList.remove("show"); dr.setAttribute("aria-hidden","true"); } document.removeEventListener("keydown",setEsc); }
+function setEsc(e){ if(e.key==="Escape") closeSettings(); }
+function renderSettings(){ const b=document.getElementById("setBody"); if(!b) return; const u=currentUser(), env=getEnv(), n=getNotif(), mini=!!loadUI().mini;
+  const envOpt=(k,name,s)=>'<button type="button" class="set-env-opt'+(env===k?" on":"")+'" data-env="'+k+'"><span class="set-env-dot '+k+'"></span><span class="set-env-tx"><span class="set-env-n">'+name+'</span><span class="set-env-s">'+s+'</span></span>'+BM_CHK.replace("bm-chk","set-env-chk")+'</button>';
+  b.innerHTML=
+    '<div class="set-sec"><div class="set-sec-t"><i data-lucide="user"></i>Profil</div>'
+      +'<div class="set-prof"><span class="avatar" style="background:'+roleColor(u.role)+';color:#fff">'+userInitials(u)+'</span><div class="set-prof-tx"><div class="set-prof-n">'+escHtml(u.name)+'</div><div class="set-prof-r"><span class="dot" style="background:'+roleColor(u.role)+'"></span>'+roleLabel(u.role)+'</div></div></div>'
+      +'<div class="set-fields"><div class="formf" style="margin:0"><label>Nom complet</label><input id="setName" value="'+escHtml(u.name)+'"></div><div class="formf" style="margin:0"><label>Email</label><input id="setEmail" value="'+escHtml(u.email||"")+'" placeholder="prenom@chaskis.ch"></div></div></div>'
+    +'<div class="set-sec"><div class="set-sec-t"><i data-lucide="server"></i>Environnement</div><div class="set-env">'+envOpt("dev","Développement","Brouillon de travail, non public")+envOpt("prod","Production","Le site réellement en ligne")+'</div></div>'
+    +'<div class="set-sec"><div class="set-sec-t"><i data-lucide="sliders-horizontal"></i>Préférences d\'affichage</div><div class="set-card">'
+      +setToggleRow("Menu réduit par défaut","La barre latérale s\'ouvre repliée à la connexion",mini,'id="setMini"')
+      +'<div class="set-row"><div class="set-row-tx"><div class="set-row-t">Langue d\'édition par défaut</div><div class="set-row-s">La langue montrée à l\'ouverture de l\'éditeur</div></div><div class="seg set-seg" id="setLang"><button data-l="fr" class="'+(currentLang==="fr"?"on":"")+'">FR</button><button data-l="en" class="'+(currentLang==="en"?"on":"")+'">EN</button></div></div>'
+    +'</div></div>'
+    +'<div class="set-sec"><div class="set-sec-t"><i data-lucide="bell"></i>Notifications <span style="color:var(--muted);font-weight:400">· démo</span></div><div class="set-card">'
+      +setToggleRow("Résumé hebdomadaire","Un email chaque lundi avec l\'activité du site",n.weekly,'data-n="weekly"')
+      +setToggleRow("Nouveau rendez-vous","Alerte à chaque prise de rendez-vous",n.newRdv,'data-n="newRdv"')
+      +setToggleRow("Version publiée","Alerte quand une mise en ligne est faite",n.published,'data-n="published"')
+    +'</div></div>'
+    +'<div class="set-sec"><div class="set-sec-t"><i data-lucide="info"></i>À propos</div><div class="set-card">'
+      +'<div class="set-about-v"><span class="set-about">Back-office Chaskis</span><b class="set-about" style="color:var(--ink)">v'+ADMIN_BUILD.version+'</b></div>'
+      +'<div class="set-about-v"><span class="set-about">Environnement</span><span class="sb-build-env '+env+'" style="font-size:10.5px">'+(env==="prod"?"prod":"dev")+'</span></div>'
+      +'<div class="set-about-v"><span class="set-about">Support technique</span><b class="set-about" style="color:var(--ink)">'+GAMMA+'</b></div>'
+    +'</div><p class="set-about" style="margin:10px 2px 0">L\'authentification réelle (mots de passe, invitations) arrivera à la mise en ligne.</p></div>';
+  // profil
+  const nm=document.getElementById("setName"); if(nm) nm.addEventListener("input",()=>{ u.name=nm.value; saveUsers(); renderUserChip(); const pn=b.querySelector(".set-prof-n"); if(pn) pn.textContent=nm.value; });
+  const em=document.getElementById("setEmail"); if(em) em.addEventListener("input",()=>{ u.email=em.value; saveUsers(); });
+  // environnement
+  b.querySelectorAll("[data-env]").forEach(o=>o.addEventListener("click",()=>{ setEnv(o.dataset.env); renderSettings(); }));
+  // préférences
+  const mn=document.getElementById("setMini"); if(mn) mn.addEventListener("click",()=>{ const on=!mn.classList.contains("on"); mn.classList.toggle("on",on); mn.setAttribute("aria-checked",on); app.classList.toggle("mini",on); saveUI({mini:on}); });
+  b.querySelectorAll("#setLang button").forEach(bt=>bt.addEventListener("click",()=>{ currentLang=bt.dataset.l; saveUI({editLang:currentLang}); b.querySelectorAll("#setLang button").forEach(x=>x.classList.toggle("on",x===bt)); document.querySelectorAll("#lang button").forEach(x=>x.classList.toggle("on",x.dataset.lang===currentLang)); if(WIN&&typeof WIN.setLang==="function"){ try{ WIN.setLang(currentLang); }catch(e){} } if(typeof applyTextForLang==="function") applyTextForLang(); toast(currentLang==="en"?"Édition en anglais":"Édition en français"); }));
+  // notifications
+  b.querySelectorAll("[data-n]").forEach(sw=>sw.addEventListener("click",()=>{ const on=!sw.classList.contains("on"); sw.classList.toggle("on",on); sw.setAttribute("aria-checked",on); setNotif(sw.dataset.n,on); }));
+  refreshIcons();
+}
+
 (function boot(){
   const ui=loadUI();
   applyRole();
   const tb=document.getElementById("tbUser"); if(tb) tb.addEventListener("click",openUserMenu);
   const lo=document.getElementById("sbLogout"); if(lo) lo.addEventListener("click",logout);
   renderBuild(); const sbb=document.getElementById("sbBuild"); if(sbb) sbb.addEventListener("click",openBuildMenu);
+  const setBtn=document.getElementById("settingsBtn"); if(setBtn) setBtn.addEventListener("click",openSettings);
+  const setCl=document.getElementById("setClose"); if(setCl) setCl.addEventListener("click",closeSettings);
+  const setSc=document.getElementById("setScrim"); if(setSc) setSc.addEventListener("click",closeSettings);
+  if(ui.editLang==="en"||ui.editLang==="fr") currentLang=ui.editLang;
   applyResponsiveNav();
   refreshIcons();
   renderSecList();

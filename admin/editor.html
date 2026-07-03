@@ -279,6 +279,7 @@
   .mod-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 16px}
   @media(max-width:760px){.mod-grid{grid-template-columns:1fr}}
   .ex-note{font-size:12px;color:var(--ink-soft);background:#fff8e8;border:1px solid #f0e2bd;border-radius:9px;padding:9px 11px;margin:0 0 16px;display:flex;gap:8px;align-items:flex-start}
+  .ex-note[hidden]{display:none}
   .ex-note svg{width:15px;height:15px;flex-shrink:0;margin-top:1px;color:#c79a1e}
   /* ---- Performance ---- */
   .perf-card{display:flex;align-items:center;gap:16px}
@@ -300,6 +301,105 @@
   .pf-good{background:#E1F5EE;color:#0F6E56}
   .pf-warn{background:#FBF0DD;color:#9A6A15}
   .pf-bad{background:#FBE4E4;color:#B23B3B}
+  /* ---- Performance "en clair" ---- */
+  .perf-verdict{display:flex;align-items:center;gap:18px;border-radius:14px;padding:16px 20px;margin-bottom:16px;border:1px solid var(--border);background:#fff;box-shadow:0 1px 2px rgba(40,32,60,.03)}
+  .pv-gauge{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px}
+  .pv-cap{font-size:9.5px;font-weight:600;color:var(--muted);text-align:center;line-height:1.25}
+  .pv-main{flex:1;min-width:0}
+  .pv-title{font-size:17px;font-weight:800;letter-spacing:-.01em;color:var(--ink);line-height:1.25;display:flex;align-items:center;gap:8px}
+  .pv-dot{display:inline-flex;flex-shrink:0}.pv-dot svg{width:20px;height:20px}
+  .pv-sub{font-size:12.5px;color:var(--ink-soft);margin-top:5px;line-height:1.45}
+  .pring{position:relative;flex-shrink:0}
+  .pring svg{width:100%;height:100%;display:block}
+  .pring-v{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;letter-spacing:-.03em}
+  .perf-pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+  @media(max-width:900px){.perf-pillars{grid-template-columns:1fr}}
+  .pcard{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px;display:flex;flex-direction:column}
+  .pcard-top{display:flex;align-items:center;gap:10px}
+  .pcard-ic{width:38px;height:38px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+  .pcard-ic svg{width:20px;height:20px}
+  .pcard-t{font-size:13px;font-weight:700;flex:1;min-width:0}
+  .pcard-plain{font-size:14px;font-weight:700;color:var(--ink);margin-top:13px;line-height:1.3}
+  .pcard-benefit{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-top:9px}
+  .pcard-pill{align-self:flex-start;margin-top:9px}
+  .pcard-top .pring-v{font-weight:800}
+  .pcard-toggle{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--teal-d);margin-top:13px;width:fit-content}
+  .pcard-toggle svg{width:14px;height:14px;transition:transform .15s}
+  .pcard.open .pcard-toggle svg{transform:rotate(180deg)}
+  .pcard-detail{display:none;margin-top:11px;padding-top:4px;border-top:1px solid var(--border)}
+  .pcard.open .pcard-detail{display:block}
+  .pdet-row{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--border)}
+  .pdet-row:last-child{border-bottom:none}
+  .pdet-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .pd-k{flex:1;min-width:0;font-size:12px;color:var(--ink-soft);line-height:1.35}
+  .pd-tech{color:var(--muted);font-weight:500}
+  .pd-v{font-size:12px;font-weight:600;white-space:nowrap;flex-shrink:0}
+  .perf-act{display:flex;gap:13px;padding:15px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+  .perf-act:first-child{padding-top:4px}.perf-act:last-child{border-bottom:none;padding-bottom:2px}
+  .pa-ic{width:34px;height:34px;border-radius:9px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center}
+  .pa-ic svg{width:17px;height:17px}
+  .pa-body{flex:1;min-width:0}
+  .pa-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .pa-title{font-size:13.5px;font-weight:700;color:var(--ink)}
+  .pa-impact{font-size:10.5px;font-weight:700;border-radius:20px;padding:2px 9px;white-space:nowrap}
+  .pa-area{font-size:11px;color:var(--muted);font-weight:500}
+  .pa-why{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-top:6px}
+  .pa-how{font-size:12.5px;color:var(--ink);line-height:1.5;margin-top:8px;display:flex;gap:8px;align-items:flex-start;background:var(--bg);border-radius:9px;padding:9px 11px}
+  .pa-how svg{width:15px;height:15px;color:#B8791C;flex-shrink:0;margin-top:1px}
+  .pa-how b{font-weight:700}
+  .pa-cta{margin-top:11px;display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+  .pa-cta .btn svg{width:14px;height:14px}
+  .pa-self{font-size:11.5px;font-weight:600;color:#0F6E56;display:inline-flex;align-items:center;gap:4px}
+  .pa-self svg{width:13px;height:13px}
+  .pa-gamma{font-size:12.5px;color:var(--ink);line-height:1.5;margin-top:8px;display:flex;gap:8px;align-items:flex-start;background:#EEF3FB;border:1px solid #DCE6F5;border-radius:9px;padding:9px 11px}
+  .pa-gamma svg{width:15px;height:15px;color:#2F6FE0;flex-shrink:0;margin-top:1px}
+  .perf-good-list{display:flex;flex-direction:column}
+  .pg-item{display:flex;gap:9px;align-items:flex-start;padding:8px 0;font-size:12.5px;color:var(--ink-soft);line-height:1.45}
+  .pg-item svg{width:16px;height:16px;color:#0F6E56;flex-shrink:0;margin-top:1px}
+  .perf-content-intro{font-size:12.5px;color:var(--ink-soft);line-height:1.5;background:#F3F0FC;border:1px solid #E4DDF7;border-radius:10px;padding:10px 12px;margin-bottom:12px;display:flex;gap:8px;align-items:flex-start}
+  .perf-content-intro svg{width:15px;height:15px;color:#6B5BCC;flex-shrink:0;margin-top:1px}
+  .pc-item{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--border)}
+  .pc-item:first-of-type{border-top:none}
+  .pc-chk{width:22px;height:22px;border-radius:7px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;margin-top:1px}
+  .pc-chk svg{width:13px;height:13px}
+  .pc-body{flex:1;min-width:0}
+  .pc-k{font-size:13px;font-weight:700;color:var(--ink)}
+  .pc-plain{font-size:12px;color:var(--ink-soft);line-height:1.45;margin-top:3px}
+  .pc-tip{font-size:11.5px;color:var(--teal-d);margin-top:5px;display:flex;gap:6px;align-items:flex-start}
+  .pc-tip svg{width:13px;height:13px;flex-shrink:0;margin-top:1px}
+  /* ---- Structure & stratégie ---- */
+  .struct-hero{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(100deg,#F2F0FC,#EAF2FB);border:1px solid #E2DAF5;border-radius:12px;padding:14px 16px;margin:16px 0 15px;font-size:13px;color:var(--ink-soft);line-height:1.55}
+  .struct-hero > svg{width:20px;height:20px;color:#6B5BCC;flex-shrink:0;margin-top:1px}
+  .struct-hero b{color:var(--ink)}
+  .struct-legend{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:18px}
+  .struct-leg{font-size:11.5px;font-weight:700;border-radius:20px;padding:4px 11px}
+  .struct-arrow{display:inline-flex;color:var(--muted)}
+  .struct-arrow svg{width:15px;height:15px}
+  .struct-item{display:flex;gap:14px;align-items:stretch}
+  .struct-rail{position:relative;width:12px;flex-shrink:0;display:flex;justify-content:center}
+  .struct-rail::before{content:"";position:absolute;top:0;bottom:0;width:2px;background:var(--border)}
+  .struct-item:first-child .struct-rail::before{top:22px}
+  .struct-item:last-child .struct-rail::before{bottom:calc(100% - 22px)}
+  .struct-dot{position:relative;z-index:1;width:12px;height:12px;border-radius:50%;margin-top:16px;box-shadow:0 0 0 3px var(--panel)}
+  .struct-card{flex:1;min-width:0;border:1px solid var(--border);border-radius:12px;background:#fff;padding:13px 15px;margin-bottom:12px}
+  .struct-card.key{border-color:#E8D9B0;background:linear-gradient(180deg,#FFFDF7,#fff)}
+  .struct-hd{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:11px;width:100%}
+  .struct-ic{width:34px;height:34px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+  .struct-ic svg{width:18px;height:18px}
+  .struct-name{font-size:14px;font-weight:700;color:var(--ink);flex:1;min-width:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .struct-key{font-size:10px;font-weight:700;color:#9A6A15;background:#FBF0DD;border-radius:20px;padding:2px 8px;display:inline-flex;align-items:center;gap:3px}
+  .struct-key svg{width:11px;height:11px}
+  .struct-phase{font-size:10.5px;font-weight:700;border-radius:20px;padding:2px 9px;flex-shrink:0;white-space:nowrap}
+  .struct-caret{width:16px;height:16px;color:var(--muted);flex-shrink:0;transition:transform .15s}
+  .struct-card.open .struct-caret{transform:rotate(180deg)}
+  .struct-role{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-top:9px;padding-left:45px}
+  .struct-detail{display:none;margin-top:11px;padding:11px 0 2px 45px;border-top:1px solid var(--border)}
+  .struct-card.open .struct-detail{display:block}
+  .struct-why{font-size:12.5px;color:var(--ink-soft);line-height:1.5}
+  .struct-why b,.struct-risk b{color:var(--ink);font-weight:700}
+  .struct-risk{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-top:9px;display:flex;gap:8px;align-items:flex-start;background:#FBF3F3;border:1px solid #F3DEDE;border-radius:9px;padding:9px 11px}
+  .struct-risk svg{width:15px;height:15px;color:#B23B3B;flex-shrink:0;margin-top:1px}
+  @media(max-width:640px){ .struct-phase{display:none} .struct-role,.struct-detail{padding-left:0} }
   /* ---- Affiliation ---- */
   .affil-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
   @media(max-width:1100px){.affil-stats{grid-template-columns:repeat(2,1fr)}}
@@ -332,6 +432,31 @@
   .affil-card .ac-addr{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px}
   .affil-card .ac-addr svg{width:13px;height:13px;flex-shrink:0}
   .affil-card .ac-offer{font-size:12px;color:var(--ink-soft);line-height:1.4;margin-top:2px}
+  /* recherche + pagination partenaires */
+  .affil-search{position:relative;margin-bottom:11px}
+  .affil-search input{width:100%;box-sizing:border-box;font-family:inherit;font-size:13px;padding:9px 12px 9px 35px;border:1px solid var(--border);border-radius:9px;background:#fff;color:var(--ink)}
+  .affil-search input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(75,179,164,.16)}
+  .affil-search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--muted);pointer-events:none}
+  .affil-more{display:flex;justify-content:center;margin-top:14px}
+  /* jeux concours : une identité par concours (pastille typée), fini l'icône répétée */
+  .contest-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+  .contest-card{border:1px solid var(--border);border-radius:12px;padding:14px;background:#fff;display:flex;flex-direction:column;gap:9px;transition:box-shadow .15s,transform .15s}
+  .contest-card:hover{box-shadow:0 6px 20px rgba(40,32,60,.08);transform:translateY(-2px)}
+  .cc-top{display:flex;align-items:center;gap:9px}
+  .cc-tile{width:34px;height:34px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cc-tile svg{width:18px;height:18px}
+  .cc-kind{font-size:11px;font-weight:700;border-radius:20px;padding:2px 9px}
+  .cc-status{margin-left:auto;flex-shrink:0}
+  .cc-title{font-size:14.5px;font-weight:700;line-height:1.25}
+  .cc-prize{font-size:13px;font-weight:600;color:var(--ink);line-height:1.35}
+  .cc-period{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-top:auto}
+  .cc-period svg{width:13px;height:13px;flex-shrink:0}
+  /* rangée de formulaire à 2 colonnes, rythme vertical homogène */
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:11px}
+  .affil-newcat{display:flex;gap:8px;align-items:center;margin:-2px 0 11px}
+  .affil-newcat[hidden]{display:none}
+  .affil-newcat input{flex:1;min-width:0;font-family:inherit;font-size:13px;padding:8px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--ink)}
+  .affil-newcat input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(75,179,164,.16)}
   /* éditeur d'image dans la modale */
   .ae-preview{position:relative;height:150px;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:linear-gradient(135deg,#EEEDFE,#E1F5EE);background-size:cover}
   .ae-logo{position:absolute;top:12px;right:12px;border-radius:9px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.16);display:inline-flex;align-items:center;justify-content:center}
@@ -432,12 +557,46 @@
   .acc-tbl td{padding:9px 8px;border-bottom:1px solid var(--border);text-align:center}
   .acc-tbl td:first-child{text-align:left;color:var(--ink);font-weight:500}
   .acc-tbl tr:last-child td{border-bottom:none}
-  .acc-chk{all:unset;box-sizing:border-box;cursor:pointer;width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border);display:inline-flex;align-items:center;justify-content:center;color:#fff}
-  .acc-chk svg{width:13px;height:13px;opacity:0}
+  /* case à cocher unifiée : un seul glyphe centré par état (coché / partiel / vide) */
+  .acc-chk{all:unset;box-sizing:border-box;cursor:pointer;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border-2);background:#fff;display:inline-flex;align-items:center;justify-content:center;color:#fff;transition:background .12s,border-color .12s}
+  .acc-chk:not(.locked):hover{border-color:var(--teal)}
+  .acc-chk svg{width:12px;height:12px}
   .acc-chk.on{background:var(--teal);border-color:var(--teal)}
-  .acc-chk.on svg{opacity:1}
-  .acc-chk.locked{background:var(--bg);border-color:var(--border);cursor:default}
-  .acc-chk.locked svg{opacity:1;stroke:var(--teal-d)}
+  .acc-chk.ind{border-color:var(--teal)}
+  .acc-dash{width:9px;height:2px;border-radius:2px;background:var(--teal)}
+  .acc-chk.locked{cursor:default;opacity:.5}
+  /* matrice de capacités : accordéon par module + interrupteur maître tri-état */
+  .acc-caps{min-width:560px}
+  .acc-grp>td{background:var(--bg)}
+  .acc-grp-tog{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:8px;width:100%;font-size:12.5px;font-weight:600;color:var(--ink)}
+  .acc-grp-ic{display:inline-flex;color:var(--muted)}
+  .acc-grp-ic svg{width:15px;height:15px}
+  .acc-caret{width:15px;height:15px;color:var(--muted);transition:transform .15s;flex-shrink:0}
+  .acc-grp.col .acc-caret,.acc-caret.col{transform:rotate(-90deg)}
+  .acc-grp-n{font-size:11px;font-weight:600;color:var(--muted);background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:0 7px;line-height:16px}
+  .acc-cap-lbl{padding-left:34px!important;color:var(--ink-soft)!important;font-weight:500!important}
+  .acc-cap.hide{display:none}
+  /* interrupteur maître de module = même case .acc-chk, état .ind pour "partiel" */
+  /* exceptions par personne (modale) */
+  .usr-edit{all:unset;box-sizing:border-box;cursor:pointer;width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0}
+  .usr-edit:hover{background:var(--bg);color:var(--ink)}
+  .usr-edit svg{width:17px;height:17px}
+  .usr-ov-badge{font-size:10.5px;font-weight:600;color:#185FA5;background:#E6F1FB;border-radius:20px;padding:1px 7px;margin-left:8px;vertical-align:1px}
+  .usr-ov-hint{font-weight:500;color:var(--muted)}
+  .cap-ov{max-height:288px;overflow:auto;border:1px solid var(--border);border-radius:10px;padding:4px}
+  .cov-grp+.cov-grp{border-top:1px solid var(--border)}
+  .cov-ghd{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:8px;width:100%;padding:8px;border-radius:8px;font-size:12.5px;font-weight:600;color:var(--ink)}
+  .cov-ghd:hover{background:var(--bg)}
+  .cov-ghd .acc-caret{margin-left:auto}
+  .cov-gic{display:inline-flex;color:var(--muted)}
+  .cov-gic svg{width:15px;height:15px}
+  .cov-gn{font-size:10.5px;font-weight:600;color:#185FA5;background:#E6F1FB;border-radius:20px;min-width:17px;text-align:center;padding:0 6px;line-height:17px}
+  .cov-body.hide{display:none}
+  .cov-row{display:flex;align-items:center;gap:9px;padding:6px 8px 6px 31px}
+  .cov-row .cov-lbl{flex:1;min-width:0;font-size:12.5px;color:var(--ink-soft)}
+  .cov-badge{font-size:10px;font-weight:600;border-radius:20px;padding:1px 7px}
+  .cov-badge.add{color:#0F6E56;background:#E1F5EE}
+  .cov-badge.rem{color:#C0392B;background:#FBEAEA}
   .chips{display:flex;flex-wrap:wrap;gap:6px}
   .chip{font-size:11.5px;padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--ink-soft);background:#fff}
   .chip.ok{background:#eaf6f1;color:#0f6e56;border-color:#cfeae4}
@@ -1133,6 +1292,7 @@
     <div class="navlist" id="navlist">
       <button class="nav-i on" data-view="dashboard"><i data-lucide="layout-dashboard"></i><span class="nav-lbl">Tableau de bord</span><span class="nav-tip">Tableau de bord</span></button>
       <button class="nav-i" data-view="editor"><i data-lucide="square-pen"></i><span class="nav-lbl">Édition du site</span><span class="nav-tip">Édition du site</span></button>
+      <button class="nav-i" data-view="structure"><i data-lucide="route"></i><span class="nav-lbl">Structure & stratégie</span><span class="nav-tip">Structure & stratégie</span></button>
       <button class="nav-i" data-view="media"><i data-lucide="image"></i><span class="nav-lbl">Médiathèque</span><span class="nav-tip">Médiathèque</span></button>
       <button class="nav-i" data-view="versions"><i data-lucide="history"></i><span class="nav-lbl">Versions</span><span class="nav-tip">Versions</span></button>
       <div class="nav-sep"></div>
@@ -1560,25 +1720,37 @@
       <!-- ===== Performance ===== -->
       <section class="view scroll" id="view-perf">
         <div class="pan-head" style="align-items:flex-start">
-          <div><h1 class="pg-h">Performance</h1><p class="pg-sub" style="margin-bottom:0">La santé technique de chaskis.ch : référencement, accessibilité et rapidité.</p></div>
-          <div class="cb-pulse-r"><span class="hint" id="perfLast"></span><button class="btn primary" id="perfRun"><i data-lucide="refresh-cw"></i>Lancer une analyse</button></div>
+          <div><h1 class="pg-h">Performance</h1><p class="pg-sub" style="margin-bottom:0">La santé de votre site, expliquée simplement.</p></div>
+          <div class="cb-pulse-r"><span class="hint" id="perfLast"></span><button class="btn primary" id="perfRun"><i data-lucide="refresh-cw"></i>Relancer l'analyse</button></div>
         </div>
-        <div class="ex-note" style="margin-top:16px"><i data-lucide="info"></i><div>Ébauche : les scores sont des exemples. Ils seront branchés sur une vraie analyse (Google PageSpeed / Lighthouse) à l'étape dédiée, avec un historique daté.</div></div>
-        <div class="stat-row" id="perfScores"></div>
+        <div class="ex-note" style="margin-top:16px"><i data-lucide="info"></i><div>Ébauche : les résultats sont des exemples. Ils seront branchés sur une vraie analyse (Google PageSpeed / Lighthouse) à l'étape dédiée, avec un historique daté.</div></div>
+        <div id="perfVerdict"></div>
+        <div class="perf-pillars" id="perfPillars"></div>
+        <div class="dpan">
+          <div class="pan-head"><h4><span class="hic amber"><i data-lucide="list-checks"></i></span> À améliorer en priorité</h4><span class="hint" id="perfActionsHint" style="margin:0"></span></div>
+          <div id="perfActions"></div>
+        </div>
         <div class="dash-grid">
           <div class="dpan">
-            <div class="pan-head"><h4><span class="hic teal"><i data-lucide="activity"></i></span> Core Web Vitals</h4><span class="hint" style="margin:0">Vitesse ressentie</span></div>
-            <div id="perfVitals"></div>
+            <div class="pan-head"><h4><span class="hic teal"><i data-lucide="check-circle-2"></i></span> Ce qui va déjà bien</h4></div>
+            <div id="perfGood"></div>
           </div>
           <div class="dpan">
-            <div class="pan-head"><h4><span class="hic"><i data-lucide="search"></i></span> Référencement (SEO)</h4><span class="hint" style="margin:0">Points vérifiés</span></div>
-            <div id="perfSeo"></div>
+            <div class="pan-head"><h4><span class="hic violet"><i data-lucide="pen-line"></i></span> Vos textes et Google</h4><span class="hint" style="margin:0">ce que vos mots changent</span></div>
+            <div id="perfContent"></div>
           </div>
         </div>
-        <div class="dpan">
-          <div class="pan-head"><h4><span class="hic violet"><i data-lucide="accessibility"></i></span> Accessibilité</h4><span class="hint" style="margin:0">Conformité WCAG</span></div>
-          <div id="perfA11y"></div>
+      </section>
+
+      <!-- ===== Structure & stratégie ===== -->
+      <section class="view scroll" id="view-structure">
+        <div class="pan-head" style="align-items:flex-start">
+          <div><h1 class="pg-h">Structure & stratégie</h1><p class="pg-sub" style="margin-bottom:0">Pourquoi votre page d'accueil est construite dans cet ordre. Chaque section a un rôle.</p></div>
         </div>
+        <div class="struct-hero"><i data-lucide="route"></i><div><b>Votre page raconte une histoire, dans un ordre précis.</b> Elle capte l'attention, convainc, rassure, puis fait passer à l'action. Retirer une section, c'est enlever un maillon de la chaîne. Voici le rôle de chacune.</div></div>
+        <div class="struct-legend" id="structLegend"></div>
+        <div class="struct-map" id="structMap"></div>
+        <div class="ex-note" style="margin-top:6px"><i data-lucide="info"></i><div>Les sections marquées « section clé » sont celles qui déclenchent le passage à l'action. Les retirer ou les vider a un fort impact sur vos demandes de contact.</div></div>
       </section>
 
       <!-- ===== Affiliation ===== -->
@@ -1591,8 +1763,10 @@
         <div class="affil-stats" id="affilStats"></div>
         <div class="dpan">
           <div class="pan-head"><h4><span class="hic teal"><i data-lucide="store"></i></span> Partenaires</h4><span class="hint" id="affilCount" style="margin:0"></span></div>
+          <div class="affil-search"><i data-lucide="search"></i><input id="affilSearch" placeholder="Rechercher un partenaire (nom, adresse)…"></div>
           <div class="affil-filter" id="affilFilter"></div>
           <div class="affil-grid" id="affilList"></div>
+          <div class="affil-more" id="affilMore"></div>
         </div>
         <div class="dpan">
           <div class="pan-head"><h4><span class="hic violet"><i data-lucide="gift"></i></span> Jeux concours</h4><span class="hint" style="margin:0">Réservés aux équipes</span></div>
@@ -1651,7 +1825,7 @@
           <div id="usrList"></div>
         </div>
         <div class="dpan">
-          <div class="pan-head"><h4><span class="hic violet"><i data-lucide="shield-check"></i></span> Droits par rôle</h4><span class="hint" style="margin:0">Cochez les modules accessibles</span></div>
+          <div class="pan-head"><h4><span class="hic violet"><i data-lucide="shield-check"></i></span> Droits par rôle</h4><span class="hint" style="margin:0">Chaque rôle est un socle de capacités. Dépliez un module pour régler les actions.</span></div>
           <div id="usrAccess"></div>
         </div>
       </section>
@@ -1669,7 +1843,9 @@
     <h3 style="padding-right:34px" id="usrModalT">Ajouter un utilisateur</h3>
     <div class="formf"><label>Nom complet<span class="req">*</span></label><input id="usrName" placeholder="Prénom Nom"></div>
     <div class="formf"><label>Email</label><input id="usrEmail" placeholder="prenom@chaskis.ch"></div>
-    <div class="formf"><label>Rôle<span class="req">*</span></label><select class="formfsel" id="usrRole"><option value="admin">Administrateur (accès total)</option><option value="commercial">Commercial</option><option value="editor">Éditeur</option></select></div>
+    <div class="formf"><label>Rôle<span class="req">*</span></label><select class="formfsel" id="usrRole"><option value="admin">Administrateur</option><option value="commercial">Commercial</option><option value="leadcommercial">Lead commercial</option><option value="editor">Éditeur</option></select></div>
+    <div class="formf" id="usrOvWrap" hidden><label>Accès sur-mesure <span class="usr-ov-hint">au-delà du rôle</span></label><div class="cap-ov" id="usrOv"></div></div>
+    <div class="ex-note" id="usrOvNote" hidden style="margin-bottom:11px"><i data-lucide="shield-check"></i><div>Un administrateur a accès à tout, il n'y a rien à restreindre.</div></div>
     <div class="acts"><button class="btn ghost" id="usrCancel">Annuler</button><button class="btn primary" id="usrSave">Enregistrer</button></div>
   </div>
 </div>
@@ -1748,14 +1924,14 @@
   <div class="modal">
     <button class="modal-x" id="affilClose" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     <h3 style="padding-right:34px" id="affilModalT">Ajouter un partenaire</h3>
-    <p class="req-note"><span class="req">*</span> champs obligatoires</p>
     <div class="formf"><label>Image et logo du partenaire</label><div id="affilImgEditor"></div></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:2px">
+    <div class="form-row">
       <div class="formf" style="margin:0"><label>Nom<span class="req">*</span></label><input id="affilName" placeholder="Le Comptoir"></div>
-      <div class="formf" style="margin:0"><label>Catégorie<span class="req">*</span></label><select class="formfsel" id="affilCat"><option value="restaurant">Restaurant</option><option value="commerce">Commerce</option><option value="service">Service</option><option value="sport">Sport & bien-être</option><option value="autre">Autre</option></select></div>
+      <div class="formf" style="margin:0"><label>Catégorie<span class="req">*</span></label><select class="formfsel" id="affilCat"></select></div>
     </div>
+    <div class="affil-newcat" id="affilNewCat" hidden><input id="affilNewCatInput" placeholder="Nom de la nouvelle catégorie" maxlength="28"><button type="button" class="btn primary sm" id="affilNewCatOk">Ajouter</button><button type="button" class="btn ghost sm" id="affilNewCatCancel">Annuler</button></div>
     <div class="formf"><label>Adresse</label><input id="affilAddr" placeholder="Rue du Rhône 12, 1204 Genève"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div class="form-row">
       <div class="formf" style="margin:0"><label>Type d'avantage<span class="req">*</span></label><select class="formfsel" id="affilAdvType"><option value="pct">Pourcentage de remise</option><option value="item">Article ou produit offert</option><option value="amount">Montant offert (CHF)</option><option value="other">Autre avantage</option></select></div>
       <div class="formf" style="margin:0"><label id="affilAdvLabel">Remise (%)<span class="req">*</span></label><input id="affilAdvValue" placeholder="15"></div>
     </div>
@@ -2173,7 +2349,8 @@ function updateDashboard(){
   const gd=document.getElementById("dashDate");
   if(gd){ const d=new Date(); const wd=WEEKDAYS[d.getDay()];
     gd.textContent=wd.charAt(0).toUpperCase()+wd.slice(1)+" "+d.getDate()+" "+MONTHS_FULL[d.getMonth()]+" "+d.getFullYear(); }
-  renderDashHero(role); renderDashStats(role); renderDashPanels(role); refreshIcons();
+  const drole = role==="leadcommercial" ? "commercial" : role;
+  renderDashHero(drole); renderDashStats(drole); renderDashPanels(drole); refreshIcons();
 }
 const HERO_IC={
   editor:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
@@ -2256,7 +2433,7 @@ function fillDashActivity(){ const da=document.getElementById("dashActivity"); i
   const acts=[
     {who:"Léa Fontaine", role:"editor", t:"a modifié la page d'accueil", w:"il y a 2 h", detail:"Titre du hero : « On gère vos livraisons » → « On livre, vous gérez ». Image de couverture remplacée."},
     {who:"Sarah Benoit", role:"commercial", t:"a terminé un rendez-vous", w:"hier · 16:40", detail:"Boucherie Dubois · issue : devis envoyé, relance prévue le 5 juil."},
-    {who:"Marc Girard", role:"commercial", t:"a ajouté un partenaire", w:"hier · 11:12", detail:"Pizzeria Napoli (Lausanne) · avantage : -20 % à emporter."},
+    {who:"Marc Girard", role:"leadcommercial", t:"a ajouté un partenaire", w:"hier · 11:12", detail:"Pizzeria Napoli (Lausanne) · avantage : -20 % à emporter."},
     {who:"Alex Moreira", role:"admin", t:"a publié la version v3", w:"lun. · 09:05", detail:"3 changements : bandeau promo activé, grille tarifaire mise à jour, FAQ enrichie."}
   ];
   da.innerHTML=acts.map(a=>'<div class="dash-act"><button type="button" class="dash-act-hd"><span class="avatar xs" style="background:'+roleColor(a.role)+';color:#fff;margin-right:0">'+initials(a.who)+'</span><div class="dash-act-tx"><div class="dash-act-t"><b>'+a.who.split(" ")[0]+'</b> '+a.t+'</div><div class="dash-act-w">'+a.w+'</div></div><svg class="dash-act-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="dash-act-detail">'+a.detail+'</div></div>').join("");
@@ -2295,8 +2472,8 @@ function fillDashCop(){ const el=document.getElementById("dashCop"); if(!el) ret
   el.innerHTML='<p class="hint" style="margin:0 0 11px">Préparez votre prochain rendez-vous : découverte guidée, chiffrage en direct et compte-rendu prêt en partant.</p><button class="btn primary" data-goto="copilot" style="width:100%;justify-content:center">Ouvrir le copilote</button>';
   const b=el.querySelector("[data-goto]"); if(b) b.addEventListener("click",()=>showView("copilot")); }
 function fillDashTeam(){ const el=document.getElementById("dashTeam"); if(!el) return; const byRole={}; adminUsers.forEach(u=>byRole[u.role]=(byRole[u.role]||0)+1);
-  const PLUR={admin:["administrateur","administrateurs"],commercial:["commercial","commerciaux"],editor:["éditeur","éditeurs"]};
-  const legend=["admin","commercial","editor"].filter(r=>byRole[r]).map(r=>'<span class="dash-team-lg"><span class="dot" style="background:'+roleColor(r)+'"></span>'+byRole[r]+' '+PLUR[r][byRole[r]>1?1:0]+'</span>').join("");
+  const PLUR={admin:["administrateur","administrateurs"],commercial:["commercial","commerciaux"],leadcommercial:["lead commercial","leads commerciaux"],editor:["éditeur","éditeurs"]};
+  const legend=ROLE_ORDER.filter(r=>byRole[r]).map(r=>'<span class="dash-team-lg"><span class="dot" style="background:'+roleColor(r)+'"></span>'+byRole[r]+' '+(PLUR[r]||[r,r])[byRole[r]>1?1:0]+'</span>').join("");
   el.innerHTML='<div class="dash-team-avas">'+adminUsers.slice(0,7).map((u,i)=>'<span class="avatar sm" style="background:'+roleColor(u.role)+';color:#fff;margin-left:'+(i?"-9px":"0")+';box-shadow:0 0 0 2px var(--panel)" title="'+escHtml(u.name)+' · '+roleLabel(u.role)+'">'+initials(u.name)+'</span>').join("")+'</div>'
     +'<div class="dash-team-legend">'+legend+'</div>'
     +'<button class="btn" data-goto="users">Gérer les accès</button>';
@@ -2342,60 +2519,231 @@ function publishVersion(){
 /* ============================================================
    Performance (ébauche : scores d'exemple, à brancher sur PageSpeed / Lighthouse)
    ============================================================ */
-const PERF_SCORES=[
-  {label:"Référencement", score:92, prev:88},
-  {label:"Accessibilité", score:88, prev:90},
-  {label:"Rapidité", score:76, prev:71}
+/* Performance en langage non-initié : le sens d'abord, le terme technique en second (détail repliable). */
+const PF_C={good:{c:"#0F6E56",bg:"#E1F5EE",w:"Bon"},warn:{c:"#C7891B",bg:"#FBF0DD",w:"À améliorer"},bad:{c:"#B23B3B",bg:"#FBE4E4",w:"Problème"}};
+function pfStat(st){ return PF_C[st]||PF_C.good; }
+const GAMMA="Gamma Project";
+/* anneau de score réutilisable (global + par pilier) */
+function perfRing(score, size, col){ const s=Math.max(0,Math.min(100,score)), r=(size-8)/2, cx=size/2, c=2*Math.PI*r, off=c*(1-s/100);
+  return '<div class="pring" style="width:'+size+'px;height:'+size+'px"><svg viewBox="0 0 '+size+' '+size+'"><circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="#ECEAF1" stroke-width="6"/>'
+    +'<circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" transform="rotate(-90 '+cx+' '+cx+')"/></svg>'
+    +'<span class="pring-v" style="color:'+col+';font-size:'+Math.round(size*0.34)+'px">'+score+'</span></div>'; }
+function perfFix(a){ if(a.fix&&a.fix.goto){ showView(a.fix.goto); if(a.fix.guide) setTimeout(()=>toast(a.fix.guide),380); } }
+function perfSignalGamma(){ toast("Point signalé à "+GAMMA+" (démo)"); }
+const PERF_PILLARS=[
+  { key:"speed", icon:"zap", title:"Rapidité", status:"good", score:90,
+    plain:"Votre site s'affiche vite",
+    benefit:"Vos visiteurs voient la page presque tout de suite. Un site lent, et beaucoup repartent avant même d'avoir vu votre offre.",
+    detail:[
+      {k:"Affichage du contenu principal", tech:"LCP", v:"2,1 s", st:"good"},
+      {k:"Réactivité quand on clique", tech:"INP", v:"180 ms", st:"good"},
+      {k:"La page ne saute pas au chargement", tech:"CLS", v:"0,12", st:"warn"},
+      {k:"Temps de réponse du serveur", tech:"TTFB", v:"0,6 s", st:"good"}
+    ] },
+  { key:"seo", icon:"search", title:"Référencement", status:"warn", score:74,
+    plain:"Google vous trouve et vous comprend",
+    benefit:"C'est ce qui amène des clients depuis Google sans payer de publicité. Bien réglé, vous remontez dans les résultats.",
+    detail:[
+      {k:"Titre et description de chaque page", tech:"balises title / meta", v:"complets", st:"good"},
+      {k:"Plan du site fourni à Google", tech:"sitemap.xml", v:"présent", st:"good"},
+      {k:"Fiche d'infos pour Google (avis, horaires…)", tech:"données structurées", v:"manque sur 3 pages", st:"warn"},
+      {k:"Liens qui ne mènent nulle part", tech:"erreurs 404", v:"aucun", st:"good"},
+      {k:"Adapté au téléphone", tech:"responsive", v:"oui", st:"good"}
+    ] },
+  { key:"a11y", icon:"eye", title:"Lisibilité pour tous", status:"warn", score:82,
+    plain:"Votre site est lisible par le plus grand nombre",
+    benefit:"Un site lisible par tous, y compris les personnes âgées ou malvoyantes, c'est plus de clients, et Google le récompense.",
+    detail:[
+      {k:"Contraste des textes", tech:"ratio 4.5:1", v:"2 zones justes", st:"warn"},
+      {k:"Descriptions des images", tech:"attribut alt", v:"3 manquantes", st:"warn"},
+      {k:"Navigation au clavier", tech:"focus", v:"complète", st:"good"},
+      {k:"Étiquettes des formulaires", tech:"labels", v:"toutes présentes", st:"good"},
+      {k:"Ordre des titres", tech:"H1 puis H2, H3", v:"cohérent", st:"good"}
+    ] }
 ];
-function perfColor(s){ return s>=90?"#0F6E56":s>=60?"#9A6A15":"#B23B3B"; }
-function perfWord(s){ return s>=90?"Bon":s>=60?"À améliorer":"Faible"; }
-function perfDonut(score){ const r=32, c=2*Math.PI*r, off=c*(1-score/100), col=perfColor(score);
-  return '<div class="perf-ring"><svg viewBox="0 0 76 76"><circle cx="38" cy="38" r="'+r+'" fill="none" stroke="#EDECF0" stroke-width="7"/>'
-    +'<circle cx="38" cy="38" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/></svg>'
-    +'<span class="pr-val">'+score+'</span></div>'; }
+const PF_IMPACT={fort:{c:"#B23B3B",bg:"#FBE4E4",w:"Priorité forte"},moyen:{c:"#9A6A15",bg:"#FBF0DD",w:"Priorité moyenne"},leger:{c:"#2F6FE0",bg:"#E6F1FB",w:"Petit plus"}};
+const PF_IMPACT_ORDER={fort:0,moyen:1,leger:2};
+/* fix.mode : "self" = corrigeable soi-même (bouton qui emmène au bon endroit + guide) ; "gamma" = à confier à Gamma Project. */
+const PERF_ACTIONS=[
+  { title:"Le titre de la page d'accueil est un peu court", impact:"moyen", area:"Référencement", icon:"heading",
+    why:"Le grand titre est ce que Google lit en premier, et ce qui donne envie de rester. Trop court ou trop vague, votre message ne passe pas.",
+    fix:{mode:"self", goto:"editor", label:"Modifier le titre", guide:"Dans l'éditeur, cliquez le grand titre en haut de la page et reformulez-le en disant clairement ce que vous apportez."} },
+  { title:"Une page manque un peu de texte", impact:"moyen", area:"Référencement", icon:"file-text",
+    why:"Google a besoin de mots pour comprendre le sujet de la page et bien vous classer. Une page presque vide est difficile à référencer.",
+    fix:{mode:"self", goto:"editor", label:"Étoffer le texte", guide:"Dans l'éditeur, ajoutez un ou deux paragraphes qui décrivent votre service avec les mots de vos clients."} },
+  { title:"3 images n'ont pas de description", impact:"moyen", area:"Référencement et lisibilité", icon:"image",
+    why:"Une description aide Google à comprendre l'image, et permet aux personnes malvoyantes de savoir ce qu'elle montre.",
+    fix:{mode:"gamma", note:"L'ajout d'une description d'image arrive bientôt dans l'éditeur. En attendant, "+GAMMA+" peut le faire pour vous."} },
+  { title:"La fiche d'infos Google manque sur 3 pages", impact:"moyen", area:"Référencement", icon:"tag",
+    why:"Cette fiche permet à Google d'afficher vos avis, horaires ou prix directement dans les résultats.",
+    fix:{mode:"gamma", note:"C'est un réglage technique, "+GAMMA+" s'en occupe. Rien à faire de votre côté."} },
+  { title:"2 textes sont un peu clairs sur fond blanc", impact:"leger", area:"Lisibilité", icon:"contrast",
+    why:"Un gris trop clair est dur à lire, surtout au soleil sur un téléphone ou pour une personne âgée.",
+    fix:{mode:"gamma", note:"La couleur des textes fait partie du design, "+GAMMA+" l'ajuste."} }
+];
+const PERF_GOOD=[
+  "Votre site s'affiche vite, vos visiteurs n'attendent pas.",
+  "Le titre et la description de vos pages sont complets.",
+  "Google a le plan de votre site et le parcourt bien.",
+  "Aucun lien cassé.",
+  "Votre site s'adapte au téléphone.",
+  "On peut naviguer entièrement au clavier.",
+  "Vos formulaires sont bien étiquetés."
+];
+const PERF_CONTENT_INTRO="Vos textes parlent à Google autant qu'à vos visiteurs. Quand vous ou votre équipe modifiez un texte, ces points peuvent bouger. Gardez-les au vert pour ne pas perdre en visibilité.";
+const PERF_CONTENT=[
+  {k:"Un grand titre clair par page", st:"good", plain:"Chaque page a un titre principal unique qui dit tout de suite de quoi elle parle.", tip:"Un seul grand titre par page, court et parlant."},
+  {k:"Une description qui donne envie", st:"good", plain:"Le petit texte affiché sous votre lien dans Google est rempli.", tip:"120 à 160 caractères, donnez envie de cliquer."},
+  {k:"Assez de texte sur la page", st:"good", plain:"Vos pages ont assez de contenu pour que Google comprenne le sujet.", tip:"Ne videz pas une page de son texte, Google a besoin de mots pour vous classer."},
+  {k:"Les mots que cherchent vos clients", st:"warn", plain:"Les termes que tapent vos clients (livraison, coursier, Genève…) doivent apparaître dans vos textes.", tip:"Écrivez avec les mots de vos clients, pas du jargon interne."},
+  {k:"Des images décrites", st:"warn", plain:"Chaque image porte une courte description, utile à Google comme aux malvoyants.", tip:"Une phrase qui dit ce qu'on voit."}
+];
 function renderPerf(){
   const last=document.getElementById("perfLast"); if(last) last.textContent="Dernière analyse : hier, 09:12";
-  const sc=document.getElementById("perfScores");
-  if(sc){ sc.innerHTML=""; PERF_SCORES.forEach(p=>{ const el=document.createElement("div"); el.className="statc perf-card";
-    el.innerHTML=perfDonut(p.score)+'<div class="perf-meta"><span class="k">'+p.label+'</span><span class="pm-status" style="color:'+perfColor(p.score)+'">'+perfWord(p.score)+'</span>'+trendChip(p.score-p.prev," pts")+'</div>';
-    sc.appendChild(el); }); }
-  fillPerfRows("perfVitals",[
-    {k:"LCP", sub:"Chargement du plus gros élément", v:"2,1 s", st:"good"},
-    {k:"INP", sub:"Réactivité aux interactions", v:"180 ms", st:"good"},
-    {k:"CLS", sub:"Stabilité visuelle", v:"0,12", st:"warn"},
-    {k:"TTFB", sub:"Temps de réponse serveur", v:"0,6 s", st:"good"}]);
-  fillPerfChecks("perfSeo",[
-    ["Balises titre et meta","good","Complètes sur les pages clés"],
-    ["Plan du site (sitemap.xml)","good","Présent et à jour"],
-    ["Données structurées","warn","Manquantes sur 3 pages"],
-    ["Liens cassés","good","Aucun détecté"],
-    ["Version mobile","good","Responsive validé"]]);
-  fillPerfChecks("perfA11y",[
-    ["Contrastes de couleurs","warn","2 zones sous le ratio 4.5:1"],
-    ["Textes alternatifs des images","good","Tous renseignés"],
-    ["Navigation au clavier","good","Parcours complet"],
-    ["Labels de formulaires","good","Tous associés"],
-    ["Hiérarchie des titres","good","Cohérente"]]);
+  const scores=PERF_PILLARS.map(p=>p.score), overall=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  const anyBad=PERF_PILLARS.some(p=>p.status==="bad"), anyWarn=PERF_PILLARS.some(p=>p.status==="warn");
+  renderPerfVerdict(anyBad?"bad":anyWarn?"warn":"good", overall);
+  renderPerfPillars(); renderPerfActions(); renderPerfGood(); renderPerfContent();
   refreshIcons();
 }
-function fillPerfRows(id, rows){ const el=document.getElementById(id); if(!el) return; el.innerHTML="";
-  rows.forEach(r=>{ const d=document.createElement("div"); d.className="perf-row";
-    const w=r.st==="good"?"Bon":r.st==="warn"?"Moyen":"Faible";
-    d.innerHTML='<div class="pr-main"><div class="pr-k">'+r.k+'</div><div class="pr-sub">'+r.sub+'</div></div><span class="pr-v">'+r.v+'</span><span class="pf-pill pf-'+r.st+'">'+w+'</span>';
-    el.appendChild(d); }); }
-function fillPerfChecks(id, rows){ const el=document.getElementById(id); if(!el) return; el.innerHTML="";
-  rows.forEach(r=>{ const st=r[1], ic=st==="good"?"check-circle-2":"alert-triangle", col=st==="good"?"#0F6E56":"#9A6A15";
-    const d=document.createElement("div"); d.className="perf-row";
-    d.innerHTML='<span class="pr-ic" style="color:'+col+'"><i data-lucide="'+ic+'"></i></span><div class="pr-main"><div class="pr-k">'+r[0]+'</div><div class="pr-sub">'+r[2]+'</div></div>';
-    el.appendChild(d); }); }
+function renderPerfVerdict(vk, overall){ const w=document.getElementById("perfVerdict"); if(!w) return;
+  const map={ good:{ic:"check-circle-2", t:"Votre site est en bonne santé"}, warn:{ic:"sparkles", t:"Votre site va bien, quelques réglages à peaufiner"}, bad:{ic:"alert-triangle", t:"Des points importants sont à corriger"} };
+  const goodN=PERF_PILLARS.filter(p=>p.status==="good").length, actN=PERF_ACTIONS.length, m=map[vk], col=pfStat(vk).c;
+  const sub=goodN+" domaine"+(goodN>1?"s":"")+" au vert sur "+PERF_PILLARS.length+", et "+actN+" point"+(actN>1?"s":"")+" à améliorer, expliqués et guidés plus bas.";
+  w.className="perf-verdict";
+  w.innerHTML='<div class="pv-gauge">'+perfRing(overall,66,col)+'<span class="pv-cap">note globale<br>sur 100</span></div>'
+    +'<div class="pv-main"><div class="pv-title"><span class="pv-dot" style="color:'+col+'"><i data-lucide="'+m.ic+'"></i></span>'+m.t+'</div><div class="pv-sub">'+sub+'</div></div>';
+}
+function renderPerfPillars(){ const w=document.getElementById("perfPillars"); if(!w) return; w.innerHTML="";
+  PERF_PILLARS.forEach(p=>{ const s=pfStat(p.status); const el=document.createElement("div"); el.className="pcard";
+    el.innerHTML='<div class="pcard-top"><span class="pcard-ic" style="background:'+s.bg+';color:'+s.c+'"><i data-lucide="'+p.icon+'"></i></span><span class="pcard-t">'+p.title+'</span>'+perfRing(p.score,44,s.c)+'</div>'
+      +'<div class="pcard-plain">'+p.plain+'</div>'
+      +'<span class="pf-pill pf-'+p.status+' pcard-pill">'+s.w+'</span>'
+      +'<div class="pcard-benefit">'+p.benefit+'</div>'
+      +'<button type="button" class="pcard-toggle">Voir le détail technique <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>'
+      +'<div class="pcard-detail">'+p.detail.map(d=>{ const ds=pfStat(d.st); return '<div class="pdet-row"><span class="pdet-dot" style="background:'+ds.c+'"></span><span class="pd-k">'+d.k+'<span class="pd-tech"> · '+d.tech+'</span></span><span class="pd-v" style="color:'+ds.c+'">'+d.v+'</span></div>'; }).join("")+'</div>';
+    el.querySelector(".pcard-toggle").addEventListener("click",()=>el.classList.toggle("open"));
+    w.appendChild(el); }); }
+function renderPerfActions(){ const w=document.getElementById("perfActions"); if(!w) return; const hint=document.getElementById("perfActionsHint");
+  const acts=PERF_ACTIONS.slice().sort((a,b)=>(PF_IMPACT_ORDER[a.impact]-PF_IMPACT_ORDER[b.impact]));
+  if(hint) hint.textContent=acts.length+" point"+(acts.length>1?"s":"");
+  w.innerHTML="";
+  if(!acts.length){ w.innerHTML='<div class="pg-item"><i data-lucide="check-circle-2"></i><span>Rien à corriger, tout est au vert.</span></div>'; refreshIcons(); return; }
+  acts.forEach(a=>{ const im=PF_IMPACT[a.impact]||PF_IMPACT.moyen, fx=a.fix||{mode:"gamma",note:""}; const el=document.createElement("div"); el.className="perf-act";
+    let fixHtml;
+    if(fx.mode==="self"){
+      fixHtml='<div class="pa-how"><i data-lucide="lightbulb"></i><span><b>Comment faire :</b> '+fx.guide+'</span></div>'
+        +'<div class="pa-cta"><button class="btn sm primary" data-fix="self"><i data-lucide="wand-2"></i>'+(fx.label||"Corriger")+'</button><span class="pa-self"><i data-lucide="check"></i>à votre portée</span></div>';
+    } else {
+      fixHtml='<div class="pa-gamma"><i data-lucide="life-buoy"></i><span>'+fx.note+'</span></div>'
+        +'<div class="pa-cta"><button class="btn sm" data-fix="gamma"><i data-lucide="send"></i>Le signaler à '+GAMMA+'</button></div>';
+    }
+    el.innerHTML='<span class="pa-ic" style="background:'+im.bg+';color:'+im.c+'"><i data-lucide="'+(a.icon||"triangle-alert")+'"></i></span>'
+      +'<div class="pa-body"><div class="pa-head"><span class="pa-title">'+a.title+'</span><span class="pa-impact" style="color:'+im.c+';background:'+im.bg+'">'+im.w+'</span><span class="pa-area">'+a.area+'</span></div>'
+      +'<div class="pa-why">'+a.why+'</div>'+fixHtml+'</div>';
+    const fb=el.querySelector("[data-fix]"); if(fb){ if(fx.mode==="self") fb.addEventListener("click",()=>perfFix(a)); else fb.addEventListener("click",perfSignalGamma); }
+    w.appendChild(el); }); }
+function renderPerfGood(){ const w=document.getElementById("perfGood"); if(!w) return; w.className="perf-good-list";
+  w.innerHTML=PERF_GOOD.map(g=>'<div class="pg-item"><i data-lucide="check-circle-2"></i><span>'+g+'</span></div>').join(""); }
+function renderPerfContent(){ const w=document.getElementById("perfContent"); if(!w) return;
+  let h='<div class="perf-content-intro"><i data-lucide="info"></i><span>'+PERF_CONTENT_INTRO+'</span></div>';
+  h+=PERF_CONTENT.map(c=>{ const s=pfStat(c.st), ic=c.st==="good"?"check":"alert-triangle";
+    return '<div class="pc-item"><span class="pc-chk" style="background:'+s.bg+';color:'+s.c+'"><i data-lucide="'+ic+'"></i></span><div class="pc-body"><div class="pc-k">'+c.k+'</div><div class="pc-plain">'+c.plain+'</div><div class="pc-tip"><i data-lucide="lightbulb"></i><span>'+c.tip+'</span></div></div></div>'; }).join("");
+  w.innerHTML=h; }
+
+/* ============================================================
+   Structure & stratégie : expliquer le rôle de chaque section
+   du site (le tunnel de conversion) pour que le client n'enlève
+   pas une section clé sans en mesurer l'importance.
+   ============================================================ */
+const STRUCT_PHASES=[
+  {key:"capter", label:"Capter l'attention", col:"#2F6FE0", bg:"#E6F1FB"},
+  {key:"convaincre", label:"Convaincre", col:"#7C5CD6", bg:"#EEEBFB"},
+  {key:"rassurer", label:"Rassurer", col:"#0F9E8A", bg:"#E1F5EE"},
+  {key:"convertir", label:"Chiffrer & convertir", col:"#C7891B", bg:"#FBF0DD"}
+];
+/* dans l'ordre RÉEL de index.html : hero -> diff -> feat -> testi -> sim -> offres -> booking -> faq */
+const STRUCT_SECTIONS=[
+  { name:"Bandeau promotionnel", phase:"capter", icon:"megaphone", keySec:false,
+    role:"Une offre visible dès la première seconde (créneaux, remise) qui crée un sentiment d'opportunité.",
+    why:"Tout en haut, avant même le logo : c'est ce qui accroche celui qui hésite encore.",
+    risk:"En le retirant, vous perdez ce petit déclic d'urgence qui pousse à explorer la suite." },
+  { name:"Accroche (hero)", phase:"capter", icon:"sparkles", keySec:true,
+    role:"Votre promesse en une phrase : livraison pro en Suisse romande, coursiers salariés, tarifs fixes. Plus les premiers boutons d'action.",
+    why:"C'est la première chose vue. En 3 secondes, le visiteur doit savoir ce que vous faites et pour qui.",
+    risk:"Sans accroche claire, une bonne moitié des visiteurs repart sans avoir compris votre métier." },
+  { name:"Ce qui vous différencie", phase:"convaincre", icon:"badge-check", keySec:false,
+    role:"La livraison pro « sans les compromis habituels » : ce qui vous distingue d'un simple livreur.",
+    why:"Juste après l'accroche, on répond au « pourquoi vous plutôt qu'un autre ? ».",
+    risk:"Sans ça, vous devenez interchangeable et on vous compare au moins cher." },
+  { name:"Tout est inclus (services)", phase:"convaincre", icon:"package-check", keySec:false,
+    role:"Ce que le client obtient concrètement : coursiers salariés, traçabilité, suivi en direct.",
+    why:"Une fois l'intérêt créé, on rend la valeur tangible pour justifier le prix à venir.",
+    risk:"Sans le détail, l'offre reste abstraite et le prix paraît élevé." },
+  { name:"Témoignages", phase:"rassurer", icon:"quote", keySec:false,
+    role:"La preuve par les clients : d'autres l'ont fait, ça marche.",
+    why:"Avant de parler d'argent, on installe la confiance avec des voix qui ne sont pas la vôtre.",
+    risk:"Sans preuve sociale, votre discours n'est que votre parole, et la confiance chute." },
+  { name:"Simulateur de coût", phase:"convertir", icon:"calculator", keySec:true,
+    role:"Le visiteur estime en 10 secondes ce que lui coûtent vraiment ses livraisons, et voit l'offre recommandée.",
+    why:"Juste avant les prix : on crée la prise de conscience du coût actuel, donc le besoin.",
+    risk:"C'est souvent LA section qui déclenche le contact. Sans elle, le visiteur ne mesure pas son problème et votre prix n'a aucun point de comparaison." },
+  { name:"Offres & tarifs", phase:"convertir", icon:"tags", keySec:true,
+    role:"Vos formules Flex et Dédié, sans engagement, avec les prix.",
+    why:"Le besoin étant chiffré, on propose la solution et son prix, sans détour.",
+    risk:"Cacher le prix ne le rend pas plus acceptable, ça fait fuir : la plupart n'osent pas demander et partent comparer ailleurs." },
+  { name:"Prise de rendez-vous", phase:"convertir", icon:"calendar-check", keySec:true,
+    role:"Le passage à l'acte : réserver une consultation offerte, avec calendrier et créneaux.",
+    why:"Le point d'arrivée de tout le parcours. Tout ce qui précède mène ici.",
+    risk:"C'est votre caisse enregistreuse. Sans un moment d'action clair, tout votre trafic ne devient jamais des clients." },
+  { name:"Questions fréquentes (FAQ)", phase:"rassurer", icon:"help-circle", keySec:false,
+    role:"Les réponses aux dernières objections, plus vos coordonnées et adresses.",
+    why:"En bas, pour lever le dernier doute de celui qui hésite encore juste avant de vous contacter.",
+    risk:"Sans FAQ, les hésitants restent avec leur question sans réponse, et abandonnent." }
+];
+function renderStructure(){ const w=document.getElementById("structMap"); if(!w) return;
+  const leg=document.getElementById("structLegend");
+  if(leg){ leg.innerHTML=STRUCT_PHASES.map((p,i)=>'<span class="struct-leg" style="color:'+p.col+';background:'+p.bg+'">'+p.label+'</span>'+(i<STRUCT_PHASES.length-1?'<span class="struct-arrow"><i data-lucide="chevron-right"></i></span>':'')).join(""); }
+  const phMap={}; STRUCT_PHASES.forEach(p=>phMap[p.key]=p);
+  w.innerHTML=STRUCT_SECTIONS.map((s,idx)=>{ const p=phMap[s.phase]||STRUCT_PHASES[0];
+    return '<div class="struct-item"><div class="struct-rail"><span class="struct-dot" style="background:'+p.col+'"></span></div>'
+      +'<div class="struct-card'+(s.keySec?" key":"")+'"><button type="button" class="struct-hd" data-i="'+idx+'">'
+        +'<span class="struct-ic" style="background:'+p.bg+';color:'+p.col+'"><i data-lucide="'+s.icon+'"></i></span>'
+        +'<span class="struct-name">'+s.name+(s.keySec?'<span class="struct-key"><i data-lucide="lock"></i>section clé</span>':'')+'</span>'
+        +'<span class="struct-phase" style="color:'+p.col+';background:'+p.bg+'">'+p.label+'</span>'
+        +'<svg class="struct-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>'
+        +'<div class="struct-role">'+s.role+'</div>'
+        +'<div class="struct-detail"><div class="struct-why"><b>Pourquoi à cet endroit&nbsp;?</b> '+s.why+'</div>'
+          +'<div class="struct-risk"><i data-lucide="alert-triangle"></i><span><b>Si vous la retirez&nbsp;: </b>'+s.risk+'</span></div></div>'
+      +'</div></div>'; }).join("");
+  w.querySelectorAll(".struct-hd").forEach(b=>b.addEventListener("click",()=>b.closest(".struct-card").classList.toggle("open")));
+  refreshIcons();
+}
 
 /* ============================================================
    Affiliation (ébauche : restaurants partenaires + jeux concours)
    ============================================================ */
 const AFFIL_KEY="chaskis_affiliation_v2";
-const AFFIL_CATS={restaurant:"Restaurant",commerce:"Commerce",service:"Service",sport:"Sport & bien-être",autre:"Autre"};
+/* Catégories gérables : jeu par défaut élargi + ajout à la volée, persisté. [key,label] pour garder l'ordre. */
+const AFFIL_CATS_KEY="chaskis_affil_cats";
+const DEFAULT_AFFIL_CATS=[["restaurant","Restaurant"],["cafe","Café & bar"],["commerce","Commerce"],["beaute","Beauté"],["sport","Sport & bien-être"],["culture","Culture & loisirs"],["service","Services"],["sante","Santé"],["autre","Autre"]];
+let affilCats=loadAffilCats();
+function loadAffilCats(){ try{ const s=JSON.parse(localStorage.getItem(AFFIL_CATS_KEY)); if(Array.isArray(s)&&s.length) return s; }catch(e){} return DEFAULT_AFFIL_CATS.map(x=>x.slice()); }
+function saveAffilCats(){ try{ localStorage.setItem(AFFIL_CATS_KEY, JSON.stringify(affilCats)); }catch(e){} }
+function catLabel(key){ const c=affilCats.find(x=>x[0]===key); return c?c[1]:(key||"Autre"); }
+function slugify(s){ return (s||"").toLowerCase().normalize("NFD").replace(/[^\x00-\x7f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,""); }
+function addAffilCat(label){ label=(label||"").trim(); if(!label) return null; const key=slugify(label)||("cat"+Date.now());
+  const exist=affilCats.find(x=>x[0]===key||x[1].toLowerCase()===label.toLowerCase()); if(exist) return exist[0];
+  const i=affilCats.findIndex(x=>x[0]==="autre"); const entry=[key,label]; if(i>=0) affilCats.splice(i,0,entry); else affilCats.push(entry); saveAffilCats(); return key; }
+/* Jeux concours : chaque type a son identité (icône + couleur), fini l'icône répétée. */
+const CONTEST_KINDS={
+  tirage:{ic:"ticket",label:"Tirage au sort",col:"#7C5CD6",bg:"#EEEBFB"},
+  defi:{ic:"trophy",label:"Défi",col:"#B8791C",bg:"#FBF0DD"},
+  parrainage:{ic:"user-plus",label:"Parrainage",col:"#0F6E56",bg:"#E1F5EE"}
+};
 const AFFIL_ADV={pct:{label:"Remise (%)",ph:"15"},item:{label:"Article offert",ph:"Un burger offert"},amount:{label:"Montant offert (CHF)",ph:"10"},other:{label:"Avantage",ph:"2 places de ciné offertes"}};
-let affilData=loadAffil(), affilFilter="all";
+let affilData=loadAffil(), affilFilter="all", affilSearch="", affilPage=1;
+const AFFIL_PER=24;
 function loadAffil(){ try{ const s=JSON.parse(localStorage.getItem(AFFIL_KEY)); if(s&&s.length) return s; }catch(e){}
   return [
     {id:1, cat:"restaurant", name:"Le Comptoir", addr:"Rue du Rhône 12, 1204 Genève", advType:"pct", advValue:"15", offer:"Valable midi et soir, sur présentation du badge Chaskis"},
@@ -2406,9 +2754,9 @@ function loadAffil(){ try{ const s=JSON.parse(localStorage.getItem(AFFIL_KEY)); 
 }
 function saveAffil(){ try{ localStorage.setItem(AFFIL_KEY, JSON.stringify(affilData)); }catch(e){} }
 const AFFIL_CONTESTS=[
-  {title:"Tirage au sort mensuel", prize:"Un bon d'achat de 150 CHF", period:"Jusqu'au 31 juillet", status:"good"},
-  {title:"Défi courses de l'été", prize:"Un week-end pour deux à gagner", period:"Du 1er juin au 31 août", status:"good"},
-  {title:"Prime de parrainage", prize:"50 CHF par filleul actif", period:"En continu", status:"warn"}
+  {kind:"tirage", title:"Tirage au sort mensuel", prize:"Un bon d'achat de 150 CHF", period:"Jusqu'au 31 juillet", status:"good"},
+  {kind:"defi", title:"Défi courses de l'été", prize:"Un week-end pour deux à gagner", period:"Du 1er juin au 31 août", status:"good"},
+  {kind:"parrainage", title:"Prime de parrainage", prize:"50 CHF par filleul actif", period:"En continu", status:"warn"}
 ];
 function affilAdvBadge(r){ const t=r.advType||"pct", v=(r.advValue||"").toString().trim();
   if(t==="amount") return '<span class="ac-adv amount"><span>-'+(parseInt(v,10)||0)+' CHF</span></span>';
@@ -2418,9 +2766,9 @@ function affilAdvBadge(r){ const t=r.advType||"pct", v=(r.advValue||"").toString
 }
 function renderAffilFilter(){ const w=document.getElementById("affilFilter"); if(!w) return;
   const cats=[...new Set(affilData.map(r=>r.cat||"autre"))];
-  const opts=[["all","Tous ("+affilData.length+")"]].concat(cats.map(c=>[c,(AFFIL_CATS[c]||c)+" ("+affilData.filter(r=>(r.cat||"autre")===c).length+")"]));
-  w.innerHTML=opts.map(o=>'<button class="af-chip'+(affilFilter===o[0]?" on":"")+'" data-f="'+o[0]+'">'+o[1]+'</button>').join("");
-  w.querySelectorAll("[data-f]").forEach(b=>b.addEventListener("click",()=>{ affilFilter=b.dataset.f; renderAffiliation(); }));
+  const opts=[["all","Tous ("+affilData.length+")"]].concat(cats.map(c=>[c,catLabel(c)+" ("+affilData.filter(r=>(r.cat||"autre")===c).length+")"]));
+  w.innerHTML=opts.map(o=>'<button class="af-chip'+(affilFilter===o[0]?" on":"")+'" data-f="'+escHtml(o[0])+'">'+escHtml(o[1])+'</button>').join("");
+  w.querySelectorAll("[data-f]").forEach(b=>b.addEventListener("click",()=>{ affilFilter=b.dataset.f; affilPage=1; renderAffiliation(); }));
 }
 function renderAffiliation(){
   const stats=document.getElementById("affilStats");
@@ -2430,7 +2778,7 @@ function renderAffiliation(){
     const cards=[
       {k:"Partenaires", v:affilData.length, d:rest+" resto"+(rest>1?"s":"")+" · "+other+" autre"+(other>1?"s":""), ic:"handshake", col:"teal"},
       {k:"Offres actives", v:affilData.length, d:pctCount+" en pourcentage", ic:"tag", col:"amber"},
-      {k:"Catégories", v:catCount, d:Object.keys(cats).map(c=>AFFIL_CATS[c]||c).slice(0,3).join(", ")||"—", ic:"layout-grid", col:"purple"},
+      {k:"Catégories", v:catCount, d:Object.keys(cats).map(c=>catLabel(c)).slice(0,3).join(", ")||"—", ic:"layout-grid", col:"purple"},
       {k:"Jeux concours actifs", v:AFFIL_CONTESTS.filter(c=>c.status==="good").length, d:"réservés aux équipes", ic:"gift", col:"pink"}
     ];
     stats.innerHTML=""; cards.forEach(c=>{ const el=document.createElement("div"); el.className="statc"; const bc=DASH_ICOL[c.col]||DASH_ICOL.teal;
@@ -2438,11 +2786,14 @@ function renderAffiliation(){
       stats.appendChild(el); }); }
   renderAffilFilter();
   const list=document.getElementById("affilList"), cnt=document.getElementById("affilCount");
-  if(cnt) cnt.textContent=affilData.length+" partenaire"+(affilData.length>1?"s":"");
-  const shown=affilData.filter(r=>affilFilter==="all"||(r.cat||"autre")===affilFilter);
+  const q=(affilSearch||"").trim().toLowerCase();
+  let shown=affilData.filter(r=>affilFilter==="all"||(r.cat||"autre")===affilFilter);
+  if(q) shown=shown.filter(r=>((r.name||"")+" "+(r.addr||"")).toLowerCase().indexOf(q)>=0);
+  const filtered=(affilFilter!=="all"||!!q), cap=affilPage*AFFIL_PER, page=shown.slice(0,cap);
+  if(cnt) cnt.textContent=affilData.length+" partenaire"+(affilData.length>1?"s":"")+(filtered?" · "+shown.length+" affiché"+(shown.length>1?"s":""):"");
   if(list){ list.innerHTML="";
-    if(!shown.length){ list.innerHTML='<p class="hint" style="margin:0">'+(affilData.length?"Aucun partenaire dans cette catégorie.":"Aucun partenaire pour l'instant. Cliquez « Ajouter un partenaire ».")+'</p>'; }
-    else shown.forEach(r=>{ const el=document.createElement("div"); el.className="affil-card";
+    if(!page.length){ list.innerHTML='<p class="hint" style="margin:0">'+(affilData.length?"Aucun partenaire ne correspond à votre recherche.":"Aucun partenaire pour l'instant. Cliquez « Ajouter un partenaire ».")+'</p>'; }
+    else page.forEach(r=>{ const el=document.createElement("div"); el.className="affil-card";
       const logoInner = r.logo ? '<img src="'+escHtml(r.logo)+'">' : escHtml((r.name||"?").trim().charAt(0).toUpperCase()||"?");
       const logoEl='<span class="ac-logo '+(r.logoCorner||"tr")+(r.logoInvert?" inv":"")+'"'+(r.logo?' style="width:'+(r.logoSize||44)+'px;height:'+(r.logoSize||44)+'px"':'')+'>'+logoInner+'</span>';
       el.innerHTML='<div class="ac-photo">'
@@ -2450,7 +2801,7 @@ function renderAffiliation(){
           +logoEl+affilAdvBadge(r)
         +'</div>'
         +'<div class="ac-body">'
-          +'<div class="ac-name-row"><span class="ac-name" title="'+escHtml(r.name)+'">'+escHtml(r.name)+'</span><span class="ac-cat">'+(AFFIL_CATS[r.cat]||"Autre")+'</span></div>'
+          +'<div class="ac-name-row"><span class="ac-name" title="'+escHtml(r.name)+'">'+escHtml(r.name)+'</span><span class="ac-cat">'+escHtml(catLabel(r.cat))+'</span></div>'
           +'<div class="ac-addr"><i data-lucide="map-pin"></i>'+escHtml(r.addr||"—")+'</div>'
           +(r.offer?'<div class="ac-offer">'+escHtml(r.offer)+'</div>':'')
         +'</div>';
@@ -2458,9 +2809,14 @@ function renderAffiliation(){
       el.querySelector("[data-edit]").addEventListener("click",()=>openAffilModal(r.id));
       el.querySelector("[data-del]").addEventListener("click",()=>delAffil(r.id));
       list.appendChild(el); }); }
+  const more=document.getElementById("affilMore");
+  if(more){ more.innerHTML=""; const rest=shown.length-cap; if(rest>0){ const b=document.createElement("button"); b.className="btn"; b.textContent="Voir plus ("+rest+" restant"+(rest>1?"s":"")+")"; b.addEventListener("click",()=>{ affilPage++; renderAffiliation(); }); more.appendChild(b); } }
   const con=document.getElementById("affilContests");
-  if(con){ con.innerHTML=""; AFFIL_CONTESTS.forEach(c=>{ const d=document.createElement("div"); d.className="perf-row";
-    d.innerHTML='<span class="pr-ic" style="color:#6B5BCC"><i data-lucide="gift"></i></span><div class="pr-main"><div class="pr-k">'+c.title+'</div><div class="pr-sub">'+c.prize+' · '+c.period+'</div></div><span class="pf-pill pf-'+c.status+'">'+(c.status==="good"?"En cours":"Bientôt")+'</span>';
+  if(con){ con.className="contest-grid"; con.innerHTML=""; AFFIL_CONTESTS.forEach(c=>{ const k=CONTEST_KINDS[c.kind]||CONTEST_KINDS.tirage; const d=document.createElement("div"); d.className="contest-card";
+    d.innerHTML='<div class="cc-top"><span class="cc-tile" style="background:'+k.bg+';color:'+k.col+'"><i data-lucide="'+k.ic+'"></i></span><span class="cc-kind" style="color:'+k.col+';background:'+k.bg+'">'+k.label+'</span><span class="pf-pill pf-'+c.status+' cc-status">'+(c.status==="good"?"En cours":"Bientôt")+'</span></div>'
+      +'<div class="cc-title">'+escHtml(c.title)+'</div>'
+      +'<div class="cc-prize">'+escHtml(c.prize)+'</div>'
+      +'<div class="cc-period"><i data-lucide="calendar"></i>'+escHtml(c.period)+'</div>';
     con.appendChild(d); }); }
   refreshIcons();
 }
@@ -2494,13 +2850,24 @@ function renderAffilEditor(){
 }
 function readAffilImg(e,kind){ const f=e.target.files&&e.target.files[0]; if(!f) return; const rd=new FileReader(); rd.onload=()=>{ affilImg[kind]=rd.result; renderAffilEditor(); }; rd.readAsDataURL(f); }
 function setAffilSel(id,v){ const s=document.getElementById(id); if(s){ s.value=v; if(s._ddSync) s._ddSync(); } }
+/* select catégorie reconstruit depuis affilCats (+ option "créer"), avec ré-enrobage du dropdown maison */
+let affilPrevCat="restaurant";
+function reEnhanceSelect(sel){ if(!sel) return; const dd=sel.closest(".dd"); if(dd){ dd.parentNode.insertBefore(sel, dd); dd.remove(); } sel.style.display=""; delete sel.dataset.enhanced; sel._ddSync=null; enhanceSelect(sel); }
+function rebuildAffilCatSelect(val){ const s=document.getElementById("affilCat"); if(!s) return;
+  s.innerHTML=affilCats.map(c=>'<option value="'+escHtml(c[0])+'"'+(c[0]===val?" selected":"")+'>'+escHtml(c[1])+'</option>').join("")+'<option value="__new__">+ Créer une catégorie…</option>';
+  reEnhanceSelect(s); }
+function showAffilNewCat(){ const row=document.getElementById("affilNewCat"), inp=document.getElementById("affilNewCatInput"); if(!row) return; row.hidden=false; if(inp){ inp.value=""; setTimeout(()=>inp.focus(),10); } }
+function hideAffilNewCat(){ const row=document.getElementById("affilNewCat"); if(row) row.hidden=true; }
+function confirmAffilNewCat(){ const inp=document.getElementById("affilNewCatInput"); const key=addAffilCat(inp?inp.value:""); if(!key){ if(inp) inp.focus(); return; } rebuildAffilCatSelect(key); affilPrevCat=key; hideAffilNewCat(); }
+function cancelAffilNewCat(){ rebuildAffilCatSelect(affilPrevCat); hideAffilNewCat(); }
 function syncAffilAdv(){ const t=(document.getElementById("affilAdvType")||{}).value||"pct"; const cfg=AFFIL_ADV[t]||AFFIL_ADV.pct;
   const lb=document.getElementById("affilAdvLabel"); if(lb) lb.innerHTML=cfg.label+'<span class="req">*</span>';
   const inp=document.getElementById("affilAdvValue"); if(inp){ inp.placeholder=cfg.ph; inp.inputMode=(t==="pct"||t==="amount")?"numeric":"text"; } }
 function openAffilModal(id){ affilEditId=id||null; const r=id?affilData.find(x=>x.id===id):null;
   document.getElementById("affilModalT").textContent=id?"Éditer le partenaire":"Ajouter un partenaire";
   document.getElementById("affilName").value=r?r.name:"";
-  setAffilSel("affilCat", r?(r.cat||"restaurant"):"restaurant");
+  affilPrevCat = r ? (r.cat||affilCats[0][0]) : affilCats[0][0];
+  rebuildAffilCatSelect(affilPrevCat); hideAffilNewCat();
   document.getElementById("affilAddr").value=r?(r.addr||""):"";
   setAffilSel("affilAdvType", r?(r.advType||"pct"):"pct");
   document.getElementById("affilAdvValue").value=r?(r.advValue||""):"";
@@ -2514,7 +2881,7 @@ function openAffilModal(id){ affilEditId=id||null; const r=id?affilData.find(x=>
 function closeAffilModal(){ document.getElementById("affilModal").classList.remove("show"); affilEditId=null; }
 function saveAffilForm(){
   const name=(document.getElementById("affilName").value||"").trim();
-  const cat=document.getElementById("affilCat").value;
+  let cat=document.getElementById("affilCat").value; if(cat==="__new__") cat=affilPrevCat;
   const addr=(document.getElementById("affilAddr").value||"").trim();
   const advType=document.getElementById("affilAdvType").value;
   const advValue=(document.getElementById("affilAdvValue").value||"").trim();
@@ -2685,16 +3052,20 @@ function renderCopilot(){
 /* ============================================================
    Utilisateurs & accès (page admin : gérer comptes + droits par rôle)
    ============================================================ */
-let usrEditId=null;
+let usrEditId=null, usrOv={grant:[],deny:[]}, usrOvCollapsed=new Set();
 function renderUsers(){
   const list=document.getElementById("usrList"), cnt=document.getElementById("usrCount"); const me=currentUser();
   if(cnt) cnt.textContent=adminUsers.length+" utilisateur"+(adminUsers.length>1?"s":"");
   if(list){ list.innerHTML=""; adminUsers.forEach(u=>{ const row=document.createElement("div"); row.className="usr-row"; const isMe=u.id===me.id;
+    const ovN=(u.grant?u.grant.length:0)+(u.deny?u.deny.length:0);
+    const roleOpts=ROLE_ORDER.map(r=>'<option value="'+r+'"'+(u.role===r?" selected":"")+'>'+roleLabel(r)+'</option>').join("");
     row.innerHTML='<span class="usr-ava" style="background:'+roleColor(u.role)+'">'+userInitials(u)+'</span>'
-      +'<div class="usr-main"><div class="usr-n">'+escHtml(u.name)+(isMe?'<span class="you">vous</span>':'')+'</div><div class="usr-e">'+escHtml(u.email||"—")+'</div></div>'
-      +'<div class="usr-role"><select class="formfsel usr-role-sel"><option value="admin"'+(u.role==="admin"?" selected":"")+'>Administrateur</option><option value="commercial"'+(u.role==="commercial"?" selected":"")+'>Commercial</option><option value="editor"'+(u.role==="editor"?" selected":"")+'>Éditeur</option></select></div>'
+      +'<div class="usr-main"><div class="usr-n">'+escHtml(u.name)+(isMe?'<span class="you">vous</span>':'')+'</div><div class="usr-e">'+escHtml(u.email||"—")+(ovN?'<span class="usr-ov-badge" title="Accès personnalisés au-delà du rôle">sur-mesure</span>':'')+'</div></div>'
+      +'<div class="usr-role"><select class="formfsel usr-role-sel">'+roleOpts+'</select></div>'
+      +'<button class="usr-edit" title="Réglages & accès sur-mesure"><i data-lucide="sliders-horizontal"></i></button>'
       +'<button class="usr-del" title="Retirer"'+(isMe?" disabled":"")+'><i data-lucide="trash-2"></i></button>';
     const sel=row.querySelector(".usr-role-sel"); sel.addEventListener("change",e=>setUserRole(u.id,e.target.value)); enhanceSelect(sel);
+    row.querySelector(".usr-edit").addEventListener("click",()=>openUsrModal(u.id));
     const del=row.querySelector(".usr-del"); if(!isMe) del.addEventListener("click",()=>delUser(u.id));
     list.appendChild(row); }); }
   renderUsrAccess(); refreshIcons();
@@ -2706,33 +3077,79 @@ function delUser(id){ const u=adminUsers.find(x=>x.id===id); if(!u) return;
   if(id===currentUser().id){ toast("Vous ne pouvez pas vous retirer"); return; }
   if(u.role==="admin" && adminUsers.filter(x=>x.role==="admin").length<=1){ toast("Gardez au moins un manager"); return; }
   if(!confirm("Retirer "+u.name+" ?")) return; adminUsers=adminUsers.filter(x=>x.id!==id); saveUsers(); renderUsers(); toast("Utilisateur retiré"); }
-function renderUsrAccess(){ const w=document.getElementById("usrAccess"); if(!w) return; const roles=["admin","commercial","editor"];
-  let h='<div class="tbl-scroll"><table class="acc-tbl"><thead><tr><th>Module</th>'+roles.map(r=>'<th><span class="acc-role-h"><span class="acc-dot" style="background:'+roleColor(r)+'"></span>'+roleLabel(r)+'</span></th>').join("")+'</tr></thead><tbody>';
-  ACCESS_MODULES.forEach(mod=>{ h+='<tr><td>'+mod[1]+'</td>'+roles.map(r=>{ const on=r==="admin"||(roleAccess[r]||[]).indexOf(mod[0])>=0, locked=r==="admin";
-    return '<td><button class="acc-chk'+(on?" on":"")+(locked?" locked":"")+'" data-role="'+r+'" data-mod="'+mod[0]+'"'+(locked?" disabled":"")+'><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button></td>'; }).join("")+'</tr>'; });
-  h+='</tbody></table></div>'; w.innerHTML=h;
-  w.querySelectorAll(".acc-chk:not(.locked)").forEach(b=>b.addEventListener("click",()=>toggleAccess(b.dataset.role,b.dataset.mod)));
+let accCollapsed=null; /* init paresseux : CAP_GROUPS est défini plus bas dans le script */
+function roleHasCap(role, cap){ return role==="admin" || (roleCaps[role]||[]).indexOf(cap)>=0; }
+function moduleState(role, g){ if(role==="admin") return "all"; const on=g.caps.filter(c=>roleHasCap(role,c[0])).length; return on===0?"none":(on===g.caps.length?"all":"some"); }
+const ACC_CHK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+function accChk(state, locked, attrs){ /* state : on | ind | off. Un seul glyphe centré, pas d'élément caché qui décale. */
+  const glyph = state==="on" ? ACC_CHK_SVG : (state==="ind" ? '<span class="acc-dash"></span>' : "");
+  return '<button type="button" class="acc-chk'+(state==="on"?" on":state==="ind"?" ind":"")+(locked?" locked":"")+'"'+(locked?" disabled":"")+" "+attrs+">"+glyph+"</button>";
 }
-function toggleAccess(role, mod){ const a=roleAccess[role]||(roleAccess[role]=[]); const i=a.indexOf(mod); if(i<0)a.push(mod); else a.splice(i,1); saveAccess();
-  if(role===currentUser().role) applyRole(); renderUsrAccess(); refreshIcons(); }
+function renderUsrAccess(){ const w=document.getElementById("usrAccess"); if(!w) return; const roles=ROLE_ORDER;
+  if(!accCollapsed) accCollapsed=new Set(CAP_GROUPS.map(g=>g.mod));
+  let h='<div class="tbl-scroll"><table class="acc-tbl acc-caps"><thead><tr><th>Capacité</th>'+roles.map(r=>'<th><span class="acc-role-h"><span class="acc-dot" style="background:'+roleColor(r)+'"></span>'+roleLabel(r)+'</span></th>').join("")+'</tr></thead><tbody>';
+  CAP_GROUPS.forEach(g=>{ const col=accCollapsed.has(g.mod);
+    h+='<tr class="acc-grp'+(col?" col":"")+'"><td><button type="button" class="acc-grp-tog" data-tog="'+g.mod+'"><svg class="acc-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span class="acc-grp-ic"><i data-lucide="'+g.ic+'"></i></span>'+g.label+'<span class="acc-grp-n">'+g.caps.length+'</span></button></td>'
+      + roles.map(r=>{ const st=moduleState(r,g), cs=st==="all"?"on":st==="some"?"ind":"off";
+        return '<td>'+accChk(cs, r==="admin", 'data-mrole="'+r+'" data-mmod="'+g.mod+'" title="'+(st==="all"?"Tout coché":st==="some"?"Partiel":"Aucun")+'"')+'</td>'; }).join("")+'</tr>';
+    g.caps.forEach(c=>{ h+='<tr class="acc-cap'+(col?" hide":"")+'"><td class="acc-cap-lbl">'+c[1]+'</td>'
+      + roles.map(r=>{ const on=roleHasCap(r,c[0]);
+        return '<td>'+accChk(on?"on":"off", r==="admin", 'data-crole="'+r+'" data-cap="'+c[0]+'"')+'</td>'; }).join("")+'</tr>'; });
+  });
+  h+='</tbody></table></div>'; w.innerHTML=h;
+  w.querySelectorAll(".acc-grp-tog").forEach(b=>b.addEventListener("click",()=>{ const m=b.dataset.tog; accCollapsed.has(m)?accCollapsed.delete(m):accCollapsed.add(m); renderUsrAccess(); }));
+  w.querySelectorAll(".acc-chk[data-cap]:not(.locked)").forEach(b=>b.addEventListener("click",()=>toggleRoleCap(b.dataset.crole,b.dataset.cap)));
+  w.querySelectorAll(".acc-chk[data-mmod]:not(.locked)").forEach(b=>b.addEventListener("click",()=>toggleModuleCaps(b.dataset.mrole,b.dataset.mmod)));
+  refreshIcons();
+}
+function setRoleCap(role, cap, on){ const a=roleCaps[role]||(roleCaps[role]=[]); const i=a.indexOf(cap); if(on && i<0) a.push(cap); else if(!on && i>=0) a.splice(i,1); }
+function toggleRoleCap(role, cap){ setRoleCap(role, cap, !roleHasCap(role,cap)); saveRoleCaps(); if(role===currentUser().role) applyRole(); renderUsrAccess(); }
+function toggleModuleCaps(role, mod){ const g=CAP_GROUPS.find(x=>x.mod===mod); if(!g) return; const on=moduleState(role,g)!=="all"; g.caps.forEach(c=>setRoleCap(role,c[0],on)); saveRoleCaps(); if(role===currentUser().role) applyRole(); renderUsrAccess(); }
 function openUsrModal(id){ usrEditId=id||null; const u=id?adminUsers.find(x=>x.id===id):null;
   document.getElementById("usrModalT").textContent=id?"Éditer l'utilisateur":"Ajouter un utilisateur";
   document.getElementById("usrName").value=u?u.name:"";
   document.getElementById("usrEmail").value=u?(u.email||""):"";
   const rs=document.getElementById("usrRole"); rs.value=u?u.role:"commercial"; if(rs._ddSync) rs._ddSync();
+  usrOv={ grant:(u&&u.grant?u.grant.slice():[]).filter(isCap), deny:(u&&u.deny?u.deny.slice():[]).filter(isCap) };
+  usrOvCollapsed=new Set(CAP_GROUPS.map(g=>g.mod));
+  renderUsrOvSection();
   document.getElementById("usrModal").classList.add("show");
   setTimeout(()=>{ const n=document.getElementById("usrName"); if(n) n.focus(); },30); }
 function closeUsrModal(){ document.getElementById("usrModal").classList.remove("show"); usrEditId=null; }
+/* Exceptions par personne : delta au-dessus du preset du rôle. grant = ajout, deny = retrait. */
+function ovEff(role, cap){ let on=role!=="admin" && (roleCaps[role]||[]).indexOf(cap)>=0; if(usrOv.grant.indexOf(cap)>=0) on=true; if(usrOv.deny.indexOf(cap)>=0) on=false; return on; }
+function ovStatus(role, cap){ if(usrOv.grant.indexOf(cap)>=0) return "add"; if(usrOv.deny.indexOf(cap)>=0) return "rem"; return ""; }
+function toggleUsrOv(role, cap){ const inRole=(roleCaps[role]||[]).indexOf(cap)>=0, neweff=!ovEff(role,cap);
+  usrOv.grant=usrOv.grant.filter(c=>c!==cap); usrOv.deny=usrOv.deny.filter(c=>c!==cap);
+  if(neweff!==inRole){ if(neweff) usrOv.grant.push(cap); else usrOv.deny.push(cap); }
+  renderUsrOv(); }
+function renderUsrOvSection(){ const role=document.getElementById("usrRole").value, wrap=document.getElementById("usrOvWrap"), note=document.getElementById("usrOvNote"); if(!wrap) return;
+  if(role==="admin"){ wrap.hidden=true; if(note) note.hidden=false; return; }
+  if(note) note.hidden=true; wrap.hidden=false; renderUsrOv(); }
+function renderUsrOv(){ const box=document.getElementById("usrOv"); if(!box) return; const role=document.getElementById("usrRole").value;
+  let h="";
+  CAP_GROUPS.forEach(g=>{ const col=usrOvCollapsed.has(g.mod), nov=g.caps.filter(c=>ovStatus(role,c[0])).length;
+    h+='<div class="cov-grp"><button type="button" class="cov-ghd" data-tog="'+g.mod+'"><span class="cov-gic"><i data-lucide="'+g.ic+'"></i></span>'+g.label+(nov?'<span class="cov-gn">'+nov+'</span>':'')+'<svg class="acc-caret'+(col?" col":"")+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>'
+      +'<div class="cov-body'+(col?" hide":"")+'">';
+    g.caps.forEach(c=>{ const on=ovEff(role,c[0]), st=ovStatus(role,c[0]);
+      h+='<div class="cov-row"><span class="cov-lbl">'+c[1]+'</span>'+(st==="add"?'<span class="cov-badge add">ajout</span>':st==="rem"?'<span class="cov-badge rem">retiré</span>':'')
+        +accChk(on?"on":"off", false, 'data-cap="'+c[0]+'"')+'</div>'; });
+    h+='</div></div>'; });
+  box.innerHTML=h;
+  box.querySelectorAll(".cov-ghd").forEach(b=>b.addEventListener("click",()=>{ const m=b.dataset.tog; usrOvCollapsed.has(m)?usrOvCollapsed.delete(m):usrOvCollapsed.add(m); renderUsrOv(); }));
+  box.querySelectorAll(".acc-chk").forEach(b=>b.addEventListener("click",()=>toggleUsrOv(role,b.dataset.cap)));
+  refreshIcons(); }
 function saveUsrForm(){ const name=(document.getElementById("usrName").value||"").trim(); const email=(document.getElementById("usrEmail").value||"").trim(); const role=document.getElementById("usrRole").value;
   if(!name){ toast("Le nom est obligatoire"); return; }
-  if(usrEditId){ const u=adminUsers.find(x=>x.id===usrEditId); if(u){ u.name=name; u.email=email; u.role=role; } toast("Utilisateur mis à jour"); }
-  else { adminUsers.push({id:"u"+Date.now(), name, email, role, color:USER_COLORS[adminUsers.length%USER_COLORS.length]}); toast("Utilisateur ajouté"); }
+  const grant=role==="admin"?[]:usrOv.grant.filter(isCap), deny=role==="admin"?[]:usrOv.deny.filter(isCap);
+  if(usrEditId){ const u=adminUsers.find(x=>x.id===usrEditId); if(u){ u.name=name; u.email=email; u.role=role; u.grant=grant; u.deny=deny; } toast("Utilisateur mis à jour"); }
+  else { adminUsers.push({id:"u"+Date.now(), name, email, role, grant, deny, color:USER_COLORS[adminUsers.length%USER_COLORS.length]}); toast("Utilisateur ajouté"); }
   saveUsers(); closeUsrModal(); applyRole(); renderUsers(); }
 
 /* ============================================================
    View switching + sidebar
    ============================================================ */
-const TITLES={ dashboard:"Tableau de bord", editor:"Édition du site", media:"Médiathèque", versions:"Versions", chatbot:"Chatbot", "chatbot-stats":"Statistiques du chatbot", rdv:"Rendez-vous", stats:"Statistiques", perf:"Performance", affiliation:"Affiliation", copilot:"Copilote RDV", users:"Utilisateurs & accès" };
+const TITLES={ dashboard:"Tableau de bord", editor:"Édition du site", structure:"Structure & stratégie", media:"Médiathèque", versions:"Versions", chatbot:"Chatbot", "chatbot-stats":"Statistiques du chatbot", rdv:"Rendez-vous", stats:"Statistiques", perf:"Performance", affiliation:"Affiliation", copilot:"Copilote RDV", users:"Utilisateurs & accès" };
 function showView(name){
   if(name==="chatbot-stats") name="chatbot";   // ancienne vue supprimée : les stats vivent dans le tiroir de la page Chatbot
   if(!canView(name)) name="dashboard";          // un rôle ne peut pas ouvrir une vue hors de son périmètre
@@ -2752,6 +3169,7 @@ function showView(name){
   if(name==="rdv") renderRdv();
   if(name==="stats") renderStats();
   if(name==="perf") renderPerf();
+  if(name==="structure") renderStructure();
   if(name==="affiliation") renderAffiliation();
   if(name==="copilot") renderCopilot();
   if(name==="users") renderUsers();
@@ -3370,8 +3788,12 @@ function cbAsk(q){
   const aCancel=document.getElementById("affilCancel"); if(aCancel) aCancel.addEventListener("click",closeAffilModal);
   const aSave=document.getElementById("affilSave"); if(aSave) aSave.addEventListener("click",saveAffilForm);
   const aModal=document.getElementById("affilModal"); if(aModal) aModal.addEventListener("click",e=>{ if(e.target.id==="affilModal") closeAffilModal(); });
-  const aType=document.getElementById("affilAdvType"); if(aType) aType.addEventListener("change",syncAffilAdv);
-  ["affilCat","affilAdvType"].forEach(id=>{ const s=document.getElementById(id); if(s) enhanceSelect(s); });
+  const aType=document.getElementById("affilAdvType"); if(aType){ aType.addEventListener("change",syncAffilAdv); enhanceSelect(aType); }
+  const aCat=document.getElementById("affilCat"); if(aCat) aCat.addEventListener("change",e=>{ if(e.target.value==="__new__") showAffilNewCat(); else affilPrevCat=e.target.value; });
+  const aNcOk=document.getElementById("affilNewCatOk"); if(aNcOk) aNcOk.addEventListener("click",confirmAffilNewCat);
+  const aNcC=document.getElementById("affilNewCatCancel"); if(aNcC) aNcC.addEventListener("click",cancelAffilNewCat);
+  const aNcI=document.getElementById("affilNewCatInput"); if(aNcI) aNcI.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); confirmAffilNewCat(); } else if(e.key==="Escape"){ e.preventDefault(); cancelAffilNewCat(); } });
+  const aSearch=document.getElementById("affilSearch"); if(aSearch) aSearch.addEventListener("input",e=>{ affilSearch=e.target.value; affilPage=1; renderAffiliation(); });
   // Copilote RDV
   const copC=document.getElementById("copCompany"); if(copC) copC.addEventListener("input",e=>{ copState.company=e.target.value; copSave(); renderCopRecap(); renderCopProgress(); });
   const copCt=document.getElementById("copContact"); if(copCt) copCt.addEventListener("input",e=>{ copState.contact=e.target.value; copSave(); renderCopRecap(); });
@@ -3385,7 +3807,7 @@ function cbAsk(q){
   const uCancel=document.getElementById("usrCancel"); if(uCancel) uCancel.addEventListener("click",closeUsrModal);
   const uSave=document.getElementById("usrSave"); if(uSave) uSave.addEventListener("click",saveUsrForm);
   const uModal=document.getElementById("usrModal"); if(uModal) uModal.addEventListener("click",e=>{ if(e.target.id==="usrModal") closeUsrModal(); });
-  const uRole=document.getElementById("usrRole"); if(uRole) enhanceSelect(uRole);
+  const uRole=document.getElementById("usrRole"); if(uRole){ enhanceSelect(uRole); uRole.addEventListener("change",renderUsrOvSection); }
   document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ if(cbOpen && !document.querySelector(".modal-bg.show")) closeCbDrawer(); closeCbAdd(); closeCbPreview(); closeCbLog(); closeAffilModal(); closeUsrModal(); } });
   // langue : s'adapte au visiteur + langue par défaut
   const alg=document.getElementById("cbAutoLang"); if(alg) alg.addEventListener("click",()=>{ chat.autoLang=!(chat.autoLang!==false); const on=chat.autoLang; alg.classList.toggle("on",on); alg.setAttribute("aria-checked",on); saveChat(); });
@@ -3980,27 +4402,63 @@ function refreshIcons(){ try{ if(window.lucide) lucide.createIcons({ attrs:{ "st
    Utilisateurs & rôles (POC : login simulé via sélecteur de profil ;
    la vraie authentification arrivera avec un backend à la mise en ligne)
    ============================================================ */
-const USERS_KEY="chaskis_users", ACCESS_KEY="chaskis_role_access";
+const USERS_KEY="chaskis_users", ACCESS_KEY="chaskis_role_access", CAPS_KEY="chaskis_role_caps";
 const DEFAULT_USERS=[
   {id:"alex", name:"Alex Moreira", email:"alex@chaskis.ch", role:"admin", color:"#534AB7"},
   {id:"sarah", name:"Sarah Benoit", email:"sarah@chaskis.ch", role:"commercial", color:"#0F6E56"},
-  {id:"marc", name:"Marc Girard", email:"marc@chaskis.ch", role:"commercial", color:"#9A6A15"},
+  {id:"marc", name:"Marc Girard", email:"marc@chaskis.ch", role:"leadcommercial", color:"#9A6A15"},
   {id:"lea", name:"Léa Fontaine", email:"lea@chaskis.ch", role:"editor", color:"#C0407B"}
 ];
-const ROLES={ admin:{label:"Administrateur"}, commercial:{label:"Commercial"}, editor:{label:"Éditeur"} };
-const ROLE_COLORS={ admin:"#534AB7", commercial:"#0F6E56", editor:"#C0407B" };
+/* Rôles : source unique (ordre, libellé, couleur). Ajouter un rôle = une entrée ici + un preset dans DEFAULT_ROLE_CAPS. */
+const ROLE_ORDER=["admin","commercial","leadcommercial","editor"];
+const ROLES={ admin:{label:"Administrateur"}, commercial:{label:"Commercial"}, leadcommercial:{label:"Lead commercial"}, editor:{label:"Éditeur"} };
+const ROLE_COLORS={ admin:"#534AB7", commercial:"#0F6E56", leadcommercial:"#2F6FE0", editor:"#C0407B" };
 function roleColor(role){ return ROLE_COLORS[role]||"#534AB7"; }
-const DEFAULT_ACCESS={ commercial:["copilot","rdv"], editor:["editor","media","versions"] };
-const ACCESS_MODULES=[["editor","Édition du site"],["media","Médiathèque"],["versions","Versions"],["chatbot","Chatbot"],["rdv","Rendez-vous"],["copilot","Copilote RDV"],["stats","Statistiques"],["perf","Performance"],["affiliation","Affiliation"]];
-const USER_COLORS=["#534AB7","#0F6E56","#9A6A15","#C0407B","#2F6FE0","#0EA5A0","#B0518F"];
-let adminUsers=loadUsers(), roleAccess=loadAccess();
-function loadUsers(){ try{ const s=JSON.parse(localStorage.getItem(USERS_KEY)); if(s&&s.length) return s; }catch(e){} return JSON.parse(JSON.stringify(DEFAULT_USERS)); }
-function saveUsers(){ try{ localStorage.setItem(USERS_KEY, JSON.stringify(adminUsers)); }catch(e){} }
-function loadAccess(){ try{ const s=JSON.parse(localStorage.getItem(ACCESS_KEY)); if(s) return Object.assign(JSON.parse(JSON.stringify(DEFAULT_ACCESS)), s); }catch(e){} return JSON.parse(JSON.stringify(DEFAULT_ACCESS)); }
-function saveAccess(){ try{ localStorage.setItem(ACCESS_KEY, JSON.stringify(roleAccess)); }catch(e){} }
-function currentUser(){ const id=loadUI().user; return adminUsers.find(u=>u.id===id)||adminUsers[0]; }
 function roleLabel(role){ return (ROLES[role]||ROLES.admin).label; }
-function canView(name){ const u=currentUser(); if(!u||u.role==="admin") return true; if(name==="dashboard") return true; if(name==="users") return false; return (roleAccess[u.role]||[]).indexOf(name)>=0; }
+/* Catalogue des capacités : la source unique de vérité des droits. Une capacité = une action précise.
+   Ajouter un droit = ajouter une ligne dans le bon groupe, il apparaît partout (matrice + exceptions).
+   La capacité "<module>.view" = "a accès à la page". Les autres = actions dans la page (à brancher ensuite). */
+const CAP_GROUPS=[
+  {mod:"dashboard", label:"Tableau de bord", ic:"layout-dashboard", caps:[["dashboard.view","Voir le tableau de bord"]]},
+  {mod:"editor", label:"Édition du site", ic:"square-pen", caps:[["editor.view","Ouvrir l'éditeur"],["editor.edit","Modifier les contenus"],["editor.publish","Publier en ligne"]]},
+  {mod:"structure", label:"Structure & stratégie", ic:"route", caps:[["structure.view","Voir la structure du site"]]},
+  {mod:"media", label:"Médiathèque", ic:"image", caps:[["media.view","Voir la médiathèque"],["media.import","Importer un média"],["media.delete","Supprimer un média"]]},
+  {mod:"versions", label:"Versions", ic:"history", caps:[["versions.view","Voir l'historique"],["versions.restore","Restaurer une version"]]},
+  {mod:"chatbot", label:"Chatbot", ic:"bot", caps:[["chatbot.view","Voir le chatbot"],["chatbot.edit","Modifier la configuration"],["chatbot.sources","Gérer les sources"]]},
+  {mod:"rdv", label:"Rendez-vous", ic:"calendar", caps:[["rdv.view","Voir les rendez-vous"],["rdv.edit","Modifier une fiche"],["rdv.assign","Attribuer un commercial"],["rdv.relance","Gérer la relance automatique"],["rdv.export","Exporter la liste"]]},
+  {mod:"copilot", label:"Copilote RDV", ic:"compass", caps:[["copilot.view","Utiliser le copilote"]]},
+  {mod:"stats", label:"Statistiques", ic:"bar-chart-3", caps:[["stats.view","Voir les statistiques"],["stats.export","Exporter les statistiques"]]},
+  {mod:"perf", label:"Performance", ic:"gauge", caps:[["perf.view","Voir la performance"]]},
+  {mod:"affiliation", label:"Affiliation", ic:"handshake", caps:[["affiliation.view","Voir l'affiliation"],["affiliation.manage","Gérer les partenaires"]]},
+  {mod:"users", label:"Utilisateurs & accès", ic:"users", caps:[["users.view","Voir les utilisateurs"],["users.manage","Gérer les comptes et les droits"]]}
+];
+const CAP_LABEL={}; CAP_GROUPS.forEach(g=>g.caps.forEach(c=>CAP_LABEL[c[0]]=c[1]));
+function isCap(k){ return !!CAP_LABEL[k]; }
+/* Preset par défaut de chaque rôle (l'admin a tout, géré à part). Éditable via la matrice. */
+const DEFAULT_ROLE_CAPS={
+  commercial:["dashboard.view","rdv.view","rdv.edit","copilot.view"],
+  leadcommercial:["dashboard.view","rdv.view","rdv.edit","rdv.assign","rdv.relance","rdv.export","copilot.view","stats.view","affiliation.view"],
+  editor:["dashboard.view","editor.view","editor.edit","structure.view","media.view","media.import","media.delete","versions.view","chatbot.view","chatbot.edit"]
+};
+const USER_COLORS=["#534AB7","#0F6E56","#9A6A15","#C0407B","#2F6FE0","#0EA5A0","#B0518F"];
+let adminUsers=loadUsers(), roleCaps=loadRoleCaps();
+function normUser(u){ if(!Array.isArray(u.grant)) u.grant=[]; if(!Array.isArray(u.deny)) u.deny=[]; return u; }
+function loadUsers(){ try{ const s=JSON.parse(localStorage.getItem(USERS_KEY)); if(s&&s.length) return s.map(normUser); }catch(e){} return JSON.parse(JSON.stringify(DEFAULT_USERS)).map(normUser); }
+function saveUsers(){ try{ localStorage.setItem(USERS_KEY, JSON.stringify(adminUsers)); }catch(e){} }
+function loadRoleCaps(){
+  const base=JSON.parse(JSON.stringify(DEFAULT_ROLE_CAPS));
+  try{ const s=JSON.parse(localStorage.getItem(CAPS_KEY)); if(s) return Object.assign(base,s); }catch(e){}
+  /* migration douce depuis l'ancien modèle "par page" -> capacités .view */
+  try{ const old=JSON.parse(localStorage.getItem(ACCESS_KEY)); if(old){ Object.keys(old).forEach(r=>{ const set=new Set(base[r]||[]); (old[r]||[]).forEach(p=>set.add(p+".view")); set.add("dashboard.view"); base[r]=[...set]; }); } }catch(e){}
+  return base;
+}
+function saveRoleCaps(){ try{ localStorage.setItem(CAPS_KEY, JSON.stringify(roleCaps)); }catch(e){} }
+function currentUser(){ const id=loadUI().user; return adminUsers.find(u=>u.id===id)||adminUsers[0]; }
+/* Moteur de droits : capacités effectives = preset du rôle + ajouts perso - retraits perso. L'admin a tout. */
+function userCaps(u){ if(!u) return new Set(); if(u.role==="admin") return "*";
+  const s=new Set(roleCaps[u.role]||[]); (u.grant||[]).forEach(k=>s.add(k)); (u.deny||[]).forEach(k=>s.delete(k)); return s; }
+function can(cap, u){ u=u||currentUser(); const c=userCaps(u); return c==="*"||c.has(cap); }
+function canView(name){ if(name==="dashboard") return true; return can(name+".view"); }
 function userInitials(u){ return (u.name||"?").trim().split(/\s+/).map(w=>w[0]||"").slice(0,2).join("").toUpperCase(); }
 function renderUserChip(){ const u=currentUser();
   const ava=document.getElementById("tbAva"); if(ava){ ava.textContent=userInitials(u); ava.style.setProperty("--c",roleColor(u.role)); }

@@ -72,7 +72,30 @@
   .app.mini .nav-i:hover .nav-tip{opacity:1}
   .nav-sep{height:1px;background:var(--border);margin:8px 6px}
   .nav-bottom{margin-top:auto}
+  /* version + environnement du back-office (dev / prod) */
+  .sb-build{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;border-radius:9px;transition:background .15s}
+  .sb-build:hover{background:var(--bg)}
+  .sb-build-env{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;line-height:1;padding:3px 8px 3px 7px;border-radius:20px;white-space:nowrap}
+  .sb-build-env::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+  .sb-build-env.dev{color:#9A6A15;background:#FBF0DD}
+  .sb-build-env.prod{color:#0F6E56;background:#E1F5EE}
+  .sb-build-v{font-size:11px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:auto}
+  .app.mini .sb-build{justify-content:center;padding:6px 0}
+  .app.mini .sb-build-v{display:none}
+  .app.mini .sb-build-env{font-size:0;gap:0;padding:4px}
   .sb-logout{color:#C0392B;justify-content:center;gap:7px;width:100%;box-sizing:border-box}
+  .build-menu{position:fixed;z-index:120;background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 34px rgba(40,32,60,.18);padding:6px;width:252px}
+  .build-menu .bm-hd{font-size:11px;font-weight:700;color:var(--muted);padding:7px 9px 5px}
+  .build-menu .bm-opt{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:9px;border-radius:9px}
+  .build-menu .bm-opt:hover{background:var(--bg)}
+  .build-menu .bm-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  .build-menu .bm-dot.dev{background:#9A6A15}.build-menu .bm-dot.prod{background:#0F6E56}
+  .build-menu .bm-tx{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0}
+  .build-menu .bm-n{font-size:13px;font-weight:600;color:var(--ink)}
+  .build-menu .bm-s{font-size:11px;color:var(--muted)}
+  .build-menu .bm-chk{width:16px;height:16px;color:var(--teal-d);opacity:0;flex-shrink:0}
+  .build-menu .bm-opt.on .bm-chk{opacity:1}
+  .build-menu .bm-foot{font-size:10.5px;color:var(--muted);padding:7px 9px 3px;border-top:1px solid var(--border);margin-top:4px}
   .sb-logout .nav-lbl{font-size:11.5px;font-weight:600}
   .sb-logout:hover{color:#fff;background:#C0392B}
   .sb-logout:hover .nav-tip{color:var(--ink)}
@@ -1358,6 +1381,7 @@
       <button class="nav-i" data-view="users"><i data-lucide="users"></i><span class="nav-lbl">Utilisateurs & accès</span><span class="nav-tip">Utilisateurs & accès</span></button>
     </div>
     <div class="nav-bottom">
+      <button class="sb-build" id="sbBuild" type="button" title="Version et environnement"></button>
       <div class="nav-sep"></div>
       <button class="nav-i sb-logout" id="sbLogout"><i data-lucide="log-out"></i><span class="nav-lbl">Se déconnecter</span><span class="nav-tip">Se déconnecter</span></button>
     </div>
@@ -2005,6 +2029,8 @@ const PAGE = "index";
 const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
+/* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
+const ADMIN_BUILD = { version: "0.9.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -4812,11 +4838,32 @@ function umOutside(e){ const m=document.getElementById("sbUserMenu"), btn=docume
 function closeUserMenu(){ const m=document.getElementById("sbUserMenu"); if(m) m.remove(); document.removeEventListener("mousedown",umOutside,true); }
 function logout(){ toast("Déconnexion (démo) · l'authentification réelle arrivera à la mise en ligne."); }
 
+/* ---- environnement (dev / prod) + version du back-office ---- */
+function getEnv(){ return loadUI().env==="prod" ? "prod" : "dev"; }
+function setEnv(env){ env=(env==="prod")?"prod":"dev"; saveUI({env}); renderBuild(); document.querySelector(".app")?.setAttribute("data-env",env);
+  toast(env==="prod"?"Environnement : production (le site en ligne)":"Environnement : développement (brouillon de travail)"); }
+function renderBuild(){ const el=document.getElementById("sbBuild"); if(!el) return; const env=getEnv();
+  el.innerHTML='<span class="sb-build-env '+env+'">'+(env==="prod"?"prod":"dev")+'</span><span class="sb-build-v">v'+ADMIN_BUILD.version+'</span>';
+  document.querySelector(".app")?.setAttribute("data-env",env); }
+const BM_CHK='<svg class="bm-chk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+function openBuildMenu(){ closeBuildMenu(); const btn=document.getElementById("sbBuild"); if(!btn) return; const env=getEnv();
+  const opts=[["dev","Développement","Brouillon de travail, non public"],["prod","Production","Le site réellement en ligne"]];
+  const m=document.createElement("div"); m.className="build-menu"; m.id="buildMenu";
+  m.innerHTML='<div class="bm-hd">Environnement</div>'+opts.map(o=>'<button class="bm-opt'+(o[0]===env?" on":"")+'" data-env="'+o[0]+'"><span class="bm-dot '+o[0]+'"></span><span class="bm-tx"><span class="bm-n">'+o[1]+'</span><span class="bm-s">'+o[2]+'</span></span>'+BM_CHK+'</button>').join("")
+    +'<div class="bm-foot">Back-office Chaskis · v'+ADMIN_BUILD.version+'</div>';
+  document.body.appendChild(m);
+  const r=btn.getBoundingClientRect(); m.style.left=Math.max(8,r.left)+"px"; m.style.bottom=(innerHeight-r.top+8)+"px";
+  m.querySelectorAll("[data-env]").forEach(b=>b.addEventListener("click",()=>{ setEnv(b.dataset.env); closeBuildMenu(); }));
+  setTimeout(()=>document.addEventListener("mousedown",bmOutside,true),0); }
+function bmOutside(e){ const m=document.getElementById("buildMenu"), btn=document.getElementById("sbBuild"); if(m && !m.contains(e.target) && btn && !btn.contains(e.target)) closeBuildMenu(); }
+function closeBuildMenu(){ const m=document.getElementById("buildMenu"); if(m) m.remove(); document.removeEventListener("mousedown",bmOutside,true); }
+
 (function boot(){
   const ui=loadUI();
   applyRole();
   const tb=document.getElementById("tbUser"); if(tb) tb.addEventListener("click",openUserMenu);
   const lo=document.getElementById("sbLogout"); if(lo) lo.addEventListener("click",logout);
+  renderBuild(); const sbb=document.getElementById("sbBuild"); if(sbb) sbb.addEventListener("click",openBuildMenu);
   applyResponsiveNav();
   refreshIcons();
   renderSecList();

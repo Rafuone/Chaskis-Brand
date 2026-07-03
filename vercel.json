@@ -5,7 +5,8 @@
     { "source": "/commander", "destination": "/commander.html" },
     { "source": "/dashboard", "destination": "/dashboard.html" },
     { "source": "/postuler", "destination": "/postuler.html" },
-    { "source": "/mobilite", "destination": "/mobilite.html" }
+    { "source": "/mobilite", "destination": "/mobilite.html" },
+    { "source": "/suivi/:code", "destination": "/app.html?code=:code" }
   ],
   "headers": [
     {

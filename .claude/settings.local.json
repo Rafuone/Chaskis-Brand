@@ -80,7 +80,10 @@
       "Bash(awk '{print $9, $5}')",
       "Bash(ffmpeg -version)",
       "Bash(python -c \"from PIL import Image; print\\('Pillow', Image.__version__\\)\")",
-      "Bash(python -c \"import imageio_ffmpeg; print\\(imageio_ffmpeg.get_ffmpeg_exe\\(\\)\\)\")"
+      "Bash(python -c \"import imageio_ffmpeg; print\\(imageio_ffmpeg.get_ffmpeg_exe\\(\\)\\)\")",
+      "mcp__visualize__read_me",
+      "mcp__visualize__show_widget",
+      "Bash(awk 'NR>=2050 && NR<=2120' index.html)"
     ]
   }
 }

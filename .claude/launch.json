@@ -4,7 +4,7 @@
     {
       "name": "chaskis-brand",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "3000", "--directory", "C:\\Users\\rafuo\\Desktop\\Claude\\Chaskis-website\\Chaskis-Brand"],
+      "runtimeArgs": ["C:\\Users\\rafuo\\Desktop\\Claude\\Chaskis-website\\Chaskis-Brand\\tools\\dev_server.py", "3000"],
       "port": 3000,
       "openPath": "/index.html"
     }

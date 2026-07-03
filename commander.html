@@ -500,11 +500,28 @@ body.page-commander .nav{background:rgba(255,255,255,.92);backdrop-filter:blur(1
 .success-copy.copied{color:#2FA594;border-color:#ACDCD5;background:#EDF7F6}
 
 .success-actions{width:100%;display:flex;flex-direction:column;gap:8px;animation:cmd-fade-up .4s ease both .45s;opacity:0}
-.success-pwa{width:100%;height:52px;border-radius:12px;background:linear-gradient(135deg,#2FA594 0%,#1F8C7D 100%);color:#fff;border:none;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 4px 16px rgba(47,165,148,.28)}
-.success-pwa:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(47,165,148,.38)}
-.success-pwa svg{width:17px;height:17px}
+.success-track{width:100%;height:52px;border-radius:12px;background:linear-gradient(135deg,#2FA594 0%,#1F8C7D 100%);color:#fff;border:none;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 4px 16px rgba(47,165,148,.28)}
+.success-track:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(47,165,148,.38)}
+.success-pwa{width:100%;height:46px;border-radius:12px;background:#fff;color:#2FA594;border:1.5px solid #ACDCD5;font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;transition:all .18s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.success-pwa:hover{background:#EDF7F6;border-color:#2FA594}
+.success-pwa svg{width:15px;height:15px}
 .success-close{background:none;border:none;color:#9890A2;font-family:inherit;font-size:13px;font-weight:600;padding:8px;cursor:pointer;transition:color .15s;text-decoration:underline;text-decoration-color:transparent}
 .success-close:hover{color:#695C73;text-decoration-color:#C8C4D0}
+/* QR block */
+.success-qr{width:100%;display:flex;align-items:center;gap:16px;padding:16px;background:#fff;border:1px solid #E8E8EB;border-radius:12px;animation:cmd-fade-up .4s ease both .4s;opacity:0}
+.success-qr canvas{width:120px;height:120px;flex-shrink:0;border-radius:6px;background:#fff}
+.success-qr-info{flex:1;min-width:0;text-align:left;display:flex;flex-direction:column;gap:6px}
+.success-qr-info strong{font-size:13.5px;font-weight:700;color:#261835;letter-spacing:-.01em;line-height:1.25}
+.success-qr-info span{font-size:11.5px;color:#9890A2;line-height:1.45}
+.success-link-copy{align-self:flex-start;margin-top:2px;background:#F4F3F5;border:1px solid #E8E8EB;color:#261835;border-radius:8px;padding:6px 12px;font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer;transition:all .15s}
+.success-link-copy:hover{background:#EDF7F6;border-color:#ACDCD5;color:#2FA594}
+.success-link-copy.copied{background:#EDF7F6;border-color:#ACDCD5;color:#2FA594}
+@media (max-width:420px){
+  .success-qr{flex-direction:column;text-align:center}
+  .success-qr canvas{width:140px;height:140px}
+  .success-qr-info{text-align:center;align-items:center}
+  .success-link-copy{align-self:center}
+}
 .success-note{font-size:11.5px;color:#9890A2;margin-top:4px;line-height:1.5;animation:cmd-fade-up .4s ease both .55s;opacity:0}
 .success-note strong{color:#695C73;font-weight:600}
 
@@ -960,10 +977,21 @@ body.page-commander .nav{background:rgba(255,255,255,.92);backdrop-filter:blur(1
         </div>
         <button type="button" class="success-copy" id="successCopy">Copier</button>
       </div>
+      <div class="success-qr" id="successQrWrap">
+        <canvas id="successQr" width="180" height="180" aria-label="QR code de suivi"></canvas>
+        <div class="success-qr-info">
+          <strong>Scannez pour suivre</strong>
+          <span>Ou partagez ce lien avec votre destinataire</span>
+          <button type="button" class="success-link-copy" id="successLinkCopy" data-link="">Copier le lien</button>
+        </div>
+      </div>
       <div class="success-actions">
+        <button type="button" class="success-track" id="successTrack" onclick="var h=this.dataset.href;var c=document.getElementById('successOrderId')&&document.getElementById('successOrderId').textContent;if(h){window.location.href=h}else if(c&&c!=='—'){window.location.href='/suivi/'+c}">
+          Suivre ma commande →
+        </button>
         <button type="button" class="success-pwa" id="pwaInstallBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
-          Installer l'app pour suivre en temps réel
+          Installer l'app Chaskis
         </button>
         <button type="button" class="success-close" id="successClose">
           Retour à l'accueil
@@ -1033,9 +1061,10 @@ window.T = {
   }
 };
 </script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js" defer></script>
 <script src="assets/js/shared.js?v=20260422h"></script>
 <script src="assets/js/pricing-mock.js?v=7"></script>
-<script src="assets/js/commander.js?v=9"></script>
+<script src="assets/js/commander.js?v=11"></script>
 
 </body>
 </html>

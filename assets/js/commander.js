@@ -11,6 +11,30 @@ if (!P) { console.error('ChaskisPricing not loaded'); return; }
 
 const MAX_STOPS = 5;
 const DRAFT_KEY = 'chaskis_commander_draft_v2';
+const ORDERS_KEY = 'chaskis_orders';
+
+// ===== ORDER CODE + PERSISTENCE =====
+// Code format: CH-XXXXXXXX (8 alphanumeric chars, crypto random, no confusing 0/O/1/I).
+function generateOrderCode() {
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const rnd = new Uint8Array(8);
+  (window.crypto || window.msCrypto).getRandomValues(rnd);
+  let out = 'CH-';
+  for (let i = 0; i < 8; i++) out += alphabet[rnd[i] % alphabet.length];
+  return out;
+}
+
+function persistOrder(order) {
+  try {
+    const raw = localStorage.getItem(ORDERS_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    // Dedupe by code, prepend newest
+    const filtered = list.filter(o => o && o.code !== order.code);
+    filtered.unshift(order);
+    // Cap to 20 most recent
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(filtered.slice(0, 20)));
+  } catch (e) { console.warn('persistOrder failed', e); }
+}
 
 // ===== STATE =====
 const state = {
@@ -1034,11 +1058,66 @@ async function simulateStripePayment() {
   await new Promise(r => setTimeout(r, 1100));
   sim.classList.remove('show');
 
-  // Redirect to success screen
-  const orderId = 'CH-' + Date.now().toString(36).toUpperCase().slice(-7);
+  // Generate code + persist order for the PWA tracking
+  const orderId = generateOrderCode();
+  const trackUrl = location.origin + '/suivi/' + orderId;
+  const order = {
+    code: orderId,
+    createdAt: Date.now(),
+    pickup: {
+      addr: state.pickup.addr || state.pickup.label || '',
+      label: state.pickup.label || state.pickup.addr || '',
+    },
+    stops: state.stops.map(s => ({
+      addr: s.addr || s.label || '',
+      label: s.label || s.addr || '',
+    })),
+    contact: {
+      name: state.contact.name,
+      email: state.contact.email,
+      phone: state.contact.phone,
+    },
+    pricing: state.pricing ? {
+      totalTTC: state.pricing.totalTTC,
+    } : null,
+    timing: state.timing,
+    vehicle: state.vehicle,
+    status: 'confirmed',
+    trackUrl: trackUrl,
+  };
+  persistOrder(order);
+
+  // Success screen + QR
   document.getElementById('successOrderId').textContent = orderId;
   const emailEl = document.getElementById('successEmail');
   if (emailEl) emailEl.textContent = state.contact.email;
+  const linkBtn = document.getElementById('successLinkCopy');
+  if (linkBtn) linkBtn.dataset.link = trackUrl;
+  const trackBtn = document.getElementById('successTrack');
+  if (trackBtn) trackBtn.dataset.href = trackUrl;
+
+  // Draw QR code with graceful degradation: hide the QR block if the library
+  // fails to load within 3s (e.g. offline, blocked CDN, restrictive CSP).
+  const qrWrap = document.getElementById('successQrWrap');
+  const drawQr = (attempt = 0) => {
+    if (!window.QRCode) {
+      if (attempt > 30) { if (qrWrap) qrWrap.style.display = 'none'; return; }
+      setTimeout(() => drawQr(attempt + 1), 120);
+      return;
+    }
+    const canvas = document.getElementById('successQr');
+    if (!canvas) return;
+    window.QRCode.toCanvas(canvas, trackUrl, {
+      width: 180,
+      margin: 1,
+      color: { dark: '#261835', light: '#ffffff' },
+      errorCorrectionLevel: 'M',
+    }, err => {
+      if (err) { console.warn('QR draw failed', err); if (qrWrap) qrWrap.style.display = 'none'; }
+    });
+  };
+  drawQr();
+
   document.getElementById('screenForm').classList.remove('active');
   document.getElementById('screenSuccess').classList.add('active');
   document.getElementById('summaryMobile').style.display = 'none';
@@ -1066,12 +1145,25 @@ document.getElementById('pwaInstallBtn').addEventListener('click', async () => {
   }
 });
 document.getElementById('successClose').addEventListener('click', () => { window.location.href = 'index.html'; });
+document.getElementById('successTrack').addEventListener('click', (e) => {
+  const href = e.currentTarget.dataset.href;
+  if (href) window.location.href = href;
+});
 document.getElementById('successCopy').addEventListener('click', (e) => {
   const id = document.getElementById('successOrderId').textContent;
   navigator.clipboard?.writeText(id).then(() => {
     e.target.textContent = 'Copié';
     e.target.classList.add('copied');
     setTimeout(() => { e.target.textContent = 'Copier'; e.target.classList.remove('copied'); }, 1600);
+  });
+});
+document.getElementById('successLinkCopy').addEventListener('click', (e) => {
+  const link = e.currentTarget.dataset.link;
+  if (!link) return;
+  navigator.clipboard?.writeText(link).then(() => {
+    e.target.textContent = 'Lien copié';
+    e.target.classList.add('copied');
+    setTimeout(() => { e.target.textContent = 'Copier le lien'; e.target.classList.remove('copied'); }, 1800);
   });
 });
 

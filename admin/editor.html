@@ -2229,7 +2229,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.9.7" };
+const ADMIN_BUILD = { version: "0.9.8" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -2310,7 +2310,7 @@ function drawSpark(svg, vals){
 /* ============================================================
    Draft + versions state
    ============================================================ */
-function blankDraft(){ return { text:{fr:{},en:{}}, html:{fr:{},en:{}}, dom:{}, order:null, hidden:[], promoHidden:false, images:{}, bgImages:{}, media:[] }; }
+function blankDraft(){ return { text:{fr:{},en:{}}, html:{fr:{},en:{}}, dom:{}, order:null, hidden:[], promoHidden:false, images:{}, bgImages:{}, media:[], lists:{} }; }
 let draft = loadDraft();
 let versions = loadVersions();
 let currentLang = "fr";
@@ -2398,6 +2398,14 @@ const EDIT_CSS = `
   .ck-preview .ck-hidden{display:none!important}
   .ck-preview [data-ckedit]{outline:none!important;background:none!important;box-shadow:none!important;cursor:auto!important}
   .ck-preview [data-ckimg]:hover,.ck-preview [data-ckbg]:hover{filter:none!important}
+  .ck-li{position:relative}
+  .ck-li-x{all:unset;box-sizing:border-box;position:absolute;top:2px;right:-8px;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid #e0dcd2;box-shadow:0 2px 6px rgba(40,32,60,.18);display:none;align-items:center;justify-content:center;color:#B23B3B;cursor:pointer;z-index:9995}
+  .ck-li:hover > .ck-li-x{display:flex}
+  .ck-li-x svg{width:11px;height:11px}
+  .ck-list-add{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;gap:5px;margin-top:10px;font:600 12px/1 -apple-system,BlinkMacSystemFont,sans-serif;color:#6B5BCC;cursor:pointer;padding:6px 11px;border:1px dashed #b7aee6;border-radius:8px;background:rgba(107,91,204,.05)}
+  .ck-list-add:hover{background:rgba(107,91,204,.12)}
+  .ck-list-add span{font-size:15px;line-height:1}
+  .ck-preview .ck-li-x,.ck-preview .ck-list-add{display:none!important}
 `;
 
 /* affichage du bandeau : on pilote la classe native du site (has-promo) plutot que des display inline.
@@ -2412,8 +2420,8 @@ function initEditMode(){
   const pb=DOC.getElementById("promoBar"); if(pb){ pb.style.display=""; pb.classList.remove("is-hidden","hidden"); }
   setPromoVisible(!draft.promoHidden);
   killNavigation();
-  markTexts(); markPromo(); markImages(); markBg(); seedMedia(); renderContentHealth();
-  setupSections(); applyDraft(); renderSecList(); refreshSecToolbars();
+  markTexts(); markPromo(); markImages(); markBg(); markLists(); seedMedia(); renderContentHealth();
+  setupSections(); applyDraft(); decorateAllLists(); renderSecList(); refreshSecToolbars();
   togglePreview(false);
   loader.style.display="none";
   updateDashboard();
@@ -2436,6 +2444,7 @@ function attachEditable(el, kind, key){
   el.addEventListener("focus",()=>{ el.__ck_prev=el.textContent; });
   el.addEventListener("blur",()=>{ contentFeedback(el, kind); });
   el.addEventListener("input",()=>{
+    if(el.hasAttribute("data-cklistedit")) return; /* point de liste : géré par draft.lists */
     if(kind==="html") setVal(draft.html,key,el.innerHTML); else setVal(draft.text,key,el.textContent);
     syncSiblings(el,kind,key); markDirty(); contentHealthDebounced();
   });
@@ -2841,6 +2850,35 @@ function renderPricingEditor(){ const P=getPricing(); const b=document.getElemen
   refreshIcons();
 }
 
+/* ---- Points de listes : ajouter / retirer un point dans les cards à puces (diff, offres) ---- */
+const LIST_SELS=".diff-list, .offre-list";
+function listTextEl(li){ let t=li.querySelector("[data-cklistedit]")||li.querySelector("[data-i18n]"); if(t) return t;
+  const sp=li.querySelectorAll(":scope > span"); return sp.length?sp[sp.length-1]:li; }
+function markLists(){ if(!DOC) return; let n=0; editableEls().forEach(sec=> sec.querySelectorAll(LIST_SELS).forEach(ul=>{ ul.setAttribute("data-cklist","list"+(n++)); })); }
+function applyLists(){ if(!DOC||!draft.lists) return; Object.keys(draft.lists).forEach(key=>{ const ul=DOC.querySelector('[data-cklist="'+cssEsc(key)+'"]'); if(ul && Array.isArray(draft.lists[key]) && draft.lists[key].length) ul.innerHTML=draft.lists[key].join(""); }); }
+function cleanLiHTML(li){ const c=li.cloneNode(true); c.querySelectorAll(".ck-li-x").forEach(x=>x.remove()); c.classList.remove("ck-li");
+  c.querySelectorAll("[contenteditable],[data-i18n],[data-ckedit],[data-cklistedit],[data-ckkey],[spellcheck]").forEach(e=>{ ["contenteditable","spellcheck","data-i18n","data-i18n-html","data-ckedit","data-cklistedit","data-ckkey"].forEach(a=>e.removeAttribute(a)); });
+  return c.outerHTML; }
+function storeList(ul){ const key=ul.getAttribute("data-cklist"); if(!key) return; if(!draft.lists) draft.lists={}; draft.lists[key]=[...ul.querySelectorAll(":scope > li")].map(cleanLiHTML); markDirty(); }
+function makeLiEditable(li, ul){ const t=listTextEl(li); if(!t||t.hasAttribute("data-cklistedit")) return;
+  t.setAttribute("data-cklistedit","1"); t.setAttribute("contenteditable","true"); t.setAttribute("spellcheck","false");
+  t.addEventListener("mousedown",e=>e.stopPropagation()); t.addEventListener("click",e=>e.stopPropagation());
+  t.addEventListener("input",()=>storeList(ul)); }
+function addLiRemove(li, ul){ if(li.querySelector(":scope > .ck-li-x")) return; li.classList.add("ck-li");
+  const x=DOC.createElement("button"); x.type="button"; x.className="ck-li-x"; x.title="Retirer ce point"; x.setAttribute("aria-label","Retirer ce point");
+  x.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+  x.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); if(ul.querySelectorAll(":scope > li").length<=1){ toast("Gardez au moins un point"); return; } li.remove(); storeList(ul); }); li.appendChild(x); }
+function refreshListAdd(ul){ let add=ul.nextElementSibling; if(add&&add.classList&&add.classList.contains("ck-list-add")) return;
+  add=DOC.createElement("button"); add.type="button"; add.className="ck-list-add"; add.innerHTML='<span>+</span>ajouter un point';
+  add.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); addListItem(ul); }); ul.after(add); }
+function decorateList(ul){ ul.querySelectorAll(":scope > li").forEach(li=>{ makeLiEditable(li,ul); addLiRemove(li,ul); }); refreshListAdd(ul); }
+function decorateAllLists(){ if(!DOC) return; DOC.querySelectorAll("[data-cklist]").forEach(ul=> decorateList(ul)); }
+function addListItem(ul){ const lis=ul.querySelectorAll(":scope > li"); const tmpl=lis[lis.length-1]; if(!tmpl) return;
+  const li=tmpl.cloneNode(true); li.querySelectorAll(".ck-li-x").forEach(x=>x.remove()); li.classList.remove("ck-li");
+  const t=listTextEl(li); if(t){ ["data-i18n","data-i18n-html","data-cklistedit","data-ckedit","data-ckkey","contenteditable"].forEach(a=>t.removeAttribute(a)); t.textContent="Nouveau point"; }
+  ul.appendChild(li); makeLiEditable(li,ul); addLiRemove(li,ul); storeList(ul);
+  const nt=listTextEl(li); if(nt){ try{ nt.focus(); const r=DOC.createRange(); r.selectNodeContents(nt); const sel=WIN.getSelection(); sel.removeAllRanges(); sel.addRange(r); }catch(e){} } }
+
 /* ---- sections ---- */
 function secEl(id){ const d=SECTION_DEFS.find(s=>s.id===id); return d?DOC.querySelector(d.sel):null; }
 function editableEls(){ return SECTION_DEFS.map(d=>secEl(d.id)).filter(Boolean); }
@@ -2975,7 +3013,7 @@ function applyDraft(){
   Object.keys(draft.dom).forEach(k=>{ const el=DOC.querySelector('[data-ckkey="'+cssEsc(k)+'"]'); if(el) el.innerHTML=draft.dom[k]; });
   Object.keys(draft.images).forEach(id=>{ const el=DOC.querySelector('[data-ckimg="'+id+'"]'); if(el) el.src=draft.images[id]; });
   BG_DEFS.forEach(b=>{ if(draft.bgImages[b.key]){ const el=DOC.querySelector(b.sel); if(el) el.style.backgroundImage='url("'+draft.bgImages[b.key]+'")'; } });
-  applyLogos(); applyTestimonials(); applyPricingToPage();
+  applyLogos(); applyTestimonials(); applyPricingToPage(); applyLists();
   applyTextForLang();
 }
 function applyTextForLang(){
@@ -3025,7 +3063,7 @@ function changeCount(dr){
   const text=nkeys(dr.text&&dr.text.fr)+nkeys(dr.text&&dr.text.en)+nkeys(dr.html&&dr.html.fr)+nkeys(dr.html&&dr.html.en)+nkeys(dr.dom);
   const img=nkeys(dr.images)+nkeys(dr.bgImages);
   const sec=(dr.order?1:0)+((dr.hidden&&dr.hidden.length)||0)+(dr.promoHidden?1:0);
-  const struct=(Array.isArray(dr.logos)?1:0)+(Array.isArray(dr.testimonials)?1:0)+(dr.pricing?1:0);
+  const struct=(Array.isArray(dr.logos)?1:0)+(Array.isArray(dr.testimonials)?1:0)+(dr.pricing?1:0)+((dr.lists&&Object.keys(dr.lists).length)?1:0);
   return { text, img, sec, struct, total:text+img+sec+struct };
 }
 function humanSummary(dr){
@@ -3039,6 +3077,7 @@ function humanSummary(dr){
   if(Array.isArray(dr.logos)) parts.push("logos de confiance");
   if(Array.isArray(dr.testimonials)) parts.push("témoignages");
   if(dr.pricing) parts.push("tarifs du simulateur");
+  if(dr.lists && Object.keys(dr.lists).length) parts.push("points de listes");
   return parts.length?parts.join(", "):"aucune modification";
 }
 function fmtTime(d){ return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); }

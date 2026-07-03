@@ -1580,6 +1580,21 @@
   .set-about b{color:var(--ink-soft);font-weight:600}
   .set-about-v{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
   .set-about-v + .set-about-v{border-top:1px solid var(--border)}
+  /* ---- tutoriel guidé (spotlight coach-mark) ---- */
+  .coach-hole{position:fixed;z-index:400;border-radius:9px;border:2px solid #6B5BCC;box-shadow:0 0 0 9999px rgba(22,17,40,.6);pointer-events:none;opacity:0;transition:opacity .3s,left .2s,top .2s,width .2s,height .2s}
+  .coach-hole.show{opacity:1;animation:coachPulse 2.4s ease-in-out infinite}
+  @keyframes coachPulse{0%,100%{box-shadow:0 0 0 9999px rgba(22,17,40,.6),0 0 0 2px rgba(107,91,204,.5)}50%{box-shadow:0 0 0 9999px rgba(22,17,40,.6),0 0 0 8px rgba(107,91,204,.16)}}
+  .coach-pop{position:fixed;z-index:401;width:322px;max-width:calc(100vw - 24px);background:#fff;border-radius:14px;box-shadow:0 18px 48px rgba(20,16,38,.34);padding:16px 18px;pointer-events:auto;opacity:0;transform:translateY(6px);transition:opacity .28s,transform .28s}
+  .coach-pop.show{opacity:1;transform:none}
+  .coach-pop-x{all:unset;box-sizing:border-box;position:absolute;top:11px;right:11px;width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer}
+  .coach-pop-x:hover{background:var(--bg);color:var(--ink)}
+  .coach-pop-x svg{width:15px;height:15px}
+  .coach-pop-step{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px}
+  .coach-pop-badge{display:inline-flex;align-items:center;gap:5px;color:#6B5BCC}
+  .coach-pop-badge svg{width:13px;height:13px}
+  .coach-pop-t{font-size:14.5px;font-weight:800;color:var(--ink);line-height:1.3;margin-bottom:6px;padding-right:22px}
+  .coach-pop-b{font-size:12.5px;color:var(--ink-soft);line-height:1.55}
+  .coach-pop-cta{margin-top:14px;display:flex;justify-content:flex-end;gap:9px}
 </style>
 </head>
 <body>
@@ -2286,7 +2301,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.9.9" };
+const ADMIN_BUILD = { version: "0.10.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -3395,8 +3410,66 @@ function perfRing(score, size, col){ const s=Math.max(0,Math.min(100,score)), r=
   return '<div class="pring" style="width:'+size+'px;height:'+size+'px"><svg viewBox="0 0 '+size+' '+size+'"><circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="#ECEAF1" stroke-width="6"/>'
     +'<circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" transform="rotate(-90 '+cx+' '+cx+')"/></svg>'
     +'<span class="pring-v" style="color:'+col+';font-size:'+Math.round(size*0.34)+'px">'+score+'</span></div>'; }
-function perfFix(a){ if(a.fix&&a.fix.goto){ showView(a.fix.goto); if(a.fix.guide) setTimeout(()=>toast(a.fix.guide),380); } }
+function perfFix(a){ const fx=a.fix||{}; if(!fx.goto) return; showView(fx.goto);
+  if(fx.goto==="editor" && fx.target){ startCoach([{sel:fx.target, title:fx.coachTitle||"À modifier ici", text:fx.coachText||fx.guide||""}]); }
+  else if(fx.guide){ setTimeout(()=>toast(fx.guide),380); } }
 function perfSignalGamma(){ toast("Point signalé à "+GAMMA+" (démo)"); }
+/* ---- Tutoriel guidé (spotlight) : met en avant l'élément à modifier, sans presser ---- */
+let _coach=null;
+function coachTargetRect(step, doScroll){
+  let el=null;
+  if(step.sel){ if(!DOC) return null; el=DOC.querySelector(step.sel); }
+  else if(step.parentSel){ el=document.querySelector(step.parentSel); }
+  if(!el) return null;
+  if(doScroll){ try{ el.scrollIntoView({block:"center"}); }catch(e){} }
+  const er=el.getBoundingClientRect(); if(er.width===0 && er.height===0) return null;
+  if(step.sel){ const ir=iframe.getBoundingClientRect(); return {left:ir.left+er.left, top:ir.top+er.top, width:er.width, height:er.height}; }
+  return {left:er.left, top:er.top, width:er.width, height:er.height};
+}
+function startCoach(steps){ endCoach(); if(!steps||!steps.length) return;
+  _coach={steps, i:0};
+  const hole=document.createElement("div"); hole.className="coach-hole"; hole.id="coachHole";
+  const pop=document.createElement("div"); pop.className="coach-pop"; pop.id="coachPop";
+  document.body.appendChild(hole); document.body.appendChild(pop);
+  _coach.hole=hole; _coach.pop=pop;
+  window.addEventListener("resize", coachReposition);
+  window.addEventListener("keydown", coachKey, true);
+  showCoachStep(0);
+}
+function showCoachStep(i){ if(!_coach) return; _coach.i=i; const step=_coach.steps[i]; let tries=0;
+  const attempt=()=>{ if(!_coach) return; const r=coachTargetRect(step, true);
+    if(!r){ if(tries++<40){ _coach._t=setTimeout(attempt,120); return; } endCoach(); return; }
+    if(DOC && !DOC.__coachScroll){ DOC.__coachScroll=1; DOC.addEventListener("scroll", coachReposition, true); }
+    renderCoachPop(step); positionCoach(r);
+    requestAnimationFrame(()=>{ if(_coach){ _coach.hole.classList.add("show"); _coach.pop.classList.add("show"); } });
+  };
+  attempt();
+}
+function renderCoachPop(step){ const pop=_coach.pop, n=_coach.steps.length, last=_coach.i>=n-1;
+  pop.innerHTML='<button class="coach-pop-x" id="coachX" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'
+    +'<div class="coach-pop-step">'+(n>1?("Étape "+(_coach.i+1)+" / "+n):'<span class="coach-pop-badge"><i data-lucide="wand-2"></i>Guide pas à pas</span>')+'</div>'
+    +'<div class="coach-pop-t">'+step.title+'</div><div class="coach-pop-b">'+step.text+'</div>'
+    +'<div class="coach-pop-cta">'+(last?'<button class="btn sm primary" id="coachDone">Compris</button>':'<button class="btn ghost sm" id="coachSkip">Passer</button><button class="btn sm primary" id="coachNext">Suivant</button>')+'</div>';
+  const x=pop.querySelector("#coachX"); if(x) x.addEventListener("click",endCoach);
+  const d=pop.querySelector("#coachDone"); if(d) d.addEventListener("click",endCoach);
+  const sk=pop.querySelector("#coachSkip"); if(sk) sk.addEventListener("click",endCoach);
+  const nx=pop.querySelector("#coachNext"); if(nx) nx.addEventListener("click",()=>showCoachStep(_coach.i+1));
+  refreshIcons();
+}
+function positionCoach(r){ if(!_coach) return; const pad=7, gap=12, hole=_coach.hole, pop=_coach.pop;
+  hole.style.left=(r.left-pad)+"px"; hole.style.top=(r.top-pad)+"px"; hole.style.width=(r.width+2*pad)+"px"; hole.style.height=(r.height+2*pad)+"px";
+  const pr=pop.getBoundingClientRect(), vw=innerWidth, vh=innerHeight;
+  let top=r.top+r.height+pad+gap; if(top+pr.height>vh-12) top=r.top-pad-gap-pr.height; if(top<12) top=12;
+  let left=r.left+r.width/2-pr.width/2; left=Math.max(12, Math.min(vw-pr.width-12, left));
+  pop.style.top=top+"px"; pop.style.left=left+"px";
+}
+function coachReposition(){ if(!_coach) return; const r=coachTargetRect(_coach.steps[_coach.i], false); if(r) positionCoach(r); }
+function coachKey(e){ if(e.key==="Escape"){ e.preventDefault(); endCoach(); } }
+function endCoach(){ if(!_coach) return; if(_coach._t) clearTimeout(_coach._t);
+  window.removeEventListener("resize", coachReposition); window.removeEventListener("keydown", coachKey, true);
+  if(DOC && DOC.__coachScroll){ DOC.removeEventListener("scroll", coachReposition, true); DOC.__coachScroll=0; }
+  if(_coach.hole) _coach.hole.remove(); if(_coach.pop) _coach.pop.remove(); _coach=null;
+}
 const PERF_PILLARS=[
   { key:"speed", icon:"zap", title:"Rapidité", status:"good", score:90,
     plain:"Votre site s'affiche vite",
@@ -3434,10 +3507,14 @@ const PF_IMPACT_ORDER={fort:0,moyen:1,leger:2};
 const PERF_ACTIONS=[
   { title:"Le titre de la page d'accueil est un peu court", impact:"moyen", area:"Référencement", icon:"heading",
     why:"Le grand titre est ce que Google lit en premier, et ce qui donne envie de rester. Trop court ou trop vague, votre message ne passe pas.",
-    fix:{mode:"self", goto:"editor", label:"Modifier le titre", guide:"Dans l'éditeur, cliquez le grand titre en haut de la page et reformulez-le en disant clairement ce que vous apportez."} },
+    fix:{mode:"self", goto:"editor", label:"Modifier le titre", target:".hero h1",
+      coachTitle:"Votre titre principal", coachText:"Cliquez ce titre pour le modifier. En quelques mots clairs, dites ce que vous apportez et pour qui : c'est la première chose que lisent vos visiteurs et Google.",
+      guide:"Dans l'éditeur, cliquez le grand titre en haut de la page et reformulez-le en disant clairement ce que vous apportez."} },
   { title:"Une page manque un peu de texte", impact:"moyen", area:"Référencement", icon:"file-text",
     why:"Google a besoin de mots pour comprendre le sujet de la page et bien vous classer. Une page presque vide est difficile à référencer.",
-    fix:{mode:"self", goto:"editor", label:"Étoffer le texte", guide:"Dans l'éditeur, ajoutez un ou deux paragraphes qui décrivent votre service avec les mots de vos clients."} },
+    fix:{mode:"self", goto:"editor", label:"Étoffer le texte", target:".hero-sub",
+      coachTitle:"Le texte d'introduction", coachText:"Cliquez ce texte pour l'enrichir. Ajoutez une phrase avec les mots de vos clients (livraison, coursier, Genève…) : plus de contenu utile aide Google à bien vous classer.",
+      guide:"Dans l'éditeur, ajoutez un ou deux paragraphes qui décrivent votre service avec les mots de vos clients."} },
   { title:"3 images n'ont pas de description", impact:"moyen", area:"Référencement et lisibilité", icon:"image",
     why:"Une description aide Google à comprendre l'image, et permet aux personnes malvoyantes de savoir ce qu'elle montre.",
     fix:{mode:"gamma", note:"L'ajout d'une description d'image arrive bientôt dans l'éditeur. En attendant, "+GAMMA+" peut le faire pour vous."} },

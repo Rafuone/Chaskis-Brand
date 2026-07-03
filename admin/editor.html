@@ -1072,6 +1072,39 @@
   .cb-prev-nm{font-size:15px;font-weight:700;color:var(--ink)}
   .cb-prev-meta{font-size:12px;color:var(--muted);margin-top:1px}
   .cb-prev-body{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;font-size:13px;line-height:1.6;color:var(--ink-soft);max-height:52vh;overflow:auto}
+  /* lecteur de fichier (façon pièce jointe) */
+  #cbPrevModal .modal{max-width:760px}
+  .fv{display:flex;flex-direction:column;height:72vh;margin-top:-2px}
+  .fv-bar{display:flex;align-items:center;gap:11px;padding:0 2px 12px;border-bottom:1px solid var(--border)}
+  .fv-fic{width:38px;height:38px;border-radius:9px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center}
+  .fv-fic svg{width:19px;height:19px}
+  .fv-file{flex:1;min-width:0}
+  .fv-nm{font-size:14px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .fv-meta{font-size:11.5px;color:var(--muted);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .fv-tools{display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .fv-zoom{display:flex;align-items:center;gap:2px;border:1px solid var(--border);border-radius:8px;padding:2px}
+  .fv-zb{all:unset;box-sizing:border-box;cursor:pointer;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--ink-soft)}
+  .fv-zb:hover{background:var(--bg)}
+  .fv-zv{font-size:11.5px;font-weight:600;color:var(--ink-soft);min-width:42px;text-align:center;font-variant-numeric:tabular-nums}
+  .fv-dl{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--teal-d);border:1px solid var(--border);border-radius:8px;padding:6px 12px}
+  .fv-dl:hover{background:var(--bg);border-color:var(--border-2)}
+  .fv-dl svg{width:15px;height:15px}
+  .fv-tags{display:flex;flex-wrap:wrap;margin:10px 2px 0;align-items:center;gap:6px}
+  .fv-status{font-size:11px;color:var(--muted)}
+  .fv-canvas{flex:1;overflow:auto;background:#ECEAF1;border-radius:10px;margin-top:10px;padding:18px;--fvz:1;display:flex;flex-direction:column;align-items:center;gap:16px}
+  .fv-page{background:#fff;width:calc(430px * var(--fvz));min-height:calc(566px * var(--fvz));box-shadow:0 3px 14px rgba(20,16,38,.14);border-radius:3px;padding:calc(40px * var(--fvz)) calc(42px * var(--fvz));box-sizing:border-box;position:relative;transition:width .15s,min-height .15s,padding .15s}
+  .fv-page-body{font-size:calc(13px * var(--fvz));line-height:1.75;color:#2b2b2b;white-space:pre-wrap;word-break:break-word}
+  .fv-pnum{position:absolute;bottom:13px;right:18px;font-size:10.5px;color:#b8b4bf;font-variant-numeric:tabular-nums}
+  .fv-page-more{display:flex;align-items:center;justify-content:center}
+  .fv-more{display:flex;gap:11px;align-items:flex-start;max-width:300px;color:var(--muted)}
+  .fv-more svg{width:22px;height:22px;color:#b8b4bf;flex-shrink:0}
+  .fv-more b{display:block;font-size:13px;color:var(--ink);margin-bottom:3px}
+  .fv-more span{font-size:12px;line-height:1.5}
+  .fv-web{width:100%;max-width:580px;background:#fff;border-radius:10px;box-shadow:0 3px 14px rgba(20,16,38,.14);overflow:hidden}
+  .fv-web-bar{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#f4f3f5;border-bottom:1px solid var(--border)}
+  .fv-web-bar .fv-dot{width:8px;height:8px;border-radius:50%;background:#d4d1da}
+  .fv-url{margin-left:8px;font-size:11.5px;color:var(--muted);background:#fff;border:1px solid var(--border);border-radius:20px;padding:3px 12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .fv-web-body{padding:20px 22px;font-size:13px;line-height:1.75;color:#2b2b2b;white-space:pre-wrap}
   .test{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px}
   .bub{max-width:82%;font-size:12.5px;padding:8px 11px;border-radius:13px;line-height:1.5}
   .bub.u{align-self:flex-end;background:var(--ink);color:#fff;border-bottom-right-radius:3px}
@@ -2301,7 +2334,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.10.0" };
+const ADMIN_BUILD = { version: "0.10.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -4319,9 +4352,9 @@ const LANGS=[{k:"fr",l:"Français"},{k:"en",l:"English"},{k:"de",l:"Deutsch"},{k
 const LANG_LBL={fr:"Français",en:"English",de:"Deutsch",it:"Italiano",pt:"Português",es:"Español",tr:"Türkçe",so:"Soomaali",ar:"العربية"};
 function blankChat(){ return {
   sources:[
-    {n:"tarifs-2026.pdf",kind:"file",tags:["Tarifs","Offres"],s:"indexé",prev:"Grille tarifaire 2026\n\nCourse standard (Genève intra-muros) : 14 CHF.\nZone Léman (Nyon, Morges, Lausanne) : dès 22 CHF.\nAbonnement Flex : 249 CHF / mois, 30 courses incluses.\nAbonnement Dédié : sur devis, coursier attitré.\nSupplément express (< 2 h) : +9 CHF."},
-    {n:"zones-livraison.docx",kind:"file",tags:["Zones","Délais"],s:"indexé",prev:"Zones de livraison\n\nGenève : livraison le jour même, créneaux 9h-18h.\nNyon / Morges : J+0 si commande avant 11h, sinon J+1.\nLausanne / Riviera : J+1, créneau matin ou après-midi.\nLe samedi est couvert sur la zone Léman de 9h à 17h."},
-    {n:"FAQ du site",kind:"url",tags:["Général","Services"],s:"synchronisé",prev:"FAQ publiée sur chaskis.ch/faq\n\n• Comment commander une course ?\n• Quels sont les délais garantis ?\n• Livrez-vous les produits fragiles / réfrigérés ?\n• Comment fonctionne la facturation mensuelle ?\n(La FAQ du site est resynchronisée automatiquement à chaque publication.)"}
+    {n:"tarifs-2026.pdf",kind:"file",ext:"pdf",pages:12,size:238000,tags:["Tarifs","Offres"],s:"indexé",prev:"Grille tarifaire 2026\n\nCourse standard (Genève intra-muros) : 14 CHF.\nZone Léman (Nyon, Morges, Lausanne) : dès 22 CHF.\nAbonnement Flex : 249 CHF / mois, 30 courses incluses.\nAbonnement Dédié : sur devis, coursier attitré.\nSupplément express (< 2 h) : +9 CHF."},
+    {n:"zones-livraison.docx",kind:"file",ext:"docx",pages:4,size:96000,tags:["Zones","Délais"],s:"indexé",prev:"Zones de livraison\n\nGenève : livraison le jour même, créneaux 9h-18h.\nNyon / Morges : J+0 si commande avant 11h, sinon J+1.\nLausanne / Riviera : J+1, créneau matin ou après-midi.\nLe samedi est couvert sur la zone Léman de 9h à 17h."},
+    {n:"FAQ du site",kind:"url",url:"https://chaskis.ch/faq",tags:["Général","Services"],s:"synchronisé",prev:"FAQ publiée sur chaskis.ch/faq\n\n• Comment commander une course ?\n• Quels sont les délais garantis ?\n• Livrez-vous les produits fragiles / réfrigérés ?\n• Comment fonctionne la facturation mensuelle ?\n(La FAQ du site est resynchronisée automatiquement à chaque publication.)"}
   ],
   allowed:["Tarifs","Délais","Zones","Services"],
   forbidden:["Données clients","Marges internes","Coordonnées coursiers"],
@@ -4621,13 +4654,40 @@ function renderCbSources(){
     row.querySelector(".src-del").addEventListener("click",()=>{ const r=chat.sources.splice(i,1)[0]; bumpBot("Source retirée : « "+r.n+" »"); renderChatbot(); toast("Source retirée · v"+chat.version); });
     s.appendChild(row); });
 }
-function openCbPreview(i){
-  const src=chat.sources[i]; if(!src) return;
-  const tags=(src.tags||[]).map(t=>'<span class="src-tag">'+escHtml(t)+'</span>').join("");
-  const kindLbl = src.kind==="url"?"Page web":src.kind==="drive"?"Google Drive":"Fichier";
-  document.getElementById("cbPrevBody").innerHTML='<div class="cb-prev-hd"><span class="src-ic lg">'+srcIcon(src.kind)+'</span><div style="min-width:0"><div class="cb-prev-nm">'+escHtml(src.n)+'</div><div class="cb-prev-meta">'+kindLbl+' · '+(src.s||"")+'</div><div class="src-tags" style="margin-top:7px">'+(tags||'<span class="src-tag empty">sans tag</span>')+'</div></div></div><div class="cb-prev-body">'+escHtml(src.prev||"Aperçu non disponible pour cette source.").replace(/\n/g,"<br>")+'</div>';
-  document.getElementById("cbPrevModal").classList.add("show"); refreshIcons();
-}
+/* Lecteur de fichier (façon pièce jointe) : barre d'outils + pages A4 + zoom + téléchargement, adapté aux gros documents. */
+function fvFileType(src){ const ext=(src.ext||(src.n||"").split(".").pop()||"").toLowerCase();
+  if(src.kind==="url") return {label:"Page web", ic:"globe", color:"#2F6FE0"};
+  if(src.kind==="drive") return {label:"Google Drive", ic:"hard-drive", color:"#0F9D58"};
+  const map={ pdf:{label:"Document PDF",ic:"file-text",color:"#CF3B3B"}, docx:{label:"Document Word",ic:"file-text",color:"#2F6FE0"}, doc:{label:"Document Word",ic:"file-text",color:"#2F6FE0"}, txt:{label:"Fichier texte",ic:"file-text",color:"#8a8c89"}, csv:{label:"Tableur CSV",ic:"table",color:"#0F9D58"}, xlsx:{label:"Tableur Excel",ic:"table",color:"#0F9D58"} };
+  return map[ext]||{label:"Fichier",ic:"file",color:"#6B5BCC"}; }
+function fvPaginate(text){ const paras=(text||"").split(/\n\n+/), pages=[]; let cur=""; const B=560;
+  paras.forEach(p=>{ if((cur+p).length>B && cur){ pages.push(cur); cur=""; } cur+=(cur?"\n\n":"")+p; });
+  if(cur) pages.push(cur); if(!pages.length) pages.push("(Document vide)"); return pages; }
+let _fvZoom=1;
+function renderFvPages(src, declaredPages){
+  if(src.kind==="url"){ return '<div class="fv-web"><div class="fv-web-bar"><span class="fv-dot"></span><span class="fv-dot"></span><span class="fv-dot"></span><span class="fv-url">'+escHtml(src.url||"chaskis.ch")+'</span></div><div class="fv-web-body">'+escHtml(src.prev||"").replace(/\n/g,"<br>")+'</div></div>'; }
+  const pages=fvPaginate(src.prev), total=Math.max(pages.length, declaredPages||0); let h="";
+  pages.forEach((p,idx)=>{ h+='<div class="fv-page"><div class="fv-page-body">'+escHtml(p).replace(/\n/g,"<br>")+'</div><div class="fv-pnum">'+(idx+1)+' / '+total+'</div></div>'; });
+  if(total>pages.length){ const more=total-pages.length; h+='<div class="fv-page fv-page-more"><div class="fv-more"><i data-lucide="files"></i><div><b>'+more+' autre'+(more>1?"s":"")+' page'+(more>1?"s":"")+'</b><span>L\'aperçu montre le début. Le fichier complet ('+total+' pages) est bien indexé et sert de source au chatbot.</span></div></div><div class="fv-pnum">'+(pages.length+1)+'–'+total+' / '+total+'</div></div>'; }
+  return h; }
+function openCbPreview(i){ const src=chat.sources[i]; if(!src) return; _fvZoom=1;
+  const ft=fvFileType(src), tags=(src.tags||[]).map(t=>'<span class="src-tag">'+escHtml(t)+'</span>').join("")||'<span class="src-tag empty">sans tag</span>';
+  const dp=src.pages||0; let meta;
+  if(src.kind==="url"){ meta=ft.label+' · '+escHtml(src.url||"chaskis.ch"); }
+  else { const parts=[ft.label], pg=Math.max(fvPaginate(src.prev).length, dp); if(pg) parts.push(pg+" page"+(pg>1?"s":"")); if(src.size) parts.push(fmtBytes(src.size)); meta=parts.join(" · "); }
+  document.getElementById("cbPrevBody").innerHTML='<div class="fv">'
+    +'<div class="fv-bar"><span class="fv-fic" style="background:'+ft.color+'1a;color:'+ft.color+'"><i data-lucide="'+ft.ic+'"></i></span>'
+      +'<div class="fv-file"><div class="fv-nm">'+escHtml(src.n)+'</div><div class="fv-meta">'+meta+'</div></div>'
+      +'<div class="fv-tools">'+(src.kind==="url"?'':'<div class="fv-zoom"><button class="fv-zb" data-z="-" aria-label="Dézoomer">–</button><span class="fv-zv" id="fvZoomV">100%</span><button class="fv-zb" data-z="+" aria-label="Zoomer">+</button></div>')
+        +'<button class="fv-dl" id="fvDl" title="'+(src.kind==="url"?"Ouvrir la page":"Télécharger")+'">'+(src.kind==="url"?'<i data-lucide="external-link"></i>Ouvrir':'<i data-lucide="download"></i>Télécharger')+'</button></div></div>'
+    +'<div class="src-tags fv-tags">'+tags+'<span class="fv-status">'+escHtml(src.s||"")+'</span></div>'
+    +'<div class="fv-canvas" id="fvCanvas">'+renderFvPages(src, dp)+'</div></div>';
+  document.querySelectorAll("#cbPrevBody .fv-zb").forEach(b=>b.addEventListener("click",()=>fvZoom(b.dataset.z)));
+  const dl=document.getElementById("fvDl"); if(dl) dl.addEventListener("click",()=>{ if(src.kind==="url"){ try{ window.open(src.url,"_blank"); }catch(e){} } else toast("Téléchargement de « "+src.n+" » (démo)"); });
+  document.getElementById("cbPrevModal").classList.add("show"); refreshIcons(); }
+function fvZoom(dir){ _fvZoom=Math.max(0.6, Math.min(1.8, _fvZoom+(dir==="+"?0.15:-0.15)));
+  const c=document.getElementById("fvCanvas"); if(c) c.style.setProperty("--fvz", _fvZoom);
+  const v=document.getElementById("fvZoomV"); if(v) v.textContent=Math.round(_fvZoom*100)+"%"; }
 function closeCbPreview(){ document.getElementById("cbPrevModal").classList.remove("show"); }
 /* auto-tag : "lecture" du document -> tags proposés (l'utilisateur n'a rien à saisir) */
 /* auto-tag : on lit le nom (et l'aperçu si dispo), insensible aux accents, vocabulaire livraison */

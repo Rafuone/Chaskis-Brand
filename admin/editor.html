@@ -366,6 +366,31 @@
   .md-actions{display:flex;align-items:center;gap:9px;margin-top:16px}
   .md-del{color:var(--danger)}
   .md-del svg{width:15px;height:15px}
+  /* ---- éditeurs de contenu structuré (logos, avis, simulateur) ---- */
+  .modal.wide{max-width:680px}
+  .spec-sub{margin:-2px 0 15px;font-size:13px;color:var(--muted);line-height:1.5}
+  .spec-preview{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:15px 16px;margin-bottom:16px;overflow:hidden}
+  .spec-preview-l{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:11px}
+  .logo-strip{display:flex;flex-wrap:wrap;align-items:center;gap:14px 32px;min-height:38px}
+  .logo-strip img{width:auto;display:block}
+  .logo-strip img.mono{filter:brightness(0);opacity:.65}
+  .logo-list{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;max-height:42vh;overflow:auto;padding-right:2px}
+  .logo-item{display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:11px;padding:10px 12px;background:var(--panel)}
+  .logo-item-thumb{width:66px;height:40px;flex-shrink:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .logo-item-thumb img{max-width:54px;max-height:28px;filter:brightness(0);opacity:.65}
+  .logo-item-thumb img.color{filter:none;opacity:1}
+  .logo-item-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
+  .logo-item-name{width:100%;font-family:inherit;font-size:13px;font-weight:600;padding:5px 9px;border:1px solid var(--border);border-radius:7px;color:var(--ink);background:#fff}
+  .logo-item-ctrls{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .logo-h{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--muted)}
+  .logo-h input[type=range]{width:84px;accent-color:var(--teal)}
+  .logo-h .hv{font-variant-numeric:tabular-nums;color:var(--ink-soft);font-weight:600;min-width:36px}
+  .logo-color-btn{all:unset;box-sizing:border-box;cursor:pointer;font-size:11px;font-weight:600;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:4px 10px}
+  .logo-color-btn.on{color:var(--teal-d);background:#eaf7f4;border-color:#bfe6df}
+  .logo-del{all:unset;box-sizing:border-box;cursor:pointer;width:30px;height:30px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:8px;color:var(--muted)}
+  .logo-del:hover{background:#FBE4E4;color:var(--danger);border-color:#f3cccc}
+  .logo-del svg{width:15px;height:15px}
+  .spec-add{width:100%;justify-content:center}
 
   /* modules : chatbot / courses / stats */
   .row2{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:0 0 16px}
@@ -2023,6 +2048,16 @@
   </div>
 </div>
 
+<!-- éditeur de contenu structuré (logos, avis, simulateur) -->
+<div class="modal-bg" id="specModal">
+  <div class="modal wide">
+    <button class="modal-x" id="specClose" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <h3 style="padding-right:34px" id="specTitle">Éditeur</h3>
+    <p class="spec-sub" id="specSub"></p>
+    <div id="specBody"></div>
+  </div>
+</div>
+
 <!-- médiathèque : détail / édition d'un média -->
 <div class="modal-bg" id="mediaDetailModal">
   <div class="modal">
@@ -2156,7 +2191,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.9.4" };
+const ADMIN_BUILD = { version: "0.9.5" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -2625,6 +2660,66 @@ function renderMediaDetail(){ if(mediaDetailIdx==null) return; const m=draft.med
   refreshIcons();
 }
 
+/* ============================================================
+   Éditeurs de contenu structuré (logos, avis, simulateur)
+   ============================================================ */
+function escAttr(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
+function openSpec(title, sub){ document.getElementById("specTitle").textContent=title; document.getElementById("specSub").textContent=sub||""; document.getElementById("specModal").classList.add("show"); }
+function closeSpec(){ document.getElementById("specModal").classList.remove("show"); }
+function openSpecialEditor(kind){
+  if(kind==="logos") return openLogosEditor();
+  if(kind==="avis") return openTestiEditor();
+  if(kind==="simulateur") return openPricingEditor();
+  showContentGuide("neutral", SEC_SPECIAL[kind]||"");
+}
+
+/* ---- Logos de confiance : SVG uploadables, taille et recoloration (gris uniforme) ---- */
+let _logosWork=null;
+function seedLogos(){ const arr=[], seen=new Set();
+  if(DOC){ DOC.querySelectorAll(".partners .mq-inner .mq-logo").forEach(img=>{ let src; try{ src=new URL(img.getAttribute("src"), DOC.baseURI).pathname; }catch(e){ src=img.getAttribute("src"); }
+    if(seen.has(src)) return; seen.add(src); arr.push({id:"lg"+arr.length, name:img.getAttribute("alt")||"Logo", src, height:34, keepColor:false}); }); }
+  if(!arr.length){ arr.push({id:"lg0",name:"Uber",src:"/assets/img/uber.svg",height:34,keepColor:false},{id:"lg1",name:"Proton",src:"/assets/img/proton.svg",height:34,keepColor:false}); }
+  return arr;
+}
+function getLogos(){ if(Array.isArray(draft.logos)) return draft.logos; if(!_logosWork) _logosWork=seedLogos(); return _logosWork; }
+function commitLogos(){ draft.logos=getLogos(); markDirty(); applyLogos(); }
+function applyLogos(){ if(!DOC||!Array.isArray(draft.logos)) return; const logos=draft.logos; const inners=DOC.querySelectorAll(".partners .mq-inner"); if(!inners.length||!logos.length) return;
+  const reps=Math.max(1, Math.ceil(Math.max(8, logos.length*4)/logos.length)); let items="";
+  for(let r=0;r<reps;r++){ logos.forEach(l=>{ const st="height:"+(l.height||34)+"px"+(l.keepColor?";filter:none;opacity:1":""); items+='<span class="mq-i"><img src="'+escAttr(l.src)+'" alt="'+escAttr(l.name||"")+'" class="mq-logo" style="'+st+'"></span>'; }); }
+  inners.forEach(inner=>{ inner.innerHTML=items; });
+}
+const logoInput=(function(){ const i=document.createElement("input"); i.type="file"; i.accept="image/svg+xml,image/png,image/webp,image/jpeg"; i.style.display="none"; document.body.appendChild(i);
+  i.addEventListener("change",()=>{ const f=i.files&&i.files[0]; if(!f) return; i.value=""; if(!/^image\/(svg\+xml|png|webp|jpeg)$/.test(f.type)){ toast("Format non supporté (SVG conseillé)"); return; } if(f.size>1048576){ toast("Logo trop lourd (max 1 Mo)"); return; }
+    const rd=new FileReader(); rd.onload=()=>{ const logos=getLogos(); logos.push({id:"lg"+Date.now(), name:f.name.replace(/\.[^.]+$/,""), src:rd.result, height:34, keepColor:false}); commitLogos(); renderLogosEditor(); toast("Logo ajouté"); }; rd.readAsDataURL(f); });
+  return i; })();
+const ICO_TRASH='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>';
+const ICO_UP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M20 16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/></svg>';
+function openLogosEditor(){ openSpec("Logos de confiance","Les entreprises qui vous font confiance. Les logos sont mis en gris pour un rendu uniforme ; ajustez la taille pour bien les équilibrer."); renderLogosEditor(); }
+function logoStripHTML(){ const logos=getLogos(); return logos.length?logos.map(l=>'<img src="'+escAttr(l.src)+'" alt="'+escAttr(l.name)+'" class="'+(l.keepColor?"":"mono")+'" style="height:'+(l.height||34)+'px">').join(""):'<span class="hint">Aucun logo pour l\'instant.</span>'; }
+function updateLogoStrip(){ const s=document.querySelector("#specBody .logo-strip"); if(s) s.innerHTML=logoStripHTML(); }
+function renderLogosEditor(){ const logos=getLogos(); const b=document.getElementById("specBody");
+  const list=logos.map((l,i)=>'<div class="logo-item">'
+     +'<div class="logo-item-thumb"><img src="'+escAttr(l.src)+'" alt="" class="'+(l.keepColor?"color":"")+'"></div>'
+     +'<div class="logo-item-main"><input class="logo-item-name" data-i="'+i+'" value="'+escAttr(l.name)+'" placeholder="Nom de l\'entreprise">'
+       +'<div class="logo-item-ctrls"><span class="logo-h">Taille <input type="range" min="18" max="52" value="'+(l.height||34)+'" data-h="'+i+'"><span class="hv">'+(l.height||34)+' px</span></span>'
+       +'<button type="button" class="logo-color-btn'+(l.keepColor?" on":"")+'" data-c="'+i+'">Couleurs d\'origine</button></div></div>'
+     +'<button class="logo-del" data-d="'+i+'" title="Retirer" aria-label="Retirer">'+ICO_TRASH+'</button></div>').join("");
+  b.innerHTML='<div class="spec-preview"><div class="spec-preview-l">Aperçu du bandeau</div><div class="logo-strip">'+logoStripHTML()+'</div></div>'
+    +'<div class="logo-list">'+list+'</div>'
+    +'<button class="btn primary spec-add" id="logoAdd">'+ICO_UP+'Ajouter un logo (SVG conseillé)</button>';
+  b.querySelectorAll(".logo-item-name").forEach(inp=>inp.addEventListener("input",()=>{ logos[+inp.dataset.i].name=inp.value; draft.logos=logos; markDirty(); applyLogos(); }));
+  b.querySelectorAll("[data-h]").forEach(r=>r.addEventListener("input",()=>{ const i=+r.dataset.h; logos[i].height=+r.value; commitLogos(); const hv=r.parentNode.querySelector(".hv"); if(hv) hv.textContent=r.value+" px"; updateLogoStrip(); }));
+  b.querySelectorAll("[data-c]").forEach(btn=>btn.addEventListener("click",()=>{ const i=+btn.dataset.c; logos[i].keepColor=!logos[i].keepColor; commitLogos(); renderLogosEditor(); }));
+  b.querySelectorAll("[data-d]").forEach(btn=>btn.addEventListener("click",()=>{ const i=+btn.dataset.d; if(logos.length<=1){ toast("Gardez au moins un logo"); return; } logos.splice(i,1); commitLogos(); renderLogosEditor(); }));
+  document.getElementById("logoAdd").addEventListener("click",()=>logoInput.click());
+}
+
+/* stubs remplacés par les éditeurs Avis et Simulateur (sous-étapes suivantes) */
+function openTestiEditor(){ showContentGuide("neutral", SEC_SPECIAL.avis||""); }
+function openPricingEditor(){ showContentGuide("neutral", SEC_SPECIAL.simulateur||""); }
+function applyTestimonials(){}
+function applyPricingToPage(){}
+
 /* ---- sections ---- */
 function secEl(id){ const d=SECTION_DEFS.find(s=>s.id===id); return d?DOC.querySelector(d.sel):null; }
 function editableEls(){ return SECTION_DEFS.map(d=>secEl(d.id)).filter(Boolean); }
@@ -2759,6 +2854,7 @@ function applyDraft(){
   Object.keys(draft.dom).forEach(k=>{ const el=DOC.querySelector('[data-ckkey="'+cssEsc(k)+'"]'); if(el) el.innerHTML=draft.dom[k]; });
   Object.keys(draft.images).forEach(id=>{ const el=DOC.querySelector('[data-ckimg="'+id+'"]'); if(el) el.src=draft.images[id]; });
   BG_DEFS.forEach(b=>{ if(draft.bgImages[b.key]){ const el=DOC.querySelector(b.sel); if(el) el.style.backgroundImage='url("'+draft.bgImages[b.key]+'")'; } });
+  applyLogos(); applyTestimonials(); applyPricingToPage();
   applyTextForLang();
 }
 function applyTextForLang(){
@@ -2781,7 +2877,7 @@ function renderSecList(){
     const m=SEC_META[id]||{}, ph=phaseInfo(m.phase);
     const tags='<span class="sec-tags"><span class="sec-ph" style="color:'+ph.col+';background:'+ph.bg+'">'+ph.label+'</span>'
       +(m.key?'<span class="sec-cle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>clé</span>':'')
-      +(m.special?'<button type="button" class="sec-special" data-a="special">gérée à part</button>':'')+'</span>';
+      +(m.special?'<button type="button" class="sec-special" data-a="special">personnaliser</button>':'')+'</span>';
     item.innerHTML=
       '<span class="grip">'+
         '<button '+(idx===0?'disabled':'')+' data-a="up" aria-label="Monter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg></button>'+
@@ -2793,7 +2889,7 @@ function renderSecList(){
     item.querySelector('[data-a="down"]').addEventListener("click",()=>moveSection(id,1));
     item.querySelector('[data-a="eye"]').addEventListener("click",()=>toggleSection(id,!isHidden));
     item.querySelector(".nm").addEventListener("click",()=>scrollToSec(id));
-    const sp=item.querySelector('[data-a="special"]'); if(sp) sp.addEventListener("click",(e)=>{ e.stopPropagation(); showContentGuide("neutral", SEC_SPECIAL[m.special]||""); });
+    const sp=item.querySelector('[data-a="special"]'); if(sp) sp.addEventListener("click",(e)=>{ e.stopPropagation(); openSpecialEditor(m.special); });
     item.dataset.id=id; initSecDrag(item, id);
     wrap.appendChild(item);
   });
@@ -2808,7 +2904,8 @@ function changeCount(dr){
   const text=nkeys(dr.text&&dr.text.fr)+nkeys(dr.text&&dr.text.en)+nkeys(dr.html&&dr.html.fr)+nkeys(dr.html&&dr.html.en)+nkeys(dr.dom);
   const img=nkeys(dr.images)+nkeys(dr.bgImages);
   const sec=(dr.order?1:0)+((dr.hidden&&dr.hidden.length)||0)+(dr.promoHidden?1:0);
-  return { text, img, sec, total:text+img+sec };
+  const struct=(Array.isArray(dr.logos)?1:0)+(Array.isArray(dr.testimonials)?1:0)+(dr.pricing?1:0);
+  return { text, img, sec, struct, total:text+img+sec+struct };
 }
 function humanSummary(dr){
   const parts=[]; const c=changeCount(dr);
@@ -2818,6 +2915,9 @@ function humanSummary(dr){
   const hid=(dr.hidden||[]).map(id=>{ const d=SECTION_DEFS.find(s=>s.id===id); return d?d.name:null; }).filter(Boolean);
   if(hid.length) parts.push(hid.join(", ")+" masquée"+(hid.length>1?"s":""));
   if(dr.promoHidden) parts.push("bandeau masqué");
+  if(Array.isArray(dr.logos)) parts.push("logos de confiance");
+  if(Array.isArray(dr.testimonials)) parts.push("témoignages");
+  if(dr.pricing) parts.push("tarifs du simulateur");
   return parts.length?parts.join(", "):"aucune modification";
 }
 function fmtTime(d){ return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); }
@@ -3853,6 +3953,8 @@ document.getElementById("mediaModalBg").addEventListener("click",(e)=>{ if(e.tar
 document.getElementById("mediaPageImport").addEventListener("click",()=>{ mediaTarget=null; mediaInput.click(); });
 document.getElementById("mdClose").addEventListener("click",closeMediaDetail);
 document.getElementById("mediaDetailModal").addEventListener("click",(e)=>{ if(e.target.id==="mediaDetailModal") closeMediaDetail(); });
+document.getElementById("specClose").addEventListener("click",closeSpec);
+document.getElementById("specModal").addEventListener("click",(e)=>{ if(e.target.id==="specModal") closeSpec(); });
 
 /* publish */
 const pubBg=document.getElementById("pubModalBg");

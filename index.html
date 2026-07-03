@@ -1624,7 +1624,11 @@ span.ast{color:#e53e3e!important;font-weight:700}
 
   let mode = 'fixed'; // 'fixed' | 'commission'
 
+  // Tarifs pilotables depuis le back-office (source unique). Repli sur les valeurs par défaut.
+  function pricingCfg(){ let c = window.CHASKIS_PRICING; if(!c){ try{ c = JSON.parse(localStorage.getItem('chaskis_pricing')); }catch(e){} } return c; }
   function getChaskisRate(v) {
+    const c = pricingCfg();
+    if (c && Array.isArray(c.tiers)) { for (var i=0;i<c.tiers.length;i++){ var t=c.tiers[i]; if (t.max==null || v < t.max) return { rate: t.rate, plan: t.plan }; } }
     if (v < 10) return { rate: 16, plan: 'Express' };
     if (v < 40) return { rate: 12, plan: 'Flex' };
     return { rate: 8, plan: 'Dédié' };
@@ -1654,7 +1658,8 @@ span.ast{color:#e53e3e!important;font-weight:700}
   function update() {
     const v = +vol.value;
     const { rate, plan } = getChaskisRate(v);
-    const days = 22;
+    const _pc = pricingCfg();
+    const days = (_pc && _pc.days) || 22;
     const lang = window._currentLang || 'fr';
     const isEn = lang === 'en';
 

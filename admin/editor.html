@@ -391,6 +391,21 @@
   .logo-del:hover{background:#FBE4E4;color:var(--danger);border-color:#f3cccc}
   .logo-del svg{width:15px;height:15px}
   .spec-add{width:100%;justify-content:center}
+  #specBody{max-height:62vh;overflow-y:auto;margin-right:-6px;padding-right:6px}
+  .pr-sec{margin-bottom:18px}
+  .pr-sec-t{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+  .pr-hint{font-size:11.5px;color:var(--muted);margin:0 0 9px}
+  .pr-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+  .pr-line label{font-size:12.5px;color:var(--ink-soft);font-weight:600;min-width:150px}
+  .pr-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .pr-cap{font-size:12px;color:var(--muted);min-width:56px}
+  .pr-in{font-family:inherit;font-size:13px;padding:6px 9px;border:1px solid var(--border);border-radius:7px;background:#fff;color:var(--ink);width:76px}
+  .pr-in:focus{outline:none;border-color:var(--teal)}
+  .pr-in.pr-plan{width:132px}
+  .pr-unit{font-size:11.5px;color:var(--muted)}
+  .pr-fixed{font-size:13px;color:var(--muted);width:76px;text-align:center}
+  .pr-add{margin-top:4px}
+  .pr-add svg{width:14px;height:14px}
 
   /* modules : chatbot / courses / stats */
   .row2{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:0 0 16px}
@@ -2191,7 +2206,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.9.5" };
+const ADMIN_BUILD = { version: "0.9.6" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -2714,11 +2729,59 @@ function renderLogosEditor(){ const logos=getLogos(); const b=document.getElemen
   document.getElementById("logoAdd").addEventListener("click",()=>logoInput.click());
 }
 
-/* stubs remplacés par les éditeurs Avis et Simulateur (sous-étapes suivantes) */
+/* stub remplacé par l'éditeur Avis (sous-étape suivante) */
 function openTestiEditor(){ showContentGuide("neutral", SEC_SPECIAL.avis||""); }
-function openPricingEditor(){ showContentGuide("neutral", SEC_SPECIAL.simulateur||""); }
 function applyTestimonials(){}
-function applyPricingToPage(){}
+
+/* ---- Simulateur & tarifs : source unique partagée (accueil + copilote) ---- */
+const PRICING_KEY="chaskis_pricing";
+const DEFAULT_PRICING={ days:22,
+  tiers:[{max:10,rate:16,plan:"Express"},{max:40,rate:12,plan:"Flex"},{max:null,rate:8,plan:"Dédié"}],
+  zones:[{key:"geneve",name:"Genève",unit:14},{key:"leman",name:"Léman / Vaud",unit:22}],
+  flexMonthly:249, flexIncluded:30, express:9,
+  promos:[{code:"CHASKIS10",pct:10},{code:"BIENVENUE",pct:15},{code:"PARTNER20",pct:20}] };
+let _pricingWork=null;
+function seedPricing(){ try{ const s=JSON.parse(localStorage.getItem(PRICING_KEY)); if(s) return s; }catch(e){} return JSON.parse(JSON.stringify(DEFAULT_PRICING)); }
+function getPricing(){ if(draft.pricing) return draft.pricing; if(!_pricingWork) _pricingWork=seedPricing(); return _pricingWork; }
+function commitPricing(){ draft.pricing=getPricing(); try{ localStorage.setItem(PRICING_KEY, JSON.stringify(draft.pricing)); }catch(e){} markDirty(); applyPricingToPage(); const cv=document.getElementById("view-copilot"); if(cv&&cv.classList.contains("on")&&typeof renderCopilot==="function") renderCopilot(); }
+function applyPricingToPage(){ try{ if(typeof WIN!=="undefined" && WIN && draft.pricing){ WIN.CHASKIS_PRICING=draft.pricing; if(typeof WIN._simUpdate==="function") WIN._simUpdate(); } }catch(e){} }
+function prNum(v){ return v==null?"":v; }
+function openPricingEditor(){ openSpec("Simulateur & tarifs","Ces tarifs alimentent le simulateur de la page d'accueil et le simulateur d'offre du copilote. Une modification se répercute aux deux."); renderPricingEditor(); }
+function renderPricingEditor(){ const P=getPricing(); const b=document.getElementById("specBody");
+  const tierRows=P.tiers.map((t,i)=>{ const isLast=(t.max==null);
+    return '<div class="pr-row"><span class="pr-cap">'+(isLast?"Au-delà":"Jusqu\'à")+'</span>'
+      +(isLast?'<span class="pr-fixed">—</span>':'<input class="pr-in" type="number" min="1" value="'+prNum(t.max)+'" data-tmax="'+i+'">')
+      +'<span class="pr-unit">liv/jour</span><input class="pr-in" type="number" min="0" value="'+prNum(t.rate)+'" data-trate="'+i+'"><span class="pr-unit">CHF/course</span>'
+      +'<input class="pr-in pr-plan" value="'+escAttr(t.plan||"")+'" data-tplan="'+i+'" placeholder="Palier">'
+      +((P.tiers.length>2 && !isLast)?'<button class="logo-del" data-tdel="'+i+'" title="Retirer">'+ICO_TRASH+'</button>':'<span style="width:30px;display:inline-block"></span>')+'</div>'; }).join("");
+  const zoneRows=P.zones.map((z,i)=>'<div class="pr-row"><input class="pr-in pr-plan" value="'+escAttr(z.name)+'" data-zname="'+i+'" placeholder="Nom de la zone"><input class="pr-in" type="number" min="0" value="'+prNum(z.unit)+'" data-zunit="'+i+'"><span class="pr-unit">CHF/course</span></div>').join("");
+  const promoRows=P.promos.map((p,i)=>'<div class="pr-row"><input class="pr-in pr-plan" value="'+escAttr(p.code)+'" data-pcode="'+i+'" style="text-transform:uppercase" placeholder="CODE"><input class="pr-in" type="number" min="0" max="100" value="'+prNum(p.pct)+'" data-ppct="'+i+'"><span class="pr-unit">% de remise</span><button class="logo-del" data-pdel="'+i+'" title="Retirer">'+ICO_TRASH+'</button></div>').join("");
+  b.innerHTML=
+    '<div class="pr-sec"><div class="pr-sec-t">Tarif dégressif · page d\'accueil</div>'
+      +'<div class="pr-line"><label>Jours ouvrés par mois</label><input class="pr-in" type="number" min="1" max="31" value="'+prNum(P.days)+'" id="prDays"></div>'
+      +'<p class="pr-hint">Plus le volume est élevé, plus le tarif par course baisse.</p>'+tierRows
+      +'<button class="btn ghost pr-add" id="prTierAdd"><i data-lucide="plus"></i>Ajouter un palier</button></div>'
+    +'<div class="pr-sec"><div class="pr-sec-t">Simulateur d\'offre · copilote</div>'
+      +'<p class="pr-hint">Prix par course selon la zone dominante.</p>'+zoneRows
+      +'<div class="pr-line"><label>Abonnement Flex</label><input class="pr-in" type="number" min="0" value="'+prNum(P.flexMonthly)+'" id="prFlex"><span class="pr-unit">CHF/mois ·</span><input class="pr-in" type="number" min="0" value="'+prNum(P.flexIncluded)+'" id="prFlexInc"><span class="pr-unit">courses incluses</span></div>'
+      +'<div class="pr-line"><label>Surcharge express (&lt; 2h)</label><input class="pr-in" type="number" min="0" value="'+prNum(P.express)+'" id="prExp"><span class="pr-unit">CHF/course</span></div></div>'
+    +'<div class="pr-sec"><div class="pr-sec-t">Codes promo · copilote</div>'+promoRows
+      +'<button class="btn ghost pr-add" id="prPromoAdd"><i data-lucide="plus"></i>Ajouter un code</button></div>';
+  const num=(id,fn)=>{ const el=document.getElementById(id); if(el) el.addEventListener("input",()=>{ fn(el.value===""?null:+el.value); commitPricing(); }); };
+  num("prDays",v=>P.days=v); num("prFlex",v=>P.flexMonthly=v); num("prFlexInc",v=>P.flexIncluded=v); num("prExp",v=>P.express=v);
+  b.querySelectorAll("[data-tmax]").forEach(el=>el.addEventListener("input",()=>{ P.tiers[+el.dataset.tmax].max=el.value===""?null:+el.value; commitPricing(); }));
+  b.querySelectorAll("[data-trate]").forEach(el=>el.addEventListener("input",()=>{ P.tiers[+el.dataset.trate].rate=+el.value; commitPricing(); }));
+  b.querySelectorAll("[data-tplan]").forEach(el=>el.addEventListener("input",()=>{ P.tiers[+el.dataset.tplan].plan=el.value; commitPricing(); }));
+  b.querySelectorAll("[data-tdel]").forEach(el=>el.addEventListener("click",()=>{ P.tiers.splice(+el.dataset.tdel,1); commitPricing(); renderPricingEditor(); }));
+  b.querySelectorAll("[data-zname]").forEach(el=>el.addEventListener("input",()=>{ P.zones[+el.dataset.zname].name=el.value; commitPricing(); }));
+  b.querySelectorAll("[data-zunit]").forEach(el=>el.addEventListener("input",()=>{ P.zones[+el.dataset.zunit].unit=+el.value; commitPricing(); }));
+  b.querySelectorAll("[data-pcode]").forEach(el=>el.addEventListener("input",()=>{ P.promos[+el.dataset.pcode].code=el.value.toUpperCase(); commitPricing(); }));
+  b.querySelectorAll("[data-ppct]").forEach(el=>el.addEventListener("input",()=>{ P.promos[+el.dataset.ppct].pct=+el.value; commitPricing(); }));
+  b.querySelectorAll("[data-pdel]").forEach(el=>el.addEventListener("click",()=>{ if(P.promos.length<=1){ toast("Gardez au moins un code"); return; } P.promos.splice(+el.dataset.pdel,1); commitPricing(); renderPricingEditor(); }));
+  const ta=document.getElementById("prTierAdd"); if(ta) ta.addEventListener("click",()=>{ P.tiers.splice(Math.max(0,P.tiers.length-1),0,{max:20,rate:10,plan:"Palier"}); commitPricing(); renderPricingEditor(); });
+  const pa=document.getElementById("prPromoAdd"); if(pa) pa.addEventListener("click",()=>{ P.promos.push({code:"NOUVEAU",pct:10}); commitPricing(); renderPricingEditor(); });
+  refreshIcons();
+}
 
 /* ---- sections ---- */
 function secEl(id){ const d=SECTION_DEFS.find(s=>s.id===id); return d?DOC.querySelector(d.sel):null; }
@@ -3674,11 +3737,14 @@ function renderCopSections(){
     w.appendChild(el);
   });
 }
-function copSimCalc(){ const s=copState.sim, unit=s.zone==="leman"?22:14, vol=s.volume;
-  const expSurcharge=Math.round(vol*s.express/100)*9;
-  const payPer=vol*unit+expSurcharge, flex=249+Math.max(0,vol-30)*unit+expSurcharge;
+function copPromoPct(code){ const P=getPricing(); if(P&&Array.isArray(P.promos)){ const f=P.promos.find(x=>x.code===code); if(f) return f.pct; } return COP_PROMOS[code]||0; }
+function copSimCalc(){ const P=getPricing(), s=copState.sim, vol=s.volume;
+  const zone=(P.zones||[]).find(z=>z.key===s.zone), unit=zone?zone.unit:(s.zone==="leman"?22:14);
+  const expRate=(P.express!=null?P.express:9), expSurcharge=Math.round(vol*s.express/100)*expRate;
+  const flexBase=(P.flexMonthly!=null?P.flexMonthly:249), flexIncl=(P.flexIncluded!=null?P.flexIncluded:30);
+  const payPer=vol*unit+expSurcharge, flex=flexBase+Math.max(0,vol-flexIncl)*unit+expSurcharge;
   const reco=flex<=payPer?"flex":"course", recoTotal=Math.min(flex,payPer);
-  const promoPct=COP_PROMOS[(copState.promo||"").toUpperCase()]||0, final=Math.round(recoTotal*(1-promoPct/100));
+  const promoPct=copPromoPct((copState.promo||"").toUpperCase()), final=Math.round(recoTotal*(1-promoPct/100));
   return {unit,vol,payPer,flex,reco,recoTotal,promoPct,final,saving:Math.max(payPer,flex)-recoTotal};
 }
 function copComputeSim(){ const o=document.getElementById("copSimOut"); if(!o) return; const c=copSimCalc();
@@ -3691,7 +3757,7 @@ function copComputeSim(){ const o=document.getElementById("copSimOut"); if(!o) r
 }
 function renderCopSim(){
   const w=document.getElementById("copSim"); if(!w) return; const s=copState.sim;
-  const zoneOpts=[["geneve","Genève"],["leman","Léman / Vaud"]];
+  let zoneOpts=(getPricing().zones||[]).map(z=>[z.key,z.name]); if(!zoneOpts.length) zoneOpts=[["geneve","Genève"],["leman","Léman / Vaud"]];
   w.innerHTML='<div class="cop-sim-row"><label>Courses par mois · <b id="copVolLbl">'+s.volume+'</b></label><input type="range" class="cop-range" min="0" max="200" step="5" value="'+s.volume+'" id="copVol"></div>'
     +'<div class="cop-sim-row"><label>Zone dominante</label><div class="cop-opts" id="copZone">'+zoneOpts.map(z=>'<button class="cop-opt'+(s.zone===z[0]?" on":"")+'" data-z="'+z[0]+'" style="--c:#0F6E56">'+z[1]+'</button>').join("")+'</div></div>'
     +'<div class="cop-sim-row"><label>Part en express (&lt; 2h) · <b id="copExpLbl">'+s.express+' %</b></label><input type="range" class="cop-range" min="0" max="100" step="5" value="'+s.express+'" id="copExp"></div>'
@@ -3707,7 +3773,7 @@ function renderCopSim(){
 }
 function copApplyPromo(){ const code=(document.getElementById("copPromo").value||"").trim().toUpperCase(); copState.promo=code; copSave();
   const msg=document.getElementById("copPromoMsg");
-  if(COP_PROMOS[code]) msg.innerHTML='<div class="cop-promo-ok"><i data-lucide="check-circle-2"></i>Code valide : -'+COP_PROMOS[code]+'% sur l\'offre</div>';
+  if(copPromoPct(code)) msg.innerHTML='<div class="cop-promo-ok"><i data-lucide="check-circle-2"></i>Code valide : -'+copPromoPct(code)+'% sur l\'offre</div>';
   else if(code) msg.innerHTML='<div class="hint" style="margin:7px 0 0;color:#B23B3B">Code inconnu</div>';
   else msg.innerHTML="";
   copComputeSim(); renderCopRecap(); refreshIcons();

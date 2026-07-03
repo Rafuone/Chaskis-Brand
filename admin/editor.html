@@ -722,13 +722,24 @@
   .cop-promo-ok svg{width:13px;height:13px}
   /* actions + recap */
   .cop-actions{display:flex;flex-direction:column;gap:8px}
-  .cop-actions .btn{width:100%;justify-content:flex-start;border:1px solid var(--border)}
-  .cop-actions .btn svg{width:16px;height:16px;color:var(--muted)}
+  .cop-act{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:11px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;transition:border-color .12s,background .12s}
+  .cop-act:hover{border-color:var(--teal);background:#f4fbf9}
+  .cop-act-ic{width:34px;height:34px;border-radius:9px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;background:var(--bg);color:var(--teal-d)}
+  .cop-act:hover .cop-act-ic{background:#e1f5ee}
+  .cop-act-ic svg{width:17px;height:17px}
+  .cop-act-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+  .cop-act-t{font-size:13px;font-weight:600;color:var(--ink)}
+  .cop-act-s{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cop-act-arr{width:16px;height:16px;color:var(--muted);flex-shrink:0;opacity:0;transform:translateX(-3px);transition:opacity .12s,transform .12s}
+  .cop-act:hover .cop-act-arr{opacity:1;transform:none;color:var(--teal-d)}
   .cop-recap-row{display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12.5px}
   .cop-recap-row:last-child{border-bottom:none}
   .cop-recap-k{width:96px;flex-shrink:0;color:var(--muted);font-size:11.5px;padding-top:1px}
   .cop-recap-v{flex:1;color:var(--ink);min-width:0}
   .cop-recap-v .muted{color:var(--muted)}
+  .cop-recap-notes{padding:9px 0 2px;margin-top:2px;border-top:1px solid var(--border)}
+  .cop-recap-notes .cop-recap-k{display:block;width:auto;margin-bottom:5px}
+  .cop-recap-note{font-size:12.5px;color:var(--ink);line-height:1.55;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;white-space:pre-wrap;word-break:break-word}
   /* ---- Utilisateurs & accès ---- */
   .usr-row{display:flex;align-items:center;gap:12px;padding:11px 2px;border-bottom:1px solid var(--border)}
   .usr-row:last-child{border-bottom:none}
@@ -2044,7 +2055,7 @@
             <div id="copSections"></div>
             <div class="dpan">
               <div class="pan-head"><h4><span class="hic"><i data-lucide="pencil-line"></i></span> Notes libres</h4></div>
-              <textarea id="copNotes" rows="3" placeholder="Ce que vous voulez retenir de l'échange…" style="width:100%;font-family:inherit;font-size:13px;padding:9px 11px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--ink);resize:vertical"></textarea>
+              <textarea id="copNotes" rows="5" placeholder="Ce que vous voulez retenir de l'échange : contexte, remarques, points de vigilance…" style="width:100%;min-height:118px;font-family:inherit;font-size:13px;line-height:1.55;padding:11px 13px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--ink);resize:vertical"></textarea>
             </div>
           </div>
           <div class="cop-side" id="copSide">
@@ -2664,23 +2675,27 @@ function enrichMedia(m, cb){
 const MD_CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
 const MD_WARN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4m0 4h.01"/></svg>';
 const MD_VIDICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>';
+function mediaMetaLine(m){ const isVid=m.kind==="video"; return [mediaFormat(m), mediaDims(m), (m.size!=null?fmtBytes(m.size):null), (isVid?fmtDur(m.dur):null)].filter(Boolean).join(" · ")||"…"; }
+function mediaAltBadge(m){ if(m.kind==="video") return ''; return m.alt?'<span class="mcard-alt ok" title="Texte alternatif défini">'+MD_CHECK+'alt</span>':'<span class="mcard-alt miss" title="Texte alternatif manquant">'+MD_WARN+'alt manquant</span>'; }
+/* MàJ d'une carte EN PLACE (pas de reconstruction du grid) : évite le clignotement au survol pendant l'enrichissement/la saisie */
+function updateMediaCard(idx){ const grid=document.getElementById("mediaPageGrid"); if(!grid) return; const card=grid.querySelector('.mcard[data-idx="'+idx+'"]'); const m=draft.media[idx]; if(!card||!m) return;
+  const meta=card.querySelector(".mcard-meta"); if(meta) meta.textContent=mediaMetaLine(m);
+  const nm=card.querySelector(".mcard-name"); if(nm){ nm.textContent=m.name||"sans nom"; nm.title=m.name||""; }
+  const tags=card.querySelector(".mcard-tags"); if(tags) tags.innerHTML='<span class="mcard-origin '+(m.origin==="upload"?"up":"")+'">'+(m.kind==="video"?"vidéo":(m.origin==="upload"?"importé":"site"))+'</span>'+mediaAltBadge(m); }
 function renderMediaPage(){ const grid=document.getElementById("mediaPageGrid"); if(!grid) return; grid.innerHTML="";
   if(!draft.media.length){ grid.innerHTML='<p class="hint" style="grid-column:1/-1">Aucun média pour l\'instant. Importez-en un.</p>'; return; }
   draft.media.forEach((m,idx)=>{
     const isVid=m.kind==="video";
-    const card=document.createElement("div"); card.className="mcard";
+    const card=document.createElement("div"); card.className="mcard"; card.setAttribute("data-idx",idx);
     const thumb = isVid ? (m.src?'<video src="'+m.src+'" muted preload="metadata"></video>':'<div class="mcard-vid">'+MD_VIDICON+'</div>') : '<img src="'+m.src+'" alt="" loading="lazy">';
-    const metaLine=[mediaFormat(m), mediaDims(m), (m.size!=null?fmtBytes(m.size):null), (isVid?fmtDur(m.dur):null)].filter(Boolean).join(" · ");
-    const origin = isVid?"vidéo":(m.origin==="upload"?"importé":"site");
-    const altState = isVid ? '' : (m.alt?'<span class="mcard-alt ok" title="Texte alternatif défini">'+MD_CHECK+'alt</span>':'<span class="mcard-alt miss" title="Texte alternatif manquant">'+MD_WARN+'alt manquant</span>');
     card.innerHTML='<button class="mcard-thumb" title="Voir et modifier les détails">'+thumb+'</button>'
       +'<div class="mcard-body"><div class="mcard-name" title="'+escHtml(m.name||"")+'">'+escHtml(m.name||"sans nom")+'</div>'
-      +'<div class="mcard-meta">'+(metaLine||"…")+'</div>'
-      +'<div class="mcard-tags"><span class="mcard-origin '+(m.origin==="upload"?"up":"")+'">'+origin+'</span>'+altState+'</div></div>';
+      +'<div class="mcard-meta">'+mediaMetaLine(m)+'</div>'
+      +'<div class="mcard-tags"><span class="mcard-origin '+(m.origin==="upload"?"up":"")+'">'+(isVid?"vidéo":(m.origin==="upload"?"importé":"site"))+'</span>'+mediaAltBadge(m)+'</div></div>';
     card.querySelector(".mcard-thumb").addEventListener("click",()=>openMediaDetail(idx));
     grid.appendChild(card);
     const key=m.src||m.name;
-    if((m.size==null||!m.w) && !_mediaEnriching.has(key)){ _mediaEnriching.add(key); enrichMedia(m,()=>{ _mediaEnriching.delete(key); scheduleMediaRerender(); }); }
+    if((m.size==null||!m.w) && !_mediaEnriching.has(key)){ _mediaEnriching.add(key); enrichMedia(m,()=>{ _mediaEnriching.delete(key); updateMediaCard(idx); if(mediaDetailIdx===idx) renderMediaDetail(); }); }
   });
 }
 let mediaDetailIdx=null;
@@ -2700,8 +2715,8 @@ function renderMediaDetail(){ if(mediaDetailIdx==null) return; const m=draft.med
     +'<div class="md-actions"><span class="mcard-origin '+(m.origin==="upload"?"up":"")+'">'+(isVid?"vidéo":(m.origin==="upload"?"importé":"image du site"))+'</span><div style="flex:1"></div>'
       +(m.origin==="upload"?'<button class="btn ghost md-del" id="mdDel"><i data-lucide="trash-2"></i>Supprimer</button>':'')
       +'<button class="btn primary" id="mdOk">Terminé</button></div>';
-  const nm=document.getElementById("mdName"); if(nm) nm.addEventListener("input",()=>{ m.name=nm.value; save(); renderMediaPage(); });
-  const al=document.getElementById("mdAlt"); if(al) al.addEventListener("input",()=>{ m.alt=al.value; save(); renderMediaPage(); });
+  const nm=document.getElementById("mdName"); if(nm) nm.addEventListener("input",()=>{ m.name=nm.value; save(); updateMediaCard(mediaDetailIdx); });
+  const al=document.getElementById("mdAlt"); if(al) al.addEventListener("input",()=>{ m.alt=al.value; save(); updateMediaCard(mediaDetailIdx); });
   const dl=document.getElementById("mdDel"); if(dl) dl.addEventListener("click",()=>{ const i=mediaDetailIdx; closeMediaDetail(); deleteMediaAt(i); });
   const ok=document.getElementById("mdOk"); if(ok) ok.addEventListener("click",closeMediaDetail);
   refreshIcons();
@@ -3875,13 +3890,18 @@ function copApplyPromo(){ const code=(document.getElementById("copPromo").value|
   else msg.innerHTML="";
   copComputeSim(); renderCopRecap(); refreshIcons();
 }
+const COP_ARR='<svg class="cop-act-arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
 function renderCopActions(){ const w=document.getElementById("copActions"); if(!w) return;
-  w.innerHTML='<button class="btn" data-act="plaquette"><i data-lucide="file-text"></i>Envoyer la plaquette</button>'
-    +'<button class="btn" data-act="offre"><i data-lucide="mail"></i>Envoyer l\'offre + bon d\'achat</button>'
-    +'<button class="btn" data-act="suivi"><i data-lucide="calendar-plus"></i>Planifier un suivi</button>';
+  const acts=[
+    {k:"plaquette", ic:"file-text", t:"Envoyer la plaquette", s:"Présentation Chaskis, par email"},
+    {k:"offre", ic:"mail", t:"Envoyer l'offre chiffrée", s:"Offre + bon d'achat au prospect"},
+    {k:"suivi", ic:"calendar-plus", t:"Planifier un suivi", s:"Ouvre les rendez-vous"}
+  ];
+  w.innerHTML=acts.map(a=>'<button type="button" class="cop-act" data-act="'+a.k+'"><span class="cop-act-ic"><i data-lucide="'+a.ic+'"></i></span><span class="cop-act-tx"><span class="cop-act-t">'+a.t+'</span><span class="cop-act-s">'+a.s+'</span></span>'+COP_ARR+'</button>').join("");
   w.querySelector('[data-act="plaquette"]').addEventListener("click",()=>toast("Plaquette envoyée à "+(copState.contact||copState.company||"le prospect")));
   w.querySelector('[data-act="offre"]').addEventListener("click",()=>toast("Offre + bon d'achat envoyés · "+copSimCalc().final+" CHF/mois"));
   w.querySelector('[data-act="suivi"]').addEventListener("click",()=>showView("rdv"));
+  refreshIcons();
 }
 function renderCopRecap(){ const w=document.getElementById("copRecap"); if(!w) return; const c=copSimCalc(); const dash='<span class="muted">—</span>';
   const rows=[
@@ -3895,7 +3915,10 @@ function renderCopRecap(){ const w=document.getElementById("copRecap"); if(!w) r
     ["Décision", [copAnsText("decideur"),copAnsText("echeance")].filter(Boolean).map(escHtml).join(" · ")||dash],
     ["Suite", copAnsText("next")?escHtml(copAnsText("next")):dash]
   ];
-  w.innerHTML=rows.map(r=>'<div class="cop-recap-row"><span class="cop-recap-k">'+r[0]+'</span><span class="cop-recap-v">'+r[1]+'</span></div>').join("");
+  let h=rows.map(r=>'<div class="cop-recap-row"><span class="cop-recap-k">'+r[0]+'</span><span class="cop-recap-v">'+r[1]+'</span></div>').join("");
+  const notes=(copState.notes||"").trim();
+  h+='<div class="cop-recap-notes"><span class="cop-recap-k">Notes</span>'+(notes?'<div class="cop-recap-note">'+escHtml(notes).replace(/\n/g,"<br>")+'</div>':'<span class="cop-recap-v"><span class="muted">—</span></span>')+'</div>';
+  w.innerHTML=h;
 }
 function renderCopProgress(){ const el=document.getElementById("copProg"); if(!el) return;
   const done=COP_DISCOVERY.filter(sec=>sec.fields.some(f=>copAnsText(f.k))).length;
@@ -4683,7 +4706,7 @@ function cbAsk(q){
   // Copilote RDV
   const copC=document.getElementById("copCompany"); if(copC) copC.addEventListener("input",e=>{ copState.company=e.target.value; copSave(); renderCopRecap(); renderCopProgress(); });
   const copCt=document.getElementById("copContact"); if(copCt) copCt.addEventListener("input",e=>{ copState.contact=e.target.value; copSave(); renderCopRecap(); });
-  const copN=document.getElementById("copNotes"); if(copN) copN.addEventListener("input",e=>{ copState.notes=e.target.value; copSave(); });
+  const copN=document.getElementById("copNotes"); if(copN) copN.addEventListener("input",e=>{ copState.notes=e.target.value; copSave(); renderCopRecap(); });
   const copRz=document.getElementById("copReset"); if(copRz) copRz.addEventListener("click",()=>{ if(!confirm("Démarrer un nouveau RDV ? Les infos en cours seront effacées.")) return; copState=copBlank(); copSave(); renderCopilot(); toast("Nouveau RDV"); });
   const copCp=document.getElementById("copCopy"); if(copCp) copCp.addEventListener("click",()=>{ const t=copRecapText(); if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(()=>toast("Compte-rendu copié"),()=>toast("Copie indisponible")); } else toast("Copie indisponible"); });
   const copF=document.getElementById("copFinish"); if(copF) copF.addEventListener("click",()=>{ copSave(); toast("RDV enregistré · compte-rendu prêt"); });

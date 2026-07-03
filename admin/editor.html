@@ -318,6 +318,38 @@
   .vinfo .vd{font-size:13px;color:var(--ink)}
   .vinfo .vs{font-size:12px;color:var(--muted);margin-top:1px}
   .badge-live{font-size:10.5px;color:var(--teal-d);border:1px solid #cfeae4;background:#f1faf8;border-radius:20px;padding:2px 9px}
+  /* ---- Versions : timeline ---- */
+  .vtl{display:flex;flex-direction:column}
+  .vtl-item{display:flex;gap:14px}
+  .vtl-rail{position:relative;width:14px;flex-shrink:0;display:flex;justify-content:center}
+  .vtl-rail::before{content:"";position:absolute;top:0;bottom:0;width:2px;background:var(--border)}
+  .vtl-item:first-child .vtl-rail::before{top:16px}
+  .vtl-item:last-child .vtl-rail::before{bottom:calc(100% - 16px)}
+  .vtl-dot{position:relative;z-index:1;width:12px;height:12px;border-radius:50%;background:#fff;border:2.5px solid var(--border-2);margin-top:9px}
+  .vtl-dot.live{border-color:var(--teal);background:var(--teal)}
+  .vtl-dot.draft{border-color:var(--muted);border-style:dashed}
+  .vtl-card{flex:1;min-width:0;border:1px solid var(--border);border-radius:12px;padding:13px 15px;margin-bottom:14px;background:var(--panel)}
+  .vtl-card.draft{border-style:dashed;background:#fcfcfb}
+  .vtl-hd{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .vtl-id{font-size:14px;font-weight:800;color:var(--ink)}
+  .vtl-id.draft{color:var(--muted)}
+  .vtl-badge{font-size:10.5px;font-weight:700;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:2px 9px}
+  .vtl-badge.live{color:var(--teal-d);background:#f1faf8;border-color:#cfeae4}
+  .vtl-badge.draft{color:#9A6A15;background:#FBF0DD;border-color:#f0e2bd}
+  .vtl-date{font-size:11.5px;color:var(--muted)}
+  .vtl-sp{flex:1}
+  .vtl-changes{margin:10px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+  .vtl-changes li{position:relative;padding-left:16px;font-size:12.5px;color:var(--ink-soft);line-height:1.45}
+  .vtl-changes li::before{content:"";position:absolute;left:2px;top:7px;width:5px;height:5px;border-radius:50%;background:var(--teal)}
+  .vtl-empty{margin-top:8px;font-size:12.5px;color:var(--muted)}
+  .vtl-acts{display:flex;gap:8px;margin-top:12px}
+  .ver-preview-bar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:210;display:none;align-items:center;gap:16px;background:var(--ink);color:#fff;border-radius:12px;padding:9px 10px 9px 16px;box-shadow:0 12px 34px rgba(20,16,38,.4);max-width:calc(100vw - 28px)}
+  .ver-preview-bar .vpb-l{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+  .ver-preview-bar .vpb-l svg{width:16px;height:16px;color:#9ad6cc}
+  .ver-preview-bar .vpb-l b{font-weight:800}
+  .ver-preview-bar .vpb-r{display:inline-flex;gap:8px;flex-shrink:0}
+  .ver-preview-bar .btn.ghost{color:#cfc9dd;border:1px solid rgba(255,255,255,.2)}
+  .ver-preview-bar .btn.ghost:hover{color:#fff;background:rgba(255,255,255,.12)}
 
   /* ---- media library ---- */
   .media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;max-height:52vh;overflow-y:auto;padding:2px}
@@ -2361,7 +2393,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.10.6" };
+const ADMIN_BUILD = { version: "0.11.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -2443,16 +2475,25 @@ function drawSpark(svg, vals){
    Draft + versions state
    ============================================================ */
 function blankDraft(){ return { text:{fr:{},en:{}}, html:{fr:{},en:{}}, dom:{}, order:null, hidden:[], promoHidden:false, images:{}, bgImages:{}, media:[], lists:{} }; }
+/* historique d'exemple (démo) : montre plusieurs versions avec leurs points clés tant qu'on n'a pas publié pour de vrai */
+const SEED_VERSIONS=[
+  { id:"v4", date:"2026-07-02T09:05:00", author:"Alex Moreira", changes:["Bandeau promo « -15 % sur Flex & Dédié » activé","Grille tarifaire mise à jour (Flex à 12 CHF / livraison)","FAQ enrichie : 2 nouvelles questions"], snapshot:{} },
+  { id:"v3", date:"2026-06-27T16:40:00", author:"Léa Fontaine", changes:["Titre d'accueil reformulé","Photo de couverture remplacée","Section « Ce que ça change » : 1 élément ajouté"], snapshot:{} },
+  { id:"v2", date:"2026-06-20T11:15:00", author:"Alex Moreira", changes:["Témoignages : 2 avis clients ajoutés","Logos de confiance : Proton ajouté"], snapshot:{} },
+  { id:"v1", date:"2026-06-12T10:00:00", author:"Alex Moreira", changes:["Première mise en ligne du site"], snapshot:{} }
+];
 let draft = loadDraft();
 let versions = loadVersions();
 let currentLang = "fr";
+let _verPreview = null;
 
 function loadDraft(){ try{ const r=JSON.parse(localStorage.getItem(STORE_KEY)); if(r) return Object.assign(blankDraft(), r); }catch(e){} return blankDraft(); }
-function loadVersions(){ try{ const r=JSON.parse(localStorage.getItem(VERS_KEY)); if(Array.isArray(r)) return r; }catch(e){} return []; }
+function loadVersions(){ try{ const r=JSON.parse(localStorage.getItem(VERS_KEY)); if(Array.isArray(r)&&r.length) return r; }catch(e){} return JSON.parse(JSON.stringify(SEED_VERSIONS)); }
 function saveVersions(){ try{ localStorage.setItem(VERS_KEY, JSON.stringify(versions)); }catch(e){ toast("Stockage plein, supprimez d'anciennes versions."); } }
 
 let saveTimer=null;
 function save(immediate){
+  if(_verPreview) return; /* en aperçu d'une version : lecture seule, on ne persiste rien */
   clearTimeout(saveTimer);
   const doSave=()=>{ try{ localStorage.setItem(STORE_KEY, JSON.stringify(draft)); setSaved(); }
     catch(e){ toast("Brouillon trop lourd (trop d'images). Supprimez des imports dans la médiathèque."); } };
@@ -3430,35 +3471,59 @@ const DASH_CHANGELOG=[
   {icon:"handshake", t:"Page Affiliation", d:"Partenaires (restaurants, commerces…), avantages et jeux concours", tag:"Nouveau"},
   {icon:"bar-chart-3", t:"Statistiques", d:"Vue analytics du site validée", tag:"Amélioré"}
 ];
-function renderVersions(){
-  const vl=document.getElementById("versionList"); if(!vl) return; vl.innerHTML="";
-  // current draft as a pending row
+function humanChanges(dr){ const c=changeCount(dr), parts=[];
+  if(c.text) parts.push(c.text+" texte"+(c.text>1?"s":"")+" modifié"+(c.text>1?"s":""));
+  if(c.img) parts.push(c.img+" image"+(c.img>1?"s":"")+" remplacée"+(c.img>1?"s":""));
+  if(dr.order) parts.push("Sections réordonnées");
+  const hid=(dr.hidden||[]).map(id=>{ const d=SECTION_DEFS.find(s=>s.id===id); return d?d.name:null; }).filter(Boolean);
+  if(hid.length) parts.push("Section masquée : "+hid.join(", "));
+  if(dr.promoHidden) parts.push("Bandeau promo masqué"); else if(dr.dom && dr.dom["promo.text"]) parts.push("Bandeau promo mis à jour");
+  if(Array.isArray(dr.logos)) parts.push("Logos de confiance mis à jour");
+  if(Array.isArray(dr.testimonials)) parts.push("Témoignages mis à jour");
+  if(dr.pricing) parts.push("Tarifs du simulateur mis à jour");
+  if(dr.lists && Object.keys(dr.lists).length) parts.push("Points de listes modifiés");
+  return parts.length?parts:["Petites retouches"]; }
+function renderVersions(){ const vl=document.getElementById("versionList"); if(!vl) return; vl.className="vtl"; vl.innerHTML="";
   const c=changeCount(draft);
-  const head=document.createElement("div"); head.className="ver-row";
-  head.innerHTML='<span class="vid cur">•</span><div class="vinfo"><div class="vd">Brouillon en cours</div><div class="vs">'+(c.total?humanSummary(draft):"aucune modification non publiée")+'</div></div>'+(c.total?'<button class="btn primary" id="vlPublish">Publier</button>':'<span class="hint" style="margin:0">à jour</span>');
+  const head=document.createElement("div"); head.className="vtl-item";
+  head.innerHTML='<div class="vtl-rail"><span class="vtl-dot draft"></span></div>'
+    +'<div class="vtl-card draft"><div class="vtl-hd"><span class="vtl-id draft">Brouillon</span><span class="vtl-badge draft">non publié</span><span class="vtl-sp"></span>'+(c.total?'<button class="btn primary sm" id="vlPublish"><i data-lucide="upload"></i>Publier</button>':'<span class="hint" style="margin:0">à jour</span>')+'</div>'
+    +(c.total?'<ul class="vtl-changes">'+humanChanges(draft).map(x=>'<li>'+escHtml(x)+'</li>').join("")+'</ul>':'<div class="vtl-empty">Aucune modification non publiée.</div>')+'</div>';
   vl.appendChild(head);
   const hp=head.querySelector("#vlPublish"); if(hp) hp.addEventListener("click",openPublish);
-  if(!versions.length){ const p=document.createElement("p"); p.className="hint"; p.textContent="Aucune version publiée pour l'instant."; vl.appendChild(p); return; }
-  versions.forEach((v,i)=>{
-    const row=document.createElement("div"); row.className="ver-row";
-    row.innerHTML='<span class="vid'+(i===0?" cur":"")+'">'+v.id+'</span><div class="vinfo"><div class="vd">'+fmtDate(v.date)+'</div><div class="vs">'+v.summary+'</div></div>'+(i===0?'<span class="badge-live">en ligne</span>':'<button class="btn" data-restore="'+v.id+'">Restaurer</button>');
-    const rb=row.querySelector("[data-restore]"); if(rb) rb.addEventListener("click",()=>restoreVersion(v.id));
-    vl.appendChild(row);
-  });
+  versions.forEach((v,i)=>{ const live=i===0, changes=(v.changes&&v.changes.length)?v.changes:[v.summary||"Mise à jour"];
+    const it=document.createElement("div"); it.className="vtl-item";
+    it.innerHTML='<div class="vtl-rail"><span class="vtl-dot'+(live?" live":"")+'"></span></div>'
+      +'<div class="vtl-card"><div class="vtl-hd"><span class="vtl-id">'+v.id+'</span>'+(live?'<span class="vtl-badge live">en ligne</span>':'<span class="vtl-badge">précédente</span>')+'<span class="vtl-date">'+fmtDate(v.date)+(v.author?' · '+escHtml(v.author):"")+'</span></div>'
+      +'<ul class="vtl-changes">'+changes.map(x=>'<li>'+escHtml(x)+'</li>').join("")+'</ul>'
+      +'<div class="vtl-acts"><button class="btn ghost sm" data-prev="'+v.id+'"><i data-lucide="eye"></i>Prévisualiser</button>'+(live?'':'<button class="btn ghost sm" data-restore="'+v.id+'"><i data-lucide="rotate-ccw"></i>Restaurer</button>')+'</div></div>';
+    const pv=it.querySelector("[data-prev]"); if(pv) pv.addEventListener("click",()=>previewVersion(v.id));
+    const rb=it.querySelector("[data-restore]"); if(rb) rb.addEventListener("click",()=>restoreVersion(v.id));
+    vl.appendChild(it); });
+  refreshIcons();
 }
-function restoreVersion(id){
-  const v=versions.find(x=>x.id===id); if(!v) return;
+function nextVersionId(){ const n=versions.reduce((m,x)=>Math.max(m, parseInt(String(x.id||"v0").replace(/\D/g,""))||0),0)+1; return "v"+n; }
+function restoreVersion(id){ const v=versions.find(x=>x.id===id); if(!v) return;
   if(!confirm("Restaurer "+id+" ("+fmtShort(v.date)+") ? Vos modifications non publiées seront remplacées.")) return;
-  draft=JSON.parse(JSON.stringify(v.snapshot)); save(true);
+  draft=Object.assign(blankDraft(), JSON.parse(JSON.stringify(v.snapshot||{}))); save(true);
   toast(id+" restaurée"); reloadIframe("Restauration de "+id+"…");
-  renderVersions(); updateDashboard();
-}
-function publishVersion(){
-  const n=versions.length+1;
-  const v={ id:"v"+n, date:new Date().toISOString(), summary:humanSummary(draft), snapshot:JSON.parse(JSON.stringify(draft)) };
+  renderVersions(); updateDashboard(); }
+function publishVersion(){ const v={ id:nextVersionId(), date:new Date().toISOString(), author:((currentUser()||{}).name||"—"), summary:humanSummary(draft), changes:humanChanges(draft), snapshot:JSON.parse(JSON.stringify(draft)) };
   versions.unshift(v); saveVersions();
-  toast("Version "+v.id+" publiée"); renderVersions(); updateDashboard();
-}
+  toast("Version "+v.id+" publiée"); renderVersions(); updateDashboard(); }
+function previewVersion(id){ const v=versions.find(x=>x.id===id); if(!v) return;
+  if(!_verPreview) _verPreview={ backup:JSON.parse(JSON.stringify(draft)) };
+  _verPreview.id=id;
+  draft=Object.assign(blankDraft(), JSON.parse(JSON.stringify(v.snapshot||{})));
+  showView("editor"); reloadIframe("Aperçu de "+id+"…"); showVerPreviewBar(id); }
+function showVerPreviewBar(id){ let bar=document.getElementById("verPreviewBar"); if(!bar){ bar=document.createElement("div"); bar.id="verPreviewBar"; bar.className="ver-preview-bar"; document.body.appendChild(bar); }
+  bar.innerHTML='<span class="vpb-l"><i data-lucide="eye"></i>Aperçu de la version <b>'+id+'</b> · lecture seule</span><span class="vpb-r"><button class="btn ghost sm" id="vpbRestore"><i data-lucide="rotate-ccw"></i>Restaurer cette version</button><button class="btn primary sm" id="vpbExit">Quitter l\'aperçu</button></span>';
+  bar.style.display="flex";
+  document.getElementById("vpbExit").addEventListener("click",()=>exitVerPreview());
+  document.getElementById("vpbRestore").addEventListener("click",()=>{ _verPreview=null; const bb=document.getElementById("verPreviewBar"); if(bb) bb.style.display="none"; restoreVersion(id); });
+  refreshIcons(); }
+function exitVerPreview(){ const bar=document.getElementById("verPreviewBar"); if(bar) bar.style.display="none";
+  if(_verPreview){ draft=_verPreview.backup; _verPreview=null; save(true); reloadIframe("Retour au brouillon…"); showView("versions"); } }
 
 /* ============================================================
    Performance (ébauche : scores d'exemple, à brancher sur PageSpeed / Lighthouse)

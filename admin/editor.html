@@ -350,6 +350,65 @@
   .ver-preview-bar .vpb-r{display:inline-flex;gap:8px;flex-shrink:0}
   .ver-preview-bar .btn.ghost{color:#cfc9dd;border:1px solid rgba(255,255,255,.2)}
   .ver-preview-bar .btn.ghost:hover{color:#fff;background:rgba(255,255,255,.12)}
+  /* ---- Suivi technique (vue dev) ---- */
+  .tech-devchip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#9A6A15;background:#FBF0DD;border-radius:20px;padding:3px 10px}
+  .tech-devchip svg{width:13px;height:13px}
+  .tech-tabs{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
+  .tech-tab{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--ink-soft);padding:8px 14px;border-radius:9px;border:1px solid var(--border);background:var(--panel)}
+  .tech-tab:hover{border-color:var(--border-2)}
+  .tech-tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .tech-tab svg{width:15px;height:15px}
+  .tech-intro{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--ink-soft);line-height:1.5;background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:11px 13px;margin-bottom:14px}
+  .tech-intro svg{width:16px;height:16px;color:var(--purple);flex-shrink:0;margin-top:1px}
+  .tech-intro b{color:var(--ink)}
+  .tech-plan{display:flex;flex-direction:column;gap:10px}
+  .tech-brick{border:1px solid var(--border);border-radius:12px;background:var(--panel);overflow:hidden}
+  .tech-brick-hd{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;width:100%;padding:13px 15px}
+  .tech-brick-ic{width:32px;height:32px;border-radius:9px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;background:#EEEDFE;color:var(--purple)}
+  .tech-brick-ic svg{width:17px;height:17px}
+  .tech-brick-t{font-size:13.5px;font-weight:700;color:var(--ink);flex:1;min-width:0}
+  .tech-tag{font-size:10.5px;font-weight:600;border-radius:20px;padding:3px 9px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+  .tech-tag svg{width:12px;height:12px}
+  .tech-tag.cost{color:#0E7D48;background:#E3F4EA}
+  .tech-tag.eff{color:var(--muted);background:var(--bg);border:1px solid var(--border)}
+  @media(max-width:720px){.tech-tag.eff{display:none}}
+  .tech-caret{width:16px;height:16px;color:var(--muted);transition:transform .15s;flex-shrink:0}
+  .tech-brick.open .tech-caret{transform:rotate(180deg)}
+  .tech-brick-body{display:none;padding:0 15px 15px 57px}
+  .tech-brick.open .tech-brick-body{display:block}
+  .tech-kv{margin-bottom:9px}
+  .tech-k{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:2px}
+  .tech-k.reco{color:var(--teal-d)}
+  .tech-v{font-size:12.5px;color:var(--ink-soft);line-height:1.55}
+  .tech-steps ol{margin:3px 0 0;padding-left:18px}
+  .tech-steps li{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:2px}
+  .tech-order{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--ink);line-height:1.55;background:#F1EFFC;border:1px solid #E1DBF6;border-radius:11px;padding:12px 14px;margin-top:14px}
+  .tech-order svg{width:16px;height:16px;color:var(--purple);flex-shrink:0;margin-top:1px}
+  .tech-legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:14px}
+  .tech-leg{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-soft)}
+  .tech-leg b{color:var(--ink)}
+  .tech-leg-dot{width:9px;height:9px;border-radius:50%}
+  .tech-fgroup{border:1px solid var(--border);border-radius:12px;background:var(--panel);margin-bottom:12px;overflow:hidden}
+  .tech-fgroup-t{font-size:12px;font-weight:700;color:var(--ink);padding:11px 14px;background:var(--bg);border-bottom:1px solid var(--border)}
+  .tech-frow{display:flex;align-items:center;gap:11px;padding:10px 14px;border-top:1px solid var(--border)}
+  .tech-frow:first-of-type{border-top:none}
+  .tech-fic{width:26px;height:26px;border-radius:7px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center}
+  .tech-fic svg{width:14px;height:14px}
+  .tech-fn{flex:1;min-width:0;font-size:12.5px;color:var(--ink)}
+  .tech-fs{flex-shrink:0;font-size:10.5px;font-weight:700;border-radius:20px;padding:2px 9px}
+  .tech-audit-out{margin-top:14px}
+  .ta-sum{font-size:13.5px;font-weight:700;padding:11px 14px;border-radius:10px;margin-bottom:12px;border:1px solid var(--border)}
+  .ta-sum.ok{background:#E3F4EA;border-color:#bfe6cd;color:#0E7D48}
+  .ta-sum.fail{background:#FBF0DD;border-color:#f0e2bd;color:#9A6A15}
+  .ta-sum-n{font-size:16px;font-weight:800}
+  .ta-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;margin-bottom:7px}
+  .ta-ic{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;color:#fff}
+  .ta-row.pass .ta-ic{background:#0E7D48}
+  .ta-row.fail .ta-ic{background:#CF3B3B}
+  .ta-ic svg{width:13px;height:13px}
+  .ta-n{flex:1;min-width:0;font-size:12.5px;color:var(--ink)}
+  .ta-ok-lbl{font-size:11px;font-weight:700;color:#0E7D48}
+  .ta-err{font-size:11px;color:#CF3B3B;background:#FBE4E4;border-radius:6px;padding:2px 7px;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
   /* ---- media library ---- */
   .media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;max-height:52vh;overflow-y:auto;padding:2px}
@@ -1712,6 +1771,8 @@
       <div class="nav-sep"></div>
       <button class="nav-i" data-view="affiliation"><i data-lucide="handshake"></i><span class="nav-lbl">Affiliation</span><span class="nav-tip">Affiliation</span></button>
       <button class="nav-i" data-view="users"><i data-lucide="users"></i><span class="nav-lbl">Utilisateurs & accès</span><span class="nav-tip">Utilisateurs & accès</span></button>
+      <div class="nav-sep" data-devonly="1"></div>
+      <button class="nav-i" data-view="tech" data-devonly="1"><i data-lucide="terminal-square"></i><span class="nav-lbl">Suivi technique</span><span class="nav-tip">Suivi technique (dev)</span></button>
     </div>
     <div class="nav-bottom">
       <button class="sb-build" id="sbBuild" type="button" title="Version et environnement"></button>
@@ -2246,6 +2307,16 @@
         </div>
       </section>
 
+      <!-- ===== Suivi technique (vue DEV) ===== -->
+      <section class="view scroll" id="view-tech">
+        <div class="pan-head" style="align-items:flex-start">
+          <div><h1 class="pg-h">Suivi technique</h1><p class="pg-sub" style="margin-bottom:0">Espace pour l'équipe : plan de mise en production, état des fonctionnalités, audit. Visible seulement en environnement de développement.</p></div>
+          <span class="tech-devchip"><i data-lucide="terminal-square"></i>dev</span>
+        </div>
+        <div class="tech-tabs" id="techTabs"></div>
+        <div id="techBody"></div>
+      </section>
+
     </div>
   </div>
 </div>
@@ -2393,7 +2464,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.11.0" };
+const ADMIN_BUILD = { version: "0.12.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -3526,6 +3597,136 @@ function exitVerPreview(){ const bar=document.getElementById("verPreviewBar"); i
   if(_verPreview){ draft=_verPreview.backup; _verPreview=null; save(true); reloadIframe("Retour au brouillon…"); showView("versions"); } }
 
 /* ============================================================
+   Suivi technique (vue DEV, masquée en prod) : plan de faisabilité,
+   état des fonctionnalités, et audit lançable (tests type unitaires).
+   ============================================================ */
+const TECH_EFFORT={S:"quelques heures → 1 j", M:"2 → 5 j", L:"1 → 2 sem."};
+const TECH_PLAN=[
+  { t:"Hébergement & déploiement", ic:"cloud", cost:"Gratuit", effort:"S",
+    state:"Déjà sur Vercel : statique, rewrites d'URL, HTTPS. La brique la plus saine, rien de structurel à changer.",
+    reco:"Garder Vercel. Activer les Functions (dossier /api) pour héberger l'auth, le chatbot, la publication (incluses au plan gratuit). Bloquer /admin de l'indexation.",
+    risk:"Très faible : plateforme managée, aucun serveur à patcher.",
+    steps:["Headers noindex sur /admin/*","Créer le dossier /api (functions)","Vérifier domaine + HTTPS (déjà en place)"] },
+  { t:"Publication réelle depuis l'admin", ic:"upload-cloud", cost:"Gratuit", effort:"M",
+    state:"Aujourd'hui tout vit en localStorage (brouillon, versions) : rien n'atteint le site public.",
+    reco:"Publier UN fichier site-content.json (i18n + sections + pricing + témoignages + logos + listes) commité via l'API GitHub par une Function /api/publish → Vercel redéploie seul. L'historique devient des commits Git : auditable, diffable, réversible (rollback = revert). Pas de base de données à payer.",
+    risk:"Faible. Point clé : valider le JSON côté serveur (schéma + taille) + fallback si illisible. Les pages hydratent déjà via data-i18n : surtout un recâblage de source, pas une réécriture.",
+    steps:["Définir le schéma site-content.json","Les pages lisent ce JSON au boot (i18n/pricing/témoignages déjà branchés sur des configs)","/api/publish : valide + commit (token GitHub côté serveur)","Câbler le bouton Publier (loading + toast)","Historique = commits du fichier (rollback)"] },
+  { t:"Authentification multi-utilisateur", ic:"shield-check", cost:"Gratuit à ce volume", effort:"M",
+    state:"Rôles/capacités déjà modélisés côté UI, mais AUCUNE auth réelle : le RBAC actuel n'est qu'un affichage.",
+    reco:"Provider managé gratuit à ce volume (ex. Clerk). Le contrôle réel vit dans les Functions : /api/publish et routes sensibles vérifient session + capacité AVANT d'agir. Les capacités déjà définies (can()) modulent l'UI ET sont revérifiées serveur.",
+    risk:"Faible à moyen. Ne jamais coder une auth maison. Aucun secret côté client (tokens/clefs en variables d'environnement Vercel).",
+    steps:["Choisir le provider (Clerk : intégration statique simple)","Protéger /admin/* (redirection login)","Mapper rôle + exceptions sur les métadonnées utilisateur","Revérifier la capacité dans chaque function sensible"] },
+  { t:"Analytics & sources de trafic", ic:"bar-chart-3", cost:"Gratuit", effort:"S → M",
+    state:"La page Statistiques affiche des données d'exemple. Aucune vraie collecte.",
+    reco:"Vercel Web Analytics : une ligne à ajouter, SANS cookie (pas de bannière), conforme nLPD/RGPD. Fournit pages vues, visiteurs et surtout les SOURCES / référents (LinkedIn, lien direct, recherche…). Encourager les UTM sur les liens de campagne. Alternative fine : Plausible/Umami (self-host gratuit) si besoin. GA4 déconseillé (cookies).",
+    risk:"Très faible avec Vercel Analytics (managé, sans cookie).",
+    steps:["Activer Vercel Web Analytics (script sur toutes les pages)","Convention UTM pour les campagnes","Brancher la page Statistiques sur les vraies données (sources en évidence)"] },
+  { t:"Page Performance (mesure réelle)", ic:"gauge", cost:"Gratuit", effort:"M",
+    state:"Ébauche à données d'exemple, vulgarisée pour non-initiés.",
+    reco:"Google PageSpeed Insights API (gratuite) : scores Lighthouse + Core Web Vitals. Une Function /api/perf mesure les pages clés et stocke chaque relevé daté (JSON historisé ou KV) pour la courbe d'évolution. Traduire les scores en langage humain + une action par item.",
+    risk:"Faible : mesure à la demande ou cron quotidien, pas de service permanent.",
+    steps:["Clé PageSpeed (gratuite)","/api/perf : mesure index/commander/mobilité/postuler","Stocker les relevés datés (historique)","Traduire en libellés humains + reco"] },
+  { t:"Chatbot (RAG économique)", ic:"bot", cost:"~quelques → 15 CHF/mois (borné)", effort:"L",
+    state:"Widget scripté (catégories, réponses prudentes, fallback mots-clés) : robuste et gratuit mais figé. Les sources et le périmètre saisis dans l'admin ne sont pas encore exploités.",
+    reco:"RAG économique : on paie l'indexation UNE fois par document (pas par message). Ingestion à l'ajout d'une source (/api/ingest, hash anti-réindexation) → embeddings → stockage vectoriel gratuit (JSON en mémoire si petit corpus, sinon Upstash Vector). À chaque message, /api/chat récupère 3-5 passages du périmètre autorisé + garde-fous → LLM éco en streaming. Le chatbot scripté reste le socle GRATUIT ; le LLM n'intervient qu'en complément plafonné.",
+    risk:"Moyen : dérive de coût (mitigée par cache + plafonds + fallback scripté), réponses hors périmètre (garde-fous stricts + sortie humaine).",
+    steps:["Pipeline d'ingestion (/api/ingest, hash)","Stockage vectoriel (JSON si petit, sinon Upstash gratuit)","/api/chat : retrieval → garde-fous → LLM streaming","Bascule LLM seulement pour le hors-script","Plafonds (messages/session, longueur) + cache","Clé LLM côté serveur uniquement"] },
+  { t:"Rendez-vous (Calendly)", ic:"calendar", cost:"Embed gratuit ; API ~10-15 CHF/mois", effort:"S → M",
+    state:"RDV admin en données d'exemple. Calendly référencé mais non intégré.",
+    reco:"Embed Calendly côté public (gratuit, pas de clé). Remontée des RDV dans l'admin via l'API Calendly depuis une Function /api/appointments (jeton côté serveur). Webhooks optionnels pour le temps réel.",
+    risk:"Faible (service managé). À arbitrer avec le client : le plan API Calendly est payant.",
+    steps:["Embed Calendly sur la page de réservation","Jeton API en variable d'environnement","/api/appointments (lecture RDV + vérif capacité)","Optionnel : webhooks temps réel"] },
+  { t:"Médiathèque & fichiers", ic:"image", cost:"Gratuit (petit volume)", effort:"M",
+    state:"Les imports sont en dataURL localStorage : ne tient pas en prod (quota ~5 Mo, invisibles côté site).",
+    reco:"Assets légers (logos, images optimisées) : dans le repo (assets/img/), servis par le CDN — gratuit, versionné. Fichiers lourds/vidéos : stockage objet (Vercel Blob gratuit au départ, ou R2). Convertir en WebP + dimensions max à l'upload. Normaliser les chemins (fini les dataURL).",
+    risk:"Faible. Ne pas committer de très gros binaires (basculer sur Blob/R2).",
+    steps:["/api/upload : compresse/convertit, repo (léger) ou Blob (lourd)","Committer les assets légers avec un nom normalisé","Remplacer le stockage dataURL par des chemins/URLs","Références dans site-content.json"] }
+];
+const TECH_ORDER="Ordre recommandé : 1) Functions + Auth (fondations) · 2) Publication réelle · 3) Médiathèque · 4) Analytics + Performance (gains rapides gratuits) · 5) Calendly · 6) Chatbot RAG (le plus lourd, en dernier). Fonctionnement visé : essentiellement GRATUIT ; seuls coûts optionnels et petits à arbitrer (Calendly API, budget LLM borné). Le site reste statique/CDN (véloce, stable), la donnée est du JSON versionné dans Git, et tout secret vit côté serveur.";
+const TECH_ST={ ok:{w:"Fonctionne",c:"#0E7D48",bg:"#E3F4EA",ic:"check"}, wip:{w:"En cours",c:"#C7891B",bg:"#FBF0DD",ic:"loader"}, ko:{w:"À corriger",c:"#CF3B3B",bg:"#FBE4E4",ic:"alert-triangle"}, todo:{w:"À développer",c:"#4E77C0",bg:"#E9F0FB",ic:"circle-dashed"} };
+const TECH_FEATURES=[
+  { group:"Édition du site", items:[
+    {n:"Édition texte / image en place (multi-pages)", s:"ok"},
+    {n:"Sections : masquer, réordonner, repères stratégiques", s:"ok"},
+    {n:"Contenus structurés : logos, avis, simulateur, listes", s:"ok"},
+    {n:"Tutoriel guidé (spotlight)", s:"ok"},
+    {n:"Édition du titre d'accueil (mot par mot, à assouplir)", s:"wip"},
+    {n:"Publication réelle (JSON + redeploy)", s:"todo"} ]},
+  { group:"Médiathèque", items:[
+    {n:"Import image / vidéo, métadonnées, texte alternatif", s:"ok"},
+    {n:"Stockage serveur des imports (aujourd'hui dataURL)", s:"todo"} ]},
+  { group:"Chatbot", items:[
+    {n:"Builder : sources, périmètre, comportement, bac à test", s:"ok"},
+    {n:"Lecteur de fichier des sources", s:"ok"},
+    {n:"Moteur RAG réel (indexation + LLM)", s:"todo"} ]},
+  { group:"Rendez-vous & Copilote", items:[
+    {n:"Vue Rendez-vous (liste, fiche, relance)", s:"ok"},
+    {n:"Copilote RDV (découverte, simulateur, compte-rendu)", s:"ok"},
+    {n:"Connexion Calendly réelle (API)", s:"todo"} ]},
+  { group:"Statistiques & Performance", items:[
+    {n:"Vues Statistiques / Performance (démo)", s:"ok"},
+    {n:"Sources de trafic + analytics réels", s:"todo"},
+    {n:"Performance branchée sur PageSpeed / Lighthouse", s:"todo"} ]},
+  { group:"Comptes & accès", items:[
+    {n:"Rôles / capacités (modèle + matrice)", s:"ok"},
+    {n:"Authentification réelle + can() vérifié serveur", s:"todo"} ]}
+];
+const TECH_AUDIT=[
+  {n:"Les 12 vues existent dans le DOM", fn:()=>["dashboard","editor","structure","media","versions","chatbot","rdv","copilot","stats","perf","affiliation","users"].every(v=>!!document.getElementById("view-"+v))},
+  {n:"Navigation entre toutes les vues sans erreur", fn:()=>{ const cur=(document.querySelector(".view.on")||{}).id; ["dashboard","media","versions","chatbot","rdv","copilot","stats","perf","structure","affiliation","users"].forEach(v=>showView(v)); showView("tech"); return true; }},
+  {n:"Tarifs : source unique partagée (paliers + zones)", fn:()=>{ const p=getPricing(); return Array.isArray(p.tiers)&&p.tiers.length>=1&&Array.isArray(p.zones)&&p.zones.length>=1; }},
+  {n:"Copilote : le simulateur calcule une offre cohérente", fn:()=>{ const c=copSimCalc(); return c&&c.final>0&&c.payPer>0&&c.flex>0; }},
+  {n:"Bandeaux : au moins un bandeau actif + presets", fn:()=>{ ensureBanners(); return draft.banners.length>=1&&!!activeBanner()&&BANNER_PRESETS.length>=1; }},
+  {n:"Médiathèque : lecture des métadonnées (format, poids)", fn:()=>{ return mediaFormat({name:"x.webp"})==="WEBP"&&fmtBytes(238000).indexOf("Ko")>0; }},
+  {n:"Droits : un administrateur a bien accès à tout", fn:()=>{ const admin=adminUsers.find(u=>u.role==="admin"); return !!admin&&can("users.manage",admin)&&can("editor.publish",admin); }},
+  {n:"Versions : un historique est disponible", fn:()=>Array.isArray(versions)&&versions.length>=1},
+  {n:"Tutoriel guidé disponible et générique", fn:()=>typeof startCoach==="function"&&typeof coachTargetRect==="function"},
+  {n:"Config pricing sérialisable (prête à publier)", fn:()=>{ JSON.parse(JSON.stringify(getPricing())); return true; }},
+  {n:"Lecteur de fichier : pagination d'un document", fn:()=>fvPaginate("a\n\nb\n\nc").length>=1},
+  {n:"Environnement dev/prod cohérent", fn:()=>{ const e=getEnv(); return e==="dev"||e==="prod"; }}
+];
+let techTab="plan";
+function renderTech(){ const tabs=document.getElementById("techTabs"), body=document.getElementById("techBody"); if(!tabs||!body) return;
+  const T=[["plan","Plan de faisabilité","route"],["status","État des fonctionnalités","list-checks"],["audit","Audit","flask-conical"]];
+  tabs.innerHTML=T.map(t=>'<button class="tech-tab'+(t[0]===techTab?" on":"")+'" data-t="'+t[0]+'"><i data-lucide="'+t[2]+'"></i>'+t[1]+'</button>').join("");
+  tabs.querySelectorAll("[data-t]").forEach(b=>b.addEventListener("click",()=>{ techTab=b.dataset.t; renderTech(); }));
+  if(techTab==="plan") renderTechPlan(body); else if(techTab==="status") renderTechStatus(body); else renderTechAudit(body);
+  refreshIcons();
+}
+function renderTechPlan(body){
+  body.innerHTML='<div class="tech-intro"><i data-lucide="info"></i><div>Comment on branche l\'admin sur du réel, brique par brique, en visant : <b>gratuit ou le moins cher possible</b>, véloce, solide, peu de maintenance. Chaque coût est chiffré pour arbitrage.</div></div>'
+    +'<div class="tech-plan">'+TECH_PLAN.map((b,i)=>'<div class="tech-brick'+(i===0?" open":"")+'"><button type="button" class="tech-brick-hd"><span class="tech-brick-ic"><i data-lucide="'+b.ic+'"></i></span><span class="tech-brick-t">'+b.t+'</span><span class="tech-tag cost"><i data-lucide="wallet"></i>'+escHtml(b.cost)+'</span><span class="tech-tag eff">'+b.effort+(TECH_EFFORT[b.effort]?(" · "+TECH_EFFORT[b.effort]):"")+'</span><svg class="tech-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>'
+      +'<div class="tech-brick-body"><div class="tech-kv"><span class="tech-k">Aujourd\'hui</span><span class="tech-v">'+escHtml(b.state)+'</span></div>'
+      +'<div class="tech-kv"><span class="tech-k reco">Recommandé</span><span class="tech-v">'+escHtml(b.reco)+'</span></div>'
+      +'<div class="tech-kv"><span class="tech-k">Risque</span><span class="tech-v">'+escHtml(b.risk)+'</span></div>'
+      +'<div class="tech-steps"><span class="tech-k">Étapes</span><ol>'+b.steps.map(s=>'<li>'+escHtml(s)+'</li>').join("")+'</ol></div></div></div>').join("")+'</div>'
+    +'<div class="tech-order"><i data-lucide="flag"></i><div>'+escHtml(TECH_ORDER)+'</div></div>';
+  body.querySelectorAll(".tech-brick-hd").forEach(h=>h.addEventListener("click",()=>h.parentElement.classList.toggle("open")));
+}
+function renderTechStatus(body){
+  const all=TECH_FEATURES.reduce((a,g)=>a.concat(g.items),[]), by=s=>all.filter(x=>x.s===s).length;
+  const legend=["ok","wip","ko","todo"].map(s=>{ const st=TECH_ST[s]; return '<span class="tech-leg"><span class="tech-leg-dot" style="background:'+st.c+'"></span>'+st.w+' <b>'+by(s)+'</b></span>'; }).join("");
+  body.innerHTML='<div class="tech-intro"><i data-lucide="list-checks"></i><div>État réel de chaque fonctionnalité, pour que l\'équipe sache d\'un coup d\'œil ce qui tourne, ce qui reste à faire, et les bugs.</div></div>'
+    +'<div class="tech-legend">'+legend+'</div>'
+    +TECH_FEATURES.map(g=>'<div class="tech-fgroup"><div class="tech-fgroup-t">'+g.group+'</div>'+g.items.map(it=>{ const st=TECH_ST[it.s]; return '<div class="tech-frow"><span class="tech-fic" style="background:'+st.bg+';color:'+st.c+'"><i data-lucide="'+st.ic+'"></i></span><span class="tech-fn">'+escHtml(it.n)+'</span><span class="tech-fs" style="color:'+st.c+';background:'+st.bg+'">'+st.w+'</span></div>'; }).join("")+'</div>').join("");
+}
+function renderTechAudit(body){
+  body.innerHTML='<div class="tech-intro"><i data-lucide="flask-conical"></i><div>Vérifie automatiquement que les fonctionnalités clés répondent (façon tests unitaires). À lancer après chaque changement pour repérer une régression.</div></div>'
+    +'<button class="btn primary" id="techRunAudit"><i data-lucide="play"></i>Lancer l\'audit</button>'
+    +'<div id="techAuditOut" class="tech-audit-out"><p class="hint" style="margin:14px 0 0">'+TECH_AUDIT.length+' vérifications prêtes. Cliquez « Lancer l\'audit ».</p></div>';
+  const run=document.getElementById("techRunAudit"); if(run) run.addEventListener("click",runTechAudit);
+}
+function runTechAudit(){ if(!document.getElementById("techAuditOut")) return;
+  const t0=(window.performance&&performance.now)?performance.now():0;
+  const results=TECH_AUDIT.map(c=>{ let pass=false, err=""; try{ pass=!!c.fn(); }catch(e){ pass=false; err=e.message||String(e); } return {n:c.n, pass, err}; });
+  const okN=results.filter(r=>r.pass).length, ms=Math.round(((window.performance&&performance.now)?performance.now():0)-t0);
+  const out=document.getElementById("techAuditOut"); if(!out) return; /* re-query : un test navigue entre les vues et peut avoir re-rendu l'onglet */
+  out.innerHTML='<div class="ta-sum '+(okN===results.length?"ok":"fail")+'"><span class="ta-sum-n">'+okN+' / '+results.length+'</span> vérifications réussies · '+ms+' ms</div>'
+    +results.map(r=>'<div class="ta-row '+(r.pass?"pass":"fail")+'"><span class="ta-ic"><i data-lucide="'+(r.pass?"check":"x")+'"></i></span><span class="ta-n">'+escHtml(r.n)+'</span>'+(r.err?'<span class="ta-err">'+escHtml(r.err)+'</span>':'<span class="ta-ok-lbl">OK</span>')+'</div>').join("");
+  refreshIcons(); toast(okN===results.length?"Audit : tout est vert ("+okN+"/"+results.length+")":"Audit : "+okN+"/"+results.length+" réussis"); }
+
+/* ============================================================
    Performance (ébauche : scores d'exemple, à brancher sur PageSpeed / Lighthouse)
    ============================================================ */
 /* Performance en langage non-initié : le sens d'abord, le terme technique en second (détail repliable). */
@@ -4332,7 +4533,7 @@ function saveUsrForm(){ const name=(document.getElementById("usrName").value||""
 /* ============================================================
    View switching + sidebar
    ============================================================ */
-const TITLES={ dashboard:"Tableau de bord", editor:"Édition du site", structure:"Structure & stratégie", media:"Médiathèque", versions:"Versions", chatbot:"Chatbot", "chatbot-stats":"Statistiques du chatbot", rdv:"Rendez-vous", stats:"Statistiques", perf:"Performance", affiliation:"Affiliation", copilot:"Copilote RDV", users:"Utilisateurs & accès" };
+const TITLES={ dashboard:"Tableau de bord", editor:"Édition du site", structure:"Structure & stratégie", media:"Médiathèque", versions:"Versions", chatbot:"Chatbot", "chatbot-stats":"Statistiques du chatbot", rdv:"Rendez-vous", stats:"Statistiques", perf:"Performance", affiliation:"Affiliation", copilot:"Copilote RDV", users:"Utilisateurs & accès", tech:"Suivi technique" };
 function showView(name){
   if(name==="chatbot-stats") name="chatbot";   // ancienne vue supprimée : les stats vivent dans le tiroir de la page Chatbot
   if(!canView(name)) name="dashboard";          // un rôle ne peut pas ouvrir une vue hors de son périmètre
@@ -4360,6 +4561,7 @@ function showView(name){
   if(name==="affiliation") renderAffiliation();
   if(name==="copilot") renderCopilot();
   if(name==="users") renderUsers();
+  if(name==="tech") renderTech();
   saveUI({view:name});
 }
 function saveUI(patch){ let s={}; try{ s=JSON.parse(localStorage.getItem(UI_KEY))||{}; }catch(e){} Object.assign(s,patch); localStorage.setItem(UI_KEY, JSON.stringify(s)); }
@@ -5702,7 +5904,9 @@ function applyRole(){
   document.querySelectorAll("#navlist .nav-i[data-view]").forEach(b=>{ b.style.display=canView(b.dataset.view)?"":"none"; });
   document.querySelectorAll("#navlist .nav-sep").forEach(s=>{ s.style.display=admin?"":"none"; });
   const app=document.querySelector(".app"); if(app) app.setAttribute("data-role", currentUser().role);
-  renderUserChip(); }
+  renderUserChip(); applyEnvNav(); }
+/* la vue Suivi technique (dev only) est masquée en environnement de production */
+function applyEnvNav(){ const dev=getEnv()==="dev"; document.querySelectorAll("[data-devonly]").forEach(el=>{ const allowed = dev && (!el.dataset.view || canView(el.dataset.view)); el.style.display=allowed?"":"none"; }); }
 function switchUser(id){ saveUI({user:id}); applyRole(); closeUserMenu();
   const cur=loadUI().view; showView(!cur||!canView(cur)?"dashboard":cur);
   toast("Connecté en tant que "+currentUser().name+" · "+roleLabel(currentUser().role)); }
@@ -5720,6 +5924,7 @@ function logout(){ toast("Déconnexion (démo) · l'authentification réelle arr
 /* ---- environnement (dev / prod) + version du back-office ---- */
 function getEnv(){ return loadUI().env==="prod" ? "prod" : "dev"; }
 function setEnv(env){ env=(env==="prod")?"prod":"dev"; saveUI({env}); renderBuild(); document.querySelector(".app")?.setAttribute("data-env",env);
+  applyEnvNav(); if(env==="prod" && (loadUI().view==="tech")) showView("dashboard");
   toast(env==="prod"?"Environnement : production (le site en ligne)":"Environnement : développement (brouillon de travail)"); }
 function renderBuild(){ const el=document.getElementById("sbBuild"); if(!el) return; const env=getEnv();
   el.innerHTML='<span class="sb-build-env '+env+'">'+(env==="prod"?"prod":"dev")+'</span><span class="sb-build-v">v'+ADMIN_BUILD.version+'</span>';

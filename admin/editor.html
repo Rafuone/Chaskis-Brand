@@ -400,6 +400,40 @@
   .struct-risk{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-top:9px;display:flex;gap:8px;align-items:flex-start;background:#FBF3F3;border:1px solid #F3DEDE;border-radius:9px;padding:9px 11px}
   .struct-risk svg{width:15px;height:15px;color:#B23B3B;flex-shrink:0;margin-top:1px}
   @media(max-width:640px){ .struct-phase{display:none} .struct-role,.struct-detail{padding-left:0} }
+  .struct-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .struct-tab{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--ink-soft);border:1px solid var(--border);border-radius:9px;padding:7px 12px;background:#fff}
+  .struct-tab:hover{border-color:var(--border-2)}
+  .struct-tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .struct-tab svg{width:15px;height:15px}
+  .struct-portante{border:1px solid var(--border);border-radius:12px;background:#fff;padding:15px 16px;margin-bottom:16px}
+  .sp-head{display:flex;align-items:flex-start;gap:12px}
+  .sp-ic{width:40px;height:40px;border-radius:11px;background:var(--bg);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+  .sp-ic svg{width:21px;height:21px}
+  .sp-name{font-size:15px;font-weight:800;color:var(--ink)}
+  .sp-role{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-top:3px}
+  .sp-meta{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:13px;padding-top:13px;border-top:1px solid var(--border)}
+  .sp-m-k{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--muted)}
+  .sp-m-k svg{width:13px;height:13px}
+  .sp-m-v{display:block;font-size:12.5px;color:var(--ink);margin-top:3px;line-height:1.45}
+  .struct-note{display:flex;gap:10px;align-items:flex-start;background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:13px 15px;font-size:12.5px;color:var(--ink-soft);line-height:1.55}
+  .struct-note > svg{width:17px;height:17px;color:var(--muted);flex-shrink:0;margin-top:1px}
+  /* ---- santé du contenu dans l'éditeur ---- */
+  .ch-chip{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;border-radius:20px;padding:5px 11px;line-height:1.2;white-space:nowrap}
+  .ch-chip b{font-weight:800;font-size:12.5px}
+  .ch-chip .ch-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .content-guide{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;margin:0 0 10px;border-radius:11px;border:1px solid}
+  .content-guide[hidden]{display:none}
+  .cg-good{background:#EAF7F1;border-color:#CDEBE0}
+  .cg-warn{background:#FBF3E2;border-color:#F0E2BD}
+  .cg-bad{background:#FBEAEA;border-color:#F1CFCF}
+  .cg-neutral{background:var(--bg);border-color:var(--border)}
+  .cg-ic{flex-shrink:0;display:inline-flex;margin-top:1px}
+  .cg-good .cg-ic{color:#0F6E56}.cg-warn .cg-ic{color:#9A6A15}.cg-bad .cg-ic{color:#B23B3B}.cg-neutral .cg-ic{color:var(--muted)}
+  .cg-ic svg{width:17px;height:17px}
+  .cg-msg{flex:1;min-width:0;font-size:12.5px;line-height:1.5;color:var(--ink)}
+  .cg-x{all:unset;box-sizing:border-box;cursor:pointer;flex-shrink:0;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;color:var(--muted)}
+  .cg-x:hover{background:rgba(0,0,0,.06)}
+  .cg-x svg{width:14px;height:14px}
   /* ---- Affiliation ---- */
   .affil-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
   @media(max-width:1100px){.affil-stats{grid-template-columns:repeat(2,1fr)}}
@@ -1351,9 +1385,11 @@
             <button data-lang="en">EN</button>
           </div>
           <div class="tb-spacer"></div>
+          <button class="ch-chip" id="contentHealth" title="Santé de votre contenu, mise à jour en direct. Cliquez pour l'analyse complète."></button>
           <button class="btn ghost" id="resetBtn" title="Annuler les modifications du brouillon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Réinitialiser</button>
         </div>
+        <div class="content-guide" id="contentGuide" hidden></div>
         <div class="stage">
           <div class="frame-wrap" id="frameWrap">
             <div class="frame-shell">
@@ -1745,12 +1781,11 @@
       <!-- ===== Structure & stratégie ===== -->
       <section class="view scroll" id="view-structure">
         <div class="pan-head" style="align-items:flex-start">
-          <div><h1 class="pg-h">Structure & stratégie</h1><p class="pg-sub" style="margin-bottom:0">Pourquoi votre page d'accueil est construite dans cet ordre. Chaque section a un rôle.</p></div>
+          <div><h1 class="pg-h">Structure & stratégie</h1><p class="pg-sub" style="margin-bottom:0">Le rôle de chaque page, et de chaque section, dans le parcours de vos clients.</p></div>
         </div>
-        <div class="struct-hero"><i data-lucide="route"></i><div><b>Votre page raconte une histoire, dans un ordre précis.</b> Elle capte l'attention, convainc, rassure, puis fait passer à l'action. Retirer une section, c'est enlever un maillon de la chaîne. Voici le rôle de chacune.</div></div>
-        <div class="struct-legend" id="structLegend"></div>
-        <div class="struct-map" id="structMap"></div>
-        <div class="ex-note" style="margin-top:6px"><i data-lucide="info"></i><div>Les sections marquées « section clé » sont celles qui déclenchent le passage à l'action. Les retirer ou les vider a un fort impact sur vos demandes de contact.</div></div>
+        <div class="struct-hero"><i data-lucide="route"></i><div><b>Votre site raconte une histoire, page après page.</b> Chaque page a un rôle, et sur chacune, chaque section fait avancer le visiteur : on capte, on convainc, on rassure, on fait agir. Retirer un maillon casse la chaîne.</div></div>
+        <div class="struct-tabs" id="structTabs"></div>
+        <div id="structBody"></div>
       </section>
 
       <!-- ===== Affiliation ===== -->
@@ -2073,7 +2108,7 @@ function initEditMode(){
   }
   const pb=DOC.getElementById("promoBar"); if(pb){ pb.style.display=""; pb.classList.remove("is-hidden","hidden"); }
   killNavigation();
-  markTexts(); markPromo(); markImages(); markBg(); seedMedia();
+  markTexts(); markPromo(); markImages(); markBg(); seedMedia(); renderContentHealth();
   setupSections(); applyDraft(); renderSecList(); refreshSecToolbars();
   loader.style.display="none";
   updateDashboard();
@@ -2093,9 +2128,11 @@ function attachEditable(el, kind, key){
   el.setAttribute("contenteditable","true"); el.setAttribute("spellcheck","false");
   el.addEventListener("mousedown",(e)=>e.stopPropagation());
   el.addEventListener("click",(e)=>e.stopPropagation());
+  el.addEventListener("focus",()=>{ el.__ck_prev=el.textContent; });
+  el.addEventListener("blur",()=>{ contentFeedback(el, kind); });
   el.addEventListener("input",()=>{
     if(kind==="html") setVal(draft.html,key,el.innerHTML); else setVal(draft.text,key,el.textContent);
-    syncSiblings(el,kind,key); markDirty();
+    syncSiblings(el,kind,key); markDirty(); contentHealthDebounced();
   });
 }
 function setVal(bag,key,v){ (bag[currentLang]||(bag[currentLang]={}))[key]=v; }
@@ -2117,6 +2154,58 @@ function markPromo(){
     el.addEventListener("click",(e)=>e.stopPropagation());
     el.addEventListener("input",()=>{ draft.dom[p.key]=el.innerHTML; markDirty(); });
   });
+}
+
+/* ---- santé du contenu en direct : guider l'éditeur, de façon équilibrée (bon / attention / neutre) ---- */
+function contentHealthScore(){
+  if(!DOC) return {score:100,status:"good"};
+  const els=DOC.querySelectorAll("[data-i18n],[data-i18n-html]");
+  let words=0, empties=0;
+  els.forEach(el=>{ const t=(el.textContent||"").trim(); if(!t) empties++; else words+=t.split(/\s+/).length; });
+  const h1=DOC.querySelector(".hero h1"), h1len=h1?(h1.textContent||"").trim().length:1;
+  let s=100;
+  if(h1len===0) s-=28; else if(h1len<15) s-=14;
+  if(words<220) s-=Math.min(24, Math.round((220-words)/9));
+  s-=Math.min(20, empties*2);
+  s=Math.max(45, Math.min(100, s));
+  return {score:s, status: s>=85?"good":s>=65?"warn":"bad"};
+}
+let chTimer=null; function contentHealthDebounced(){ if(chTimer) clearTimeout(chTimer); chTimer=setTimeout(renderContentHealth,200); }
+function renderContentHealth(){ const el=document.getElementById("contentHealth"); if(!el) return;
+  const r=contentHealthScore(), c=pfStat(r.status);
+  el.style.color=c.c; el.style.background=c.bg;
+  el.innerHTML='<span class="ch-dot" style="background:'+c.c+'"></span><b>'+r.score+'</b>&nbsp;santé du contenu';
+}
+const CONTENT_SEC=[
+  {sel:".hero", name:"l'accroche", apport:"dire en 3 secondes ce que vous faites et pour qui"},
+  {sel:".sim-dark", name:"le simulateur", apport:"faire prendre conscience au visiteur de ce que lui coûtent ses livraisons"},
+  {sel:".offres", name:"les offres et les prix", apport:"montrer clairement vos tarifs, sans quoi le visiteur n'ose pas demander"},
+  {sel:".cta-booking", name:"la prise de rendez-vous", apport:"transformer l'intérêt en demande de contact"},
+  {sel:".testi", name:"les témoignages", apport:"installer la confiance par la preuve"}
+];
+function contentSection(el){ if(!el||!el.closest) return null; for(const s of CONTENT_SEC){ if(el.closest(s.sel)) return s; } return null; }
+function contentFeedback(el, kind){
+  const prev=(el.__ck_prev==null?"":el.__ck_prev).trim(), now=(el.textContent||"").trim();
+  if(prev===now) return;
+  const isHeading=/^H[1-6]$/.test(el.tagName), pl=prev.length, nl=now.length, sec=contentSection(el);
+  let type, msg;
+  if(nl===0 && pl>0){ type="bad"; msg=isHeading?"Vous avez vidé un titre. Le visiteur ne saura plus de quoi parle cette partie, et Google non plus.":"Vous avez vidé un texte. Google a besoin de mots pour comprendre et bien classer la page."; }
+  else if(isHeading && nl>0 && nl<15 && nl<pl*0.6){ type="warn"; msg="Ce titre est devenu très court. Un titre clair et parlant retient mieux le visiteur, et aide au référencement."; }
+  else if(isHeading && pl===0 && nl>=15){ type="good"; msg="Bien : un titre clair, c'est la première chose que lisent vos visiteurs et Google."; }
+  else if(!isHeading && pl>60 && nl<pl*0.5){ type="warn"; msg="Cette partie a beaucoup moins de texte qu'avant. Gardez assez de contenu pour rester bien référencé."; }
+  else if(!isHeading && nl>60 && nl>pl*1.4){ type="good"; msg="Bien : plus de contenu utile, c'est bon pour le référencement, tant que ça reste vrai et clair."; }
+  else { type="neutral"; msg="Contenu mis à jour. Sur le fond, c'est vous qui jugez : l'important est que ce soit juste et clair pour vos clients."; }
+  if((type==="bad"||type==="warn") && sec) msg+=" Rappel : cette section sert à "+sec.apport+".";
+  showContentGuide(type, msg); renderContentHealth();
+}
+let cgTimer=null;
+function showContentGuide(type, msg){ const w=document.getElementById("contentGuide"); if(!w) return;
+  const ic=type==="good"?"check-circle-2":type==="neutral"?"info":"alert-triangle";
+  w.className="content-guide cg-"+type; w.hidden=false;
+  w.innerHTML='<span class="cg-ic"><i data-lucide="'+ic+'"></i></span><span class="cg-msg">'+msg+'</span><button type="button" class="cg-x" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>';
+  w.querySelector(".cg-x").addEventListener("click",()=>{ w.hidden=true; });
+  refreshIcons();
+  if(cgTimer) clearTimeout(cgTimer); cgTimer=setTimeout(()=>{ if(w) w.hidden=true; }, 9000);
 }
 
 /* ---- media ---- */
@@ -2701,21 +2790,88 @@ const STRUCT_SECTIONS=[
     why:"En bas, pour lever le dernier doute de celui qui hésite encore juste avant de vous contacter.",
     risk:"Sans FAQ, les hésitants restent avec leur question sans réponse, et abandonnent." }
 ];
-function renderStructure(){ const w=document.getElementById("structMap"); if(!w) return;
-  const leg=document.getElementById("structLegend");
-  if(leg){ leg.innerHTML=STRUCT_PHASES.map((p,i)=>'<span class="struct-leg" style="color:'+p.col+';background:'+p.bg+'">'+p.label+'</span>'+(i<STRUCT_PHASES.length-1?'<span class="struct-arrow"><i data-lucide="chevron-right"></i></span>':'')).join(""); }
-  const phMap={}; STRUCT_PHASES.forEach(p=>phMap[p.key]=p);
-  w.innerHTML=STRUCT_SECTIONS.map((s,idx)=>{ const p=phMap[s.phase]||STRUCT_PHASES[0];
-    return '<div class="struct-item"><div class="struct-rail"><span class="struct-dot" style="background:'+p.col+'"></span></div>'
-      +'<div class="struct-card'+(s.keySec?" key":"")+'"><button type="button" class="struct-hd" data-i="'+idx+'">'
-        +'<span class="struct-ic" style="background:'+p.bg+';color:'+p.col+'"><i data-lucide="'+s.icon+'"></i></span>'
-        +'<span class="struct-name">'+s.name+(s.keySec?'<span class="struct-key"><i data-lucide="lock"></i>section clé</span>':'')+'</span>'
-        +'<span class="struct-phase" style="color:'+p.col+';background:'+p.bg+'">'+p.label+'</span>'
-        +'<svg class="struct-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>'
-        +'<div class="struct-role">'+s.role+'</div>'
-        +'<div class="struct-detail"><div class="struct-why"><b>Pourquoi à cet endroit&nbsp;?</b> '+s.why+'</div>'
-          +'<div class="struct-risk"><i data-lucide="alert-triangle"></i><span><b>Si vous la retirez&nbsp;: </b>'+s.risk+'</span></div></div>'
-      +'</div></div>'; }).join("");
+/* Un site = plusieurs pages, chacune avec sa "portante" (son rôle dans le parcours global).
+   Pages marketing = carte des sections ; pages transactionnelles = portante + principe. */
+const STRUCT_PAGES=[
+  { key:"accueil", name:"Accueil", icon:"home",
+    role:"Le cœur commercial du site : transformer une entreprise qui découvre Chaskis en demande de contact.",
+    audience:"Entreprises de Suisse romande qui cherchent un partenaire de livraison fiable.",
+    goal:"Décrocher une consultation (prise de rendez-vous).",
+    sections:STRUCT_SECTIONS },
+  { key:"mobilite", name:"Mobilité", icon:"car-front",
+    role:"Vendre la seconde offre : chauffeur privé et transferts, y compris pour vos pièces et documents sensibles.",
+    audience:"Entreprises et cadres qui ont besoin d'un transport de personnes ou de valeurs.",
+    goal:"Générer une demande de trajet.",
+    sections:[
+      {name:"Accroche (hero)", phase:"capter", icon:"sparkles", keySec:true, role:"La promesse chauffeur privé en une phrase, avec la première action.", why:"Première chose vue : elle doit dire à qui s'adresse ce service et pourquoi.", risk:"Sans accroche nette, le visiteur ne comprend pas que vous faites aussi du transport de personnes."},
+      {name:"Ils nous font confiance", phase:"rassurer", icon:"shield-check", keySec:false, role:"Les entreprises qui vous font déjà confiance.", why:"Tout en haut, la preuve installe la crédibilité avant l'argumentaire.", risk:"Sans preuve, votre sérieux ne repose que sur votre parole."},
+      {name:"Un chauffeur pour chaque besoin", phase:"convaincre", icon:"users", keySec:false, role:"Les cas d'usage : trajets, transferts, événements.", why:"On aide le visiteur à se reconnaître dans une situation concrète.", risk:"Sans ça, il ne voit pas que le service est pour lui."},
+      {name:"Trois raisons de choisir Chaskis", phase:"convaincre", icon:"badge-check", keySec:false, role:"Vos arguments différenciants.", why:"Répond au « pourquoi vous plutôt qu'un autre ».", risk:"Sans différenciation, on vous compare au moins cher."},
+      {name:"Transport de pièces sensibles", phase:"convaincre", icon:"gem", keySec:false, role:"L'offre haut de gamme : documents et objets de valeur.", why:"Cible un besoin premium, à plus forte marge.", risk:"La retirer, c'est renoncer à vos clients les plus rentables."},
+      {name:"Comment ça marche", phase:"rassurer", icon:"route", keySec:false, role:"Le parcours, de la demande au trajet.", why:"Lève la crainte que ce soit compliqué.", risk:"Sans ça, le visiteur doute que ce soit simple et remet à plus tard."},
+      {name:"Témoignages", phase:"rassurer", icon:"quote", keySec:false, role:"La preuve par les clients.", why:"On installe la confiance avant l'action.", risk:"Sans preuve sociale, la confiance chute."},
+      {name:"Demander un trajet (formulaire)", phase:"convertir", icon:"calendar-check", keySec:true, role:"Le passage à l'acte : demander un trajet.", why:"C'est le but de la page, tout y mène.", risk:"C'est votre prise de contact. Sans elle, aucune demande ne rentre."},
+      {name:"FAQ", phase:"rassurer", icon:"help-circle", keySec:false, role:"Les dernières objections, plus le contact.", why:"Lève le dernier doute juste avant de vous écrire.", risk:"Les hésitants restent sans réponse et abandonnent."}
+    ] },
+  { key:"recrutement", name:"Recrutement", icon:"user-plus",
+    role:"L'autre versant du modèle : attirer et recruter les coursiers et chauffeurs. Sans eux, pas de service.",
+    audience:"Candidats coursiers et chauffeurs en Suisse romande.",
+    goal:"Faire candidater (télécharger l'app, postuler).",
+    sections:[
+      {name:"Accroche (hero)", phase:"capter", icon:"sparkles", keySec:true, role:"La promesse employeur en une phrase.", why:"Dire tout de suite ce qu'on gagne à rejoindre Chaskis.", risk:"Sans accroche, le candidat ne voit pas son intérêt et referme."},
+      {name:"Ce que vous y gagnez", phase:"convaincre", icon:"badge-check", keySec:false, role:"Les avantages du poste (salariat, matériel, cadre).", why:"Répond au « qu'est-ce que j'y gagne ».", risk:"Sans avantages clairs, le candidat va voir la concurrence."},
+      {name:"Choisissez votre mode", phase:"convaincre", icon:"list-checks", keySec:false, role:"Les types d'activité ou de contrat.", why:"Chacun se projette dans son cas.", risk:"Sans ça, l'offre paraît rigide et exclut des profils."},
+      {name:"Ils en parlent", phase:"rassurer", icon:"quote", keySec:false, role:"La preuve par les coursiers actuels.", why:"On rassure sur l'ambiance et le sérieux avant de postuler.", risk:"Sans témoignages d'équipe, le candidat doute."},
+      {name:"FAQ", phase:"rassurer", icon:"help-circle", keySec:false, role:"Les questions des candidats (horaires, matériel, paie).", why:"Lève les freins concrets à la candidature.", risk:"Sans réponses, le candidat n'ose pas se lancer."},
+      {name:"Candidater / télécharger l'app", phase:"convertir", icon:"download", keySec:true, role:"L'action : télécharger l'app et postuler.", why:"C'est le but de la page.", risk:"Sans appel à l'action clair, aucune candidature."}
+    ] },
+  { key:"commander", name:"Commander", icon:"package", transactional:true,
+    role:"Le tunnel de commande : passer une course, étape par étape.",
+    audience:"Clients qui veulent commander une livraison maintenant.",
+    goal:"Finaliser une commande, sans friction.",
+    note:"Page transactionnelle : ici, l'enjeu n'est pas de convaincre mais de ne perdre personne en route. Chaque étape en trop, chaque champ inutile fait abandonner. Le principe : le moins d'efforts possible pour commander." },
+  { key:"suivi", name:"Suivi de commande", icon:"radar", transactional:true,
+    role:"Rassurer après l'achat : suivre sa livraison en temps réel.",
+    audience:"Clients avec une livraison en cours.",
+    goal:"Confiance et tranquillité, pour qu'ils recommandent.",
+    note:"Page de réassurance : un bon suivi transforme un client stressé en client fidèle. Ce n'est pas une page à vendre, c'est une page à rassurer. Priorité : clarté de l'info en direct." },
+  { key:"dashboard", name:"Tableau de bord", icon:"layout-dashboard", transactional:true,
+    role:"L'espace client : gérer ses commandes et son compte.",
+    audience:"Clients réguliers, une fois connectés.",
+    goal:"Autonomie et fidélisation.",
+    note:"Espace connecté : l'enjeu est que le client fasse seul, et vite, ce qu'il vient faire. L'utilité et la clarté priment sur le discours commercial." }
+];
+let structPage="accueil";
+function renderStructure(){ renderStructTabs(); renderStructBody(); }
+function renderStructTabs(){ const w=document.getElementById("structTabs"); if(!w) return;
+  w.innerHTML=STRUCT_PAGES.map(p=>'<button type="button" class="struct-tab'+(p.key===structPage?" on":"")+'" data-p="'+p.key+'"><i data-lucide="'+p.icon+'"></i>'+p.name+'</button>').join("");
+  w.querySelectorAll("[data-p]").forEach(b=>b.addEventListener("click",()=>{ structPage=b.dataset.p; renderStructure(); }));
+  refreshIcons();
+}
+function renderStructBody(){ const w=document.getElementById("structBody"); if(!w) return;
+  const p=STRUCT_PAGES.find(x=>x.key===structPage)||STRUCT_PAGES[0];
+  let h='<div class="struct-portante"><div class="sp-head"><span class="sp-ic"><i data-lucide="'+p.icon+'"></i></span><div><div class="sp-name">'+p.name+'</div><div class="sp-role">'+p.role+'</div></div></div>'
+    +'<div class="sp-meta"><div class="sp-m"><span class="sp-m-k"><i data-lucide="users"></i>Pour qui</span><span class="sp-m-v">'+p.audience+'</span></div>'
+    +'<div class="sp-m"><span class="sp-m-k"><i data-lucide="target"></i>Objectif</span><span class="sp-m-v">'+p.goal+'</span></div></div></div>';
+  if(p.transactional){
+    h+='<div class="struct-note"><i data-lucide="info"></i><div>'+p.note+'</div></div>';
+  } else {
+    const phMap={}; STRUCT_PHASES.forEach(ph=>phMap[ph.key]=ph);
+    h+='<div class="struct-legend">'+STRUCT_PHASES.map((ph,i)=>'<span class="struct-leg" style="color:'+ph.col+';background:'+ph.bg+'">'+ph.label+'</span>'+(i<STRUCT_PHASES.length-1?'<span class="struct-arrow"><i data-lucide="chevron-right"></i></span>':'')).join("")+'</div>';
+    h+='<div class="struct-map">'+p.sections.map(s=>{ const ph=phMap[s.phase]||STRUCT_PHASES[0];
+      return '<div class="struct-item"><div class="struct-rail"><span class="struct-dot" style="background:'+ph.col+'"></span></div>'
+        +'<div class="struct-card'+(s.keySec?" key":"")+'"><button type="button" class="struct-hd">'
+          +'<span class="struct-ic" style="background:'+ph.bg+';color:'+ph.col+'"><i data-lucide="'+s.icon+'"></i></span>'
+          +'<span class="struct-name">'+s.name+(s.keySec?'<span class="struct-key"><i data-lucide="lock"></i>section clé</span>':'')+'</span>'
+          +'<span class="struct-phase" style="color:'+ph.col+';background:'+ph.bg+'">'+ph.label+'</span>'
+          +'<svg class="struct-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>'
+          +'<div class="struct-role">'+s.role+'</div>'
+          +'<div class="struct-detail"><div class="struct-why"><b>Pourquoi à cet endroit&nbsp;?</b> '+s.why+'</div>'
+            +'<div class="struct-risk"><i data-lucide="alert-triangle"></i><span><b>Si vous la retirez&nbsp;: </b>'+s.risk+'</span></div></div>'
+        +'</div></div>'; }).join("")+'</div>';
+    h+='<div class="ex-note" style="margin-top:6px"><i data-lucide="info"></i><div>Les sections « section clé » déclenchent le passage à l\'action. Les retirer ou les vider a un fort impact sur vos demandes de contact.</div></div>';
+  }
+  w.innerHTML=h;
   w.querySelectorAll(".struct-hd").forEach(b=>b.addEventListener("click",()=>b.closest(".struct-card").classList.toggle("open")));
   refreshIcons();
 }
@@ -3782,6 +3938,7 @@ function cbAsk(q){
   document.getElementById("cbLogModal").addEventListener("click",e=>{ if(e.target.id==="cbLogModal") closeCbLog(); });
   // Performance : bouton d'analyse (ébauche)
   const prun=document.getElementById("perfRun"); if(prun) prun.addEventListener("click",()=>{ toast("Analyse simulée · à brancher sur PageSpeed"); renderPerf(); });
+  const chC=document.getElementById("contentHealth"); if(chC) chC.addEventListener("click",()=>showView("perf"));
   // Affiliation : ajout / édition / suppression de restaurants
   const aAdd=document.getElementById("affilAdd"); if(aAdd) aAdd.addEventListener("click",()=>openAffilModal(null));
   const aClose=document.getElementById("affilClose"); if(aClose) aClose.addEventListener("click",closeAffilModal);

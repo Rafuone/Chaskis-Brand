@@ -525,13 +525,15 @@
   .pc-tip svg{width:13px;height:13px;flex-shrink:0;margin-top:1px}
   /* ===== Performance : refonte (verdict granulaire, cards, vue simple/détaillée) ===== */
   .pv-band{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;white-space:nowrap;margin-left:2px}
-  .pv-scale{margin-top:12px}
-  .pv-scale-bar{position:relative;height:7px;border-radius:20px;background:linear-gradient(90deg,#CF3B3B 0%,#DB7A2A 30%,#C79A0C 55%,#2E9E5B 80%,#0E7D48 100%)}
-  .pv-scale-mark{position:absolute;top:50%}
-  .pv-scale-mark > span{display:block;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid #0E7D48;box-shadow:0 1px 3px rgba(0,0,0,.28);transform:translate(-50%,-50%)}
-  .pv-scale-lbls{display:flex;justify-content:space-between;margin-top:7px;font-size:9.5px;color:var(--muted);font-weight:600}
+  .pv-scale{margin-top:13px}
+  .pv-steps{display:flex;gap:5px;padding-top:9px}
+  .pv-step{flex:1;height:9px;border-radius:5px;position:relative;transition:opacity .2s}
+  .pv-step.dim{opacity:.26}
+  .pv-step-dot{position:absolute;left:50%;top:-9px;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid;box-shadow:0 1px 3px rgba(0,0,0,.22)}
+  .pv-scale-lbls{display:flex;gap:5px;margin-top:8px}
+  .pv-scale-lbls span{flex:1;text-align:center;font-size:9.5px;color:var(--muted);font-weight:600;white-space:nowrap}
   .pv-scale-lbls span.on{font-weight:800}
-  @media(max-width:680px){.pv-scale-lbls span:nth-child(2),.pv-scale-lbls span:nth-child(4){visibility:hidden}}
+  @media(max-width:700px){.pv-scale-lbls span{font-size:8.5px}}
   .perf-acts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
   @media(max-width:980px){.perf-acts{grid-template-columns:1fr}}
   .pa-card{border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;background:#fff}
@@ -546,10 +548,10 @@
   .pa-sub-h{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;margin-bottom:4px}
   .pa-sub-h svg{width:14px;height:14px}
   .pa-sub-b{font-size:12px;line-height:1.5;color:var(--ink)}
-  .pa-sub.self{background:#FBF6E7;border:1px solid #F0E3BC}
-  .pa-sub.self .pa-sub-h{color:#A9791A}
-  .pa-sub.gamma{background:#EEF3FB;border:1px solid #DCE6F5}
-  .pa-sub.gamma .pa-sub-h{color:#2F6FE0}
+  .pa-sub.self{background:#FCFBF4;border:1px solid #ECE6D6}
+  .pa-sub.self .pa-sub-h{color:#9C7A2C}
+  .pa-sub.gamma{background:#F6F8FC;border:1px solid #E4EAF3}
+  .pa-sub.gamma .pa-sub-h{color:#4E77C0}
   .pa-card .pa-cta{margin-top:auto;padding-top:12px;display:flex;align-items:center;gap:11px;flex-wrap:wrap}
   .pa-card .pa-cta .btn svg{width:14px;height:14px}
   .pa-card .pa-self{font-size:11.5px;font-weight:600;color:#0F6E56;display:inline-flex;align-items:center;gap:4px}
@@ -2334,7 +2336,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.10.1" };
+const ADMIN_BUILD = { version: "0.10.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -3430,19 +3432,19 @@ const PF_C={good:{c:"#0F6E56",bg:"#E1F5EE",w:"Bon"},warn:{c:"#C7891B",bg:"#FBF0D
 function pfStat(st){ return PF_C[st]||PF_C.good; }
 /* échelle granulaire par score (vert -> rouge), pour ne pas afficher un 82 en marron. */
 const PF_SCALE=[
-  {min:90, c:"#0E7D48", bg:"#E3F4EA", w:"Excellent"},
-  {min:80, c:"#2E9E5B", bg:"#E8F5EC", w:"Bon"},
-  {min:65, c:"#C79A0C", bg:"#FAF3D6", w:"Correct"},
-  {min:45, c:"#DB7A2A", bg:"#FBEBDB", w:"À surveiller"},
-  {min:0,  c:"#CF3B3B", bg:"#FBE4E4", w:"Critique"}
+  {min:90, c:"#0B6E3E", bg:"#D8EFE0", w:"Excellent"},
+  {min:80, c:"#3FB56A", bg:"#E7F7EC", w:"Bon"},
+  {min:65, c:"#D2A00C", bg:"#FAF2CF", w:"Correct"},
+  {min:45, c:"#E07B22", bg:"#FCEAD7", w:"À surveiller"},
+  {min:0,  c:"#D23B3B", bg:"#FBE1E1", w:"Critique"}
 ];
 function pfScore(score){ for(let i=0;i<PF_SCALE.length;i++){ if(score>=PF_SCALE[i].min) return PF_SCALE[i]; } return PF_SCALE[PF_SCALE.length-1]; }
 const GAMMA="Gamma Project";
 /* anneau de score réutilisable (global + par pilier) */
-function perfRing(score, size, col){ const s=Math.max(0,Math.min(100,score)), r=(size-8)/2, cx=size/2, c=2*Math.PI*r, off=c*(1-s/100);
-  return '<div class="pring" style="width:'+size+'px;height:'+size+'px"><svg viewBox="0 0 '+size+' '+size+'"><circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="#ECEAF1" stroke-width="6"/>'
-    +'<circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" transform="rotate(-90 '+cx+' '+cx+')"/></svg>'
-    +'<span class="pring-v" style="color:'+col+';font-size:'+Math.round(size*0.34)+'px">'+score+'</span></div>'; }
+function perfRing(score, size, col, sw){ const s=Math.max(0,Math.min(100,score)), w=sw||(size<50?4:6), r=(size-w-3)/2, cx=size/2, c=2*Math.PI*r, off=c*(1-s/100);
+  return '<div class="pring" style="width:'+size+'px;height:'+size+'px"><svg viewBox="0 0 '+size+' '+size+'"><circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="#ECEAF1" stroke-width="'+w+'"/>'
+    +'<circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="'+w+'" stroke-linecap="round" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" transform="rotate(-90 '+cx+' '+cx+')"/></svg>'
+    +'<span class="pring-v" style="color:'+col+';font-size:'+Math.round(size*0.33)+'px">'+score+'</span></div>'; }
 function perfFix(a){ const fx=a.fix||{}; if(!fx.goto) return; showView(fx.goto);
   if(fx.goto==="editor" && fx.target){ startCoach([{sel:fx.target, title:fx.coachTitle||"À modifier ici", text:fx.coachText||fx.guide||""}]); }
   else if(fx.guide){ setTimeout(()=>toast(fx.guide),380); } }
@@ -3593,12 +3595,13 @@ function renderPerfVerdict(overall){ const w=document.getElementById("perfVerdic
   w.innerHTML='<div class="pv-gauge">'+perfRing(overall,66,col)+'<span class="pv-cap">note globale<br>sur 100</span></div>'
     +'<div class="pv-main"><div class="pv-title"><span class="pv-dot" style="color:'+col+'"><i data-lucide="'+m.ic+'"></i></span>'+m.t+'<span class="pv-band" style="color:'+col+';background:'+b.bg+'">'+b.w+'</span></div>'
     +'<div class="pv-sub">'+sub+'</div>'
-    +'<div class="pv-scale"><div class="pv-scale-bar"><span class="pv-scale-mark" style="left:'+Math.max(2,Math.min(98,overall))+'%"><span style="border-color:'+col+'"></span></span></div>'
-      +'<div class="pv-scale-lbls">'+PF_MARKS.map(mk=>'<span'+(mk[0]===b.w?' class="on" style="color:'+col+'"':'')+'>'+mk[0]+'</span>').join("")+'</div></div></div>';
+    +'<div class="pv-scale"><div class="pv-steps">'
+      +PF_SCALE.slice().reverse().map(bd=>{ const on=bd.w===b.w; return '<div class="pv-step'+(on?"":" dim")+'" style="background:'+bd.c+'">'+(on?'<span class="pv-step-dot" style="border-color:'+bd.c+'"></span>':'')+'</div>'; }).join("")
+      +'</div><div class="pv-scale-lbls">'+PF_SCALE.slice().reverse().map(bd=>'<span'+(bd.w===b.w?' class="on" style="color:'+bd.c+'"':'')+'>'+bd.w+'</span>').join("")+'</div></div></div>';
 }
 function renderPerfPillars(){ const w=document.getElementById("perfPillars"); if(!w) return; w.innerHTML="";
   PERF_PILLARS.forEach(p=>{ const b=pfScore(p.score); const el=document.createElement("div"); el.className="pcard";
-    el.innerHTML='<div class="pcard-top"><span class="pcard-ic" style="background:'+b.bg+';color:'+b.c+'"><i data-lucide="'+p.icon+'"></i></span><span class="pcard-t">'+p.title+'</span>'+perfRing(p.score,44,b.c)+'</div>'
+    el.innerHTML='<div class="pcard-top"><span class="pcard-ic" style="background:'+b.bg+';color:'+b.c+'"><i data-lucide="'+p.icon+'"></i></span><span class="pcard-t">'+p.title+'</span>'+perfRing(p.score,36,b.c,4)+'</div>'
       +'<div class="pcard-plain">'+p.plain+'</div>'
       +'<span class="pf-pill pcard-pill" style="color:'+b.c+';background:'+b.bg+'">'+b.w+'</span>'
       +'<div class="pcard-benefit">'+p.benefit+'</div>'
@@ -3632,7 +3635,8 @@ function renderPerfContent(){ const w=document.getElementById("perfContent"); if
   const warnN=PERF_CONTENT.filter(c=>c.st!=="good").length;
   let h='<div class="pc-top"><div class="pc-intro">Ce que vos textes changent pour Google et vos visiteurs. '+(warnN?('<b>'+warnN+' point'+(warnN>1?"s":"")+' à revoir.</b>'):'Tout est au point.')+'</div>'
     +'<div class="seg pc-toggle" id="pcToggle"><button data-m="simple" class="'+(detailed?"":"on")+'">Simple</button><button data-m="detailed" class="'+(detailed?"on":"")+'">Détaillé</button></div></div>';
-  h+='<div class="pc-list">'+PERF_CONTENT.map(c=>{ const s=pfStat(c.st), ok=c.st==="good", ic=ok?"check":"alert-triangle";
+  const ordered=PERF_CONTENT.slice().sort((a,b)=>(a.st==="good"?1:0)-(b.st==="good"?1:0));
+  h+='<div class="pc-list">'+ordered.map(c=>{ const s=pfStat(c.st), ok=c.st==="good", ic=ok?"check":"alert-triangle";
     return '<div class="pc-item"><span class="pc-chk" style="background:'+s.bg+';color:'+s.c+'"><i data-lucide="'+ic+'"></i></span><div class="pc-body"><div class="pc-krow"><span class="pc-k">'+c.k+'</span><span class="pc-status" style="color:'+s.c+'">'+(ok?"Au point":"À revoir")+'</span></div>'
       +(detailed?('<div class="pc-plain">'+c.plain+'</div><div class="pc-tip"><i data-lucide="lightbulb"></i><span>'+c.tip+'</span></div>'):'')
       +'</div></div>'; }).join("")+'</div>';

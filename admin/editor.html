@@ -770,7 +770,13 @@
   /* simulateur */
   .cop-sim-row{margin-bottom:12px}
   .cop-sim-row > label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
-  .cop-range{width:100%;accent-color:var(--teal)}
+  /* range custom clair (le range natif rendait un track fonce selon la plateforme) */
+  .cop-range{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:20px;outline:none;cursor:pointer;margin:8px 0 4px;background:linear-gradient(90deg,var(--teal) var(--fill,50%),#e6e8e6 var(--fill,50%))}
+  .cop-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--teal);box-shadow:0 1px 4px rgba(20,16,38,.28);cursor:pointer}
+  .cop-range::-webkit-slider-thumb:hover{border-color:var(--teal-d)}
+  .cop-range::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--teal);box-shadow:0 1px 4px rgba(20,16,38,.28);cursor:pointer}
+  .cop-range::-moz-range-track{height:6px;border-radius:20px;background:#e6e8e6}
+  .cop-range::-moz-range-progress{height:6px;border-radius:20px;background:var(--teal)}
   .cop-sim-out{background:linear-gradient(135deg,#F2FBF8,#EAF5FF);border:1px solid #D7EEE7;border-radius:11px;padding:13px 14px;margin-top:4px}
   .cop-sim-line{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12.5px;padding:4px 0;color:var(--ink-soft)}
   .cop-sim-line b{color:var(--ink);font-weight:700}
@@ -2355,7 +2361,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.10.5" };
+const ADMIN_BUILD = { version: "0.10.6" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -4077,6 +4083,7 @@ function copSimCalc(){ const P=getPricing(), s=copState.sim, vol=s.volume;
   const promoPct=copPromoPct((copState.promo||"").toUpperCase()), final=Math.round(recoTotal*(1-promoPct/100));
   return {unit,vol,payPer,flex,reco,recoTotal,promoPct,final,saving:Math.max(payPer,flex)-recoTotal};
 }
+function copRangeFill(el){ if(!el) return; const min=+el.min||0, max=+el.max||100, v=+el.value; const pct=max>min?((v-min)/(max-min)*100):0; el.style.setProperty("--fill", pct.toFixed(1)+"%"); }
 function copComputeSim(){ const o=document.getElementById("copSimOut"); if(!o) return; const c=copSimCalc();
   o.innerHTML='<div class="cop-sim-line"><span>À la course</span><b>'+c.payPer+' CHF<span style="font-weight:400;color:var(--muted)"> /mois</span></b></div>'
     +'<div class="cop-sim-line"><span>Abonnement Flex</span><b>'+c.flex+' CHF<span style="font-weight:400;color:var(--muted)"> /mois</span></b></div>'
@@ -4095,8 +4102,8 @@ function renderCopSim(){
     +'<div class="cop-promo"><input id="copPromo" placeholder="Code promo" value="'+escHtml(copState.promo||"")+'"><button class="btn" id="copPromoBtn">Appliquer</button></div>'
     +'<div id="copPromoMsg"></div>';
   copComputeSim();
-  const vol=document.getElementById("copVol"); vol.addEventListener("input",e=>{ s.volume=+e.target.value; document.getElementById("copVolLbl").textContent=s.volume; copComputeSim(); copSave(); renderCopRecap(); });
-  const exp=document.getElementById("copExp"); exp.addEventListener("input",e=>{ s.express=+e.target.value; document.getElementById("copExpLbl").textContent=s.express+" %"; copComputeSim(); copSave(); renderCopRecap(); });
+  const vol=document.getElementById("copVol"); copRangeFill(vol); vol.addEventListener("input",e=>{ s.volume=+e.target.value; document.getElementById("copVolLbl").textContent=s.volume; copRangeFill(vol); copComputeSim(); copSave(); renderCopRecap(); });
+  const exp=document.getElementById("copExp"); copRangeFill(exp); exp.addEventListener("input",e=>{ s.express=+e.target.value; document.getElementById("copExpLbl").textContent=s.express+" %"; copRangeFill(exp); copComputeSim(); copSave(); renderCopRecap(); });
   document.getElementById("copZone").querySelectorAll("[data-z]").forEach(b=>b.addEventListener("click",()=>{ s.zone=b.dataset.z; copSave(); renderCopSim(); renderCopRecap(); }));
   document.getElementById("copPromoBtn").addEventListener("click",copApplyPromo);
   document.getElementById("copPromo").addEventListener("keydown",e=>{ if(e.key==="Enter") copApplyPromo(); });

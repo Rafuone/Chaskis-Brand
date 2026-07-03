@@ -336,6 +336,36 @@
   .media-del{all:unset;cursor:pointer;color:var(--muted);font-size:17px;line-height:1;padding:0 5px;border-radius:5px}
   .media-del:hover{color:var(--danger);background:#fff}
   .media-formats{font-size:12px;color:var(--muted);margin:6px 0 0}
+  /* médiathèque : cartes riches (nom, format, dimensions, poids, texte alternatif) */
+  .mcard{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--panel);display:flex;flex-direction:column;transition:box-shadow .15s,transform .15s}
+  .mcard:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(40,32,60,.10)}
+  .mcard-thumb{all:unset;cursor:pointer;display:block;width:100%;aspect-ratio:4/3;background:var(--bg);border-bottom:1px solid var(--border)}
+  .mcard-thumb img,.mcard-thumb video{width:100%;height:100%;object-fit:contain;display:block;padding:6px;box-sizing:border-box}
+  .mcard-thumb:hover img,.mcard-thumb:hover video{opacity:.9}
+  .mcard-vid{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+  .mcard-vid svg{width:34px;height:34px}
+  .mcard-body{padding:9px 11px 11px;display:flex;flex-direction:column;gap:4px}
+  .mcard-name{font-size:12.5px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mcard-meta{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;min-height:14px}
+  .mcard-tags{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px}
+  .mcard-origin{font-size:10.5px;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:1px 8px}
+  .mcard-origin.up{color:var(--teal-d);border-color:#bfe6df;background:#eaf7f4}
+  .mcard-alt{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;border-radius:20px;padding:1px 8px}
+  .mcard-alt svg{width:11px;height:11px}
+  .mcard-alt.ok{color:#0F6E56;background:#E1F5EE}
+  .mcard-alt.miss{color:#9A6A15;background:#FBF0DD}
+  /* détail d'un média (modale) */
+  .md-prev{background:var(--bg);border:1px solid var(--border);border-radius:10px;height:200px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:14px}
+  .md-prev img,.md-prev video{max-width:100%;max-height:100%;object-fit:contain}
+  .md-vidph{color:var(--muted)}.md-vidph svg{width:44px;height:44px}
+  .md-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:15px}
+  .md-chip{display:inline-flex;flex-direction:column;gap:1px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:6px 11px}
+  .md-chip-k{font-size:10px;color:var(--muted)}
+  .md-chip-v{font-size:12.5px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+  .md-hint{font-weight:400;color:var(--muted)}
+  .md-actions{display:flex;align-items:center;gap:9px;margin-top:16px}
+  .md-del{color:var(--danger)}
+  .md-del svg{width:15px;height:15px}
 
   /* modules : chatbot / courses / stats */
   .row2{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:0 0 16px}
@@ -1993,6 +2023,15 @@
   </div>
 </div>
 
+<!-- médiathèque : détail / édition d'un média -->
+<div class="modal-bg" id="mediaDetailModal">
+  <div class="modal">
+    <button class="modal-x" id="mdClose" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <h3 style="padding-right:34px">Détail du média</h3>
+    <div id="mdBody"></div>
+  </div>
+</div>
+
 <!-- panneau Réglages (tiroir latéral) -->
 <div class="set-scrim" id="setScrim"></div>
 <aside class="set-drawer" id="setDrawer" aria-label="Réglages" aria-hidden="true">
@@ -2117,7 +2156,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.9.3" };
+const ADMIN_BUILD = { version: "0.9.4" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -2469,17 +2508,24 @@ function makeMediaInput(){
     if(!okType){ toast("Format non supporté (WebP, PNG, JPEG, SVG, MP4, WebM)"); return; }
     if(file.size > (isVid?MEDIA.vidMax:MEDIA.imgMax)){ toast((isVid?"Vidéo trop lourde (max 50 Mo)":"Image trop lourde (max 2 Mo)")); return; }
     if(isVid){
-      // POC local : on enregistre la référence ; le fichier ira sur le serveur à la publication
-      draft.media.push({ name:file.name, origin:"upload", kind:"video" });
+      // POC local : on enregistre la référence + les métadonnées ; le fichier ira sur le serveur à la publication
+      const entry={ name:file.name, origin:"upload", kind:"video", size:file.size, type:file.type, alt:"" };
+      draft.media.push(entry);
       save(); renderAllMedia(); updateDashboard();
       toast("Vidéo ajoutée (envoyée au serveur lors de la publication)");
+      const url=URL.createObjectURL(file); const v=document.createElement("video"); v.preload="metadata";
+      v.onloadedmetadata=()=>{ entry.w=v.videoWidth; entry.h=v.videoHeight; entry.dur=v.duration; URL.revokeObjectURL(url); save(); renderAllMedia(); };
+      v.onerror=()=>URL.revokeObjectURL(url); v.src=url;
       return;
     }
     const rd=new FileReader();
-    rd.onload=()=>{ const src=rd.result; draft.media.push({src,name:file.name,origin:"upload",kind:"image"});
+    rd.onload=()=>{ const src=rd.result; const entry={src,name:file.name,origin:"upload",kind:"image",size:file.size,type:file.type,alt:""}; draft.media.push(entry);
+      const fromPage = !mediaTarget;
       if(mediaTarget){ applyMedia(src); document.getElementById("mediaModalBg").classList.remove("show"); toast("Image importée"); }
       else { save(); toast("Image ajoutée à la médiathèque"); }
-      renderAllMedia(); updateDashboard(); };
+      renderAllMedia(); updateDashboard();
+      const im=new Image(); im.onload=()=>{ entry.w=im.naturalWidth; entry.h=im.naturalHeight; save(); renderAllMedia();
+        if(fromPage){ const mv=document.getElementById("view-media"); if(mv&&mv.classList.contains("on")) openMediaDetail(draft.media.indexOf(entry)); } }; im.src=src; };
     rd.readAsDataURL(file);
   });
   return inp;
@@ -2506,7 +2552,77 @@ function renderMediaInto(grid, pickable){
 }
 function renderAllMedia(){
   if(document.getElementById("mediaModalBg").classList.contains("show")) renderMediaInto(document.getElementById("mediaGrid"),true);
-  renderMediaInto(document.getElementById("mediaPageGrid"),false);
+  renderMediaPage();
+}
+
+/* ---- métadonnées des médias (format, dimensions, poids) + fiche détaillée ---- */
+function fmtBytes(b){ if(b==null) return "—"; if(b<1024) return b+" o"; if(b<1048576) return (b/1024).toFixed(b<10240?1:0)+" Ko"; return (b/1048576).toFixed(1)+" Mo"; }
+function fmtDur(s){ if(s==null) return null; s=Math.round(s); const m=Math.floor(s/60); return m+":"+String(s%60).padStart(2,"0"); }
+function mediaFormat(m){ const ext=((m.name||m.src||"").split("?")[0].split(".").pop()||"").toLowerCase();
+  const known={webp:"WEBP",png:"PNG",jpg:"JPG",jpeg:"JPG",svg:"SVG",gif:"GIF",avif:"AVIF",mp4:"MP4",webm:"WEBM",mov:"MOV"};
+  if(known[ext]) return known[ext];
+  let t=m.type||""; if(t && t.indexOf("octet-stream")<0){ return (t.split("/")[1]||"").toUpperCase().replace("SVG+XML","SVG").replace("JPEG","JPG"); }
+  return (ext&&ext.length<=4)?ext.toUpperCase():"—"; }
+function mediaDims(m){ return (m.w&&m.h)?(m.w+" × "+m.h+" px"):null; }
+function mediaSizeHint(m){ if(!m.w||!m.h||m.kind==="video") return null; const px=Math.max(m.w,m.h);
+  if(px<=80) return {t:"Icône",c:"#8a8c89"}; if(px<=500) return {t:"Petite",c:"#8a8c89"}; if(px<=1200) return {t:"Moyenne",c:"#0F6E56"}; if(px<=2400) return {t:"Grande",c:"#0F6E56"}; return {t:"Très grande",c:"#9A6A15"}; }
+const _mediaEnriching=new Set();
+let _mediaRerenderT=null;
+function scheduleMediaRerender(){ if(_mediaRerenderT) clearTimeout(_mediaRerenderT); _mediaRerenderT=setTimeout(()=>{ const v=document.getElementById("view-media"); if(v&&v.classList.contains("on")) renderMediaPage(); if(mediaDetailIdx!=null) renderMediaDetail(); },140); }
+function enrichMedia(m, cb){
+  const tasks=[];
+  if((!m.w||!m.h) && m.src){ tasks.push(new Promise(res=>{
+    if(m.kind==="video"){ const v=document.createElement("video"); v.preload="metadata"; v.onloadedmetadata=()=>{ m.w=v.videoWidth; m.h=v.videoHeight; m.dur=v.duration; res(); }; v.onerror=res; v.src=m.src; }
+    else { const im=new Image(); im.onload=()=>{ m.w=im.naturalWidth; m.h=im.naturalHeight; res(); }; im.onerror=res; im.src=m.src; } })); }
+  if(m.size==null && m.src){ if(m.src.indexOf("data:")===0){ const i=m.src.indexOf(","); m.size=i>=0?Math.round((m.src.length-i-1)*0.75):null; }
+    else tasks.push(fetch(m.src).then(r=>r.blob()).then(b=>{ m.size=b.size; if(!m.type) m.type=b.type; }).catch(()=>{})); }
+  if(!tasks.length){ if(cb) cb(); return; }
+  Promise.all(tasks).then(()=>{ save(); if(cb) cb(); });
+}
+const MD_CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+const MD_WARN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4m0 4h.01"/></svg>';
+const MD_VIDICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>';
+function renderMediaPage(){ const grid=document.getElementById("mediaPageGrid"); if(!grid) return; grid.innerHTML="";
+  if(!draft.media.length){ grid.innerHTML='<p class="hint" style="grid-column:1/-1">Aucun média pour l\'instant. Importez-en un.</p>'; return; }
+  draft.media.forEach((m,idx)=>{
+    const isVid=m.kind==="video";
+    const card=document.createElement("div"); card.className="mcard";
+    const thumb = isVid ? (m.src?'<video src="'+m.src+'" muted preload="metadata"></video>':'<div class="mcard-vid">'+MD_VIDICON+'</div>') : '<img src="'+m.src+'" alt="" loading="lazy">';
+    const metaLine=[mediaFormat(m), mediaDims(m), (m.size!=null?fmtBytes(m.size):null), (isVid?fmtDur(m.dur):null)].filter(Boolean).join(" · ");
+    const origin = isVid?"vidéo":(m.origin==="upload"?"importé":"site");
+    const altState = isVid ? '' : (m.alt?'<span class="mcard-alt ok" title="Texte alternatif défini">'+MD_CHECK+'alt</span>':'<span class="mcard-alt miss" title="Texte alternatif manquant">'+MD_WARN+'alt manquant</span>');
+    card.innerHTML='<button class="mcard-thumb" title="Voir et modifier les détails">'+thumb+'</button>'
+      +'<div class="mcard-body"><div class="mcard-name" title="'+escHtml(m.name||"")+'">'+escHtml(m.name||"sans nom")+'</div>'
+      +'<div class="mcard-meta">'+(metaLine||"…")+'</div>'
+      +'<div class="mcard-tags"><span class="mcard-origin '+(m.origin==="upload"?"up":"")+'">'+origin+'</span>'+altState+'</div></div>';
+    card.querySelector(".mcard-thumb").addEventListener("click",()=>openMediaDetail(idx));
+    grid.appendChild(card);
+    const key=m.src||m.name;
+    if((m.size==null||!m.w) && !_mediaEnriching.has(key)){ _mediaEnriching.add(key); enrichMedia(m,()=>{ _mediaEnriching.delete(key); scheduleMediaRerender(); }); }
+  });
+}
+let mediaDetailIdx=null;
+function openMediaDetail(idx){ mediaDetailIdx=idx; renderMediaDetail(); document.getElementById("mediaDetailModal").classList.add("show"); }
+function closeMediaDetail(){ document.getElementById("mediaDetailModal").classList.remove("show"); mediaDetailIdx=null; }
+function renderMediaDetail(){ if(mediaDetailIdx==null) return; const m=draft.media[mediaDetailIdx]; const b=document.getElementById("mdBody"); if(!m||!b){ closeMediaDetail(); return; }
+  const isVid=m.kind==="video";
+  const preview = isVid ? (m.src?'<video src="'+m.src+'" controls muted></video>':'<div class="md-vidph">'+MD_VIDICON+'</div>') : '<img src="'+m.src+'" alt="">';
+  const sh=mediaSizeHint(m);
+  const chips=[["Format",mediaFormat(m)],["Dimensions",mediaDims(m)||"…"],["Poids",m.size!=null?fmtBytes(m.size):"…"]];
+  if(isVid) chips.push(["Durée",fmtDur(m.dur)||"…"]);
+  b.innerHTML='<div class="md-prev">'+preview+'</div>'
+    +'<div class="md-chips">'+chips.map(c=>'<span class="md-chip"><span class="md-chip-k">'+c[0]+'</span><span class="md-chip-v">'+escHtml(String(c[1]))+'</span></span>').join("")
+      +(sh?'<span class="md-chip"><span class="md-chip-k">Taille</span><span class="md-chip-v" style="color:'+sh.c+'">'+sh.t+'</span></span>':'')+'</div>'
+    +'<div class="formf"><label>Nom du fichier</label><input id="mdName" value="'+escHtml(m.name||"")+'"></div>'
+    +(isVid?'':'<div class="formf" style="margin-bottom:2px"><label>Texte alternatif <span class="md-hint">décrit l\'image pour Google et les lecteurs d\'écran</span></label><input id="mdAlt" value="'+escHtml(m.alt||"")+'" placeholder="Ex. Coursier Chaskis remettant un colis"></div>')
+    +'<div class="md-actions"><span class="mcard-origin '+(m.origin==="upload"?"up":"")+'">'+(isVid?"vidéo":(m.origin==="upload"?"importé":"image du site"))+'</span><div style="flex:1"></div>'
+      +(m.origin==="upload"?'<button class="btn ghost md-del" id="mdDel"><i data-lucide="trash-2"></i>Supprimer</button>':'')
+      +'<button class="btn primary" id="mdOk">Terminé</button></div>';
+  const nm=document.getElementById("mdName"); if(nm) nm.addEventListener("input",()=>{ m.name=nm.value; save(); renderMediaPage(); });
+  const al=document.getElementById("mdAlt"); if(al) al.addEventListener("input",()=>{ m.alt=al.value; save(); renderMediaPage(); });
+  const dl=document.getElementById("mdDel"); if(dl) dl.addEventListener("click",()=>{ const i=mediaDetailIdx; closeMediaDetail(); deleteMediaAt(i); });
+  const ok=document.getElementById("mdOk"); if(ok) ok.addEventListener("click",closeMediaDetail);
+  refreshIcons();
 }
 
 /* ---- sections ---- */
@@ -3735,6 +3851,8 @@ document.getElementById("mediaClose").addEventListener("click",()=> document.get
 document.getElementById("mediaImport").addEventListener("click",()=> mediaInput.click());
 document.getElementById("mediaModalBg").addEventListener("click",(e)=>{ if(e.target.id==="mediaModalBg") document.getElementById("mediaModalBg").classList.remove("show"); });
 document.getElementById("mediaPageImport").addEventListener("click",()=>{ mediaTarget=null; mediaInput.click(); });
+document.getElementById("mdClose").addEventListener("click",closeMediaDetail);
+document.getElementById("mediaDetailModal").addEventListener("click",(e)=>{ if(e.target.id==="mediaDetailModal") closeMediaDetail(); });
 
 /* publish */
 const pubBg=document.getElementById("pubModalBg");

@@ -2336,7 +2336,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.10.2" };
+const ADMIN_BUILD = { version: "0.10.3" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -2488,7 +2488,7 @@ const EDIT_CSS = `
   [data-ckimg]:hover{filter:brightness(.78)}
   [data-ckbg]{cursor:pointer;transition:filter .15s}
   [data-ckbg]:hover{filter:brightness(.82)}
-  .ck-img-tag{position:absolute;background:#6B5BCC;color:#fff;font:600 11px/1 -apple-system,sans-serif;padding:5px 8px;border-radius:6px;display:flex;gap:5px;align-items:center;pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
+  .ck-img-tag{position:absolute;background:#6B5BCC;color:#fff;font:600 11px/1 'Urbanist',sans-serif;padding:5px 8px;border-radius:6px;display:flex;gap:5px;align-items:center;pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
   .ck-sec{position:relative}
   .ck-sec-tb{position:absolute;top:8px;right:8px;display:flex;gap:4px;z-index:9997;opacity:0;transition:opacity .12s;pointer-events:none}
   .ck-sec:hover > .ck-sec-tb{opacity:1;pointer-events:auto}
@@ -2499,7 +2499,7 @@ const EDIT_CSS = `
   .ck-hidden{position:relative;filter:grayscale(1) opacity(.45)}
   .ck-hidden > *{pointer-events:none!important}
   .ck-hidden-ov{all:unset;box-sizing:border-box;position:absolute;inset:0;z-index:9996;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto!important}
-  .ck-hidden-ov > span{display:inline-flex;align-items:center;gap:7px;background:#2C2052;color:#fff;font:700 12px/1.2 -apple-system,BlinkMacSystemFont,sans-serif;padding:10px 15px;border-radius:9px;box-shadow:0 4px 16px rgba(0,0,0,.28)}
+  .ck-hidden-ov > span{display:inline-flex;align-items:center;gap:7px;background:#2C2052;color:#fff;font:700 12px/1.2 'Urbanist',sans-serif;padding:10px 15px;border-radius:9px;box-shadow:0 4px 16px rgba(0,0,0,.28)}
   .ck-hidden-ov:hover > span{background:#6B5BCC}
   .ck-preview .ck-sec-tb,.ck-preview .ck-hidden-ov,.ck-preview .ck-img-tag{display:none!important}
   .ck-preview .ck-hidden{display:none!important}
@@ -2509,7 +2509,7 @@ const EDIT_CSS = `
   .ck-li-x{all:unset;box-sizing:border-box;position:absolute;top:2px;right:-8px;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid #e0dcd2;box-shadow:0 2px 6px rgba(40,32,60,.18);display:none;align-items:center;justify-content:center;color:#B23B3B;cursor:pointer;z-index:9995}
   .ck-li:hover > .ck-li-x{display:flex}
   .ck-li-x svg{width:11px;height:11px}
-  .ck-list-add{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;gap:5px;margin-top:10px;font:600 12px/1 -apple-system,BlinkMacSystemFont,sans-serif;color:#6B5BCC;cursor:pointer;padding:6px 11px;border:1px dashed #b7aee6;border-radius:8px;background:rgba(107,91,204,.05)}
+  .ck-list-add{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;gap:5px;margin-top:10px;font:600 12px/1 'Urbanist',sans-serif;color:#5A46C0;cursor:pointer;padding:6px 12px;border:1px dashed #b7aee6;border-radius:8px;background:rgba(107,91,204,.06)}
   .ck-list-add:hover{background:rgba(107,91,204,.12)}
   .ck-list-add span{font-size:15px;line-height:1}
   .ck-preview .ck-li-x,.ck-preview .ck-list-add{display:none!important}
@@ -3061,7 +3061,7 @@ function initSecDrag(item, id){
     if(e.button!==0 || (e.target.closest && e.target.closest("button"))) return;
     const sx=e.clientX, sy=e.clientY; let started=false;
     const move=(ev)=>{ if(!started){ if(Math.abs(ev.clientY-sy)<4 && Math.abs(ev.clientX-sx)<4) return; started=true; beginSecDrag(item, id, sy); } secDragMove(ev); };
-    const up=(ev)=>{ document.removeEventListener("pointermove",move); document.removeEventListener("pointerup",up); if(started){ ev.preventDefault(); endSecDrag(); } };
+    const up=(ev)=>{ document.removeEventListener("pointermove",move); document.removeEventListener("pointerup",up); if(started){ ev.preventDefault(); endSecDrag(); } else { scrollToSec(id); } };
     document.addEventListener("pointermove",move); document.addEventListener("pointerup",up);
   });
 }
@@ -3158,7 +3158,7 @@ function renderSecList(){
     item.querySelector('[data-a="up"]').addEventListener("click",()=>moveSection(id,-1));
     item.querySelector('[data-a="down"]').addEventListener("click",()=>moveSection(id,1));
     item.querySelector('[data-a="eye"]').addEventListener("click",()=>toggleSection(id,!isHidden));
-    item.querySelector(".nm").addEventListener("click",()=>scrollToSec(id));
+    /* le clic (tap sans drag) sur toute la ligne défile vers la section, géré dans initSecDrag */
     const sp=item.querySelector('[data-a="special"]'); if(sp) sp.addEventListener("click",(e)=>{ e.stopPropagation(); openSpecialEditor(m.special); });
     item.dataset.id=id; initSecDrag(item, id);
     wrap.appendChild(item);
@@ -3477,6 +3477,10 @@ function showCoachStep(i){ if(!_coach) return; _coach.i=i; const step=_coach.ste
     if(DOC && !DOC.__coachScroll){ DOC.__coachScroll=1; DOC.addEventListener("scroll", coachReposition, true); }
     renderCoachPop(step); positionCoach(r);
     requestAnimationFrame(()=>{ if(_coach){ _coach.hole.classList.add("show"); _coach.pop.classList.add("show"); } });
+    /* le layout bouge après coup (repli auto de la sidebar, scroll) : on recale à plusieurs reprises pour rester aligné quelle que soit la taille de fenêtre */
+    [90,260,520,900].forEach(d=>setTimeout(()=>{ if(_coach) coachReposition(); }, d));
+    /* sélectionne tout le texte de la cible une fois qu'elle est éditable (après initEditMode) : on voit ce qui va changer et on peut retaper */
+    setTimeout(()=>{ if(_coach) selectCoachTarget(step); }, 320);
   };
   attempt();
 }
@@ -3499,6 +3503,9 @@ function positionCoach(r){ if(!_coach) return; const pad=7, gap=12, hole=_coach.
   pop.style.top=top+"px"; pop.style.left=left+"px";
 }
 function coachReposition(){ if(!_coach) return; const r=coachTargetRect(_coach.steps[_coach.i], false); if(r) positionCoach(r); }
+function selectCoachTarget(step){ if(!step||!step.sel||!DOC||typeof WIN==="undefined"||!WIN) return; try{ const el=DOC.querySelector(step.sel); if(!el||!el.isContentEditable) return;
+  /* pour un élément éditable d'un bloc (paragraphe), on donne le focus + on sélectionne tout : prêt à retaper. Le titre est découpé en mots, on se contente du spotlight. */
+  el.focus(); const rng=DOC.createRange(); rng.selectNodeContents(el); const sel=WIN.getSelection(); sel.removeAllRanges(); sel.addRange(rng); }catch(e){} }
 function coachKey(e){ if(e.key==="Escape"){ e.preventDefault(); endCoach(); } }
 function endCoach(){ if(!_coach) return; if(_coach._t) clearTimeout(_coach._t);
   window.removeEventListener("resize", coachReposition); window.removeEventListener("keydown", coachKey, true);

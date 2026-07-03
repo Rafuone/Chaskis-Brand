@@ -184,6 +184,15 @@
   .sec-cle svg{width:9px;height:9px}
   .sec-special{all:unset;box-sizing:border-box;cursor:pointer;font-size:9.5px;font-weight:600;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:1px 7px}
   .sec-special:hover{color:var(--ink);border-color:var(--border-2)}
+  .sec-note{display:flex;gap:9px;align-items:flex-start;font-size:12px;color:var(--ink-soft);line-height:1.5;padding:4px 2px}
+  .sec-note svg{width:15px;height:15px;color:var(--muted);flex-shrink:0;margin-top:1px}
+  .sec-note b{color:var(--ink);font-weight:700}
+  .btn.ghost.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .btn.ghost.on svg{color:#fff}
+  .sec-item[draggable="true"]{cursor:grab}
+  .sec-item.dragging{opacity:.4;cursor:grabbing}
+  .sec-item.drop-before{box-shadow:inset 0 3px 0 var(--teal)}
+  .sec-item.drop-after{box-shadow:inset 0 -3px 0 var(--teal)}
   .tipbox{background:#fff8e8;border:1px solid #f0e2bd;border-radius:10px;padding:11px 12px;font-size:12.5px;line-height:1.55;color:#7a6320;display:flex;gap:9px}
   .tipbox svg{width:16px;height:16px;flex-shrink:0;margin-top:1px;color:#c79a1e}
 
@@ -1384,7 +1393,7 @@
       <!-- ===== Editor ===== -->
       <section class="view" id="view-editor">
         <div class="subbar">
-          <span class="lbl">Page d'accueil</span>
+          <select id="editPageSel" class="ep-sel" aria-label="Page à modifier"></select>
           <div class="seg" id="device">
             <button data-dev="desktop" class="on" title="Bureau"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></button>
             <button data-dev="mobile" title="Mobile"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></button>
@@ -1394,6 +1403,8 @@
             <button data-lang="en">EN</button>
           </div>
           <div class="tb-spacer"></div>
+          <button class="btn ghost" id="previewBtn" title="Voir la page comme vos visiteurs (sans les outils d'édition)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-8 10-8 10 8 10 8-3 8-10 8-10-8-10-8Z"/><circle cx="12" cy="12" r="3"/></svg><span class="pv-txt">Prévisualiser</span></button>
+          <button class="btn ghost" id="compareBtn" title="Ouvrir la version actuellement en ligne, pour comparer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>Version en ligne</button>
           <button class="ch-chip" id="contentHealth" title="L'effet de vos textes sur votre visibilité Google, en direct. Cliquez pour l'analyse complète."></button>
           <button class="btn ghost" id="resetBtn" title="Annuler les modifications du brouillon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Réinitialiser</button>
@@ -2021,6 +2032,34 @@ const SEC_META={
 };
 const SEC_SPECIAL={ logos:"Ces logos sont des SVG calibrés pour le design. En ajouter demande un fichier SVG à la bonne taille et couleur : à gérer avec Gamma Project pour rester nickel.", avis:"Un vrai avis, c'est une photo, une note, un nom, une date. Ça se gère dans un espace dédié (à venir), pas en tapant dans le texte.", simulateur:"Le simulateur calcule des prix : changer sa logique ou vos tarifs se fait dans le projet, pas en direct ici. Le texte autour reste modifiable." };
 function phaseInfo(key){ return STRUCT_PHASES.find(p=>p.key===key)||STRUCT_PHASES[0]; }
+/* Édition multi-pages : on peut charger n'importe quelle page dans l'éditeur.
+   Textes et images sont éditables partout ; la gestion des sections (masquer/réordonner
+   + repères stratégiques) est complète sur l'Accueil. */
+const EDIT_PAGES=[
+  {key:"accueil", file:"index.html", label:"Accueil"},
+  {key:"mobilite", file:"mobilite.html", label:"Mobilité"},
+  {key:"recrutement", file:"postuler.html", label:"Recrutement"},
+  {key:"commander", file:"commander.html", label:"Commander"},
+  {key:"suivi", file:"app.html", label:"Suivi de commande"},
+  {key:"dashboard", file:"dashboard.html", label:"Tableau de bord"}
+];
+let editPage="accueil", previewOn=false;
+function currentEditPage(){ return EDIT_PAGES.find(x=>x.key===editPage)||EDIT_PAGES[0]; }
+function currentPageFile(){ return "../"+currentEditPage().file; }
+function switchEditPage(key){
+  const p=EDIT_PAGES.find(x=>x.key===key); if(!p||key===editPage) return;
+  editPage=key; previewOn=false;
+  const l=document.getElementById("loader"); if(l) l.style.display="";
+  if(typeof iframe!=="undefined" && iframe){ iframe.src="../"+p.file; }
+}
+function togglePreview(force){
+  previewOn=(force!=null)?!!force:!previewOn;
+  if(DOC){ DOC.documentElement.classList.toggle("ck-preview", previewOn);
+    DOC.querySelectorAll("[data-ckedit]").forEach(el=> el.setAttribute("contenteditable", previewOn?"false":"true")); }
+  const b=document.getElementById("previewBtn"); if(b){ b.classList.toggle("on", previewOn);
+    const t=b.querySelector(".pv-txt"); if(t) t.textContent=previewOn?"Quitter l'aperçu":"Prévisualiser"; }
+}
+function openOnline(){ try{ window.open(currentPageFile(), "_blank"); }catch(e){} }
 const PROMO_PARTS = [
   { key:"promo.badge", sel:".promo-bar-badge" },
   { key:"promo.text", sel:".promo-bar-text" },
@@ -2082,7 +2121,7 @@ iframe.addEventListener("load", ()=>{
   }
 });
 let iframeLoaded=false;
-function ensureEditor(){ if(!iframeLoaded){ iframeLoaded=true; iframe.src="../index.html"; } }
+function ensureEditor(){ if(!iframeLoaded){ iframeLoaded=true; iframe.src=currentPageFile(); } }
 
 /* seed the media library from the static HTML (no heavy site load needed) */
 async function seedMediaStatic(){
@@ -2128,6 +2167,10 @@ const EDIT_CSS = `
   .ck-hidden-ov{all:unset;box-sizing:border-box;position:absolute;inset:0;z-index:9996;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto!important}
   .ck-hidden-ov > span{display:inline-flex;align-items:center;gap:7px;background:#2C2052;color:#fff;font:700 12px/1.2 -apple-system,BlinkMacSystemFont,sans-serif;padding:10px 15px;border-radius:9px;box-shadow:0 4px 16px rgba(0,0,0,.28)}
   .ck-hidden-ov:hover > span{background:#6B5BCC}
+  .ck-preview .ck-sec-tb,.ck-preview .ck-hidden-ov,.ck-preview .ck-img-tag{display:none!important}
+  .ck-preview .ck-hidden{display:none!important}
+  .ck-preview [data-ckedit]{outline:none!important;background:none!important;box-shadow:none!important;cursor:auto!important}
+  .ck-preview [data-ckimg]:hover,.ck-preview [data-ckbg]:hover{filter:none!important}
 `;
 
 function initEditMode(){
@@ -2139,6 +2182,7 @@ function initEditMode(){
   killNavigation();
   markTexts(); markPromo(); markImages(); markBg(); seedMedia(); renderContentHealth();
   setupSections(); applyDraft(); renderSecList(); refreshSecToolbars();
+  togglePreview(false);
   loader.style.display="none";
   updateDashboard();
 }
@@ -2403,6 +2447,12 @@ function moveSection(id,dir){
   if(dir<0) a.parentNode.insertBefore(a,b); else b.parentNode.insertBefore(b,a);
   draft.order=currentOrder(); markDirty(); renderSecList(); refreshSecToolbars(); orderGuidanceCheck();
 }
+function reorderSection(dragId, targetId, before){
+  if(!dragId||dragId===targetId) return;
+  const a=secEl(dragId), t=secEl(targetId); if(!a||!t) return;
+  if(before) t.parentNode.insertBefore(a, t); else t.parentNode.insertBefore(a, t.nextSibling);
+  draft.order=currentOrder(); markDirty(); renderSecList(); refreshSecToolbars(); orderGuidanceCheck();
+}
 function sectionIdOf(el){ const d=SECTION_DEFS.find(s=>secEl(s.id)===el); return d?d.id:null; }
 function applySecHiddenVisual(el, hide){
   if(!el) return;
@@ -2448,6 +2498,7 @@ function applyTextForLang(){
 /* ---- editor right panel: sections ---- */
 function renderSecList(){
   const wrap=document.getElementById("secList"); wrap.innerHTML="";
+  if(editPage!=="accueil"){ wrap.innerHTML='<div class="sec-note"><i data-lucide="info"></i><span>Sur cette page, vous modifiez les <b>textes</b> et les <b>images</b> directement en cliquant dessus. La réorganisation et le masquage des sections sont disponibles sur l\'Accueil.</span></div>'; refreshIcons(); return; }
   const order=(DOC?currentOrder():SECTION_DEFS.map(s=>s.id));
   const hidden=new Set(draft.hidden);
   order.forEach((id,idx)=>{
@@ -2470,6 +2521,13 @@ function renderSecList(){
     item.querySelector('[data-a="eye"]').addEventListener("click",()=>toggleSection(id,!isHidden));
     item.querySelector(".nm").addEventListener("click",()=>scrollToSec(id));
     const sp=item.querySelector('[data-a="special"]'); if(sp) sp.addEventListener("click",(e)=>{ e.stopPropagation(); showContentGuide("neutral", SEC_SPECIAL[m.special]||""); });
+    /* glisser-déposer pour réordonner */
+    item.setAttribute("draggable","true"); item.dataset.id=id;
+    item.addEventListener("dragstart",(e)=>{ e.dataTransfer.setData("text/plain",id); e.dataTransfer.effectAllowed="move"; setTimeout(()=>item.classList.add("dragging"),0); });
+    item.addEventListener("dragend",()=>{ item.classList.remove("dragging"); wrap.querySelectorAll(".sec-item").forEach(x=>x.classList.remove("drop-before","drop-after")); });
+    item.addEventListener("dragover",(e)=>{ e.preventDefault(); e.dataTransfer.dropEffect="move"; const r=item.getBoundingClientRect(), before=e.clientY < r.top+r.height/2; item.classList.toggle("drop-before",before); item.classList.toggle("drop-after",!before); });
+    item.addEventListener("dragleave",()=>item.classList.remove("drop-before","drop-after"));
+    item.addEventListener("drop",(e)=>{ e.preventDefault(); const dragId=e.dataTransfer.getData("text/plain"), r=item.getBoundingClientRect(), before=e.clientY < r.top+r.height/2; item.classList.remove("drop-before","drop-after"); reorderSection(dragId, id, before); });
     wrap.appendChild(item);
   });
 }
@@ -3457,7 +3515,14 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
   draft=blankDraft(); localStorage.removeItem(STORE_KEY); setSaved();
   reloadIframe("Rechargement…"); updateDashboard();
 });
-function reloadIframe(msg){ loader.style.display="flex"; loader.innerHTML='<div class="spin"></div>'+(msg||"Chargement…"); iframe.src="../index.html"; }
+function reloadIframe(msg){ loader.style.display="flex"; loader.innerHTML='<div class="spin"></div>'+(msg||"Chargement…"); iframe.src=currentPageFile(); }
+(function wireEditPages(){
+  const sel=document.getElementById("editPageSel");
+  if(sel){ sel.innerHTML=EDIT_PAGES.map(p=>'<option value="'+p.key+'">'+p.label+'</option>').join(""); sel.value=editPage;
+    enhanceSelect(sel); sel.addEventListener("change",e=>switchEditPage(e.target.value)); }
+  const pv=document.getElementById("previewBtn"); if(pv) pv.addEventListener("click",()=>togglePreview());
+  const cmp=document.getElementById("compareBtn"); if(cmp) cmp.addEventListener("click",openOnline);
+})();
 
 /* media buttons */
 document.getElementById("mediaClose").addEventListener("click",()=> document.getElementById("mediaModalBg").classList.remove("show"));

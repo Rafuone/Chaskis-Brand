@@ -336,6 +336,21 @@
   .media-del{all:unset;cursor:pointer;color:var(--muted);font-size:17px;line-height:1;padding:0 5px;border-radius:5px}
   .media-del:hover{color:var(--danger);background:#fff}
   .media-formats{font-size:12px;color:var(--muted);margin:6px 0 0}
+  .media-import{display:flex;align-items:center;gap:16px;width:100%;box-sizing:border-box;text-align:left;margin:14px 0 18px;padding:16px 18px;border:1.5px dashed var(--border-2);border-radius:14px;background:var(--panel);cursor:pointer;transition:border-color .15s,background .15s}
+  .media-import:hover,.media-import.drag{border-color:var(--teal);background:#f4fbf9}
+  .media-import.drag{border-style:solid}
+  .mi-ic{width:46px;height:46px;border-radius:12px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;background:#e1f5ee;color:var(--teal-d)}
+  .mi-ic svg{width:23px;height:23px}
+  .mi-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+  .mi-t{font-size:14.5px;font-weight:700;color:var(--ink)}
+  .mi-s{font-size:12px;color:var(--muted);line-height:1.5}
+  .mi-btn{flex-shrink:0;pointer-events:none}
+  .mi-btn svg{width:15px;height:15px}
+  @media(max-width:640px){.media-import{flex-direction:column;align-items:flex-start;gap:12px}.mi-btn{align-self:stretch;justify-content:center}}
+  .mcard-thumb{position:relative}
+  .mcard-type{position:absolute;top:7px;left:7px;width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.94);display:inline-flex;align-items:center;justify-content:center;color:var(--ink-soft);box-shadow:0 1px 3px rgba(20,16,38,.14)}
+  .mcard-type.vid{color:var(--purple)}
+  .mcard-type svg{width:13px;height:13px}
   /* médiathèque : cartes riches (nom, format, dimensions, poids, texte alternatif) */
   .mcard{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--panel);display:flex;flex-direction:column;transition:box-shadow .15s,transform .15s}
   .mcard:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(40,32,60,.10)}
@@ -1748,11 +1763,15 @@
 
       <!-- ===== Media ===== -->
       <section class="view scroll" id="view-media">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-          <div><h1 class="pg-h">Médiathèque</h1><p class="pg-sub">Toutes les images du site. Importez-en, réutilisez-les, revenez en arrière.</p></div>
-          <button class="btn primary" id="mediaPageImport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M20 16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/></svg>Importer</button>
+        <div class="pan-head" style="align-items:flex-start">
+          <div><h1 class="pg-h">Médiathèque</h1><p class="pg-sub" style="margin-bottom:0">Vos images et vos vidéos : importez-les, réutilisez-les, revenez en arrière.</p></div>
+          <span class="hint" id="mediaCount" style="margin:0"></span>
         </div>
-        <p class="media-formats">Formats acceptés : WebP, PNG, JPEG, SVG (max 2 Mo par image) et vidéos MP4, WebM (max 50 Mo). Le SVG donne la meilleure qualité pour les logos.</p>
+        <div class="media-import" id="mediaImportZone" role="button" tabindex="0" aria-label="Importer une image ou une vidéo">
+          <span class="mi-ic"><i data-lucide="upload-cloud"></i></span>
+          <span class="mi-tx"><span class="mi-t">Importer une image ou une vidéo</span><span class="mi-s">Glissez un fichier ici, ou cliquez. Images WebP, PNG, JPEG, SVG (max 2 Mo) · Vidéos MP4, WebM (max 50 Mo). Le SVG donne le meilleur rendu pour les logos.</span></span>
+          <span class="btn primary mi-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M20 16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/></svg>Choisir un fichier</span>
+        </div>
         <div class="mpg" id="mediaPageGrid"></div>
       </section>
 
@@ -2336,7 +2355,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.10.3" };
+const ADMIN_BUILD = { version: "0.10.4" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -2686,37 +2705,38 @@ function applyMedia(src){
 }
 function pickMedia(src){ if(!mediaTarget){ return; } applyMedia(src); document.getElementById("mediaModalBg").classList.remove("show"); toast("Image mise à jour"); }
 function deleteMediaAt(i){ draft.media.splice(i,1); save(); renderAllMedia(); updateDashboard(); }
+function importMediaFile(file){
+  if(!file) return;
+  const isVid=file.type.startsWith("video/");
+  const okType = isVid ? MEDIA.vidTypes.includes(file.type) : MEDIA.imgTypes.includes(file.type);
+  if(!okType){ toast("Format non supporté (WebP, PNG, JPEG, SVG, MP4, WebM)"); return; }
+  if(file.size > (isVid?MEDIA.vidMax:MEDIA.imgMax)){ toast((isVid?"Vidéo trop lourde (max 50 Mo)":"Image trop lourde (max 2 Mo)")); return; }
+  if(isVid){
+    // POC local : on enregistre la référence + les métadonnées ; le fichier ira sur le serveur à la publication
+    const entry={ name:file.name, origin:"upload", kind:"video", size:file.size, type:file.type, alt:"" };
+    draft.media.push(entry);
+    save(); renderAllMedia(); updateDashboard();
+    toast("Vidéo ajoutée (envoyée au serveur lors de la publication)");
+    const url=URL.createObjectURL(file); const v=document.createElement("video"); v.preload="metadata";
+    v.onloadedmetadata=()=>{ entry.w=v.videoWidth; entry.h=v.videoHeight; entry.dur=v.duration; URL.revokeObjectURL(url); save(); renderAllMedia(); };
+    v.onerror=()=>URL.revokeObjectURL(url); v.src=url;
+    return;
+  }
+  const rd=new FileReader();
+  rd.onload=()=>{ const src=rd.result; const entry={src,name:file.name,origin:"upload",kind:"image",size:file.size,type:file.type,alt:""}; draft.media.push(entry);
+    const fromPage = !mediaTarget;
+    if(mediaTarget){ applyMedia(src); document.getElementById("mediaModalBg").classList.remove("show"); toast("Image importée"); }
+    else { save(); toast("Image ajoutée à la médiathèque"); }
+    renderAllMedia(); updateDashboard();
+    const im=new Image(); im.onload=()=>{ entry.w=im.naturalWidth; entry.h=im.naturalHeight; save(); renderAllMedia();
+      if(fromPage){ const mv=document.getElementById("view-media"); if(mv&&mv.classList.contains("on")) openMediaDetail(draft.media.indexOf(entry)); } }; im.src=src; };
+  rd.readAsDataURL(file);
+}
 function makeMediaInput(){
   const inp=document.createElement("input"); inp.type="file";
   inp.accept="image/webp,image/png,image/jpeg,image/svg+xml,video/mp4,video/webm";
   inp.style.display="none"; document.body.appendChild(inp);
-  inp.addEventListener("change",()=>{
-    const f=inp.files&&inp.files[0]; if(!f) return; const file=f; inp.value="";
-    const isVid=file.type.startsWith("video/");
-    const okType = isVid ? MEDIA.vidTypes.includes(file.type) : MEDIA.imgTypes.includes(file.type);
-    if(!okType){ toast("Format non supporté (WebP, PNG, JPEG, SVG, MP4, WebM)"); return; }
-    if(file.size > (isVid?MEDIA.vidMax:MEDIA.imgMax)){ toast((isVid?"Vidéo trop lourde (max 50 Mo)":"Image trop lourde (max 2 Mo)")); return; }
-    if(isVid){
-      // POC local : on enregistre la référence + les métadonnées ; le fichier ira sur le serveur à la publication
-      const entry={ name:file.name, origin:"upload", kind:"video", size:file.size, type:file.type, alt:"" };
-      draft.media.push(entry);
-      save(); renderAllMedia(); updateDashboard();
-      toast("Vidéo ajoutée (envoyée au serveur lors de la publication)");
-      const url=URL.createObjectURL(file); const v=document.createElement("video"); v.preload="metadata";
-      v.onloadedmetadata=()=>{ entry.w=v.videoWidth; entry.h=v.videoHeight; entry.dur=v.duration; URL.revokeObjectURL(url); save(); renderAllMedia(); };
-      v.onerror=()=>URL.revokeObjectURL(url); v.src=url;
-      return;
-    }
-    const rd=new FileReader();
-    rd.onload=()=>{ const src=rd.result; const entry={src,name:file.name,origin:"upload",kind:"image",size:file.size,type:file.type,alt:""}; draft.media.push(entry);
-      const fromPage = !mediaTarget;
-      if(mediaTarget){ applyMedia(src); document.getElementById("mediaModalBg").classList.remove("show"); toast("Image importée"); }
-      else { save(); toast("Image ajoutée à la médiathèque"); }
-      renderAllMedia(); updateDashboard();
-      const im=new Image(); im.onload=()=>{ entry.w=im.naturalWidth; entry.h=im.naturalHeight; save(); renderAllMedia();
-        if(fromPage){ const mv=document.getElementById("view-media"); if(mv&&mv.classList.contains("on")) openMediaDetail(draft.media.indexOf(entry)); } }; im.src=src; };
-    rd.readAsDataURL(file);
-  });
+  inp.addEventListener("change",()=>{ const f=inp.files&&inp.files[0]; inp.value=""; importMediaFile(f); });
   return inp;
 }
 function renderMediaInto(grid, pickable){
@@ -2779,12 +2799,14 @@ function updateMediaCard(idx){ const grid=document.getElementById("mediaPageGrid
   const nm=card.querySelector(".mcard-name"); if(nm){ nm.textContent=m.name||"sans nom"; nm.title=m.name||""; }
   const tags=card.querySelector(".mcard-tags"); if(tags) tags.innerHTML='<span class="mcard-origin '+(m.origin==="upload"?"up":"")+'">'+(m.kind==="video"?"vidéo":(m.origin==="upload"?"importé":"site"))+'</span>'+mediaAltBadge(m); }
 function renderMediaPage(){ const grid=document.getElementById("mediaPageGrid"); if(!grid) return; grid.innerHTML="";
-  if(!draft.media.length){ grid.innerHTML='<p class="hint" style="grid-column:1/-1">Aucun média pour l\'instant. Importez-en un.</p>'; return; }
+  const cnt=document.getElementById("mediaCount"); if(cnt) cnt.textContent=draft.media.length?(draft.media.length+" élément"+(draft.media.length>1?"s":"")):"";
+  if(!draft.media.length){ grid.innerHTML='<p class="hint" style="grid-column:1/-1">Aucun média pour l\'instant. Importez-en un ci-dessus.</p>'; return; }
   draft.media.forEach((m,idx)=>{
     const isVid=m.kind==="video";
     const card=document.createElement("div"); card.className="mcard"; card.setAttribute("data-idx",idx);
     const thumb = isVid ? (m.src?'<video src="'+m.src+'" muted preload="metadata"></video>':'<div class="mcard-vid">'+MD_VIDICON+'</div>') : '<img src="'+m.src+'" alt="" loading="lazy">';
-    card.innerHTML='<button class="mcard-thumb" title="Voir et modifier les détails">'+thumb+'</button>'
+    const typeBadge = isVid ? '<span class="mcard-type vid" title="Vidéo"><i data-lucide="video"></i></span>' : '<span class="mcard-type" title="Image"><i data-lucide="image"></i></span>';
+    card.innerHTML='<button class="mcard-thumb" title="Voir et modifier les détails">'+typeBadge+thumb+'</button>'
       +'<div class="mcard-body"><div class="mcard-name" title="'+escHtml(m.name||"")+'">'+escHtml(m.name||"sans nom")+'</div>'
       +'<div class="mcard-meta">'+mediaMetaLine(m)+'</div>'
       +'<div class="mcard-tags"><span class="mcard-origin '+(m.origin==="upload"?"up":"")+'">'+(isVid?"vidéo":(m.origin==="upload"?"importé":"site"))+'</span>'+mediaAltBadge(m)+'</div></div>';
@@ -2793,6 +2815,7 @@ function renderMediaPage(){ const grid=document.getElementById("mediaPageGrid");
     const key=m.src||m.name;
     if((m.size==null||!m.w) && !_mediaEnriching.has(key)){ _mediaEnriching.add(key); enrichMedia(m,()=>{ _mediaEnriching.delete(key); updateMediaCard(idx); if(mediaDetailIdx===idx) renderMediaDetail(); }); }
   });
+  refreshIcons();
 }
 let mediaDetailIdx=null;
 function openMediaDetail(idx){ mediaDetailIdx=idx; renderMediaDetail(); document.getElementById("mediaDetailModal").classList.add("show"); }
@@ -4324,7 +4347,14 @@ function reloadIframe(msg){ loader.style.display="flex"; loader.innerHTML='<div 
 document.getElementById("mediaClose").addEventListener("click",()=> document.getElementById("mediaModalBg").classList.remove("show"));
 document.getElementById("mediaImport").addEventListener("click",()=> mediaInput.click());
 document.getElementById("mediaModalBg").addEventListener("click",(e)=>{ if(e.target.id==="mediaModalBg") document.getElementById("mediaModalBg").classList.remove("show"); });
-document.getElementById("mediaPageImport").addEventListener("click",()=>{ mediaTarget=null; mediaInput.click(); });
+(function(){ const zone=document.getElementById("mediaImportZone"); if(!zone) return;
+  const openPick=()=>{ mediaTarget=null; mediaInput.click(); };
+  zone.addEventListener("click",openPick);
+  zone.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openPick(); } });
+  ["dragenter","dragover"].forEach(ev=>zone.addEventListener(ev,e=>{ e.preventDefault(); zone.classList.add("drag"); }));
+  ["dragleave","dragend"].forEach(ev=>zone.addEventListener(ev,e=>{ e.preventDefault(); zone.classList.remove("drag"); }));
+  zone.addEventListener("drop",e=>{ e.preventDefault(); zone.classList.remove("drag"); mediaTarget=null; const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(f) importMediaFile(f); });
+})();
 document.getElementById("mdClose").addEventListener("click",closeMediaDetail);
 document.getElementById("mediaDetailModal").addEventListener("click",(e)=>{ if(e.target.id==="mediaDetailModal") closeMediaDetail(); });
 document.getElementById("specClose").addEventListener("click",closeSpec);

@@ -176,6 +176,14 @@
   .sec-item.hidden .nm{font-weight:500;color:var(--muted)}
   .sec-item .eye{all:unset;color:var(--muted);display:flex;padding:3px;border-radius:6px}
   .sec-item .eye:hover{background:var(--bg);color:var(--ink)}
+  .sec-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+  .sec-item .sec-tx .nm{flex:none}
+  .sec-tags{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+  .sec-ph{font-size:9.5px;font-weight:700;border-radius:20px;padding:1px 7px;white-space:nowrap}
+  .sec-cle{font-size:9.5px;font-weight:700;color:#9A6A15;background:#FBF0DD;border-radius:20px;padding:1px 7px;display:inline-flex;align-items:center;gap:3px}
+  .sec-cle svg{width:9px;height:9px}
+  .sec-special{all:unset;box-sizing:border-box;cursor:pointer;font-size:9.5px;font-weight:600;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:1px 7px}
+  .sec-special:hover{color:var(--ink);border-color:var(--border-2)}
   .tipbox{background:#fff8e8;border:1px solid #f0e2bd;border-radius:10px;padding:11px 12px;font-size:12.5px;line-height:1.55;color:#7a6320;display:flex;gap:9px}
   .tipbox svg{width:16px;height:16px;flex-shrink:0;margin-top:1px;color:#c79a1e}
 
@@ -419,7 +427,8 @@
   .struct-note > svg{width:17px;height:17px;color:var(--muted);flex-shrink:0;margin-top:1px}
   /* ---- santé du contenu dans l'éditeur ---- */
   .ch-chip{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;border-radius:20px;padding:5px 11px;line-height:1.2;white-space:nowrap}
-  .ch-chip b{font-weight:800;font-size:12.5px}
+  .ch-chip b{font-weight:800;font-size:12.5px;margin-left:2px}
+  .ch-chip .ch-100{opacity:.6;font-weight:600}
   .ch-chip .ch-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
   .content-guide{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;margin:0 0 10px;border-radius:11px;border:1px solid}
   .content-guide[hidden]{display:none}
@@ -1385,7 +1394,7 @@
             <button data-lang="en">EN</button>
           </div>
           <div class="tb-spacer"></div>
-          <button class="ch-chip" id="contentHealth" title="Santé de votre contenu, mise à jour en direct. Cliquez pour l'analyse complète."></button>
+          <button class="ch-chip" id="contentHealth" title="L'effet de vos textes sur votre visibilité Google, en direct. Cliquez pour l'analyse complète."></button>
           <button class="btn ghost" id="resetBtn" title="Annuler les modifications du brouillon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Réinitialiser</button>
         </div>
@@ -1997,6 +2006,21 @@ const SECTION_DEFS = [
   { id:"booking", sel:".cta-booking", name:"Réserver un appel" },
   { id:"faq", sel:".faq", name:"FAQ" }
 ];
+/* rôle stratégique de chaque section (phase du parcours + section clé + apport), pour éduquer dans l'éditeur.
+   special = section "structurée" (pas juste texte/image), à gérer autrement. */
+const SEC_META={
+  hero:{phase:"capter", key:true, apport:"dire en 3 secondes ce que vous faites et pour qui"},
+  partners:{phase:"rassurer", apport:"montrer que des entreprises vous font déjà confiance", special:"logos"},
+  diff:{phase:"convaincre", apport:"dire pourquoi vous plutôt qu'un autre"},
+  services:{phase:"convaincre", apport:"rendre votre offre concrète et tangible"},
+  testi:{phase:"rassurer", apport:"installer la confiance par la preuve", special:"avis"},
+  sim:{phase:"chiffrer", key:true, apport:"faire prendre conscience du coût actuel des livraisons", special:"simulateur"},
+  offres:{phase:"convertir", key:true, apport:"montrer clairement vos prix, sans quoi le visiteur n'ose pas demander"},
+  booking:{phase:"convertir", key:true, apport:"transformer l'intérêt en demande de rendez-vous"},
+  faq:{phase:"rassurer", apport:"lever les derniers doutes avant le contact"}
+};
+const SEC_SPECIAL={ logos:"Ces logos sont des SVG calibrés pour le design. En ajouter demande un fichier SVG à la bonne taille et couleur : à gérer avec Gamma Project pour rester nickel.", avis:"Un vrai avis, c'est une photo, une note, un nom, une date. Ça se gère dans un espace dédié (à venir), pas en tapant dans le texte.", simulateur:"Le simulateur calcule des prix : changer sa logique ou vos tarifs se fait dans le projet, pas en direct ici. Le texte autour reste modifiable." };
+function phaseInfo(key){ return STRUCT_PHASES.find(p=>p.key===key)||STRUCT_PHASES[0]; }
 const PROMO_PARTS = [
   { key:"promo.badge", sel:".promo-bar-badge" },
   { key:"promo.text", sel:".promo-bar-text" },
@@ -2099,6 +2123,11 @@ const EDIT_CSS = `
   .ck-sec-tb button:hover{background:#6B5BCC;border-color:#6B5BCC;color:#fff}
   .ck-sec-tb button svg{width:16px;height:16px}
   .ck-sec-hl{outline:2px dashed rgba(75,179,164,.7)!important;outline-offset:-2px}
+  .ck-hidden{position:relative;filter:grayscale(1) opacity(.45)}
+  .ck-hidden > *{pointer-events:none!important}
+  .ck-hidden-ov{all:unset;box-sizing:border-box;position:absolute;inset:0;z-index:9996;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto!important}
+  .ck-hidden-ov > span{display:inline-flex;align-items:center;gap:7px;background:#2C2052;color:#fff;font:700 12px/1.2 -apple-system,BlinkMacSystemFont,sans-serif;padding:10px 15px;border-radius:9px;box-shadow:0 4px 16px rgba(0,0,0,.28)}
+  .ck-hidden-ov:hover > span{background:#6B5BCC}
 `;
 
 function initEditMode(){
@@ -2174,7 +2203,7 @@ let chTimer=null; function contentHealthDebounced(){ if(chTimer) clearTimeout(ch
 function renderContentHealth(){ const el=document.getElementById("contentHealth"); if(!el) return;
   const r=contentHealthScore(), c=pfStat(r.status);
   el.style.color=c.c; el.style.background=c.bg;
-  el.innerHTML='<span class="ch-dot" style="background:'+c.c+'"></span><b>'+r.score+'</b>&nbsp;santé du contenu';
+  el.innerHTML='<span class="ch-dot" style="background:'+c.c+'"></span>Référencement <b>'+r.score+'</b><span class="ch-100">/100</span>';
 }
 const CONTENT_SEC=[
   {sel:".hero", name:"l'accroche", apport:"dire en 3 secondes ce que vous faites et pour qui"},
@@ -2194,12 +2223,14 @@ function contentFeedback(el, kind){
   else if(isHeading && pl===0 && nl>=15){ type="good"; msg="Bien : un titre clair, c'est la première chose que lisent vos visiteurs et Google."; }
   else if(!isHeading && pl>60 && nl<pl*0.5){ type="warn"; msg="Cette partie a beaucoup moins de texte qu'avant. Gardez assez de contenu pour rester bien référencé."; }
   else if(!isHeading && nl>60 && nl>pl*1.4){ type="good"; msg="Bien : plus de contenu utile, c'est bon pour le référencement, tant que ça reste vrai et clair."; }
-  else { type="neutral"; msg="Contenu mis à jour. Sur le fond, c'est vous qui jugez : l'important est que ce soit juste et clair pour vos clients."; }
+  else { renderContentHealth(); return; } /* reformulation de longueur voisine : on met à jour le score sans message, pour ne pas être répétitif ni juger le fond */
   if((type==="bad"||type==="warn") && sec) msg+=" Rappel : cette section sert à "+sec.apport+".";
   showContentGuide(type, msg); renderContentHealth();
 }
 let cgTimer=null;
 function showContentGuide(type, msg){ const w=document.getElementById("contentGuide"); if(!w) return;
+  if(!w.hidden && w.dataset.last===type+"|"+msg) return; /* évite de répéter le même message */
+  w.dataset.last=type+"|"+msg;
   const ic=type==="good"?"check-circle-2":type==="neutral"?"info":"alert-triangle";
   w.className="content-guide cg-"+type; w.hidden=false;
   w.innerHTML='<span class="cg-ic"><i data-lucide="'+ic+'"></i></span><span class="cg-msg">'+msg+'</span><button type="button" class="cg-x" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>';
@@ -2347,25 +2378,59 @@ function currentOrder(){
   items.sort((a,b)=> (a.el.compareDocumentPosition(b.el)&Node.DOCUMENT_POSITION_FOLLOWING)?-1:1);
   return items.map(x=>x.id);
 }
+/* règles d'ordre à préserver (A doit rester avant B), pour guider sans faux positifs sur l'ordre d'origine */
+const ORDER_DEPS=[
+  ["services","testi","Montrer la preuve avant d'avoir présenté ce que vous faites a moins d'impact."],
+  ["sim","offres","Le simulateur doit venir avant les prix : il fait prendre conscience du coût, ce qui rend votre offre plus juste."],
+  ["diff","offres","Annoncer le prix avant d'avoir convaincu fait fuir. On convainc, puis on chiffre."],
+  ["services","offres","On montre la valeur avant d'annoncer le prix."],
+  ["diff","booking","Pousser au rendez-vous avant d'avoir convaincu réduit les prises de contact."]
+];
+function orderGuidanceCheck(){
+  const order=currentOrder(), pos={}; order.forEach((id,i)=>pos[id]=i);
+  for(const dep of ORDER_DEPS){ const a=dep[0], b=dep[1];
+    if(pos[a]==null||pos[b]==null) continue;
+    if(pos[a] > pos[b]){ const A=SECTION_DEFS.find(s=>s.id===a), B=SECTION_DEFS.find(s=>s.id===b);
+      showContentGuide("warn","Attention à l'ordre : « "+B.name+" » passe avant « "+A.name+" ». "+dep[2]);
+      return;
+    }
+  }
+}
 function moveSection(id,dir){
   const order=currentOrder(); const i=order.indexOf(id), j=i+dir;
   if(i<0||j<0||j>=order.length) return;
   const a=secEl(order[i]), b=secEl(order[j]);
   if(dir<0) a.parentNode.insertBefore(a,b); else b.parentNode.insertBefore(b,a);
-  draft.order=currentOrder(); markDirty(); renderSecList(); refreshSecToolbars();
+  draft.order=currentOrder(); markDirty(); renderSecList(); refreshSecToolbars(); orderGuidanceCheck();
+}
+function sectionIdOf(el){ const d=SECTION_DEFS.find(s=>secEl(s.id)===el); return d?d.id:null; }
+function applySecHiddenVisual(el, hide){
+  if(!el) return;
+  el.classList.toggle("ck-hidden", !!hide);
+  let ov=el.querySelector(":scope > .ck-hidden-ov");
+  if(hide && !ov){ ov=DOC.createElement("button"); ov.type="button"; ov.className="ck-hidden-ov";
+    ov.innerHTML='<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.2A9.1 9.1 0 0 1 12 4c7 0 10 8 10 8a18 18 0 0 1-2.2 3.2M6.6 6.6A18 18 0 0 0 2 12s3 8 10 8a9 9 0 0 0 5.4-1.6"/><path d="m2 2 20 20"/></svg>Section masquée · cliquez pour la réafficher</span>';
+    ov.addEventListener("click",(e)=>{ e.stopPropagation(); e.preventDefault(); const id=sectionIdOf(el); if(id) toggleSection(id,false); });
+    el.appendChild(ov);
+  } else if(!hide && ov){ ov.remove(); }
 }
 function toggleSection(id,hide){
   const el=secEl(id); if(!el) return;
-  el.style.display=hide?"none":"";
+  applySecHiddenVisual(el, hide);
   const set=new Set(draft.hidden); if(hide) set.add(id); else set.delete(id);
   draft.hidden=[...set]; markDirty(); renderSecList();
+  const m=SEC_META[id]||{}, d=SECTION_DEFS.find(s=>s.id===id);
+  if(hide){ let msg="Vous masquez « "+(d?d.name:"cette section")+" ». Elle n'apparaîtra plus sur le site publié.";
+    if(m.apport) msg+=" Rappel : cette section sert à "+m.apport+".";
+    showContentGuide(m.key?"bad":"warn", msg);
+  } else { showContentGuide("good","« "+(d?d.name:"Section")+" » est de nouveau visible sur le site publié."); }
 }
 function applyDraft(){
   if(draft.order && draft.order.length){
     const first=editableEls()[0]; let anchor=first?first.previousElementSibling:null;
     if(anchor){ draft.order.forEach(id=>{ const el=secEl(id); if(el){ anchor.after(el); anchor=el; } }); }
   }
-  (draft.hidden||[]).forEach(id=>{ const el=secEl(id); if(el) el.style.display="none"; });
+  (draft.hidden||[]).forEach(id=>{ applySecHiddenVisual(secEl(id), true); });
   const pb=DOC.getElementById("promoBar"); if(pb&&draft.promoHidden) pb.style.display="none";
   setPromoSwitch(!draft.promoHidden);
   Object.keys(draft.dom).forEach(k=>{ const el=DOC.querySelector('[data-ckkey="'+cssEsc(k)+'"]'); if(el) el.innerHTML=draft.dom[k]; });
@@ -2389,17 +2454,22 @@ function renderSecList(){
     const def=SECTION_DEFS.find(s=>s.id===id); if(!def) return;
     const isHidden=hidden.has(id);
     const item=document.createElement("div"); item.className="sec-item"+(isHidden?" hidden":"");
+    const m=SEC_META[id]||{}, ph=phaseInfo(m.phase);
+    const tags='<span class="sec-tags"><span class="sec-ph" style="color:'+ph.col+';background:'+ph.bg+'">'+ph.label+'</span>'
+      +(m.key?'<span class="sec-cle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>clé</span>':'')
+      +(m.special?'<button type="button" class="sec-special" data-a="special">gérée à part</button>':'')+'</span>';
     item.innerHTML=
       '<span class="grip">'+
         '<button '+(idx===0?'disabled':'')+' data-a="up" aria-label="Monter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg></button>'+
         '<button '+(idx===order.length-1?'disabled':'')+' data-a="down" aria-label="Descendre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>'+
       '</span>'+
-      '<span class="nm">'+def.name+'</span>'+
+      '<div class="sec-tx"><span class="nm">'+def.name+'</span>'+tags+'</div>'+
       '<button class="eye" data-a="eye" aria-label="'+(isHidden?'Afficher':'Masquer')+'">'+(isHidden?eyeOff():eyeOn())+'</button>';
     item.querySelector('[data-a="up"]').addEventListener("click",()=>moveSection(id,-1));
     item.querySelector('[data-a="down"]').addEventListener("click",()=>moveSection(id,1));
     item.querySelector('[data-a="eye"]').addEventListener("click",()=>toggleSection(id,!isHidden));
     item.querySelector(".nm").addEventListener("click",()=>scrollToSec(id));
+    const sp=item.querySelector('[data-a="special"]'); if(sp) sp.addEventListener("click",(e)=>{ e.stopPropagation(); showContentGuide("neutral", SEC_SPECIAL[m.special]||""); });
     wrap.appendChild(item);
   });
 }
@@ -2748,8 +2818,9 @@ function renderPerfContent(){ const w=document.getElementById("perfContent"); if
 const STRUCT_PHASES=[
   {key:"capter", label:"Capter l'attention", col:"#2F6FE0", bg:"#E6F1FB"},
   {key:"convaincre", label:"Convaincre", col:"#7C5CD6", bg:"#EEEBFB"},
-  {key:"rassurer", label:"Rassurer", col:"#0F9E8A", bg:"#E1F5EE"},
-  {key:"convertir", label:"Chiffrer & convertir", col:"#C7891B", bg:"#FBF0DD"}
+  {key:"rassurer", label:"Rassurer", col:"#0E9AA0", bg:"#E2F4F5"},
+  {key:"chiffrer", label:"Chiffrer", col:"#C7891B", bg:"#FBF0DD"},
+  {key:"convertir", label:"Convertir", col:"#147D54", bg:"#E3F4EA"}
 ];
 /* dans l'ordre RÉEL de index.html : hero -> diff -> feat -> testi -> sim -> offres -> booking -> faq */
 const STRUCT_SECTIONS=[
@@ -2773,7 +2844,7 @@ const STRUCT_SECTIONS=[
     role:"La preuve par les clients : d'autres l'ont fait, ça marche.",
     why:"Avant de parler d'argent, on installe la confiance avec des voix qui ne sont pas la vôtre.",
     risk:"Sans preuve sociale, votre discours n'est que votre parole, et la confiance chute." },
-  { name:"Simulateur de coût", phase:"convertir", icon:"calculator", keySec:true,
+  { name:"Simulateur de coût", phase:"chiffrer", icon:"calculator", keySec:true,
     role:"Le visiteur estime en 10 secondes ce que lui coûtent vraiment ses livraisons, et voit l'offre recommandée.",
     why:"Juste avant les prix : on crée la prise de conscience du coût actuel, donc le besoin.",
     risk:"C'est souvent LA section qui déclenche le contact. Sans elle, le visiteur ne mesure pas son problème et votre prix n'a aucun point de comparaison." },
@@ -3314,6 +3385,10 @@ function showView(name){
   const navName = name;
   document.querySelectorAll(".nav-i[data-view]").forEach(b=>b.classList.toggle("on", b.dataset.view===navName));
   document.getElementById("viewTitle").textContent=TITLES[name]||TITLES[navName]||"";
+  // en édition, on replie la barre latérale pour laisser la place à la page (restaurée en sortant)
+  const appEl=document.querySelector(".app");
+  if(appEl){ if(name==="editor"){ if(!appEl.classList.contains("mini")){ appEl.dataset.autoMini="1"; appEl.classList.add("mini"); } }
+    else if(appEl.dataset.autoMini){ appEl.classList.remove("mini"); delete appEl.dataset.autoMini; } }
   // l'état d'enregistrement n'a de sens que dans l'éditeur du site
   const ss=document.getElementById("saveState"); if(ss) ss.style.display=(name==="editor")?"":"none";
   const pb=document.getElementById("publishBtn"); if(pb) pb.style.display=(name==="editor")?"":"none";

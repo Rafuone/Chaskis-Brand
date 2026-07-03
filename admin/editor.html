@@ -649,12 +649,13 @@
   .usr-del:hover{background:#FBE4E4;color:#B23B3B;border-color:#f3cccc}
   .usr-del svg{width:15px;height:15px}
   .usr-del[disabled]{opacity:.32;cursor:default;pointer-events:none}
-  .acc-tbl{width:100%;border-collapse:collapse;font-size:12.5px;min-width:420px}
-  .acc-tbl th{text-align:center;font-size:11.5px;font-weight:600;color:var(--muted);padding:8px 8px 10px;border-bottom:1px solid var(--border)}
-  .acc-tbl th:first-child{text-align:left}
-  .acc-tbl td{padding:9px 8px;border-bottom:1px solid var(--border);text-align:center}
+  .acc-scroll{overflow:auto;max-width:840px;padding-bottom:2px}
+  .acc-tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:520px;table-layout:fixed}
+  .acc-tbl col.acc-cr{width:118px}
+  .acc-tbl thead th{position:sticky;top:0;z-index:3;text-align:center;font-size:11.5px;font-weight:600;color:var(--muted);padding:9px 8px 11px;background:var(--panel);border-bottom:1px solid var(--border)}
+  .acc-tbl thead th:first-child{text-align:left}
+  .acc-tbl td{padding:9px 8px;text-align:center;vertical-align:middle}
   .acc-tbl td:first-child{text-align:left;color:var(--ink);font-weight:500}
-  .acc-tbl tr:last-child td{border-bottom:none}
   /* case à cocher unifiée : un seul glyphe centré par état (coché / partiel / vide) */
   .acc-chk{all:unset;box-sizing:border-box;cursor:pointer;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border-2);background:#fff;display:inline-flex;align-items:center;justify-content:center;color:#fff;transition:background .12s,border-color .12s}
   .acc-chk:not(.locked):hover{border-color:var(--teal)}
@@ -663,16 +664,30 @@
   .acc-chk.ind{border-color:var(--teal)}
   .acc-dash{width:9px;height:2px;border-radius:2px;background:var(--teal)}
   .acc-chk.locked{cursor:default;opacity:.5}
-  /* matrice de capacités : accordéon par module + interrupteur maître tri-état */
-  .acc-caps{min-width:560px}
-  .acc-grp>td{background:var(--bg)}
-  .acc-grp-tog{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:8px;width:100%;font-size:12.5px;font-weight:600;color:var(--ink)}
-  .acc-grp-ic{display:inline-flex;color:var(--muted)}
+  /* matrice de capacités : chaque module est un bloc distinct, séparé par un espace */
+  .acc-caps{min-width:520px}
+  .acc-gap td{padding:0;height:12px;border:none;background:transparent}
+  .acc-grp td{background:#eef2f1;border-top:1px solid var(--border);padding-top:11px;padding-bottom:11px}
+  .acc-grp td:first-child{border-left:1px solid var(--border);border-top-left-radius:11px}
+  .acc-grp td:last-child{border-right:1px solid var(--border);border-top-right-radius:11px}
+  .acc-grp.col td{border-bottom:1px solid var(--border)}
+  .acc-grp.col td:first-child{border-bottom-left-radius:11px}
+  .acc-grp.col td:last-child{border-bottom-right-radius:11px}
+  .acc-grp-tog{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:9px;width:100%;font-size:13px;font-weight:700;color:var(--ink)}
+  .acc-grp-ic{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;background:var(--panel);border:1px solid var(--border);color:var(--ink-soft);flex-shrink:0}
   .acc-grp-ic svg{width:15px;height:15px}
   .acc-caret{width:15px;height:15px;color:var(--muted);transition:transform .15s;flex-shrink:0}
   .acc-grp.col .acc-caret,.acc-caret.col{transform:rotate(-90deg)}
-  .acc-grp-n{font-size:11px;font-weight:600;color:var(--muted);background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:0 7px;line-height:16px}
-  .acc-cap-lbl{padding-left:34px!important;color:var(--ink-soft)!important;font-weight:500!important}
+  .acc-grp-n{font-size:11px;font-weight:600;color:var(--muted);background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:0 7px;line-height:16px;margin-left:2px}
+  .acc-cap td{background:#fff}
+  .acc-cap td:first-child{border-left:1px solid var(--border)}
+  .acc-cap td:last-child{border-right:1px solid var(--border)}
+  .acc-cap:not(.lastcap):not(.hide) td{border-bottom:1px solid #eef2f1}
+  .acc-cap.lastcap td{border-bottom:1px solid var(--border)}
+  .acc-cap.lastcap td:first-child{border-bottom-left-radius:11px}
+  .acc-cap.lastcap td:last-child{border-bottom-right-radius:11px}
+  .acc-cap:not(.hide):hover td{background:#f9fbfa}
+  .acc-cap-lbl{padding-left:40px!important;color:var(--ink-soft)!important;font-weight:500!important}
   .acc-cap.hide{display:none}
   /* interrupteur maître de module = même case .acc-chk, état .ind pour "partiel" */
   /* exceptions par personne (modale) */
@@ -2102,7 +2117,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.9.2" };
+const ADMIN_BUILD = { version: "0.9.3" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -3561,12 +3576,14 @@ function accChk(state, locked, attrs){ /* state : on | ind | off. Un seul glyphe
 }
 function renderUsrAccess(){ const w=document.getElementById("usrAccess"); if(!w) return; const roles=ROLE_ORDER;
   if(!accCollapsed) accCollapsed=new Set(CAP_GROUPS.map(g=>g.mod));
-  let h='<div class="tbl-scroll"><table class="acc-tbl acc-caps"><thead><tr><th>Capacité</th>'+roles.map(r=>'<th><span class="acc-role-h"><span class="acc-dot" style="background:'+roleColor(r)+'"></span>'+roleLabel(r)+'</span></th>').join("")+'</tr></thead><tbody>';
-  CAP_GROUPS.forEach(g=>{ const col=accCollapsed.has(g.mod);
+  let h='<div class="acc-scroll"><table class="acc-tbl acc-caps"><colgroup><col class="acc-c0">'+roles.map(()=>'<col class="acc-cr">').join("")+'</colgroup><thead><tr><th>Capacité</th>'+roles.map(r=>'<th><span class="acc-role-h"><span class="acc-dot" style="background:'+roleColor(r)+'"></span>'+roleLabel(r)+'</span></th>').join("")+'</tr></thead><tbody>';
+  CAP_GROUPS.forEach((g,gi)=>{ const col=accCollapsed.has(g.mod);
+    if(gi>0) h+='<tr class="acc-gap"><td colspan="'+(roles.length+1)+'"></td></tr>';
     h+='<tr class="acc-grp'+(col?" col":"")+'"><td><button type="button" class="acc-grp-tog" data-tog="'+g.mod+'"><svg class="acc-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span class="acc-grp-ic"><i data-lucide="'+g.ic+'"></i></span>'+g.label+'<span class="acc-grp-n">'+g.caps.length+'</span></button></td>'
       + roles.map(r=>{ const st=moduleState(r,g), cs=st==="all"?"on":st==="some"?"ind":"off";
         return '<td>'+accChk(cs, r==="admin", 'data-mrole="'+r+'" data-mmod="'+g.mod+'" title="'+(st==="all"?"Tout coché":st==="some"?"Partiel":"Aucun")+'"')+'</td>'; }).join("")+'</tr>';
-    g.caps.forEach(c=>{ h+='<tr class="acc-cap'+(col?" hide":"")+'"><td class="acc-cap-lbl">'+c[1]+'</td>'
+    g.caps.forEach((c,ci)=>{ const last=!col && ci===g.caps.length-1;
+      h+='<tr class="acc-cap'+(col?" hide":"")+(last?" lastcap":"")+'"><td class="acc-cap-lbl">'+c[1]+'</td>'
       + roles.map(r=>{ const on=roleHasCap(r,c[0]);
         return '<td>'+accChk(on?"on":"off", r==="admin", 'data-crole="'+r+'" data-cap="'+c[0]+'"')+'</td>'; }).join("")+'</tr>'; });
   });

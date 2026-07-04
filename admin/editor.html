@@ -2969,7 +2969,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.15.2" };
+const ADMIN_BUILD = { version: "0.15.3" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -4085,7 +4085,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.15.2", cur:true, date:"2026-07-04", title:"Tableau de bord, notes de version et signalement", items:[
+  { v:"v0.15.3", cur:true, date:"2026-07-04", title:"Performance à 4 niveaux et affiliation", items:[
+    {t:"imp", x:"Performance : jauge à 4 niveaux (rouge, orange, jaune, vert) avec un seul vert comme aboutissement, fini le vert foncé"},
+    {t:"fix", x:"Affiliation : les jeux concours reviennent au visuel de prompt (les photos d'illustration n'étaient pas en rapport avec le sujet)"}
+  ]},
+  { v:"v0.15.2", date:"2026-07-04", title:"Tableau de bord, notes de version et signalement", items:[
     {t:"imp", x:"Tableau de bord : « Voir tous » en lien discret en haut à droite (rendez-vous, avancement, utilisateurs) au lieu d'un gros bouton, plus de rendez-vous affichés, et « Utilisateurs et accès » renommé"},
     {t:"imp", x:"Notes de version : « Reste à faire » présenté en carte claire, et espacements corrigés dans la légende du haut"},
     {t:"imp", x:"« Signaler un problème » : déplacé en petite icône discrète dans l'en-tête, visible uniquement en ligne (plus le gros bouton sous le menu)"}
@@ -4668,11 +4672,11 @@ function runTechAudit(){ if(!document.getElementById("techAuditOut")) return;
 const PF_C={good:{c:"#0F6E56",bg:"#E1F5EE",w:"Bon"},warn:{c:"#C7891B",bg:"#FBF0DD",w:"À améliorer"},bad:{c:"#B23B3B",bg:"#FBE4E4",w:"Problème"}};
 function pfStat(st){ return PF_C[st]||PF_C.good; }
 /* échelle granulaire par score (vert -> rouge), pour ne pas afficher un 82 en marron. */
+/* Échelle à 4 niveaux : rouge / orange / jaune / vert (le vert = finalité, un seul vert, pas de vert foncé). */
 const PF_SCALE=[
-  {min:90, c:"#0B6E3E", bg:"#D8EFE0", w:"Excellent"},
-  {min:80, c:"#3FB56A", bg:"#E7F7EC", w:"Bon"},
-  {min:65, c:"#D2A00C", bg:"#FAF2CF", w:"Correct"},
-  {min:45, c:"#E07B22", bg:"#FCEAD7", w:"À surveiller"},
+  {min:80, c:"#2AA45C", bg:"#E4F5EC", w:"Bon"},
+  {min:60, c:"#D2A00C", bg:"#FAF2CF", w:"Correct"},
+  {min:40, c:"#E07B22", bg:"#FCEAD7", w:"À surveiller"},
   {min:0,  c:"#D23B3B", bg:"#FBE1E1", w:"Critique"}
 ];
 function pfScore(score){ for(let i=0;i<PF_SCALE.length;i++){ if(score>=PF_SCALE[i].min) return PF_SCALE[i]; } return PF_SCALE[PF_SCALE.length-1]; }
@@ -4828,7 +4832,7 @@ function renderPerf(){
   renderPerfPillars(); renderPerfActions(); renderPerfGood(); renderPerfContent();
   refreshIcons();
 }
-const PF_MARKS=[["Critique",0],["À surveiller",45],["Correct",65],["Bon",80],["Excellent",90]];
+const PF_MARKS=[["Critique",0],["À surveiller",40],["Correct",60],["Bon",80]];
 function renderPerfVerdict(overall){ const w=document.getElementById("perfVerdict"); if(!w) return;
   const b=pfScore(overall), col=b.c;
   const heads={ Excellent:{ic:"check-circle-2", t:"Votre site est en excellente santé"}, Bon:{ic:"check-circle-2", t:"Votre site est en bonne santé"}, Correct:{ic:"sparkles", t:"Votre site va bien, quelques réglages à peaufiner"}, "À surveiller":{ic:"alert-triangle", t:"Quelques points sont à surveiller"}, Critique:{ic:"alert-triangle", t:"Des points importants sont à corriger"} };
@@ -5061,9 +5065,9 @@ function loadAffil(){ try{ const s=JSON.parse(localStorage.getItem(AFFIL_KEY)); 
 function saveAffil(){ try{ localStorage.setItem(AFFIL_KEY, JSON.stringify(affilData)); }catch(e){} }
 const AFFIL_CONTESTS_KEY="chaskis_affil_contests";
 function defaultContests(){ return [
-  {id:1, kind:"tirage", title:"Tirage au sort mensuel", prize:"Un bon d’achat de 150 CHF", period:"Jusqu’au 31 juillet", status:"good", photo:"/assets/img/courier2.webp", photoPosY:40, prompt:"Photo produit en gros plan d’un bon cadeau et d’un ticket doré posés sur un comptoir en bois clair, lumière naturelle latérale, ambiance chaleureuse, quelques confettis flous en arrière-plan, tons violets et sarcelle discrets, style éditorial premium."},
-  {id:2, kind:"defi", title:"Défi courses de l’été", prize:"Un week-end pour deux à gagner", period:"Du 1er juin au 31 août", status:"good", photo:"/assets/img/courier.webp", photoPosY:45, prompt:"Plan large en légère contre-plongée d’un coursier à vélo souriant dans une rue ensoleillée d’une ville suisse en été, mouvement dynamique, flou de vitesse en arrière-plan, ciel bleu, couleurs vives et estivales, cadrage cinématographique."},
-  {id:3, kind:"parrainage", title:"Prime de parrainage", prize:"50 CHF par filleul actif", period:"En continu", status:"warn", photo:"/assets/img/driver.webp", photoPosY:40, prompt:"Vue de dessus à plat (flat lay) de deux mains qui se serrent au-dessus d’une table, entourées d’enveloppes et de billets stylisés, fond uni vert sarcelle doux, composition graphique et épurée, lumière diffuse, esthétique moderne et amicale."}
+  {id:1, kind:"tirage", title:"Tirage au sort mensuel", prize:"Un bon d’achat de 150 CHF", period:"Jusqu’au 31 juillet", status:"good", photo:"", prompt:"Photo produit en gros plan d’un bon cadeau et d’un ticket doré posés sur un comptoir en bois clair, lumière naturelle latérale, ambiance chaleureuse, quelques confettis flous en arrière-plan, tons violets et sarcelle discrets, style éditorial premium."},
+  {id:2, kind:"defi", title:"Défi courses de l’été", prize:"Un week-end pour deux à gagner", period:"Du 1er juin au 31 août", status:"good", photo:"", prompt:"Plan large en légère contre-plongée d’un coursier à vélo souriant dans une rue ensoleillée d’une ville suisse en été, mouvement dynamique, flou de vitesse en arrière-plan, ciel bleu, couleurs vives et estivales, cadrage cinématographique."},
+  {id:3, kind:"parrainage", title:"Prime de parrainage", prize:"50 CHF par filleul actif", period:"En continu", status:"warn", photo:"", prompt:"Vue de dessus à plat (flat lay) de deux mains qui se serrent au-dessus d’une table, entourées d’enveloppes et de billets stylisés, fond uni vert sarcelle doux, composition graphique et épurée, lumière diffuse, esthétique moderne et amicale."}
 ];}
 function loadContests(){ try{ const s=JSON.parse(localStorage.getItem(AFFIL_CONTESTS_KEY)); if(Array.isArray(s)&&s.length) return s; }catch(e){} return defaultContests(); }
 function saveContests(){ try{ localStorage.setItem(AFFIL_CONTESTS_KEY, JSON.stringify(contestData)); }catch(e){} }

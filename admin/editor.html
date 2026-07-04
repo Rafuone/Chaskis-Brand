@@ -362,8 +362,9 @@
   .vseg-b svg{width:15px;height:15px}
   .vseg-b:hover{color:var(--ink)}
   .vseg-b.on{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgba(20,16,38,.10)}
-  .rel-legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px}
-  .rel-leg{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-soft)}
+  .rel-legend{display:flex;flex-wrap:wrap;gap:24px;margin-bottom:16px}
+  .rel-leg{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-soft)}
+  .rel-leg b{font-weight:800;color:var(--ink)}
   .rel-leg b{color:var(--ink);font-variant-numeric:tabular-nums}
   .rel-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;border-radius:6px;padding:2px 7px;flex-shrink:0;white-space:nowrap}
   .rel-badge svg{width:11px;height:11px}
@@ -372,13 +373,16 @@
   .rel-badge.imp{color:#6B4CC4;background:#EEEBFB}
   .rel-badge.todo{color:#4E77C0;background:#E9F0FB}
   .rel-badge.bug{color:#9A6A15;background:#FBF0DD}
-  .rel-todo{background:var(--bg);border:1px solid var(--border);border-radius:13px;padding:14px 16px;margin-bottom:18px}
-  .rel-todo-h{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:3px}
-  .rel-todo-h svg{width:16px;height:16px;color:var(--muted)}
-  .rel-todo-sub{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:11px}
-  .rel-todo-list{display:flex;flex-direction:column;gap:2px}
-  .rel-line{display:flex;align-items:flex-start;gap:9px;padding:5px 0}
-  .rel-line-x{font-size:12.5px;color:var(--ink-soft);line-height:1.5;padding-top:1px}
+  .rel-todo{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px 15px;margin-bottom:20px}
+  .rel-todo-h{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
+  .rel-todo-ic{width:26px;height:26px;flex-shrink:0;border-radius:8px;background:#EEF0FB;color:#5A62C0;display:inline-flex;align-items:center;justify-content:center}
+  .rel-todo-ic svg{width:15px;height:15px}
+  .rel-todo-n{font-size:11px;font-weight:700;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:1px 8px}
+  .rel-todo-sub{font-size:12px;color:var(--muted);line-height:1.5;margin:0 0 12px}
+  .rel-todo-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  @media(max-width:820px){.rel-todo-list{grid-template-columns:1fr}}
+  .rel-line{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--border);border-radius:10px;background:var(--bg)}
+  .rel-line-x{font-size:12.5px;color:var(--ink-soft);line-height:1.4}
   .rel-hd{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
   .rel-v{font-size:15px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
   .rel-cur{font-size:10.5px;font-weight:700;color:var(--teal-d);background:#f1faf8;border:1px solid #cfeae4;border-radius:20px;padding:2px 9px}
@@ -1727,6 +1731,7 @@
   .dpan h4{align-items:center}
   .pan-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
   .pan-head h4{margin:0}
+  .pan-head h4{margin:0}
   /* period selector */
   .period{display:inline-flex;gap:4px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:3px}
   .period button{all:unset;padding:5px 11px;border-radius:7px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer}
@@ -2253,6 +2258,7 @@
       <div class="save-state" id="saveState"><span class="dot"></span><span id="saveLabel">À jour</span></div>
       <button class="btn primary" id="publishBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M20 16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/></svg>Publier</button>
+      <button class="tb-icon-btn" id="bugBtn" data-prodonly="1" title="Signaler un problème" style="display:none"><i data-lucide="bug"></i></button>
       <button class="tb-icon-btn" id="settingsBtn" title="Réglages"><i data-lucide="settings"></i></button>
       <button class="tb-user" id="tbUser" aria-haspopup="true" title="Compte">
         <span class="avatar sm" id="tbAva"></span>
@@ -2963,7 +2969,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.15.1" };
+const ADMIN_BUILD = { version: "0.15.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -3850,7 +3856,6 @@ function fillDashProgress(){ const el=document.getElementById("dashProgress"); i
   const inProg=PROGRESS.filter(p=>p.stage!=="stable").slice(0,4);
   const rows=inProg.map(p=>{ const st=(typeof APP_STAGE_H!=="undefined"&&APP_STAGE_H[p.stage])?APP_STAGE_H[p.stage]:APP_STAGE[p.stage]; return '<div class="dash-av-row"><span class="dash-av-n">'+escHtml(p.name)+'</span><span class="av-stage" style="color:'+st.c+';background:'+st.c+'1e">'+st.lbl+'</span><span class="dash-av-v">v'+escHtml(p.version)+'</span></div>'; }).join("");
   el.innerHTML=sum+'<div class="dash-av-list">'+rows+'</div>';
-  const mb=document.getElementById("dashAvMore"); if(mb) mb.onclick=()=>showView("progress");
   refreshIcons();
 }
 function updateDashboard(){
@@ -3899,7 +3904,7 @@ function renderDashStats(role){ const w=document.getElementById("dashStats"); if
     if(cd.tip) el._tip=cd.tip;
     if(cd.goto) el.addEventListener("click",()=>showView(cd.goto));
     w.appendChild(el); }); }
-function dashPanel(icon, title, bodyId, hic){ return '<div class="dpan"><h4><span class="hic '+(hic||"")+'"><i data-lucide="'+icon+'"></i></span> '+title+'</h4><div id="'+bodyId+'"></div></div>'; }
+function dashPanel(icon, title, bodyId, hic, moreView){ const more=moreView?'<button class="dash-more" type="button" data-goto="'+moreView+'">Tout voir <i data-lucide="arrow-right"></i></button>':''; return '<div class="dpan"><div class="pan-head"><h4><span class="hic '+(hic||"")+'"><i data-lucide="'+icon+'"></i></span> '+title+'</h4>'+more+'</div><div id="'+bodyId+'"></div></div>'; }
 function renderDashPanels(role){ const w=document.getElementById("dashPanels"); if(!w) return;
   if(role==="editor"){ w.innerHTML='<div class="dash-grid">'+dashPanel("history","Versions récentes","dashVersions")+dashPanel("image","Médiathèque","dashMedia","violet")+'</div>'+dashPanel("clock","Activité récente","dashActivity","teal");
     fillDashVersions(); fillDashMedia(); fillDashActivity(); }
@@ -3908,14 +3913,16 @@ function renderDashPanels(role){ const w=document.getElementById("dashPanels"); 
   else { const zbtn='<span class="zoomctl"><button class="zoom-btn" id="dashZoomOut" title="Dézoomer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button><button class="zoom-btn" id="dashZoomIn" title="Zoomer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></span>';
     w.innerHTML='<div class="dash-grid dash-grid-21">'
       + '<div class="dpan"><div class="pan-head"><h4><span class="hic teal"><i data-lucide="trending-up"></i></span> Trafic du site</h4><div class="ch-hd-r"><span class="hint" id="dashChartHint" style="margin:0"></span>'+zbtn+'</div></div><svg class="lchart" id="dashChart" viewBox="0 0 700 176" preserveAspectRatio="none"></svg><div class="leg" id="dashChartLeg" style="margin-top:16px"></div></div>'
-      + dashPanel("calendar","Prochains rendez-vous","dashRdv","amber")
-    + '</div><div class="dash-grid"><div class="dpan"><div class="pan-head"><h4><span class="hic teal"><i data-lucide="activity"></i></span> Avancement du projet</h4><button class="dash-more" type="button" id="dashAvMore">Tout voir <i data-lucide="arrow-right"></i></button></div><div id="dashProgress"></div></div>'
-      + dashPanel("users","Équipe & accès","dashTeam","violet")
+      + dashPanel("calendar","Prochains rendez-vous","dashRdv","amber","rdv")
+    + '</div><div class="dash-grid">'
+      + dashPanel("activity","Avancement du projet","dashProgress","teal","progress")
+      + dashPanel("users","Utilisateurs & accès","dashTeam","violet","users")
     + '</div><div class="dash-grid">'
       + dashPanel("clock","Activité récente","dashActivity","purple")
       + dashPanel("megaphone","Bandeau promotionnel","dashBanner","amber")
     + '</div>';
-    fillDashChart(); fillDashRdv(); fillDashActivity(); fillDashBanner(); fillDashTeam(); fillDashProgress(); } }
+    fillDashChart(); fillDashRdv(); fillDashActivity(); fillDashBanner(); fillDashTeam(); fillDashProgress();
+    w.querySelectorAll(".dash-more[data-goto]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.goto))); refreshIcons(); } }
 let dashChartKey="30j";
 function dashChartZoom(dir){ let i=STAT_ZOOM.indexOf(dashChartKey); if(i<0)i=STAT_ZOOM.indexOf("30j"); const ni=Math.min(STAT_ZOOM.length-1,Math.max(0,i+dir)); if(ni===i) return; dashChartKey=STAT_ZOOM[ni]; fillDashChart(); }
 function fillDashChart(){ const svg=document.getElementById("dashChart"); if(!svg) return;
@@ -3955,13 +3962,11 @@ function fillDashChangelog(){ const dl=document.getElementById("dashChangelog");
 function commercialChip(name){ const u=adminUsers.find(x=>x.name===name||x.name.split(" ")[0]===String(name).split(" ")[0]);
   return { color:u?roleColor(u.role):"#0F6E56", ini:u?userInitials(u):initials(name), full:u?u.name:name }; }
 function fillDashRdv(){ const el=document.getElementById("dashRdv"); if(!el) return;
-  const up=(typeof rdvData!=="undefined"?rdvData:[]).filter(r=>r.st==="avenir").slice(0,3);
+  const up=(typeof rdvData!=="undefined"?rdvData:[]).filter(r=>r.st==="avenir").slice(0,5);
   if(!up.length){ el.innerHTML='<p class="hint" style="margin:0">Aucun rendez-vous à venir.</p>'; return; }
   el.innerHTML=up.map(r=>{ const c=commercialChip(r.who); const mi=r.mode==="visio"?{l:"Visio",i:"video",cls:"visio"}:{l:"Appel",i:"phone",cls:"tel"};
     return '<div class="dash-rdv"><div class="drr-main"><div class="drr-client" title="'+escHtml(r.client)+'">'+escHtml(r.client)+'</div><div class="drr-sub"><span class="drr-secteur">'+escHtml(r.secteur)+'</span><span class="drr-contact">'+escHtml(r.contact)+'</span></div></div>'
-      +'<div class="drr-side"><div class="drr-date">'+r.day+' '+r.mon+' · '+r.time+'</div><div class="drr-meta"><span class="fmode fmode-'+mi.cls+'"><i data-lucide="'+mi.i+'"></i>'+mi.l+'</span><span class="avatar xs drr-com" style="background:'+c.color+';color:#fff" title="Commercial attitré : '+escHtml(c.full)+'">'+c.ini+'</span></div></div></div>'; }).join("")
-    +'<button class="btn" data-goto="rdv" style="width:100%;justify-content:center;margin-top:11px">Voir tous les rendez-vous</button>';
-  const b=el.querySelector("[data-goto]"); if(b) b.addEventListener("click",()=>showView("rdv")); }
+      +'<div class="drr-side"><div class="drr-date">'+r.day+' '+r.mon+' · '+r.time+'</div><div class="drr-meta"><span class="fmode fmode-'+mi.cls+'"><i data-lucide="'+mi.i+'"></i>'+mi.l+'</span><span class="avatar xs drr-com" style="background:'+c.color+';color:#fff" title="Commercial attitré : '+escHtml(c.full)+'">'+c.ini+'</span></div></div></div>'; }).join(""); }
 /* ---- Bandeaux : plusieurs bandeaux enregistres + modeles prets a l'emploi, un seul actif a la fois ---- */
 const BANNER_PRESETS=[
   {name:"Lancement", badge:"Nouveau site", emphasis:"-15%", text:"sur votre premier mois avec Flex & Dédié", cta:"Découvrir nos offres", href:"#offres", code:"FLEX15"},
@@ -4080,7 +4085,12 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.15.1", cur:true, date:"2026-07-04", title:"Corrections d'après vos retours du soir", items:[
+  { v:"v0.15.2", cur:true, date:"2026-07-04", title:"Tableau de bord, notes de version et signalement", items:[
+    {t:"imp", x:"Tableau de bord : « Voir tous » en lien discret en haut à droite (rendez-vous, avancement, utilisateurs) au lieu d'un gros bouton, plus de rendez-vous affichés, et « Utilisateurs et accès » renommé"},
+    {t:"imp", x:"Notes de version : « Reste à faire » présenté en carte claire, et espacements corrigés dans la légende du haut"},
+    {t:"imp", x:"« Signaler un problème » : déplacé en petite icône discrète dans l'en-tête, visible uniquement en ligne (plus le gros bouton sous le menu)"}
+  ]},
+  { v:"v0.15.1", date:"2026-07-04", title:"Corrections d'après vos retours du soir", items:[
     {t:"fix", x:"Édition : le bandeau promotionnel réapparaît, et le dégradé de la page d'accueil passe bien derrière la barre de navigation (les deux ensemble)"},
     {t:"imp", x:"Tableau de bord rééquilibré : « Équipe et accès » remonte à côté de « Avancement du projet », plus d'espace vide"},
     {t:"imp", x:"Suivi technique : frise d'ordre plus lisible (libellés courts, légende colorée, barre de défilement discrète, plus de ligne parasite) et en-tête plus concis"},
@@ -4214,7 +4224,7 @@ function renderReleaseLog(){ const host=document.getElementById("relLog"); if(!h
   const tot={add:0,fix:0,imp:0}; RELEASE_LOG.forEach(r=>{ const c=relCounts(r.items); tot.add+=c.add; tot.fix+=c.fix; tot.imp+=c.imp; });
   const legend='<div class="rel-legend"><span class="rel-leg">'+relBadge("add")+'<b>'+tot.add+'</b></span><span class="rel-leg">'+relBadge("fix")+'<b>'+tot.fix+'</b></span><span class="rel-leg">'+relBadge("imp")+'<b>'+tot.imp+'</b></span></div>';
   const todoLines=KNOWN_TODO.map(k=>{ const wip=k.t==="wip"; return '<div class="rel-line"><span class="rel-badge '+(wip?"bug":"todo")+'"><i data-lucide="'+(wip?"loader":"circle-dashed")+'"></i>'+(wip?"En cours":"À développer")+'</span><span class="rel-line-x">'+escHtml(k.x)+'</span></div>'; }).join("");
-  const todo='<div class="rel-todo"><div class="rel-todo-h"><i data-lucide="flag"></i>Reste à faire</div><div class="rel-todo-sub">Ce qui n\'est pas encore branché sur le réel ou en cours de finition. Le détail technique est dans la vue Suivi technique.</div><div class="rel-todo-list">'+todoLines+'</div></div>';
+  const todo='<div class="rel-todo"><div class="rel-todo-h"><span class="rel-todo-ic"><i data-lucide="list-todo"></i></span>Reste à faire<span class="rel-todo-n">'+KNOWN_TODO.length+'</span></div><div class="rel-todo-sub">Ce qui n\'est pas encore branché sur le réel ou en cours de finition. Le détail technique est dans la vue Suivi technique.</div><div class="rel-todo-list">'+todoLines+'</div></div>';
   const order={add:0,fix:1,imp:2};
   let tl='<div class="vtl">';
   RELEASE_LOG.forEach(r=>{ const c=relCounts(r.items), parts=[];
@@ -4321,7 +4331,7 @@ function openBugReport(){
   });
   refreshIcons();
 }
-function initBugButton(){ if(document.getElementById("bugFab")||!document.body) return; const btn=document.createElement("button"); btn.id="bugFab"; btn.type="button"; btn.className="bug-fab"; btn.innerHTML='<i data-lucide="bug"></i><span>Signaler un problème</span>'; btn.addEventListener("click",openBugReport); document.body.appendChild(btn); refreshIcons(); }
+function initBugButton(){ const btn=document.getElementById("bugBtn"); if(!btn||btn.dataset.wired) return; btn.dataset.wired="1"; btn.addEventListener("click",openBugReport); try{ applyEnvNav(); }catch(e){} }
 (function(){ function _pgInit(){ try{ applyProgressBadges(); }catch(e){} try{ initBugButton(); }catch(e){} } if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",_pgInit); else _pgInit(); })();
 function nextVersionId(){ const n=versions.reduce((m,x)=>Math.max(m, parseInt(String(x.id||"v0").replace(/\D/g,""))||0),0)+1; return "v"+n; }
 function restoreVersion(id){ const v=versions.find(x=>x.id===id); if(!v) return;
@@ -6930,7 +6940,8 @@ function applyRole(){
   const app=document.querySelector(".app"); if(app) app.setAttribute("data-role", currentUser().role);
   renderUserChip(); applyEnvNav(); }
 /* la vue Suivi technique (dev only) est masquée en environnement de production */
-function applyEnvNav(){ const dev=getEnv()==="dev"; document.querySelectorAll("[data-devonly]").forEach(el=>{ const allowed = dev && (!el.dataset.view || canView(el.dataset.view)); el.style.display=allowed?"":"none"; }); }
+function applyEnvNav(){ const dev=getEnv()==="dev"; document.querySelectorAll("[data-devonly]").forEach(el=>{ const allowed = dev && (!el.dataset.view || canView(el.dataset.view)); el.style.display=allowed?"":"none"; });
+  document.querySelectorAll("[data-prodonly]").forEach(el=>{ el.style.display = dev ? "none" : ""; }); }
 function switchUser(id){ saveUI({user:id}); applyRole(); closeUserMenu();
   const cur=loadUI().view; showView(!cur||!canView(cur)?"dashboard":cur);
   toast("Connecté en tant que "+currentUser().name+" · "+roleLabel(currentUser().role)); }

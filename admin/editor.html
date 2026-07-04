@@ -584,7 +584,7 @@
   .tp-card-t{font-size:13.5px;font-weight:700;color:var(--ink);line-height:1.3}
   .tp-card-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}
   .tp-chip{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;border-radius:20px;padding:2px 9px;white-space:nowrap}
-  .tp-chip svg{width:11px;height:11px}
+  .tp-chip svg{width:11px;height:11px;color:currentColor}
   .tp-chip.ok{color:#0E7D48;background:#E3F4EA}
   .tp-chip.cost{color:#0F6E56;background:#EAF7F4}
   .tp-chip.time{color:var(--muted);background:var(--bg);border:1px solid var(--border)}
@@ -663,25 +663,26 @@
   .tp-flow{border:1px solid var(--border);background:var(--panel);border-radius:12px;padding:12px 14px;margin-bottom:16px}
   .tp-flow-h{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--ink);margin-bottom:11px}
   .tp-flow-h>svg{width:15px;height:15px;color:var(--purple);flex-shrink:0}
-  .tp-flow-leg{display:inline-flex;flex-wrap:wrap;gap:12px;margin-left:auto}
-  .tp-flow-lg{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--ink-soft)}
-  .tp-flow-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-  .tp-flow-track{display:flex;gap:0;overflow-x:auto;padding-bottom:4px}
-  .tp-fstep{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:flex;align-items:center;gap:9px;flex:1 0 auto;min-width:150px;padding:9px 12px 9px 10px}
-  .tp-fstep::before{content:"";position:absolute;left:0;right:0;top:19px;height:2px;background:var(--border);z-index:0}
-  .tp-fstep:first-child::before{left:50%}
-  .tp-fstep:last-child::before{right:50%}
-  .tp-fstep-n{position:relative;z-index:1;width:22px;height:22px;flex-shrink:0;border-radius:50%;background:var(--panel);border:2px solid var(--prc,var(--purple));color:var(--prc,var(--purple));font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+  .tp-flow-leg{display:inline-flex;flex-wrap:wrap;gap:7px;margin-left:auto}
+  .tp-flow-lg{display:inline-flex;align-items:center;font-size:10px;font-weight:700;border-radius:20px;padding:2px 9px;white-space:nowrap}
+  .tp-flow-track{display:flex;gap:4px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;scrollbar-color:#cfd3d0 transparent}
+  .tp-flow-track::-webkit-scrollbar{height:7px}
+  .tp-flow-track::-webkit-scrollbar-track{background:transparent}
+  .tp-flow-track::-webkit-scrollbar-thumb{background:#d4d8d5;border-radius:20px}
+  .tp-flow-track::-webkit-scrollbar-thumb:hover{background:#c1c6c2}
+  .tp-fstep{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:9px;flex:1 0 auto;min-width:158px;padding:8px 12px;border-radius:10px;transition:background .15s}
+  .tp-fstep:hover{background:var(--bg)}
+  .tp-fstep-n{width:22px;height:22px;flex-shrink:0;border-radius:50%;background:var(--panel);border:2px solid var(--prc,var(--purple));color:var(--prc,var(--purple));font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
   .tp-fstep:hover .tp-fstep-n{background:var(--prc,var(--purple));color:#fff}
-  .tp-fstep-tx{position:relative;z-index:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+  .tp-fstep-tx{display:flex;flex-direction:column;gap:3px;min-width:0}
   .tp-fstep-t{font-size:11.5px;font-weight:600;color:var(--ink);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
   .tp-fstep-p{align-self:flex-start;font-size:10px;font-weight:700;border-radius:20px;padding:1px 8px;white-space:nowrap}
   .tp-prog{margin:-6px 0 14px}
   .tp-prog-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:5px}
   .tp-prog-k{font-size:10.5px;font-weight:700;color:var(--muted)}
   .tp-prog-v{font-size:12px;font-weight:800;color:var(--teal-d);font-variant-numeric:tabular-nums}
-  .tp-prog-bar{height:6px;border-radius:20px;background:#E7E9E7;overflow:hidden}
-  .tp-prog-bar>span{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,var(--teal),var(--teal-d))}
+  .tp-prog-bar{height:6px;border-radius:20px;background:#EAF4F1;overflow:hidden}
+  .tp-prog-bar>span{display:block;height:100%;border-radius:20px;background:var(--teal)}
   .tp-card-flash{box-shadow:0 0 0 2px var(--teal),0 8px 22px rgba(40,32,60,.12)!important;transition:box-shadow .2s}
   /* suivi d'avancement : badges de nav, vue avancement, signalement de bug */
   .nav-i{position:relative}
@@ -1072,7 +1073,7 @@
   .pv-scale{margin-top:13px}
   .pv-steps{display:flex;align-items:center;gap:6px;padding-top:14px;padding-bottom:4px}
   .pv-step{flex:1;height:9px;border-radius:6px;position:relative;transition:opacity .2s,filter .2s,transform .2s}
-  .pv-step.dim{opacity:.4;filter:grayscale(.55) saturate(.7)}
+  .pv-step.dim{opacity:.92}
   .pv-step.on{height:14px;transform:none;box-shadow:0 0 0 4px rgba(255,255,255,.9),0 2px 8px rgba(40,32,60,.16)}
   .pv-step-dot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:15px;height:15px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 4px rgba(40,32,60,.35)}
   .pv-scale-lbls{display:flex;gap:5px;margin-top:8px}
@@ -2758,12 +2759,11 @@
       <section class="view scroll" id="view-users">
         <div class="pan-head" style="align-items:flex-start">
           <div><h1 class="pg-h">Utilisateurs & accès</h1><p class="pg-sub" style="margin-bottom:0">Gérez qui a accès à quoi. Chaque personne se connecte avec son profil et ne voit que son périmètre.</p></div>
-          <button class="btn primary" id="usrAdd"><i data-lucide="user-plus"></i>Ajouter un utilisateur</button>
         </div>
         <div class="ex-note" style="margin-top:16px"><i data-lucide="info"></i><div>Ébauche : les comptes sont simulés pour la démo. À la mise en ligne, ce sera relié à une vraie authentification (mots de passe, invitations par email).</div></div>
         <div class="usr-2col">
         <div class="dpan usr-pan-list">
-          <div class="pan-head"><h4><span class="hic teal"><i data-lucide="users"></i></span> Utilisateurs</h4><span class="hint" id="usrCount" style="margin:0"></span></div>
+          <div class="pan-head"><h4><span class="hic teal"><i data-lucide="users"></i></span> Utilisateurs</h4><span style="margin-left:auto;display:inline-flex;align-items:center;gap:12px"><span class="hint" id="usrCount" style="margin:0"></span><button class="btn sec-b sm" id="usrAdd"><i data-lucide="user-plus"></i>Ajouter un utilisateur</button></span></div>
           <div id="usrList"></div>
         </div>
         <div class="dpan usr-pan-caps">
@@ -2963,7 +2963,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.15.0" };
+const ADMIN_BUILD = { version: "0.15.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -3111,14 +3111,9 @@ const EDIT_CSS = `
   #pageCurtain{display:none!important}
   *,*::before,*::after{animation-duration:0s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition:none!important}
   html{scroll-behavior:auto!important}
-  .nav{position:static!important}
-  /* en edition, la nav est en flux normal : le bandeau doit l'etre aussi, sinon il se fixe par-dessus */
-  .promo-bar{position:static!important;top:auto!important}
-  /* nav + bandeau sont en flux statique : sans ca, ils poussent le hero vers le bas et le degrade demarre sous la nav. On remonte le hero sous la nav (+ bandeau) pour que son degrade repasse derriere, et la nav garde un z-index pour rester au-dessus. */
-  .nav{position:relative!important;z-index:3}
-  .promo-bar{z-index:4}
-  .hero{position:relative;z-index:1;margin-top:-90px!important;padding-top:154px!important}
-  body.has-promo .hero{margin-top:-134px!important;padding-top:198px!important}
+  /* Comme sur le vrai site : nav et bandeau posés PAR-DESSUS le hero (absolute, pas fixed pour ne pas coller au scroll en édition). Le hero part de y=0, son dégradé passe bien derrière la nav, le bandeau reste visible, et le hero garde son padding-top natif (156px, 192px avec bandeau) pour dégager le contenu. */
+  .promo-bar{position:absolute!important}
+  .nav{position:absolute!important}
   .faq-item .faq-a{display:block!important;height:auto!important;max-height:none!important;overflow:visible!important;opacity:1!important}
   .hero h1 .word,.rv,.vpc,.pipe-step,.bento-card,.sec-card,.diff-card,.vpc.v{opacity:1!important;transform:none!important}
   [data-ckedit]{cursor:text;border-radius:3px;transition:none}
@@ -3914,11 +3909,11 @@ function renderDashPanels(role){ const w=document.getElementById("dashPanels"); 
     w.innerHTML='<div class="dash-grid dash-grid-21">'
       + '<div class="dpan"><div class="pan-head"><h4><span class="hic teal"><i data-lucide="trending-up"></i></span> Trafic du site</h4><div class="ch-hd-r"><span class="hint" id="dashChartHint" style="margin:0"></span>'+zbtn+'</div></div><svg class="lchart" id="dashChart" viewBox="0 0 700 176" preserveAspectRatio="none"></svg><div class="leg" id="dashChartLeg" style="margin-top:16px"></div></div>'
       + dashPanel("calendar","Prochains rendez-vous","dashRdv","amber")
-    + '</div><div class="dash-grid"><div class="dpan"><div class="pan-head"><h4><span class="hic teal"><i data-lucide="activity"></i></span> Avancement du projet</h4><button class="dash-more" type="button" id="dashAvMore">Tout voir <i data-lucide="arrow-right"></i></button></div><div id="dashProgress"></div></div></div><div class="dash-grid">'
+    + '</div><div class="dash-grid"><div class="dpan"><div class="pan-head"><h4><span class="hic teal"><i data-lucide="activity"></i></span> Avancement du projet</h4><button class="dash-more" type="button" id="dashAvMore">Tout voir <i data-lucide="arrow-right"></i></button></div><div id="dashProgress"></div></div>'
+      + dashPanel("users","Équipe & accès","dashTeam","violet")
+    + '</div><div class="dash-grid">'
       + dashPanel("clock","Activité récente","dashActivity","purple")
       + dashPanel("megaphone","Bandeau promotionnel","dashBanner","amber")
-    + '</div><div class="dash-grid">'
-      + dashPanel("users","Équipe & accès","dashTeam","violet")
     + '</div>';
     fillDashChart(); fillDashRdv(); fillDashActivity(); fillDashBanner(); fillDashTeam(); fillDashProgress(); } }
 let dashChartKey="30j";
@@ -4085,7 +4080,17 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.15.0", cur:true, date:"2026-07-04", title:"Jeux concours, avancement chiffré et finitions", items:[
+  { v:"v0.15.1", cur:true, date:"2026-07-04", title:"Corrections d'après vos retours du soir", items:[
+    {t:"fix", x:"Édition : le bandeau promotionnel réapparaît, et le dégradé de la page d'accueil passe bien derrière la barre de navigation (les deux ensemble)"},
+    {t:"imp", x:"Tableau de bord rééquilibré : « Équipe et accès » remonte à côté de « Avancement du projet », plus d'espace vide"},
+    {t:"imp", x:"Suivi technique : frise d'ordre plus lisible (libellés courts, légende colorée, barre de défilement discrète, plus de ligne parasite) et en-tête plus concis"},
+    {t:"imp", x:"Performance : le repère de la jauge se place selon la note, et les niveaux non atteints restent colorés en pastel (plus lisibles)"},
+    {t:"imp", x:"Avancement de l'interface et intégration technique : intitulés clarifiés pour être cohérents entre eux"},
+    {t:"imp", x:"Affiliation : les jeux concours affichent de vraies photos d'illustration"},
+    {t:"imp", x:"Utilisateurs et accès : le bouton « Ajouter un utilisateur » est remonté dans la carte, en style discret"},
+    {t:"fix", x:"Suivi technique : les icônes des étiquettes reprennent la couleur de leur texte, et la barre d'avancement passe en teal clair"}
+  ]},
+  { v:"v0.15.0", date:"2026-07-04", title:"Jeux concours, avancement chiffré et finitions", items:[
     {t:"add", x:"Créer un jeu concours : nouveau formulaire (visuel ou prompt d'image IA, lot, période, statut), en plus de l'ajout de partenaires"},
     {t:"imp", x:"Page Avancement repensée : cartes claires (fini le gris), pourcentage d'avancement par page et stades en langage humain (Prêt / En test / En construction)"},
     {t:"imp", x:"Suivi technique : pourcentage d'avancement par chantier et pour l'ensemble du projet, frise d'ordre de mise en oeuvre, et estimations resserrées"},
@@ -4228,7 +4233,7 @@ function renderReleaseLog(){ const host=document.getElementById("relLog"); if(!h
 const APP_ENV={dev:{lbl:"Développement",c:"#6B4CC4"},preprod:{lbl:"Pré-production (test)",c:"#C7891B"},prod:{lbl:"En production",c:"#0E7D48"}};
 const APP_STAGE={stable:{lbl:"Stable",c:"#0E7D48"},beta:{lbl:"Bêta",c:"#C7891B"},alpha:{lbl:"Alpha",c:"#B4632A"}};
 const PROGRESS=[
-  {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.15.0",recent:["Avancement du projet remonté","Échéances retirées"]},
+  {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.15.1",recent:["Avancement et Équipe côte à côte","Échéances retirées"]},
   {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.11.0",recent:["Édition multi-pages","Coach de contenu","Contenus structurés"]},
   {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.0",recent:["Rôle de chaque page et section"]},
   {view:"media",name:"Médiathèque",env:"prod",stage:"stable",version:"1.0.1",recent:["Import image et vidéo","Correctif d'affichage des vignettes"]},
@@ -4238,10 +4243,10 @@ const PROGRESS=[
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.0.0",recent:["Fiche unifiée","Panneau latéral"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.4.0",recent:["Découverte guidée","Simulateur d'offre"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"alpha",version:"0.5.0",recent:["Vue analytics (données d'exemple)","Pastilles d'icônes raccordées"]},
-  {view:"perf",name:"Performance",env:"preprod",stage:"alpha",version:"0.5.0",recent:["Barre de verdict clarifiée","Bloc « déjà bien » réaligné"]},
-  {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.4.0",recent:["Partenaires et catégories","Créer un jeu concours"]},
-  {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.6.0",recent:["Rôles par capacité","Deux colonnes sur grand écran"]},
-  {view:"progress",name:"Avancement",env:"preprod",stage:"beta",version:"0.3.0",recent:["Cartes claires et avancement en %","Stades en langage humain"]}
+  {view:"perf",name:"Performance",env:"preprod",stage:"alpha",version:"0.5.1",recent:["Jauge calée sur la note","Niveaux en pastel"]},
+  {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.4.1",recent:["Créer un jeu concours","Photos d'illustration"]},
+  {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.6.1",recent:["Deux colonnes sur grand écran","Bouton d'ajout dans la carte"]},
+  {view:"progress",name:"Avancement",env:"preprod",stage:"beta",version:"0.3.1",recent:["Avancement de l'interface en %","Stades en langage humain"]}
 ];
 function progressBadge(view){ const p=PROGRESS.find(x=>x.view===view); if(!p||p.stage==="stable") return null; return p.stage==="alpha"?"A":"B"; }
 function rdvUpcomingCount(){ try{ if(typeof rdvData!=="undefined"&&Array.isArray(rdvData)){ const n=rdvData.filter(r=>{ const s=(r.st||r.status||"").toString().toLowerCase(); return s==="avenir"||s==="à venir"||s==="a venir"; }).length; if(n) return n; } }catch(e){} return 3; }
@@ -4254,7 +4259,7 @@ function applyProgressBadges(){
     if(v==="rdv"){ const c=document.createElement("span"); c.className="nav-count"; c.textContent=rdvUpcomingCount(); c.title="Rendez-vous à venir"; b.appendChild(c); }
   });
 }
-const APP_STAGE_H={stable:{lbl:"Prêt",pct:100,c:"#0E7D48"},beta:{lbl:"En test",pct:70,c:"#C7891B"},alpha:{lbl:"En construction",pct:40,c:"#B4632A"}};
+const APP_STAGE_H={stable:{lbl:"Prêt",pct:100,c:"#0E7D48"},beta:{lbl:"En test",pct:60,c:"#C7891B"},alpha:{lbl:"En construction",pct:30,c:"#B4632A"}};
 function renderProgress(){ const el=document.getElementById("progressBody"); if(!el) return;
   const byEnv={prod:[],preprod:[],dev:[]}; PROGRESS.forEach(p=>{ (byEnv[p.env]||byEnv.preprod).push(p); });
   const total=PROGRESS.length||1;
@@ -4262,7 +4267,7 @@ function renderProgress(){ const el=document.getElementById("progressBody"); if(
   const cnt={prod:byEnv.prod.length,preprod:byEnv.preprod.length,dev:byEnv.dev.length};
   const sumEnvs='<div class="av-sum-envs">'+["prod","preprod","dev"].map(k=>'<span class="av-sum-env"><span class="av-dot" style="background:'+APP_ENV[k].c+'"></span><b>'+cnt[k]+'</b>'+APP_ENV[k].lbl+'</span>').join("")+'</div>';
   let h='<div class="av-wrap">';
-  h+='<div class="av-sum"><div class="av-sum-l"><div class="av-sum-pct">'+glob+'<span>%</span></div><div class="av-sum-cap">avancement global sur '+total+' pages</div></div><div class="av-sum-r"><div class="av-sum-bar"><span style="width:'+glob+'%"></span></div>'+sumEnvs+'</div></div>';
+  h+='<div class="av-sum"><div class="av-sum-l"><div class="av-sum-pct">'+glob+'<span>%</span></div><div class="av-sum-cap">avancement de l\'interface, sur '+total+' pages</div></div><div class="av-sum-r"><div class="av-sum-bar"><span style="width:'+glob+'%"></span></div>'+sumEnvs+'</div></div>';
   ["prod","preprod","dev"].forEach(env=>{ const list=byEnv[env]; if(!list||!list.length) return; const e=APP_ENV[env];
     h+='<div class="av-group"><div class="av-group-h"><span class="av-dot" style="background:'+e.c+'"></span>'+e.lbl+'<span class="av-group-n">'+list.length+'</span></div><div class="av-grid">'
       +list.map(p=>{ const st=APP_STAGE_H[p.stage]||APP_STAGE_H.beta;
@@ -4411,6 +4416,8 @@ const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 const TECH_DONE={host:10,publish:15,versioning:25,analytics:30,calendly:20,auth:25,perf:30,media:20,chatbot:15};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
+/* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
+const TECH_FLOW_SHORT={host:"Fondations Vercel",publish:"Publication réelle",versioning:"Historique et sauvegardes",analytics:"Analytics et trafic",calendly:"Rendez-vous",auth:"Authentification",perf:"Performance",media:"Médias",chatbot:"Chatbot"};
 function techPrioOf(i,n){ if(i<Math.ceil(n/3)) return TECH_PRIO_TIERS[0]; if(i<Math.ceil(2*n/3)) return TECH_PRIO_TIERS[1]; return TECH_PRIO_TIERS[2]; }
 function techDoneOf(b){ return (typeof TECH_DONE!=="undefined"&&TECH_DONE[b.id]!=null)?TECH_DONE[b.id]:0; }
 const TECH_COST_SHORT={host:"Gratuit",publish:"Gratuit",versioning:"Gratuit",auth:"Gratuit",analytics:"Gratuit",perf:"Gratuit",chatbot:"0 à 15 CHF/mois",calendly:"Gratuit ou ~12 CHF/mois",media:"Gratuit"};
@@ -4517,8 +4524,8 @@ function renderTechPlan(body){
   const plan=techPlanOrdered(), est=techGlobalEstimate();
   const wk=n=>Math.max(1,Math.round(n/5)), solo=[wk(est.pmin),wk(est.pmax)], team=[wk(est.pmin/2),wk(est.pmax/2)];
   const gdone=techGlobalDone();
-  let h='<div class="tp-top hb"><div class="hb-lead"><div class="tp-gdone"><div class="tp-gdone-ring" style="background:conic-gradient(var(--teal) '+(gdone*3.6)+'deg,#E7E9E7 0)"><span>'+gdone+'<i>%</i></span></div><div class="tp-gdone-tx"><div class="tp-gdone-k">Avancement du projet</div><div class="tp-gdone-s">'+gdone+'% des chantiers réalisés, à jour au '+techEsc(TECH_UPDATED)+'</div></div></div><div class="hb-stats"><div class="hb-st"><div class="hb-k">Reste à intégrer</div><div class="hb-v">environ '+est.pmed+' j</div><div class="hb-note">'+est.pmin+' à '+est.pmax+' j</div></div><div class="hb-st"><div class="hb-k">Un dev senior seul</div><div class="hb-v">'+solo[0]+' à '+solo[1]+' sem</div></div><div class="hb-st"><div class="hb-k">En équipe</div><div class="hb-v">'+team[0]+' à '+team[1]+' sem</div></div></div></div><div class="tphx-btns"><button type="button" class="btn primary sm tphx-dl"><i data-lucide="download"></i>Télécharger le dossier d\'intégration</button><button type="button" class="btn sec-b sm tphx-md"><i data-lucide="file-code-2"></i>Version Markdown</button></div></div>';
-  h+='<div class="tp-flow"><div class="tp-flow-h"><i data-lucide="route"></i>Ordre conseillé de mise en oeuvre<span class="tp-flow-leg">'+TECH_PRIO_TIERS.map(function(t){ return '<span class="tp-flow-lg"><span class="tp-flow-dot" style="background:'+t.c+'"></span>'+t.w+'</span>'; }).join('')+'</span></div><div class="tp-flow-track">'+plan.map(function(b,i){ var pr=techPrioOf(i,plan.length); return '<button type="button" class="tp-fstep" data-goto="'+b.id+'" style="--prc:'+pr.c+'"><span class="tp-fstep-n">'+(i+1)+'</span><span class="tp-fstep-tx"><span class="tp-fstep-t">'+techEsc(b.t)+'</span><span class="tp-fstep-p" style="color:'+pr.c+';background:'+pr.bg+'">'+pr.w+'</span></span></button>'; }).join('')+'</div></div>';
+  let h='<div class="tp-top hb"><div class="hb-lead"><div class="tp-gdone"><div class="tp-gdone-ring" style="background:conic-gradient(var(--teal) '+(gdone*3.6)+'deg,#E7E9E7 0)"><span>'+gdone+'<i>%</i></span></div><div class="tp-gdone-tx"><div class="tp-gdone-k">Intégration technique</div><div class="tp-gdone-s">des chantiers réalisés, au '+techEsc(TECH_UPDATED)+'</div></div></div><div class="hb-stats"><div class="hb-st"><div class="hb-k">Reste à intégrer</div><div class="hb-v">environ '+est.pmed+' j</div></div><div class="hb-st"><div class="hb-k">Un dev senior seul</div><div class="hb-v">'+solo[0]+' à '+solo[1]+' sem</div></div><div class="hb-st"><div class="hb-k">En équipe</div><div class="hb-v">'+team[0]+' à '+team[1]+' sem</div></div></div></div><div class="tphx-btns"><button type="button" class="btn primary sm tphx-dl"><i data-lucide="download"></i>Télécharger le dossier d\'intégration</button><button type="button" class="btn sec-b sm tphx-md"><i data-lucide="file-code-2"></i>Version Markdown</button></div></div>';
+  h+='<div class="tp-flow"><div class="tp-flow-h"><i data-lucide="route"></i>Ordre conseillé de mise en oeuvre<span class="tp-flow-leg">'+TECH_PRIO_TIERS.map(function(t){ return '<span class="tp-flow-lg" style="color:'+t.c+';background:'+t.bg+'">'+t.w+'</span>'; }).join('')+'</span></div><div class="tp-flow-track">'+plan.map(function(b,i){ var pr=techPrioOf(i,plan.length); return '<button type="button" class="tp-fstep" data-goto="'+b.id+'" style="--prc:'+pr.c+'"><span class="tp-fstep-n">'+(i+1)+'</span><span class="tp-fstep-tx"><span class="tp-fstep-t">'+techEsc(TECH_FLOW_SHORT[b.id]||b.t)+'</span><span class="tp-fstep-p" style="color:'+pr.c+';background:'+pr.bg+'">'+pr.w+'</span></span></button>'; }).join('')+'</div></div>';
   h+='<div class="tech-plan">'+plan.map((b,i)=>{
     const brief=(typeof TECH_BRIEF!=="undefined"&&TECH_BRIEF[b.id])?TECH_BRIEF[b.id]:{sum:b.summary,today:b.today,goal:b.target,cost:b.cost,note:"",steps:b.steps||[],src:[]};
     const costS=(typeof TECH_COST_SHORT!=="undefined"&&TECH_COST_SHORT[b.id])?TECH_COST_SHORT[b.id]:"";
@@ -4824,7 +4831,7 @@ function renderPerfVerdict(overall){ const w=document.getElementById("perfVerdic
     +'<div class="pv-main"><div class="pv-title"><span class="pv-dot" style="color:'+col+'"><i data-lucide="'+m.ic+'"></i></span>'+m.t+'<span class="pv-band" style="color:'+col+';background:'+b.bg+'">'+b.w+'</span></div>'
     +'<div class="pv-sub">'+sub+'</div>'
     +'<div class="pv-scale"><div class="pv-steps">'
-      +scaleDesc.map(bd=>{ const on=bd.w===b.w; return '<div class="pv-step'+(on?" on":" dim")+'" style="background:'+bd.c+'">'+(on?'<span class="pv-step-dot" style="background:'+bd.c+'"></span>':'')+'</div>'; }).join("")
+      +scaleDesc.map(function(bd,j){ const on=bd.w===b.w; var dot=''; if(on){ var mx=(j<scaleDesc.length-1?scaleDesc[j+1].min:100); var fr=(mx>bd.min)?(overall-bd.min)/(mx-bd.min):0.5; fr=Math.max(0.1,Math.min(0.9,fr)); dot='<span class="pv-step-dot" style="background:'+bd.c+';left:'+(fr*100).toFixed(1)+'%"></span>'; } return '<div class="pv-step'+(on?" on":" dim")+'" style="background:'+(on?bd.c:bd.bg)+'">'+dot+'</div>'; }).join("")
       +'</div><div class="pv-scale-lbls">'+scaleDesc.map(bd=>'<span'+(bd.w===b.w?' class="on" style="color:'+bd.c+'"':'')+'>'+bd.w+'</span>').join("")+'</div></div></div>';
 }
 function renderPerfPillars(){ const w=document.getElementById("perfPillars"); if(!w) return; w.innerHTML="";
@@ -5044,9 +5051,9 @@ function loadAffil(){ try{ const s=JSON.parse(localStorage.getItem(AFFIL_KEY)); 
 function saveAffil(){ try{ localStorage.setItem(AFFIL_KEY, JSON.stringify(affilData)); }catch(e){} }
 const AFFIL_CONTESTS_KEY="chaskis_affil_contests";
 function defaultContests(){ return [
-  {id:1, kind:"tirage", title:"Tirage au sort mensuel", prize:"Un bon d’achat de 150 CHF", period:"Jusqu’au 31 juillet", status:"good", photo:"", prompt:"Photo produit en gros plan d’un bon cadeau et d’un ticket doré posés sur un comptoir en bois clair, lumière naturelle latérale, ambiance chaleureuse, quelques confettis flous en arrière-plan, tons violets et sarcelle discrets, style éditorial premium."},
-  {id:2, kind:"defi", title:"Défi courses de l’été", prize:"Un week-end pour deux à gagner", period:"Du 1er juin au 31 août", status:"good", photo:"", prompt:"Plan large en légère contre-plongée d’un coursier à vélo souriant dans une rue ensoleillée d’une ville suisse en été, mouvement dynamique, flou de vitesse en arrière-plan, ciel bleu, couleurs vives et estivales, cadrage cinématographique."},
-  {id:3, kind:"parrainage", title:"Prime de parrainage", prize:"50 CHF par filleul actif", period:"En continu", status:"warn", photo:"", prompt:"Vue de dessus à plat (flat lay) de deux mains qui se serrent au-dessus d’une table, entourées d’enveloppes et de billets stylisés, fond uni vert sarcelle doux, composition graphique et épurée, lumière diffuse, esthétique moderne et amicale."}
+  {id:1, kind:"tirage", title:"Tirage au sort mensuel", prize:"Un bon d’achat de 150 CHF", period:"Jusqu’au 31 juillet", status:"good", photo:"/assets/img/courier2.webp", photoPosY:40, prompt:"Photo produit en gros plan d’un bon cadeau et d’un ticket doré posés sur un comptoir en bois clair, lumière naturelle latérale, ambiance chaleureuse, quelques confettis flous en arrière-plan, tons violets et sarcelle discrets, style éditorial premium."},
+  {id:2, kind:"defi", title:"Défi courses de l’été", prize:"Un week-end pour deux à gagner", period:"Du 1er juin au 31 août", status:"good", photo:"/assets/img/courier.webp", photoPosY:45, prompt:"Plan large en légère contre-plongée d’un coursier à vélo souriant dans une rue ensoleillée d’une ville suisse en été, mouvement dynamique, flou de vitesse en arrière-plan, ciel bleu, couleurs vives et estivales, cadrage cinématographique."},
+  {id:3, kind:"parrainage", title:"Prime de parrainage", prize:"50 CHF par filleul actif", period:"En continu", status:"warn", photo:"/assets/img/driver.webp", photoPosY:40, prompt:"Vue de dessus à plat (flat lay) de deux mains qui se serrent au-dessus d’une table, entourées d’enveloppes et de billets stylisés, fond uni vert sarcelle doux, composition graphique et épurée, lumière diffuse, esthétique moderne et amicale."}
 ];}
 function loadContests(){ try{ const s=JSON.parse(localStorage.getItem(AFFIL_CONTESTS_KEY)); if(Array.isArray(s)&&s.length) return s; }catch(e){} return defaultContests(); }
 function saveContests(){ try{ localStorage.setItem(AFFIL_CONTESTS_KEY, JSON.stringify(contestData)); }catch(e){} }

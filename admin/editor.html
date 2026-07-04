@@ -671,18 +671,20 @@
   .tp-flow-h>svg{width:15px;height:15px;color:var(--purple);flex-shrink:0}
   .tp-flow-leg{display:inline-flex;flex-wrap:wrap;gap:7px;margin-left:auto}
   .tp-flow-lg{display:inline-flex;align-items:center;font-size:10px;font-weight:700;border-radius:20px;padding:2px 9px;white-space:nowrap}
-  .tp-flow-track{display:flex;gap:4px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin;scrollbar-color:#cfd3d0 transparent}
+  /* Frise = stepper horizontal : pastilles numérotées reliées par un rail, libellé + priorité SOUS la pastille (le trait ne traverse donc aucun texte). */
+  .tp-flow-track{display:flex;gap:0;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:thin;scrollbar-color:#cfd3d0 transparent}
   .tp-flow-track::-webkit-scrollbar{height:7px}
   .tp-flow-track::-webkit-scrollbar-track{background:transparent}
   .tp-flow-track::-webkit-scrollbar-thumb{background:#d4d8d5;border-radius:20px}
   .tp-flow-track::-webkit-scrollbar-thumb:hover{background:#c1c6c2}
-  .tp-fstep{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:9px;flex:1 0 auto;min-width:158px;padding:8px 12px;border-radius:10px;transition:background .15s}
-  .tp-fstep:hover{background:var(--bg)}
-  .tp-fstep-n{width:22px;height:22px;flex-shrink:0;border-radius:50%;background:var(--panel);border:2px solid var(--prc,var(--purple));color:var(--prc,var(--purple));font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+  .tp-fstep{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;flex:1 0 106px;min-width:106px;padding:0 4px}
+  .tp-fstep::before{content:"";position:absolute;top:12px;left:-50%;width:100%;height:2px;background:#e2e5e2;z-index:0}
+  .tp-fstep:first-child::before{display:none}
+  .tp-fstep-n{position:relative;z-index:1;width:25px;height:25px;flex-shrink:0;border-radius:50%;background:var(--panel);border:2px solid var(--prc,var(--purple));color:var(--prc,var(--purple));font-size:11.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;box-shadow:0 0 0 3px var(--panel);transition:background .15s,color .15s}
   .tp-fstep:hover .tp-fstep-n{background:var(--prc,var(--purple));color:#fff}
-  .tp-fstep-tx{display:flex;flex-direction:column;gap:3px;min-width:0}
-  .tp-fstep-t{font-size:11.5px;font-weight:600;color:var(--ink);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
-  .tp-fstep-p{align-self:flex-start;font-size:10px;font-weight:700;border-radius:20px;padding:1px 8px;white-space:nowrap}
+  .tp-fstep-tx{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;width:100%}
+  .tp-fstep-t{font-size:11px;font-weight:600;color:var(--ink);line-height:1.25;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .tp-fstep-p{font-size:9.5px;font-weight:700;border-radius:20px;padding:1px 7px;white-space:nowrap}
   .tp-prog{margin:-6px 0 14px}
   .tp-prog-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:5px}
   .tp-prog-k{font-size:10.5px;font-weight:700;color:var(--muted)}
@@ -2968,7 +2970,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.15.4" };
+const ADMIN_BUILD = { version: "0.15.5" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -4084,7 +4086,10 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.15.4", cur:true, date:"2026-07-04", title:"Avancement pleine largeur et icônes de page", items:[
+  { v:"v0.15.5", cur:true, date:"2026-07-04", title:"Frise d'ordre en vraie timeline", items:[
+    {t:"imp", x:"Suivi technique : l'ordre conseillé redevient une frise reliée (pastilles numérotées sur un fil, titre et priorité en dessous), sans trait qui traverse le texte, et toujours compacte"}
+  ]},
+  { v:"v0.15.4", date:"2026-07-04", title:"Avancement pleine largeur et icônes de page", items:[
     {t:"imp", x:"Avancement : les cartes utilisent toute la largeur (jusqu'à 4 par ligne), à taille égale ; le pourcentage abstrait est remplacé par le stade de chaque page, plus clair"},
     {t:"imp", x:"Une icône rappelle la page devant chaque titre (reprise du menu), dans le vert de la marque"}
   ]},

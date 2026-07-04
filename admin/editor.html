@@ -221,7 +221,9 @@
   .tipbox svg{width:16px;height:16px;flex-shrink:0;margin-top:1px;color:#c79a1e}
 
   /* ---- dashboard ---- */
-  .pg-h{font-size:20px;font-weight:700;margin:0}
+  .pg-h{font-size:20px;font-weight:700;margin:0;display:flex;align-items:center;gap:10px}
+  .pg-h-ic{display:inline-flex;align-items:center;justify-content:center;color:var(--teal);flex-shrink:0}
+  .pg-h-ic svg{width:22px;height:22px}
   .pg-sub{color:var(--muted);font-size:13px;margin:3px 0 20px}
   .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
   .statc{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:15px}
@@ -740,17 +742,14 @@
   .thm .tp-mini-note{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--border)}
   .thm-acts{margin-top:16px}
   /* Avancement (classes av- pour éviter la collision avec .pg-* = page) */
-  .av-wrap{max-width:1180px}
+  .av-wrap{max-width:1560px}
   .av-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
   /* Résumé global */
-  .av-sum{display:flex;align-items:center;gap:26px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px 22px;margin:0 0 22px}
-  .av-sum-l{flex-shrink:0}
-  .av-sum-pct{font-size:38px;font-weight:800;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums}
-  .av-sum-pct span{font-size:19px;font-weight:700;color:var(--muted);margin-left:2px}
-  .av-sum-cap{font-size:12px;color:var(--ink-soft);margin-top:5px}
-  .av-sum-r{flex:1;min-width:240px}
-  .av-sum-bar{height:8px;border-radius:6px;background:var(--bg);overflow:hidden;margin-bottom:12px}
-  .av-sum-bar>span{display:block;height:100%;border-radius:6px;background:var(--teal)}
+  .av-sum{display:flex;align-items:center;gap:22px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px 20px;margin:0 0 22px}
+  .av-sum-l{flex:1;min-width:240px}
+  .av-sum-t{font-size:15px;font-weight:700;color:var(--ink)}
+  .av-sum-cap{font-size:12px;color:var(--ink-soft);line-height:1.5;margin-top:4px}
+  .av-sum-r{flex-shrink:0}
   .av-sum-envs{display:flex;flex-wrap:wrap;gap:8px 20px}
   .av-sum-env{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-soft)}
   .av-sum-env b{font-weight:700;color:var(--ink)}
@@ -758,7 +757,7 @@
   .av-group{margin-bottom:22px}
   .av-group-h{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:11px}
   .av-group-n{font-size:11px;font-weight:700;color:var(--muted);background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:1px 8px}
-  .av-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+  .av-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;align-items:stretch}
   .av-card{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:13px;background:var(--panel);padding:15px 16px 14px;transition:border-color .15s,box-shadow .15s}
   .av-card:hover{border-color:var(--border-2);box-shadow:0 3px 12px rgba(40,32,60,.06)}
   .av-card-top{display:flex;align-items:baseline;gap:10px}
@@ -2969,7 +2968,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.15.3" };
+const ADMIN_BUILD = { version: "0.15.4" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -4085,7 +4084,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.15.3", cur:true, date:"2026-07-04", title:"Performance à 4 niveaux et affiliation", items:[
+  { v:"v0.15.4", cur:true, date:"2026-07-04", title:"Avancement pleine largeur et icônes de page", items:[
+    {t:"imp", x:"Avancement : les cartes utilisent toute la largeur (jusqu'à 4 par ligne), à taille égale ; le pourcentage abstrait est remplacé par le stade de chaque page, plus clair"},
+    {t:"imp", x:"Une icône rappelle la page devant chaque titre (reprise du menu), dans le vert de la marque"}
+  ]},
+  { v:"v0.15.3", date:"2026-07-04", title:"Performance à 4 niveaux et affiliation", items:[
     {t:"imp", x:"Performance : jauge à 4 niveaux (rouge, orange, jaune, vert) avec un seul vert comme aboutissement, fini le vert foncé"},
     {t:"fix", x:"Affiliation : les jeux concours reviennent au visuel de prompt (les photos d'illustration n'étaient pas en rapport avec le sujet)"}
   ]},
@@ -4277,17 +4280,15 @@ const APP_STAGE_H={stable:{lbl:"Prêt",pct:100,c:"#0E7D48"},beta:{lbl:"En test",
 function renderProgress(){ const el=document.getElementById("progressBody"); if(!el) return;
   const byEnv={prod:[],preprod:[],dev:[]}; PROGRESS.forEach(p=>{ (byEnv[p.env]||byEnv.preprod).push(p); });
   const total=PROGRESS.length||1;
-  const glob=Math.round(PROGRESS.reduce((s,p)=>s+((APP_STAGE_H[p.stage]||APP_STAGE_H.beta).pct),0)/total);
   const cnt={prod:byEnv.prod.length,preprod:byEnv.preprod.length,dev:byEnv.dev.length};
   const sumEnvs='<div class="av-sum-envs">'+["prod","preprod","dev"].map(k=>'<span class="av-sum-env"><span class="av-dot" style="background:'+APP_ENV[k].c+'"></span><b>'+cnt[k]+'</b>'+APP_ENV[k].lbl+'</span>').join("")+'</div>';
   let h='<div class="av-wrap">';
-  h+='<div class="av-sum"><div class="av-sum-l"><div class="av-sum-pct">'+glob+'<span>%</span></div><div class="av-sum-cap">avancement de l\'interface, sur '+total+' pages</div></div><div class="av-sum-r"><div class="av-sum-bar"><span style="width:'+glob+'%"></span></div>'+sumEnvs+'</div></div>';
+  h+='<div class="av-sum"><div class="av-sum-l"><div class="av-sum-t">Interface d\'administration</div><div class="av-sum-cap">'+total+' pages, réparties par environnement. Le degré d\'intégration technique (mise en ligne réelle) se suit dans « Suivi technique ».</div></div><div class="av-sum-r">'+sumEnvs+'</div></div>';
   ["prod","preprod","dev"].forEach(env=>{ const list=byEnv[env]; if(!list||!list.length) return; const e=APP_ENV[env];
     h+='<div class="av-group"><div class="av-group-h"><span class="av-dot" style="background:'+e.c+'"></span>'+e.lbl+'<span class="av-group-n">'+list.length+'</span></div><div class="av-grid">'
       +list.map(p=>{ const st=APP_STAGE_H[p.stage]||APP_STAGE_H.beta;
         return '<div class="av-card"><div class="av-card-top"><span class="av-name">'+techEsc(p.name)+'</span><span class="av-ver">v'+techEsc(p.version)+'</span></div>'
-          +'<div class="av-meta"><span class="av-stage" style="color:'+st.c+';background:'+st.c+'18">'+st.lbl+'</span><span class="av-pct">'+st.pct+'%</span></div>'
-          +'<div class="av-bar"><span style="width:'+st.pct+'%;background:'+st.c+'"></span></div>'
+          +'<div class="av-meta"><span class="av-stage" style="color:'+st.c+';background:'+st.c+'18">'+st.lbl+'</span></div>'
           +'<div class="av-detail-k">Nouveautés récentes</div><ul class="av-recent">'+(p.recent||[]).map(r=>'<li>'+techEsc(r)+'</li>').join("")+'</ul>'
           +'<button type="button" class="btn ghost sm av-open" data-goto="'+p.view+'"><i data-lucide="arrow-right"></i>Ouvrir la page</button></div>'; }).join("")
       +'</div></div>';
@@ -4336,7 +4337,10 @@ function openBugReport(){
   refreshIcons();
 }
 function initBugButton(){ const btn=document.getElementById("bugBtn"); if(!btn||btn.dataset.wired) return; btn.dataset.wired="1"; btn.addEventListener("click",openBugReport); try{ applyEnvNav(); }catch(e){} }
-(function(){ function _pgInit(){ try{ applyProgressBadges(); }catch(e){} try{ initBugButton(); }catch(e){} } if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",_pgInit); else _pgInit(); })();
+/* Icône de la page devant son titre : on reprend l'icône de la nav (même vue), en vert de marque. */
+const VIEW_ICON={dashboard:"layout-dashboard",editor:"square-pen",structure:"route",media:"image",versions:"history",notes:"scroll-text",progress:"activity",chatbot:"bot",rdv:"calendar",copilot:"compass",stats:"bar-chart-3",perf:"gauge",affiliation:"handshake",users:"users",tech:"terminal-square"};
+function decoratePageTitles(){ document.querySelectorAll(".views .view[id^='view-']").forEach(function(v){ const name=v.id.replace("view-",""); const ic=VIEW_ICON[name]; if(!ic) return; const h=v.querySelector(".pg-h"); if(!h||h.dataset.icd) return; h.dataset.icd="1"; const s=document.createElement("span"); s.className="pg-h-ic"; s.innerHTML='<i data-lucide="'+ic+'"></i>'; h.insertBefore(s,h.firstChild); }); try{ refreshIcons(); }catch(e){} }
+(function(){ function _pgInit(){ try{ applyProgressBadges(); }catch(e){} try{ initBugButton(); }catch(e){} try{ decoratePageTitles(); }catch(e){} } if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",_pgInit); else _pgInit(); })();
 function nextVersionId(){ const n=versions.reduce((m,x)=>Math.max(m, parseInt(String(x.id||"v0").replace(/\D/g,""))||0),0)+1; return "v"+n; }
 function restoreVersion(id){ const v=versions.find(x=>x.id===id); if(!v) return;
   if(!confirm("Restaurer "+id+" ("+fmtShort(v.date)+") ? Vos modifications non publiées seront remplacées.")) return;

@@ -1,0 +1,86 @@
+/* Chaskis — layout.css : sections, partenaires, footer, animations, formulaires, responsive
+   Ordre de chargement: base -> chrome -> layout -> components -> chatbot (cascade preservee) */
+
+/* ===== SECTIONS ===== */
+section{padding:clamp(64px,8vw,100px) 0}
+.sl{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);margin-bottom:12px}
+.st{font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800;line-height:1.12;letter-spacing:-.03em;margin-bottom:14px;max-width:600px}
+.st .ac{color:var(--teal)}.st .sa{font-family:'Instrument Serif',serif;font-weight:400;font-style:italic;color:var(--teal)}
+.sd{font-size:.95rem;color:var(--ink-light);line-height:1.65;max-width:500px;margin-bottom:36px}
+.sh{margin-bottom:clamp(36px,5vw,56px)}
+.sh.c{text-align:center;display:flex;flex-direction:column;align-items:center}
+
+/* ===== PARTNERS ===== */
+.partners{padding:32px 0;border-top:1px solid rgba(0,0,0,.04);overflow:hidden}
+
+.p-label{text-align:center;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-muted);margin-bottom:14px}
+.mq-w{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.mq{display:flex;gap:44px;animation:mqx 26s linear infinite;width:max-content}
+.mq-i{font-size:.88rem;font-weight:700;color:var(--ink-muted);opacity:.3;white-space:nowrap;display:flex;align-items:center;gap:7px;transition:opacity .3s}
+.mq-i:hover{opacity:.6}
+.mq-i svg{width:18px;height:18px;flex-shrink:0}
+@keyframes mqx{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ===== FOOTER ===== */
+.footer{background:var(--ink);color:#fff;padding:56px 0 0}
+.ft{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr;gap:56px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.06)}
+.fb{max-width:320px}.fb .nav-logo{color:#fff;margin-bottom:22px;display:inline-block}
+.fb p{font-size:.82rem;color:rgba(255,255,255,.38);line-height:1.7}
+.fb-soc{display:flex;gap:10px;margin-top:22px}
+.fb-soc a{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;transition:all .3s var(--ease)}
+.fb-soc a:hover{background:var(--teal);transform:translateY(-2px)}
+.fb-soc a svg{width:14px;height:14px;color:rgba(255,255,255,.4)}.fb-soc a:hover svg{color:#fff}
+.fc h4{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.22);margin-bottom:12px}
+.fc a{display:block;font-size:.78rem;color:rgba(255,255,255,.4);padding:4px 0;transition:all .3s}.fc a:hover{color:#fff;padding-left:4px}
+.f-btm{display:flex;align-items:center;justify-content:space-between;padding:18px 0;font-size:.68rem;color:rgba(255,255,255,.22);gap:16px;flex-wrap:wrap}
+.f-credit a{color:rgba(255,255,255,.45);text-decoration:none;transition:color .2s}
+.f-credit a:hover{color:#fff}
+
+/* ===== ANIMATIONS ===== */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.rv.v{opacity:1;transform:translateY(0)}
+.rl{opacity:0;transform:translateX(-32px);transition:opacity .8s var(--ease),transform .8s var(--ease)}.rl.v{opacity:1;transform:translateX(0)}
+.rr{opacity:0;transform:translateX(32px);transition:opacity .8s var(--ease),transform .8s var(--ease)}.rr.v{opacity:1;transform:translateX(0)}
+.stg>*{opacity:0;transform:translateY(20px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.stg.v>*:nth-child(1){transition-delay:.06s}.stg.v>*:nth-child(2){transition-delay:.14s}.stg.v>*:nth-child(3){transition-delay:.22s}.stg.v>*:nth-child(4){transition-delay:.3s}
+.stg.v>*{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.18s}.d3{transition-delay:.26s}.d4{transition-delay:.34s}.d5{transition-delay:.42s}
+/* Stagger with more children */
+.stg.v>*:nth-child(5){transition-delay:.38s}.stg.v>*:nth-child(6){transition-delay:.46s}.stg.v>*:nth-child(7){transition-delay:.54s}.stg.v>*:nth-child(8){transition-delay:.62s}
+
+/* Tilt on hover */
+@media(hover:hover){
+  .tilt{transition:transform .5s var(--ease)}
+  .tilt:hover{transform:translateY(-6px)}
+}
+
+/* Magnetic button effect */
+@keyframes pulse-ring{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.5);opacity:0}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.pulse-dot{position:relative}.pulse-dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--teal);animation:pulse-ring 2s ease infinite}
+
+/* ===== FORM SHARED ===== */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:.75rem;font-weight:700;color:var(--ink-mid);margin-bottom:5px}
+.field input,.field select,.field textarea{width:100%;padding:11px 14px;border:1.5px solid var(--sand);border-radius:var(--r);font-family:inherit;font-size:.86rem;color:var(--ink);background:var(--white);outline:none;transition:border-color .3s,box-shadow .3s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(58,175,169,.1)}
+.field textarea{resize:vertical;min-height:60px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){
+  .ft{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .nav-mid{display:none}.mob-t{display:flex}
+  .field-row{grid-template-columns:1fr}
+  .ft{grid-template-columns:1fr;gap:20px}
+  /* En mobile, le drapeau langue est dans le burger menu uniquement */
+  .lang-drop{display:none !important}
+}
+.mob-lang{margin-top:8px;margin-left:0}
+.mob-m .mob-lang{opacity:0;transform:translateY(16px);transition:all .4s var(--ease)}
+.mob-m.on .mob-lang{opacity:1;transform:translateY(0);transition-delay:.35s}
+.mob-m .mob-lang button{font-size:.85rem;padding:8px 18px}
+

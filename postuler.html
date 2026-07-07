@@ -26,7 +26,7 @@
 <meta name="theme-color" content="#4BB3A4">
 <link rel="icon" href="assets/icons/icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
-<link rel="stylesheet" href="assets/css/styles.css?v=20260422f">
+<link rel="stylesheet" href="assets/css/styles.css?v=20260707a">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 <link rel="preload" as="image" href="assets/img/postulation-hero.webp" fetchpriority="high">
 
@@ -532,19 +532,6 @@
 .sdl-secondary-link strong { font-weight: 700; color: rgba(255,255,255,.6); }
 .smart-dl[data-ready="true"] .sdl-btn.sdl-secondary { display: none; }
 .smart-dl:not([data-ready="true"]) .sdl-secondary-link { display: none; }
-
-/* ===== COPY PROMPT BTN ===== */
-.copy-prompt-btn {
-  display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: var(--pill);
-  background: rgba(255,255,255,.92); color: var(--ink); border: 1px solid rgba(0,0,0,.06);
-  font-family: inherit; font-size: .68rem; font-weight: 600; cursor: pointer;
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 2px 8px rgba(0,0,0,.08); transition: all .25s var(--ease);
-}
-.copy-prompt-btn:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.12); }
-.copy-prompt-btn svg { width: 12px; height: 12px; color: var(--teal-dark); }
-.copy-prompt-btn.copied { background: var(--teal); color: #fff; border-color: var(--teal); }
-.copy-prompt-btn.copied svg { color: #fff; }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
@@ -1165,7 +1152,7 @@ window.T = {
   }
 };
 </script>
-<script src="assets/js/shared.js?v=20260422h"></script>
+<script src="assets/js/shared.js?v=20260707a"></script>
 <script src="assets/js/auth.js"></script>
 <script>
 /* NAV OVER DARK */
@@ -1305,43 +1292,6 @@ window.T = {
     }
     if (img.complete && img.naturalWidth === 0) { showPrompt(); return; }
     img.addEventListener('error', showPrompt);
-  });
-})();
-
-/* COPY PROMPT BUTTONS */
-(function(){
-  const PROMPTS = {
-    'postuler-hero': "Authentic editorial photograph of a Chaskis bike courier in action, three-quarter rear view, insulated delivery backpack visible, teal Chaskis branded uniform, riding through a narrow cobblestone street in old-town Geneva or Lausanne, late afternoon golden hour light, warm bokeh of European stone buildings, candid reportage style, 35mm film look, 4:5 portrait ratio.",
-    'postuler-coursier-fg': "Professional product-style photograph of a Chaskis bike courier, full body, isolated on a pure white or transparent background, wearing teal Chaskis uniform with delivery backpack, riding or standing with bike, slight motion pose, clean studio lighting, no background elements, suitable for compositing, PNG with transparent background required.",
-    'postuler-chauffeur-fg': "Professional product-style photograph of a Chaskis professional driver inside a delivery van, upper body to mid-waist visible, isolated on transparent background, wearing dark driver uniform, hands on steering wheel or relaxed, slight 3/4 angle, clean lighting, PNG with transparent background required for compositing.",
-    'postuler-itv-pierre': "Candid portrait of Pierre, 27, Mediterranean complexion, short dark hair, wearing a plain dark t-shirt and a casual teal Chaskis jacket, no helmet, leaning against a low stone wall in a Geneva park, gaze slightly downward with a natural half-smile, not posed for camera, soft green tree bokeh behind, warm late-morning light, chest-up framing, 4:5 ratio. Same Chaskis day shoot, natural outdoor setting, Geneva.",
-    'postuler-itv-amelia': "Natural portrait of Amélia, 31, genuine relaxed smile looking directly at camera, casual dark jacket, shoulder-length curly hair loose, sitting on a bench facing Lake Geneva (Lac Léman shoreline, Geneva side), soft afternoon light reflecting off the water behind her, green trees framing the background, chest-to-torso framing, at ease and natural, same Chaskis day shoot, 4:5 ratio.",
-    'postuler-itv-abdel': "Relaxed portrait of Abdel, 34, short beard, charcoal jacket over a plain crewneck, sitting on a lakeside bench at the edge of Lac Léman in Geneva, gaze directed calmly to the side, not looking at camera, one arm resting on the bench back, soft water and tree bokeh behind, warm golden light, chest-up framing, same Chaskis day shoot, 4:5 ratio.",
-    'postuler-itv-nadia': "Candid portrait of Nadia, 29, hair loosely tied back, Chaskis jacket over a plain top, caught mid-laugh at something off-frame, standing on a gravel path under trees in a Geneva park, body slightly turned with face angled naturally toward camera, dappled soft daylight, deep green foliage bokeh, chest-to-mid-torso framing, same Chaskis day shoot, 4:5 ratio.",
-    'postuler-itv-karim': "Lively portrait of Karim, 23, wearing a plain hoodie with a small Chaskis logo, grinning naturally mid-conversation, gaze slightly off-camera, sitting on a low stone wall or wooden bench in a Geneva park, bright natural light through tree canopy, green bokeh background, waist-up framing, spontaneous and real, same Chaskis day shoot, 4:5 ratio.",
-    'postuler-itv-valentina': "Relaxed portrait of Thomas, 36, short dark beard, plain long-sleeve shirt or light Chaskis jacket, sitting on a lakeside bench along Lac Léman in Geneva, looking down slightly with a quiet smile as if checking his phone, calm water and soft tree reflections in bokeh background, warm afternoon light, chest-up framing, same Chaskis day shoot, 4:5 ratio."
-  };
-  document.querySelectorAll('.copy-prompt-btn').forEach(btn => {
-    btn.addEventListener('click', async e => {
-      e.preventDefault(); e.stopPropagation();
-      const host = btn.closest('[data-prompt-key]') || btn;
-      const key = btn.dataset.promptKey || host.dataset.promptKey;
-      const text = PROMPTS[key] || host.querySelector?.('.img-prompt-text')?.textContent?.trim() || '';
-      if (!text) return;
-      try { await navigator.clipboard.writeText(text); }
-      catch {
-        const ta = document.createElement('textarea');
-        ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
-        document.body.appendChild(ta); ta.select();
-        try { document.execCommand('copy'); } catch(_){}
-        document.body.removeChild(ta);
-      }
-      btn.classList.add('copied');
-      const label = btn.querySelector('span');
-      const old = label.textContent;
-      label.textContent = 'Copié !';
-      setTimeout(() => { btn.classList.remove('copied'); label.textContent = old; }, 1800);
-    });
   });
 })();
 

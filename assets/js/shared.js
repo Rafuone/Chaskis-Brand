@@ -174,7 +174,7 @@ const revealObs = new IntersectionObserver(entries => {
     }
   });
 }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
-document.querySelectorAll('.rv,.rl,.rr,.rs,.stg,.rrot,.rblur,.rclip,.rcount').forEach(el => revealObs.observe(el));
+document.querySelectorAll('.rv,.rl,.rr,.stg').forEach(el => revealObs.observe(el));
 
 // Animated counters
 const counterObs = new IntersectionObserver(entries => {

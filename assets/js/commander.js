@@ -80,7 +80,7 @@ function loadDraft() {
     const raw = localStorage.getItem(DRAFT_KEY); if (!raw) return;
     const d = JSON.parse(raw);
     if (!d.ts || Date.now() - d.ts > 24*3600*1000) { localStorage.removeItem(DRAFT_KEY); return; }
-    ['contact','pickup','vehicle','timing','scheduledDate','scheduledTime','urgent','fragile','note'].forEach(k => { if (d[k] !== undefined) state[k] = d[k]; });
+    ['contact','pickup','vehicle','timing','scheduledDate','scheduledTime','note'].forEach(k => { if (d[k] !== undefined) state[k] = d[k]; });
     if (Array.isArray(d.stops) && d.stops.length) state.stops = d.stops.map(s => Object.assign(makeStop(), s));
   } catch(e){ try { localStorage.removeItem(DRAFT_KEY); } catch(_){} }
 }
@@ -644,7 +644,7 @@ document.getElementById('step1Next').addEventListener('click', () => { if (step1
 document.getElementById('step2Back').addEventListener('click', () => setStep(1));
 document.getElementById('step2Next').addEventListener('click', () => { if (step2Valid()) setStep(3); });
 document.getElementById('step3Back').addEventListener('click', () => setStep(2));
-document.querySelectorAll('.recap-edit').forEach(b => b.addEventListener('click', () => setStep(Number(b.dataset.goto))));
+document.querySelectorAll('.pay-recap-edit').forEach(b => b.addEventListener('click', () => setStep(Number(b.dataset.goto))));
 
 // ===== LIVE PRICING =====
 const debouncedEstimate = debounce(async () => {

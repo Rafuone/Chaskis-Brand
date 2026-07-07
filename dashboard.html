@@ -15,7 +15,7 @@
 <meta name="theme-color" content="#3AAFA9">
 <link rel="icon" href="assets/icons/icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
-<link rel="stylesheet" href="assets/css/styles.css?v=20260422f">
+<link rel="stylesheet" href="assets/css/styles.css?v=20260707a">
 <style>
 .page-dash{padding:88px 0 60px;min-height:100vh}
 
@@ -104,7 +104,7 @@
 #pageCurtain.is-lifted{transform:translateX(-110%);pointer-events:none}
 </style>
 </head>
-<body class="page-dashboard">
+<body>
 
 <div id="pageCurtain" aria-hidden="true"></div>
 
@@ -293,7 +293,7 @@
 
 <footer class="footer" data-nav-dark data-shared></footer>
 
-<script src="assets/js/shared.js?v=20260422h"></script>
+<script src="assets/js/shared.js?v=20260707a"></script>
 <script src="assets/js/auth.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </tr>
     `).join('');
     if (filtered.length === 0) {
-      document.getElementById('ordersBody').innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--ink-muted)">Aucune commande trouvée</td></tr>';
+      document.getElementById('ordersBody').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--ink-muted)">Aucune commande trouvée</td></tr>';
     }
   };
   renderOrders();
@@ -428,7 +428,6 @@ document.addEventListener('DOMContentLoaded', () => {
     activeEl.innerHTML = activeOrders.map((o, i) => {
       const step = i === 0 ? 2 : 1;
       const initials = o.courier.split(' ').map(w => w[0]).join('').slice(0,2);
-      const progressPct = (step / (stepLabels.length - 1)) * 100;
 
       return `
         <div class="dash-card track-card">

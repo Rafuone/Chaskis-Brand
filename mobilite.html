@@ -35,7 +35,7 @@
 <meta name="theme-color" content="#F5B800">
 <link rel="icon" href="assets/icons/icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
-<link rel="stylesheet" href="assets/css/styles.css?v=20260422f">
+<link rel="stylesheet" href="assets/css/styles.css?v=20260707a">
 
 <!-- ===== Performance ===== -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -134,30 +134,6 @@ body.page-mobilite .lang-drop-item.active{color:var(--my);background:rgba(245,18
 .mob-orbs-2{top:40%;right:-18%;width:640px;height:640px;background:radial-gradient(circle,rgba(184,120,0,.09),transparent 65%)}
 .mob-orbs-3{bottom:-10%;left:30%;width:560px;height:560px;background:radial-gradient(circle,rgba(245,184,0,.07),transparent 65%)}
 body.page-mobilite > section,body.page-mobilite > header,body.page-mobilite > footer{position:relative;z-index:1}
-
-/* Image prompt placeholder (visible instruction for user) */
-.img-prompt{position:relative;border:1.5px dashed rgba(245,184,0,.38);border-radius:18px;padding:22px;background:rgba(245,184,0,.03);display:flex;flex-direction:column;gap:12px;min-height:100%}
-.img-prompt-label{font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--my);display:flex;align-items:center;gap:8px}
-.img-prompt-label::before{content:'';width:20px;height:1px;background:var(--my)}
-.img-prompt-title{font-size:.98rem;font-weight:700;color:#fff;letter-spacing:-.01em;line-height:1.3}
-.img-prompt-txt{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.74rem;color:rgba(255,255,255,.82);line-height:1.55;background:rgba(0,0,0,.35);padding:12px 14px;border-radius:10px;border:1px solid rgba(245,184,0,.14);user-select:all;word-break:break-word;white-space:pre-wrap}
-.img-prompt-copy{align-self:flex-start;padding:7px 14px;background:var(--my);color:var(--mi);border:none;border-radius:8px;font-weight:700;font-size:.72rem;letter-spacing:.02em;cursor:pointer;font-family:inherit;transition:all .25s ease;display:inline-flex;align-items:center;gap:6px}
-.img-prompt-copy:hover{background:var(--my-bright);transform:translateY(-1px)}
-.img-prompt-copy svg{width:12px;height:12px}
-.img-prompt-copy.is-copied{background:#22c55e}
-.mob-prompts-fold{margin-top:48px;max-width:900px;margin-left:auto;margin-right:auto}
-.mob-prompts-fold summary{cursor:pointer;list-style:none;padding:14px 20px;background:rgba(245,184,0,.05);border:1px dashed rgba(245,184,0,.28);border-radius:12px;color:var(--my);font-size:.78rem;font-weight:600;letter-spacing:.02em;transition:background .25s ease}
-.mob-prompts-fold summary::-webkit-details-marker{display:none}
-.mob-prompts-fold summary::before{content:'+';display:inline-block;margin-right:10px;font-weight:700;font-size:1rem;transition:transform .3s ease;transform-origin:center;line-height:0}
-.mob-prompts-fold[open] summary::before{transform:rotate(45deg)}
-.mob-prompts-fold summary:hover{background:rgba(245,184,0,.08)}
-.mob-prompts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:16px}
-@media(max-width:780px){.mob-prompts-grid{grid-template-columns:1fr}}
-
-/* Yellow buttons */
-body.page-mobilite .btn-p{background:var(--my);color:var(--mi);box-shadow:0 4px 20px rgba(245,184,0,.35)}
-body.page-mobilite .btn-p:hover{background:var(--my-bright);box-shadow:0 8px 32px rgba(245,184,0,.45)}
-body.page-mobilite .btn-p::before{background:linear-gradient(135deg,var(--my-deep),var(--my))}
 
 /* ===== Hero ===== */
 .mob-hero{position:relative;background:transparent;color:#fff;overflow:hidden;padding:160px 0 120px;display:flex;align-items:center}
@@ -1301,7 +1277,7 @@ window.T = {
   }
 };
 </script>
-<script src="assets/js/shared.js?v=20260422h"></script>
+<script src="assets/js/shared.js?v=20260707a"></script>
 <script src="assets/js/auth.js"></script>
 
 <script>
@@ -1336,33 +1312,6 @@ window.T = {
 
   document.querySelectorAll('[data-goto]').forEach(btn => {
     btn.addEventListener('click', () => goto(Number(btn.dataset.goto)));
-  });
-})();
-
-// ===== COPY PROMPT buttons =====
-(function() {
-  document.querySelectorAll('[data-copy-prompt]').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const wrap = btn.closest('.img-prompt');
-      const txt = wrap && wrap.querySelector('.img-prompt-txt');
-      if (!txt) return;
-      try {
-        await navigator.clipboard.writeText(txt.textContent.trim());
-      } catch(e) {
-        const sel = window.getSelection();
-        const range = document.createRange();
-        range.selectNodeContents(txt);
-        sel.removeAllRanges(); sel.addRange(range);
-      }
-      btn.classList.add('is-copied');
-      const span = btn.querySelector('span');
-      const prev = span ? span.textContent : '';
-      if (span) span.textContent = 'Copié';
-      setTimeout(() => {
-        btn.classList.remove('is-copied');
-        if (span) span.textContent = prev || 'Copier';
-      }, 1500);
-    });
   });
 })();
 

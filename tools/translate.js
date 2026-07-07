@@ -26,7 +26,7 @@ try {
 } catch {}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const HTML_FILE = path.join(__dirname, 'index.html');
+const HTML_FILE = path.join(__dirname, '..', 'index.html');
 const API_KEY = process.env.ANTHROPIC_API_KEY;
 
 if (!API_KEY) {

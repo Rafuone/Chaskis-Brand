@@ -49,7 +49,6 @@ const DEMO_ORDERS = {
 function getUser() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
 }
-function isLoggedIn() { return !!getUser(); }
 function getUserTier() { const u = getUser(); return u ? u.plan : 'express'; }
 function getUserOrders() { return DEMO_ORDERS[getUserTier()] || DEMO_ORDERS.express; }
 
@@ -154,139 +153,7 @@ function fillDemo(email, pass) {
   document.getElementById('loginError').style.display = 'none';
 }
 
-// ===== NAV STATE =====
-function updateNavState() {
-  const user = getUser();
-  const loginEl = document.querySelector('.nav-login');
-  if (!loginEl) return;
-
-  if (user) {
-    // Replace login button with user avatar + dropdown
-    loginEl.outerHTML = `
-      <div class="nav-user" id="navUser">
-        <div class="nav-user-av" style="background:${getPlanColor(user.plan)}">${getInitials(user.name)}</div>
-        <span class="nav-user-name">${user.name.split(' ')[0]}</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
-        <div class="nav-user-dd" id="navDD">
-          <div class="ndd-user">
-            <strong>${user.name}</strong>
-            <span>${user.company}</span>
-            <span class="ndd-plan" style="background:${getPlanColor(user.plan)}20;color:${getPlanColor(user.plan)}">${getPlanLabel(user.plan)}</span>
-          </div>
-          <a href="dashboard.html" class="ndd-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Tableau de bord</a>
-          <a href="commander.html" class="ndd-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Nouvelle commande</a>
-          <div class="ndd-sep"></div>
-          <a href="#" class="ndd-link ndd-logout" onclick="logout();return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Déconnexion</a>
-        </div>
-      </div>
-    `;
-    // Toggle dropdown
-    const navUser = document.getElementById('navUser');
-    const dd = document.getElementById('navDD');
-    if (navUser && dd) {
-      navUser.addEventListener('click', e => {
-        e.stopPropagation();
-        dd.classList.toggle('show');
-      });
-      document.addEventListener('click', () => dd.classList.remove('show'));
-    }
-
-    // Update mobile menu
-    const mm = document.getElementById('mm');
-    if (mm) {
-      const links = mm.querySelectorAll('a');
-      links.forEach(a => {
-        if (a.textContent.includes('Connexion')) {
-          a.href = 'dashboard.html';
-          a.textContent = 'Tableau de bord';
-          a.removeAttribute('onclick');
-        }
-      });
-      // Add logout link if not present
-      if (!mm.querySelector('.mm-logout')) {
-        const logoutLink = document.createElement('a');
-        logoutLink.href = '#';
-        logoutLink.className = 'mm-logout';
-        logoutLink.textContent = 'Déconnexion';
-        logoutLink.onclick = e => { e.preventDefault(); logout(); };
-        mm.appendChild(logoutLink);
-      }
-    }
-  } else {
-    // Not logged in: intercept login click
-    loginEl.addEventListener('click', e => {
-      e.preventDefault();
-      openLoginModal();
-    });
-  }
-}
-
-// ===== COMMANDER: TIER GATING =====
-function updateTierGating() {
-  const tierBar = document.getElementById('tierBar');
-  if (!tierBar) return; // Not on commander page
-
-  const user = getUser();
-  if (user) {
-    const plan = user.plan;
-    // Update subtitle
-    const sub = document.querySelector('.ostep-sub');
-    if (sub && document.getElementById('os0')) {
-      sub.textContent = `Connecté en tant que ${user.name} · Plan ${getPlanLabel(plan)}`;
-    }
-    // Unlock tiers based on plan
-    if (plan === 'flex' || plan === 'dedie') {
-      const flexTier = tierBar.querySelector('[data-tier="flex"]');
-      if (flexTier) {
-        flexTier.classList.remove('lk');
-        const tag = flexTier.querySelector('.tier-tag');
-        if (tag) tag.remove();
-        flexTier.addEventListener('click', () => selectTier(flexTier));
-      }
-    }
-    if (plan === 'dedie') {
-      const dedieTier = tierBar.querySelector('[data-tier="dedie"]');
-      if (dedieTier) {
-        dedieTier.classList.remove('lk');
-        const tag = dedieTier.querySelector('.tier-tag');
-        if (tag) tag.remove();
-        dedieTier.addEventListener('click', () => selectTier(dedieTier));
-      }
-      // Auto-select dedie
-      tierBar.querySelectorAll('.tier').forEach(t => t.classList.remove('on'));
-      const dt = tierBar.querySelector('[data-tier="dedie"]');
-      if (dt) { dt.classList.add('on'); }
-      if (typeof tierName !== 'undefined') { tierName = 'Dédié'; tierPrice = 8; }
-    }
-  } else {
-    // Not logged in: add info banner
-    const existingBanner = document.querySelector('.tier-guest-banner');
-    if (!existingBanner) {
-      const banner = document.createElement('div');
-      banner.className = 'tier-guest-banner';
-      banner.innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-        <span>Commandez sans compte en <strong>Express (CHF 16)</strong>. <a href="#" onclick="openLoginModal();return false" style="color:var(--teal);font-weight:700">Connectez-vous</a> pour les tarifs Pro.</span>
-      `;
-      tierBar.parentNode.insertBefore(banner, tierBar.nextSibling);
-    }
-  }
-}
-
-function selectTier(el) {
-  const tierBar = document.getElementById('tierBar');
-  tierBar.querySelectorAll('.tier').forEach(t => t.classList.remove('on'));
-  el.classList.add('on');
-  if (typeof tierName !== 'undefined') {
-    tierName = el.querySelector('.tier-name').textContent;
-    tierPrice = parseInt(el.dataset.price);
-    if (typeof updateSum === 'function') updateSum();
-  }
-}
-
 // ===== BOOTSTRAP =====
 document.addEventListener('DOMContentLoaded', () => {
   injectLoginModal();
-  updateNavState();
-  updateTierGating();
 });

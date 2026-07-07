@@ -8,7 +8,7 @@
 
 const ORS_API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjY1NDdjYjVlMzc0ODQ1ZTk4MDg1MzljMTczMzgyZmI2IiwiaCI6Im11cm11cjY0In0=';
 
-const VAT_RATE = 0.077;
+const VAT_RATE = 0.081; // TVA CH standard, 8.1% depuis le 01.01.2024
 
 /* ===== ZONES ===== */
 const ZONES = [
@@ -408,7 +408,4 @@ window.ChaskisPricing = {
   canPickupAt,
   canDeliverAt,
   findZoneByPostalCode,
-  extractPostalCode,
-  ZONES,
-  VAT_RATE,
 };

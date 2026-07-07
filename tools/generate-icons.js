@@ -62,34 +62,6 @@ function makePNG(size, r, g, b, cornerRadius) {
   return Buffer.concat([sig, mkchunk('IHDR', ihdr), mkchunk('IDAT', idat), mkchunk('IEND', Buffer.alloc(0))]);
 }
 
-// Lire les SVG et les convertir en PNG via data URI embedded dans un canvas HTML
-// Approche: écrire un HTML temporaire qui génère les PNG via canvas
-const htmlGen = `<!DOCTYPE html><html><body>
-<canvas id="c192" width="192" height="192"></canvas>
-<canvas id="c512" width="512" height="512"></canvas>
-<script>
-function drawIcon(canvas, size, radius) {
-  const ctx = canvas.getContext('2d');
-  const r = 58/255, g = 175/255, b = 169/255;
-  // Background with rounded corners
-  ctx.beginPath();
-  ctx.moveTo(radius, 0);
-  ctx.lineTo(size-radius, 0);
-  ctx.quadraticCurveTo(size, 0, size, radius);
-  ctx.lineTo(size, size-radius);
-  ctx.quadraticCurveTo(size, size, size-radius, size);
-  ctx.lineTo(radius, size);
-  ctx.quadraticCurveTo(0, size, 0, size-radius);
-  ctx.lineTo(0, radius);
-  ctx.quadraticCurveTo(0, 0, radius, 0);
-  ctx.closePath();
-  ctx.fillStyle = '#3AAFA9';
-  ctx.fill();
-}
-drawIcon(document.getElementById('c192'), 192, 38);
-drawIcon(document.getElementById('c512'), 512, 100);
-</script></html>`;
-
 // Teal #3AAFA9 = rgb(58, 175, 169)
 fs.writeFileSync(path.join(__dirname, '../assets/icons/icon-192.png'), makePNG(192, 58, 175, 169, 38));
 fs.writeFileSync(path.join(__dirname, '../assets/icons/icon-512.png'), makePNG(512, 58, 175, 169, 100));

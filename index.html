@@ -856,16 +856,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
   try { if (localStorage.getItem('promoDismissed') === '1') { document.body.classList.remove('has-promo'); } } catch(e){}
 </script>
 
-<div class="mob-m" id="mm">
-  <a href="index.html" onclick="cm()" data-i18n="nav.delivery">Livraison</a>
-  <a href="mobilite.html" onclick="cm()" data-i18n="nav.mobility">Mobilit&eacute;</a>
-  <a href="postuler.html" onclick="cm()" data-i18n="nav.join">Postuler</a>
-  <a href="commander.html" onclick="cm()" data-i18n="nav.order">Commander une course</a>
-  <div class="mob-lang-opts">
-    <button class="mob-lang-btn active" data-lang="fr" onclick="__chaskisSetLang('fr');cm()"><span class="mob-lang-flag"><img src="assets/img/flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
-    <button class="mob-lang-btn" data-lang="en" onclick="__chaskisSetLang('en');cm()"><span class="mob-lang-flag"><img src="assets/img/flag-gb.svg" alt="" width="18" height="13"></span> English</button>
-  </div>
-</div>
+<div class="mob-m" id="mm" data-chrome-menu></div>
 
 <div class="promo-bar" id="promoBar" role="region" aria-label="Offre promotionnelle">
   <div class="ct promo-bar-inner">
@@ -880,39 +871,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
   </div>
 </div>
 
-<nav class="nav" id="nav">
-  <div class="ct nav-in">
-    <a href="index.html" class="nav-logo" aria-label="Chaskis, accueil"><img src="assets/img/Chaskis-logo.svg" alt="Chaskis" height="22"></a>
-    <div class="nav-mid" style="margin-left:auto">
-      <a href="index.html" class="active" data-i18n="nav.delivery">Livraison</a>
-      <a href="mobilite.html" data-i18n="nav.mobility">Mobilit&eacute;</a>
-      <a href="postuler.html" data-i18n="nav.join">Postuler</a>
-    </div>
-    <a href="commander.html" class="btn btn-o nav-cta-btn"><span data-i18n="nav.order">Commander une course</span></a>
-    <div class="lang-drop" id="langDrop">
-      <button class="lang-drop-trigger" id="langTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Changer de langue">
-        <span class="lang-drop-flag" id="langFlag"><img src="assets/img/flag-fr.svg" alt="Français" width="18" height="13"></span>
-        <svg class="lang-drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="lang-drop-menu" id="langMenu" role="listbox" aria-label="Langue">
-        <button class="lang-drop-item active" role="option" data-lang="fr" data-flag="fr" data-code="FR" aria-selected="true">
-          <span class="lang-drop-item-flag"><img src="assets/img/flag-fr.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">Français</span>
-        </button>
-        <button class="lang-drop-item" role="option" data-lang="en" data-flag="gb" data-code="EN" aria-selected="false">
-          <span class="lang-drop-item-flag"><img src="assets/img/flag-gb.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">English</span>
-        </button>
-      </div>
-    </div>
-    <button class="mob-t" id="mt" aria-label="Menu">
-      <svg class="mob-icon mob-ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-        <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
-      </svg>
-      <svg class="mob-icon mob-ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-        <path d="M5 5L19 19M5 19L19 5"/>
-      </svg>
-    </button>
-  </div>
-</nav>
+<nav class="nav" id="nav" data-chrome-nav data-active="livraison"></nav>
 
 <!-- ===== HERO ===== -->
 <header class="hero">
@@ -1384,7 +1343,7 @@ span.ast{color:#e53e3e!important;font-weight:700}
 <a href="#booking" class="btn btn-p pulse nav-cta-float"><span data-i18n="float.cta">Planifier un appel</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-<script src="assets/js/shared.js?v=20260707a"></script>
+<script src="assets/js/shared.js?v=20260707b"></script>
 <script src="assets/js/auth.js"></script>
 <script>
 

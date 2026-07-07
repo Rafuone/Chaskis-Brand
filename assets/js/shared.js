@@ -1,5 +1,59 @@
 // ===== CHASKIS SHARED JS =====
 
+// ===== CHROME PARTAGÉ (nav + menu mobile injectés) =====
+// Les pages ne portent que des conteneurs vides : <nav id="nav" data-chrome-nav [data-active] [data-menu-extra]>
+// et <div class="mob-m" id="mm" data-chrome-menu>. Injection SYNCHRONE (comme le footer) : les éléments
+// existent avant le reste de shared.js, avant applyI18n, et avant que l'éditeur admin (iframe) n'agisse.
+(function renderChrome() {
+  const navEl = document.querySelector('nav[data-chrome-nav]');
+  const menuEl = document.querySelector('[data-chrome-menu]');
+  const active = (navEl && navEl.dataset.active) || '';
+  const cls = key => active === key ? ' class="active"' : '';
+  if (navEl) {
+    navEl.innerHTML =
+      `<div class="ct nav-in">
+      <a href="index.html" class="nav-logo" aria-label="Chaskis, accueil"><img src="assets/img/Chaskis-logo.svg" alt="Chaskis" height="22"></a>
+      <div class="nav-mid" style="margin-left:auto">
+        <a href="index.html"${cls('livraison')} data-i18n="nav.livraison">Livraison</a>
+        <a href="mobilite.html"${cls('mobilite')} data-i18n="nav.mobilite">Mobilité</a>
+        <a href="postuler.html"${cls('postuler')} data-i18n="nav.postuler">Postuler</a>
+      </div>
+      <a href="commander.html" class="btn btn-o nav-cta-btn"><span data-i18n="nav.commander">Commander une course</span></a>
+      <div class="lang-drop" id="langDrop">
+        <button class="lang-drop-trigger" id="langTrigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Changer de langue">
+          <span class="lang-drop-flag" id="langFlag"><img src="assets/img/flag-fr.svg" alt="Français" width="18" height="13"></span>
+          <svg class="lang-drop-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="lang-drop-menu" id="langMenu" role="listbox" aria-label="Langue">
+          <button class="lang-drop-item active" role="option" data-lang="fr" data-flag="fr" data-code="FR" aria-selected="true"><span class="lang-drop-item-flag"><img src="assets/img/flag-fr.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">Français</span></button>
+          <button class="lang-drop-item" role="option" data-lang="en" data-flag="gb" data-code="EN" aria-selected="false"><span class="lang-drop-item-flag"><img src="assets/img/flag-gb.svg" alt="" width="20" height="14"></span><span class="lang-drop-item-name">English</span></button>
+        </div>
+      </div>
+      <button class="mob-t" id="mt" aria-label="Menu">
+        <svg class="mob-icon mob-ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+        <svg class="mob-icon mob-ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5L19 19M5 19L19 5"/></svg>
+      </button>
+    </div>`;
+  }
+  if (menuEl) {
+    const extra = !!(navEl && navEl.dataset.menuExtra === '1');
+    const extraLinks = extra
+      ? `
+    <a href="index.html#booking" onclick="cm()">Planifier un appel</a>
+    <a href="index.html#faq" onclick="cm()">FAQ</a>`
+      : '';
+    menuEl.innerHTML =
+      `<a href="index.html" onclick="cm()"${cls('livraison')} data-i18n="nav.livraison">Livraison</a>
+    <a href="mobilite.html" onclick="cm()"${cls('mobilite')} data-i18n="nav.mobilite">Mobilité</a>
+    <a href="postuler.html" onclick="cm()"${cls('postuler')} data-i18n="nav.postuler">Postuler</a>
+    <a href="commander.html" onclick="cm()" data-i18n="nav.commander">Commander une course</a>${extraLinks}
+    <div class="mob-lang-opts">
+      <button class="mob-lang-btn active" data-lang="fr" onclick="__chaskisSetLang('fr');cm()"><span class="mob-lang-flag"><img src="assets/img/flag-fr.svg" alt="" width="18" height="13"></span> Français</button>
+      <button class="mob-lang-btn" data-lang="en" onclick="__chaskisSetLang('en');cm()"><span class="mob-lang-flag"><img src="assets/img/flag-gb.svg" alt="" width="18" height="13"></span> English</button>
+    </div>`;
+  }
+})();
+
 // ===== FOOTER PARTAGÉ =====
 (function() {
   const footer = document.querySelector('footer[data-shared]');

@@ -19,7 +19,7 @@ body:has(.nav-cta-float.visible) .chaskis-cb{bottom:88px}
 @keyframes cb-pulse{0%{transform:scale(1);opacity:.55}100%{transform:scale(1.55);opacity:0}}
 .chaskis-cb-panel{position:absolute;right:0;bottom:72px;width:360px;max-width:calc(100vw - 32px);height:520px;max-height:calc(100vh - 140px);background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(10,5,30,.18),0 6px 18px rgba(10,5,30,.08);border:1px solid rgba(44,32,82,.06);display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:translateY(12px) scale(.97);transform-origin:bottom right;pointer-events:none;transition:opacity .22s ease,transform .22s cubic-bezier(.4,0,.2,1)}
 .chaskis-cb.is-open .chaskis-cb-panel{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
-.chaskis-cb-head{display:flex;align-items:center;gap:11px;padding:14px 16px;background:linear-gradient(135deg,#4BB3A4 0%,#2FA594 100%);color:#fff;flex-shrink:0}
+.chaskis-cb-head{display:flex;align-items:center;gap:11px;padding:14px 16px;background:linear-gradient(135deg,var(--teal) 0%,#2FA594 100%);color:#fff;flex-shrink:0}
 .chaskis-cb-ava{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;backdrop-filter:blur(4px)}
 .chaskis-cb-ava svg{width:20px;height:20px;color:#fff}
 .chaskis-cb-head-txt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}
@@ -37,7 +37,7 @@ body:has(.nav-cta-float.visible) .chaskis-cb{bottom:88px}
 @keyframes cb-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .chaskis-cb-bubble{padding:10px 14px;border-radius:14px;font-size:.85rem;line-height:1.5;color:#261835}
 .chaskis-cb-row.is-bot .chaskis-cb-bubble{background:#fff;border:1px solid rgba(44,32,82,.06);border-bottom-left-radius:4px}
-.chaskis-cb-row.is-user .chaskis-cb-bubble{background:linear-gradient(135deg,#4BB3A4,#2FA594);color:#fff;border-bottom-right-radius:4px}
+.chaskis-cb-row.is-user .chaskis-cb-bubble{background:linear-gradient(135deg,var(--teal),#2FA594);color:#fff;border-bottom-right-radius:4px}
 .chaskis-cb-bubble a{color:#2FA594;font-weight:600;text-decoration:underline;text-underline-offset:2px}
 .chaskis-cb-row.is-user .chaskis-cb-bubble a{color:#fff}
 .chaskis-cb-bubble strong{font-weight:700;color:inherit}
@@ -69,7 +69,7 @@ body:has(.nav-cta-float.visible) .chaskis-cb{bottom:88px}
 .chaskis-cb-form{display:flex;align-items:center;gap:8px;padding:12px 14px;background:#fff;border-top:1px solid rgba(44,32,82,.06);flex-shrink:0}
 .chaskis-cb-input{flex:1;min-width:0;height:40px;padding:0 14px;border:1px solid rgba(44,32,82,.12);border-radius:999px;font-family:inherit;font-size:.85rem;color:#261835;background:#FAFAF9;outline:none;transition:border-color .15s ease,background .15s ease}
 .chaskis-cb-input:focus{border-color:#2FA594;background:#fff}
-.chaskis-cb-send{width:40px;height:40px;border-radius:50%;border:none;background:linear-gradient(135deg,#4BB3A4,#2FA594);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:transform .15s ease;padding:0}
+.chaskis-cb-send{width:40px;height:40px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--teal),#2FA594);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:transform .15s ease;padding:0}
 .chaskis-cb-send:hover{transform:scale(1.06)}
 .chaskis-cb-send svg{width:16px;height:16px}
 .chaskis-cb-disclaimer{font-size:.65rem;color:#9890A2;text-align:center;padding:6px 16px 10px;background:#fff;flex-shrink:0}

@@ -213,7 +213,7 @@ window.__chaskisSetLang = function(lang) {
 (function() {
   if (document.getElementById('chaskisChatbot')) return;
   const s = document.createElement('script');
-  s.src = 'assets/js/chatbot.js?v=20260707c';
+  s.src = 'assets/js/chatbot.js?v=20260707';
   s.async = true;
   document.body.appendChild(s);
 })();

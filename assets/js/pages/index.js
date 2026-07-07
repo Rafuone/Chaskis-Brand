@@ -427,7 +427,6 @@ document.querySelectorAll('.vpc, .pipe-step').forEach(el => extraReveal.observe(
 // ===== I18N =====
 const T = {
   fr: {
-    'nav.order': 'Commander une course', 'nav.join': 'Postuler', 'nav.delivery': 'Livraison', 'nav.mobility': 'Mobilité',
     'stat1': 'Coursiers en CDI', 'stat2': 'Livraisons par an', 'stat3': 'Villes en Suisse romande',
     'diff.label': 'Pourquoi Chaskis', 'diff.h2': 'La livraison professionnelle,<br><span class="ac">sans les compromis habituels</span>', 'diff.p': 'Pour toute entreprise qui veut externaliser ses livraisons à un partenaire fiable, sans commission, sans mauvaise surprise.',
     'diff1.h3': 'Coursiers salariés,<br>toujours au rendez-vous', 'diff1.p': 'Formés à votre image, équipés à vos couleurs.',
@@ -556,7 +555,6 @@ const T = {
     'float.cta': 'Planifier un appel',
   },
   en: {
-    'nav.order': 'Place an order', 'nav.join': 'Join us', 'nav.delivery': 'Delivery', 'nav.mobility': 'Mobility',
     'stat1': 'Employed couriers', 'stat2': 'Deliveries per year', 'stat3': 'Cities in French Switzerland',
     'diff.label': 'Why Chaskis', 'diff.h2': 'Professional delivery,<br><span class="ac">without the usual trade-offs</span>', 'diff.p': 'For any business that wants to outsource its deliveries to a reliable partner. No commission, no surprises.',
     'diff1.h3': 'Employed couriers,<br>always on time', 'diff1.p': 'Trained to your standards, equipped in your brand.',

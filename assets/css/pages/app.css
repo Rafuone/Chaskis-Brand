@@ -1,9 +1,9 @@
 /* Chaskis — pages/app.css : mini-app PWA de suivi (design system autonome, ex-inline) */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --teal:#3AAFA9;--teal-d:#2A8A85;--teal-bg:#EDF7F6;
+  --teal:#4BB3A4;--teal-d:#35938A;--teal-bg:#EDF7F6;
   --purple:#6B4FA0;--purple-bg:#F0EBF9;
-  --ink:#1A1A1A;--ink-mid:#4A4A4A;--ink-muted:#9A9A9A;
+  --ink:#2C2052;--ink-mid:#4A3B6F;--ink-muted:#9A9A9A;
   --bg:#FAFAF7;--white:#FFFFFF;--line:#E8E8E4;
   --r:12px;--rl:16px;--rxl:20px;--pill:999px;
   --ease:cubic-bezier(.25,.46,.45,.94);

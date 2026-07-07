@@ -87,8 +87,7 @@ function loadDraft() {
 function clearDraft() { try { localStorage.removeItem(DRAFT_KEY); } catch(e){} }
 
 // ===== HELPERS =====
-function debounce(fn, ms) { let t; return function(...a){ clearTimeout(t); t = setTimeout(() => fn.apply(this,a), ms); }; }
-function escapeHtml(s) { return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+const debounce = window.CK.debounce, escapeHtml = window.CK.escapeHtml;
 function formatCHF(n) { return new Intl.NumberFormat('fr-CH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n); }
 function isEmail(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s||'').trim()); }
 function isPhone(s) { return String(s||'').replace(/[^\d+]/g, '').length >= 9; }

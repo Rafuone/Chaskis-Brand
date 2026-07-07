@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-sw>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1343,7 +1343,8 @@ span.ast{color:#e53e3e!important;font-weight:700}
 <a href="#booking" class="btn btn-p pulse nav-cta-float"><span data-i18n="float.cta">Planifier un appel</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-<script src="assets/js/shared.js?v=20260707b"></script>
+<script src="assets/js/utils.js?v=20260707c"></script>
+<script src="assets/js/shared.js?v=20260707c"></script>
 <script src="assets/js/auth.js"></script>
 <script>
 
@@ -2033,52 +2034,19 @@ const T = {
     'float.cta': 'Schedule a call',
   }
 };
+// Exposé pour que shared.js fusionne ce dict avec T_BASE (getDict) et applique l'i18n en un seul passage.
+window.T = T;
 
+// shared.js (__chaskisSetLang) applique déjà l'i18n du DOM et met à jour l'UI de langue.
+// Ici on ne fait QUE reconstruire les sections dynamiques (simulateur, calendrier, témoignages) dans la bonne langue.
 function setLang(lang) {
-  window._currentLang = lang;
-  const dict = T[lang] || T.fr;
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const v = dict[el.dataset.i18n];
-    if (v !== undefined) el.textContent = v;
-  });
-  document.querySelectorAll('[data-i18n-html]').forEach(el => {
-    const v = dict[el.dataset.i18nHtml];
-    if (v !== undefined) el.innerHTML = v;
-  });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-    const v = dict[el.dataset.i18nPlaceholder];
-    if (v !== undefined) el.placeholder = v;
-  });
-  document.documentElement.lang = lang;
-  // Update desktop lang-drop trigger
-  const triggerFlag = document.getElementById('langFlag');
-  const triggerCode = document.getElementById('langCode');
-  if (triggerFlag) {
-    const flagSrc = lang === 'en' ? 'assets/img/flag-gb.svg' : 'assets/img/flag-fr.svg';
-    const flagAlt = lang === 'en' ? 'English' : 'Français';
-    triggerFlag.innerHTML = '<img src="' + flagSrc + '" alt="' + flagAlt + '" width="18" height="13">';
-  }
-  if (triggerCode) triggerCode.textContent = lang.toUpperCase();
-  document.querySelectorAll('.lang-drop-item').forEach(b => {
-    const active = b.dataset.lang === lang;
-    b.classList.toggle('active', active);
-    b.setAttribute('aria-selected', active ? 'true' : 'false');
-  });
-  // Update mobile lang buttons
-  document.querySelectorAll('.mob-lang-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.lang === lang);
-  });
-  // Rebuild dynamic sections
   if (window._simUpdate) window._simUpdate();
   if (window._calRebuild) window._calRebuild(lang);
   if (window._testiRebuild) window._testiRebuild(lang);
 }
 
 // Lang drop toggle : géré par assets/js/shared.js (window.__chaskisSetLang). Ne pas dupliquer ici.
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
-}
+// Service Worker : enregistré par shared.js (opt-in via l'attribut data-sw sur <html>).
 
 // ===== DELIVERY CANVAS ANIMATION =====
 (function() {

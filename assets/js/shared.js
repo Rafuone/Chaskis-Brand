@@ -76,6 +76,11 @@ window.addEventListener('appinstalled', () => {
   if (banner) banner.remove();
 });
 
+// Service Worker : opt-in via l'attribut data-sw sur <html> (n'active pas le SW sur les pages qui ne le demandent pas).
+if (document.documentElement.hasAttribute('data-sw') && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
+
 // Nav scroll
 const nav = document.getElementById('nav');
 if (nav) window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40), { passive: true });
@@ -208,7 +213,7 @@ window.__chaskisSetLang = function(lang) {
 (function() {
   if (document.getElementById('chaskisChatbot')) return;
   const s = document.createElement('script');
-  s.src = 'assets/js/chatbot.js?v=20260422b';
+  s.src = 'assets/js/chatbot.js?v=20260707c';
   s.async = true;
   document.body.appendChild(s);
 })();

@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.12" };
+const ADMIN_BUILD = { version: "0.16.13" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1126,7 +1126,10 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.12", cur:true, date:"2026-07-08", title:"Copilote : fin de rendez-vous utile", items:[
+  { v:"v0.16.13", cur:true, date:"2026-07-08", title:"Structure : sections masquées signalées", items:[
+    {t:"imp", x:"Structure et stratégie : une section masquée de l'accueil porte désormais un badge « actuellement masquée », pour voir d'un coup d'œil ce qui est retiré du site public"}
+  ]},
+  { v:"v0.16.12", date:"2026-07-08", title:"Copilote : fin de rendez-vous utile", items:[
     {t:"imp", x:"Copilote : « Terminer » archive le compte-rendu et le télécharge en fichier texte, au lieu de ne rien faire (plus de perte au passage à un nouveau rendez-vous)"}
   ]},
   { v:"v0.16.11", date:"2026-07-08", title:"Filtre rendez-vous complet, affichage Performance corrigé", items:[
@@ -1355,7 +1358,7 @@ const APP_STAGE={stable:{lbl:"Stable",c:"#0E7D48"},beta:{lbl:"Bêta",c:"#C7891B"
 const PROGRESS=[
   {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.16.0",recent:["Activité récente tirée des vraies publications","Tuile Rendez-vous à venir réelle"]},
   {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.11.0",recent:["Édition multi-pages","Coach de contenu","Contenus structurés"]},
-  {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.0",recent:["Rôle de chaque page et section"]},
+  {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.1",recent:["Badge « actuellement masquée » sur les sections de l'accueil","Rôle de chaque page et section"]},
   {view:"media",name:"Médiathèque",env:"prod",stage:"stable",version:"1.0.2",recent:["Confirmation avant suppression d'un média"]},
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.7.0",recent:["Restauration et aperçu sûrs sur les versions d'exemple"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
@@ -2113,6 +2116,8 @@ function renderStructTabs(){ const w=document.getElementById("structTabs"); if(!
   refreshIcons();
 }
 function renderStructBody(){ const w=document.getElementById("structBody"); if(!w) return;
+  const HIDE_MAP={"Bandeau promotionnel":"promo","Accroche (hero)":"hero","Ce qui vous différencie":"diff","Tout est inclus (services)":"services","Témoignages":"testi","Simulateur de coût":"sim","Offres & tarifs":"offres","Prise de rendez-vous":"booking","Questions fréquentes (FAQ)":"faq"};
+  const secHidden=id=> id==="promo" ? !!draft.promoHidden : (draft.hidden||[]).includes(id);
   const p=STRUCT_PAGES.find(x=>x.key===structPage)||STRUCT_PAGES[0];
   let h='<div class="struct-portante"><div class="sp-head"><span class="sp-ic"><i data-lucide="'+p.icon+'"></i></span><div><div class="sp-name">'+p.name+'</div><div class="sp-role">'+p.role+'</div></div></div>'
     +'<div class="sp-meta"><div class="sp-m"><span class="sp-m-k"><i data-lucide="users"></i>Pour qui</span><span class="sp-m-v">'+p.audience+'</span></div>'
@@ -2122,11 +2127,11 @@ function renderStructBody(){ const w=document.getElementById("structBody"); if(!
   } else {
     const phMap={}; STRUCT_PHASES.forEach(ph=>phMap[ph.key]=ph);
     h+='<div class="struct-legend">'+STRUCT_PHASES.map((ph,i)=>'<span class="struct-leg" style="color:'+ph.col+';background:'+ph.bg+'">'+ph.label+'</span>'+(i<STRUCT_PHASES.length-1?'<span class="struct-arrow"><i data-lucide="chevron-right"></i></span>':'')).join("")+'</div>';
-    h+='<div class="struct-map">'+p.sections.map(s=>{ const ph=phMap[s.phase]||STRUCT_PHASES[0];
+    h+='<div class="struct-map">'+p.sections.map(s=>{ const ph=phMap[s.phase]||STRUCT_PHASES[0]; const hid=(structPage==="accueil"&&HIDE_MAP[s.name])?secHidden(HIDE_MAP[s.name]):false;
       return '<div class="struct-item"><div class="struct-rail"><span class="struct-dot" style="background:'+ph.col+'"></span></div>'
         +'<div class="struct-card'+(s.keySec?" key":"")+'"><button type="button" class="struct-hd">'
           +'<span class="struct-ic" style="background:'+ph.bg+';color:'+ph.col+'"><i data-lucide="'+s.icon+'"></i></span>'
-          +'<span class="struct-name">'+s.name+(s.keySec?'<span class="struct-key"><i data-lucide="lock"></i>section clé</span>':'')+'</span>'
+          +'<span class="struct-name">'+s.name+(hid?'<span style="font-size:10px;font-weight:600;color:#B4632A;background:#FBEEE4;border-radius:20px;padding:2px 8px;margin-left:6px">actuellement masquée</span>':'')+(s.keySec?'<span class="struct-key"><i data-lucide="lock"></i>section clé</span>':'')+'</span>'
           +'<span class="struct-phase" style="color:'+ph.col+';background:'+ph.bg+'">'+ph.label+'</span>'
           +'<svg class="struct-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>'
           +'<div class="struct-role">'+s.role+'</div>'

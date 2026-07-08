@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.5" };
+const ADMIN_BUILD = { version: "0.16.6" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -986,13 +986,14 @@ function fillDashMedia(){ const dt=document.getElementById("dashMedia"); if(!dt)
   list.forEach(m=>h+='<div class="dthumb"><img src="'+m.src+'" alt=""></div>'); const extra=imgs.length-list.length; if(extra>0) h+='<div class="dthumb">+'+extra+'</div>'; h+='</div>';
   h+='<p class="hint" style="margin:9px 0 0">'+draft.media.length+' élément'+(draft.media.length>1?"s":"")+' dans la médiathèque</p>'; dt.innerHTML=h; }
 function fillDashActivity(){ const da=document.getElementById("dashActivity"); if(!da) return;
-  const acts=[
-    {who:"Léa Fontaine", role:"editor", t:"a modifié la page d'accueil", w:"il y a 2 h", detail:"Titre du hero : « On gère vos livraisons » → « On livre, vous gérez ». Image de couverture remplacée."},
-    {who:"Sarah Benoit", role:"commercial", t:"a terminé un rendez-vous", w:"hier · 16:40", detail:"Boucherie Dubois · issue : devis envoyé, relance prévue le 5 juil."},
-    {who:"Marc Girard", role:"leadcommercial", t:"a ajouté un partenaire", w:"hier · 11:12", detail:"Pizzeria Napoli (Lausanne) · avantage : -20 % à emporter."},
-    {who:"Alex Moreira", role:"admin", t:"a publié la version v3", w:"lun. · 09:05", detail:"3 changements : bandeau promo activé, grille tarifaire mise à jour, FAQ enrichie."}
-  ];
-  da.innerHTML=acts.map(a=>'<div class="dash-act"><button type="button" class="dash-act-hd"><span class="avatar xs" style="background:'+roleColor(a.role)+';color:#fff;margin-right:0">'+initials(a.who)+'</span><div class="dash-act-tx"><div class="dash-act-t"><b>'+a.who.split(" ")[0]+'</b> '+a.t+'</div><div class="dash-act-w">'+a.w+'</div></div><svg class="dash-act-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="dash-act-detail">'+a.detail+'</div></div>').join("");
+  /* Activite reelle derivee des publications (variable `versions`), plus de flux invente. */
+  const col="#0F6E56";
+  const acts=(typeof versions!=="undefined"&&Array.isArray(versions)?versions:[]).slice(0,6).map(v=>{
+    const ch=(v.changes&&v.changes.length)?v.changes:[v.summary||"Mise à jour"];
+    return { who:v.author||"—", t:"a publié la version "+v.id, w:fmtDate(v.date), detail:ch.join(" · ") };
+  });
+  if(!acts.length){ da.innerHTML='<p class="hint" style="margin:0">Aucune publication pour l\'instant. L\'activité apparaîtra ici dès votre première publication.</p>'; return; }
+  da.innerHTML=acts.map(a=>'<div class="dash-act"><button type="button" class="dash-act-hd"><span class="avatar xs" style="background:'+col+';color:#fff;margin-right:0">'+initials(a.who)+'</span><div class="dash-act-tx"><div class="dash-act-t"><b>'+escHtml(a.who.split(" ")[0]||a.who)+'</b> '+escHtml(a.t)+'</div><div class="dash-act-w">'+escHtml(a.w)+'</div></div><svg class="dash-act-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="dash-act-detail">'+escHtml(a.detail)+'</div></div>').join("");
   da.querySelectorAll(".dash-act-hd").forEach(hd=>hd.addEventListener("click",()=>hd.parentElement.classList.toggle("open"))); }
 function fillDashChangelog(){ const dl=document.getElementById("dashChangelog"); if(!dl) return; dl.innerHTML="";
   DASH_CHANGELOG.forEach(c=>{ const row=document.createElement("div"); row.className="perf-row";
@@ -1125,7 +1126,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.5", cur:true, date:"2026-07-08", title:"Chatbot testable et tuile Rendez-vous réelle", items:[
+  { v:"v0.16.6", cur:true, date:"2026-07-08", title:"Activité récente réelle", items:[
+    {t:"imp", x:"Tableau de bord : « Activité récente » reflète désormais vos vraies publications (auteur, version, changements) au lieu d'exemples fictifs"},
+    {t:"fix", x:"Rendez-vous : les noms des comptes d'agenda connectés sont échappés à l'affichage (sécurité)"}
+  ]},
+  { v:"v0.16.5", date:"2026-07-08", title:"Chatbot testable et tuile Rendez-vous réelle", items:[
     {t:"imp", x:"Chatbot : le bac à test répond désormais à partir de vos vraies sources configurées (extrait de la source la plus pertinente), au lieu d'une réponse générique"},
     {t:"imp", x:"Tableau de bord : la tuile « Rendez-vous à venir » affiche le nombre réel au lieu d'une valeur fixe"},
     {t:"fix", x:"Chatbot : l'affichage du bac à test échappe le contenu des sources (plus de risque d'injection de code)"}
@@ -3453,7 +3458,7 @@ function initials(n){ return (n||"?").split(/\s+/).slice(0,2).map(w=>w[0]||"").j
 function renderAccount(){
   const a=document.getElementById("rdvAccount"); if(!a) return;
   if(rdvCalendars.length){ const f=rdvCalendars[0], extra=rdvCalendars.length>1?" +"+(rdvCalendars.length-1):"";
-    a.innerHTML='<span class="acct"><span class="avatar sm">'+initials(f.name)+'</span><span class="acct-i"><b>'+f.name+extra+'</b><span>● Connecté</span></span></span>';
+    a.innerHTML='<span class="acct"><span class="avatar sm">'+initials(f.name)+'</span><span class="acct-i"><b>'+escHtml(f.name)+extra+'</b><span>● Connecté</span></span></span>';
   } else { a.innerHTML='<span class="acct off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.4 18.4A9 9 0 1 0 5.6 5.6"/><path d="m2 2 20 20"/></svg>Aucun calendrier connecté</span>'; }
 }
 function renderCalendars(){
@@ -3464,7 +3469,7 @@ function renderCalendars(){
   add.innerHTML='<span class="cal-add-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span><span class="cn">Ajouter un Calendly</span>';
   add.addEventListener("click", openCalFlow); l.appendChild(add);
   rdvCalendars.forEach((c,i)=>{ const chip=document.createElement("div"); chip.className="cal-chip"; chip.title=c.topic;
-    chip.innerHTML='<span class="avatar sm">'+initials(c.name)+'</span><span class="cn">'+c.name+'</span><button class="cal-x2" title="Déconnecter">✕</button>';
+    chip.innerHTML='<span class="avatar sm">'+initials(c.name)+'</span><span class="cn">'+escHtml(c.name)+'</span><button class="cal-x2" title="Déconnecter">✕</button>';
     chip.querySelector(".cal-x2").addEventListener("click",()=>{ if(!confirm("Déconnecter le Calendly de "+c.name+" ? Ses rendez-vous ne remonteront plus.")) return; rdvCalendars.splice(i,1); renderRdv(); toast("Calendly déconnecté"); });
     l.appendChild(chip); });
 }

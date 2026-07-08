@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.9" };
+const ADMIN_BUILD = { version: "0.16.10" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1126,7 +1126,10 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.9", cur:true, date:"2026-07-08", title:"Suivi d'avancement remis à jour", items:[
+  { v:"v0.16.10", cur:true, date:"2026-07-08", title:"Estimations d'avancement affinées", items:[
+    {t:"imp", x:"Suivi technique : les estimations d'avancement sont rendues plus prudentes (on ne compte que ce qui est réellement avancé)"}
+  ]},
+  { v:"v0.16.9", date:"2026-07-08", title:"Suivi d'avancement remis à jour", items:[
     {t:"imp", x:"Avancement : l'état, la version et les nouveautés de chaque page de l'admin sont remis à jour après les récentes améliorations"},
     {t:"imp", x:"Suivi technique : le pourcentage d'intégration reflète l'avancement réel (socle serveur et contrat de publication posés, préparations côté interface), et « reste à intégrer » diminue à mesure qu'on avance"}
   ]},
@@ -1527,7 +1530,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:70,publish:25,versioning:28,analytics:32,calendly:25,auth:25,perf:33,media:22,chatbot:20};
+const TECH_DONE={host:70,publish:25,versioning:28,analytics:30,calendly:25,auth:25,perf:30,media:20,chatbot:20};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */

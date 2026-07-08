@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.18.0" };
+const ADMIN_BUILD = { version: "0.18.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1126,7 +1126,10 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.18.0", cur:true, date:"2026-07-08", title:"Performance : audit plus complet et historique", items:[
+  { v:"v0.18.1", cur:true, date:"2026-07-08", title:"Publication : fichier prêt à mettre en ligne", items:[
+    {t:"imp", x:"Dans la fenêtre Publier, « Exporter » produit désormais le fichier exact qui sera mis en ligne (vos textes et vos tarifs), déjà au format validé par le serveur ; il ne restera qu'à fournir l'accès technique pour publier en un clic"}
+  ]},
+  { v:"v0.18.0", date:"2026-07-08", title:"Performance : audit plus complet et historique", items:[
     {t:"add", x:"L'analyse vérifie aussi l'adaptation au téléphone, l'adresse canonique et l'aperçu de partage sur les réseaux sociaux (Open Graph), en plus du référencement et de la lisibilité"},
     {t:"add", x:"Un historique daté des analyses est conservé : vous voyez l'évolution de la note globale et de chaque domaine d'une analyse à la suivante"}
   ]},
@@ -1563,7 +1566,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:70,publish:40,versioning:28,analytics:30,calendly:25,auth:25,perf:52,media:20,chatbot:20};
+const TECH_DONE={host:70,publish:46,versioning:28,analytics:30,calendly:25,auth:25,perf:52,media:20,chatbot:20};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -2894,6 +2897,24 @@ function saveUI(patch){ let s={}; try{ s=JSON.parse(localStorage.getItem(UI_KEY)
 function loadUI(){ try{ return JSON.parse(localStorage.getItem(UI_KEY))||{}; }catch(e){ return {}; } }
 /* Agrège tout l'état de l'admin (toutes les clés localStorage) en un objet unique :
    socle du futur bouton Publier et base d'une sauvegarde/export auditable. Lecture seule. */
+/* Construit le fichier site-content.json exactement conforme au contrat
+   (api/_lib/content-schema.js) : c'est le fichier que la publication ecrira dans le
+   depot. TEXTE + tarifs seulement (le schema refuse le HTML : draft.html est donc
+   exclu ; les edits de structure/images ne passent pas encore par ce contrat).
+   content.js lit par page et n'applique que les cles presentes sur chaque page, donc
+   publier le meme dictionnaire i18n sous chaque page est correct (les cles partagees
+   comme la nav/le pied s'appliquent partout, les cles propres a une page la ou elles
+   existent). Verifiable hors ligne : node -e "require('./api/_lib/content-schema')
+   .validateContent(obj)". */
+function buildSiteContent(){
+  const out={ schemaVersion:1, version:(typeof ADMIN_BUILD!=="undefined"?ADMIN_BUILD.version:undefined), updatedAt:new Date().toISOString() };
+  try{ const nm=(currentUser()||{}).name; if(nm) out.updatedBy=String(nm); }catch(e){}
+  try{ const pr=getPricing(); if(pr&&typeof pr==="object"){ const P={}; ["days","tiers","zones","flexMonthly","flexIncluded","express","promos"].forEach(function(k){ if(pr[k]!==undefined) P[k]=pr[k]; }); out.pricing=P; } }catch(e){}
+  const t=(draft&&draft.text)?draft.text:{}; const i18n={};
+  ["fr","en"].forEach(function(lg){ if(t[lg]&&Object.keys(t[lg]).length) i18n[lg]=JSON.parse(JSON.stringify(t[lg])); });
+  if(Object.keys(i18n).length){ out.pages={}; ["accueil","mobilite","recrutement","commander","suivi","dashboard"].forEach(function(pk){ out.pages[pk]={ i18n:JSON.parse(JSON.stringify(i18n)) }; }); }
+  return out;
+}
 function exportDraftBundle(){
   const KEYS={ draft:STORE_KEY, versions:VERS_KEY, ui:UI_KEY, pricing:PRICING_KEY, bugs:BUG_KEY,
     affiliation:AFFIL_KEY, affilCats:AFFIL_CATS_KEY, contests:AFFIL_CONTESTS_KEY, copilot:COP_KEY,
@@ -2985,7 +3006,7 @@ function openPublish(){
   document.getElementById("pubBody").innerHTML =
     "Publier crée une version (<b>v"+(versions.length+1)+"</b>) et la met en ligne.<br><br>"+
     "<b>Ce qui sera publié :</b><br>"+humanSummary(draft)+
-    "<br><br><span style='color:var(--muted)'>En local, la version est enregistrée dans ce navigateur. La vraie mise en ligne (déploiement) sera branchée ensuite.</span>";
+    "<br><br><span style='color:var(--muted)'>En local, la version est enregistrée dans ce navigateur. Le bouton « Exporter » télécharge le fichier prêt à mettre en ligne (textes et tarifs). La publication automatique en un clic s'activera une fois l'accès technique fourni.</span>";
   pubBg.classList.add("show");
 }
 document.getElementById("publishBtn").addEventListener("click",openPublish);
@@ -2994,9 +3015,10 @@ document.getElementById("pubCloseX").addEventListener("click",()=> pubBg.classLi
 pubBg.addEventListener("click",(e)=>{ if(e.target===pubBg) pubBg.classList.remove("show"); });
 document.getElementById("pubConfirm").addEventListener("click",()=>{ publishVersion(); pubBg.classList.remove("show"); });
 document.getElementById("pubExport").addEventListener("click",()=>{
-  const blob=new Blob([JSON.stringify(draft,null,2)],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="chaskis-"+PAGE+"-brouillon.json"; a.click();
-  toast("Brouillon exporté");
+  const content=buildSiteContent();
+  const blob=new Blob([JSON.stringify(content,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="site-content.json"; a.click();
+  toast("Fichier site-content.json exporté (prêt à publier)");
 });
 
 /* toast */

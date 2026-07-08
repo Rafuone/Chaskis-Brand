@@ -28,6 +28,7 @@ STATIC_REWRITES = {
     '/postuler': '/postuler.html',
     '/mobilite': '/mobilite.html',
     '/admin': '/admin/editor.html',
+    '/confidentialite': '/confidentialite.html',
 }
 SUIVI_RE = re.compile(r'^/suivi/([^/?#]+)/?$')
 

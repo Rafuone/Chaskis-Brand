@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.0" };
+const ADMIN_BUILD = { version: "0.16.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1125,7 +1125,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.0", cur:true, date:"2026-07-08", title:"Fondations techniques pour la publication", items:[
+  { v:"v0.16.1", cur:true, date:"2026-07-08", title:"Page Confidentialité", items:[
+    {t:"add", x:"Ajout d'une page Politique de confidentialité (structurée selon la nLPD suisse), accessible depuis le pied de page de tout le site"},
+    {t:"fix", x:"Le lien « Confidentialité » du pied de page ne menait nulle part : il ouvre désormais la vraie page"}
+  ]},
+  { v:"v0.16.0", date:"2026-07-08", title:"Fondations techniques pour la publication", items:[
     {t:"add", x:"Socle serveur posé : le site peut désormais accueillir les fonctions serveur prévues au plan (publication du contenu, statistiques, chatbot), sans surcoût"},
     {t:"add", x:"Espace d'administration rendu invisible pour les moteurs de recherche"},
     {t:"imp", x:"Règles de sécurité du contenu publié définies pour bloquer tout contenu indésirable avant sa mise en ligne"}

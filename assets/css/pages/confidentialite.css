@@ -1,0 +1,28 @@
+/* Page Confidentialité : mise en page sobre pour du texte légal long. */
+.page-legal{ padding:120px 0 80px; }
+.page-legal .legal{ max-width:760px; margin:0 auto; color:var(--ink); }
+
+.legal-head{ margin-bottom:28px; padding-bottom:22px; border-bottom:1px solid var(--line,#E7E9E7); }
+.legal-kicker{ font-size:.78rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--teal); margin:0 0 6px; }
+.legal-head h1{ font-size:2rem; font-weight:800; line-height:1.15; margin:0 0 8px; color:var(--ink); }
+.legal-upd{ font-size:.82rem; color:var(--ink-muted); margin:0; }
+
+.legal-lead{ font-size:1.02rem; line-height:1.7; color:var(--ink-light); margin:0 0 8px; }
+
+.legal section{ margin-top:30px; }
+.legal h2{ font-size:1.12rem; font-weight:800; color:var(--ink); margin:0 0 10px; }
+.legal p{ font-size:.94rem; line-height:1.7; color:var(--ink-light); margin:0 0 10px; }
+.legal ul{ margin:0 0 10px; padding-left:20px; }
+.legal li{ font-size:.94rem; line-height:1.7; color:var(--ink-light); margin:0 0 8px; }
+.legal strong{ color:var(--ink); font-weight:700; }
+.legal a{ color:var(--teal); font-weight:600; text-decoration:none; }
+.legal a:hover{ text-decoration:underline; }
+
+.legal-block{ background:var(--surface,#F5F6F5); border:1px solid var(--line,#E7E9E7); border-radius:12px; padding:14px 16px; font-size:.94rem; line-height:1.7; }
+
+.legal-back{ margin-top:36px; padding-top:22px; border-top:1px solid var(--line,#E7E9E7); }
+
+@media (max-width:640px){
+  .page-legal{ padding:96px 0 56px; }
+  .legal-head h1{ font-size:1.6rem; }
+}

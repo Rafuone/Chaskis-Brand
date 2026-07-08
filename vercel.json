@@ -7,7 +7,8 @@
     { "source": "/postuler", "destination": "/postuler.html" },
     { "source": "/mobilite", "destination": "/mobilite.html" },
     { "source": "/suivi/:code", "destination": "/app.html?code=:code" },
-    { "source": "/admin", "destination": "/admin/editor.html" }
+    { "source": "/admin", "destination": "/admin/editor.html" },
+    { "source": "/confidentialite", "destination": "/confidentialite.html" }
   ],
   "headers": [
     {

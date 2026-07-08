@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.7" };
+const ADMIN_BUILD = { version: "0.16.8" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -884,7 +884,7 @@ function humanSummary(dr){
   return parts.length?parts.join(", "):"aucune modification";
 }
 function fmtTime(d){ return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); }
-function fmtDate(iso){ const d=new Date(iso); return d.getDate()+" "+MONTHS[d.getMonth()]+" "+d.getFullYear()+", "+fmtTime(d); }
+function fmtDate(iso){ const d=new Date(iso); if(isNaN(+d)) return "date inconnue"; return d.getDate()+" "+MONTHS[d.getMonth()]+" "+d.getFullYear()+", "+fmtTime(d); }
 function fmtShort(iso){ const d=new Date(iso); return d.getDate()+" "+MONTHS[d.getMonth()]+" "+d.getFullYear(); }
 
 /* ============================================================
@@ -993,7 +993,7 @@ function fillDashActivity(){ const da=document.getElementById("dashActivity"); i
     return { who:v.author||"—", t:"a publié la version "+v.id, w:fmtDate(v.date), detail:ch.join(" · ") };
   });
   if(!acts.length){ da.innerHTML='<p class="hint" style="margin:0">Aucune publication pour l\'instant. L\'activité apparaîtra ici dès votre première publication.</p>'; return; }
-  da.innerHTML=acts.map(a=>'<div class="dash-act"><button type="button" class="dash-act-hd"><span class="avatar xs" style="background:'+col+';color:#fff;margin-right:0">'+initials(a.who)+'</span><div class="dash-act-tx"><div class="dash-act-t"><b>'+escHtml(a.who.split(" ")[0]||a.who)+'</b> '+escHtml(a.t)+'</div><div class="dash-act-w">'+escHtml(a.w)+'</div></div><svg class="dash-act-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="dash-act-detail">'+escHtml(a.detail)+'</div></div>').join("");
+  da.innerHTML=acts.map(a=>'<div class="dash-act"><button type="button" class="dash-act-hd"><span class="avatar xs" style="background:'+((commercialChip(a.who)||{}).color||col)+';color:#fff;margin-right:0">'+initials(a.who)+'</span><div class="dash-act-tx"><div class="dash-act-t"><b>'+escHtml(a.who.split(" ")[0]||a.who)+'</b> '+escHtml(a.t)+'</div><div class="dash-act-w">'+escHtml(a.w)+'</div></div><svg class="dash-act-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="dash-act-detail">'+escHtml(a.detail)+'</div></div>').join("");
   da.querySelectorAll(".dash-act-hd").forEach(hd=>hd.addEventListener("click",()=>hd.parentElement.classList.toggle("open"))); }
 function fillDashChangelog(){ const dl=document.getElementById("dashChangelog"); if(!dl) return; dl.innerHTML="";
   DASH_CHANGELOG.forEach(c=>{ const row=document.createElement("div"); row.className="perf-row";
@@ -1126,7 +1126,13 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.7", cur:true, date:"2026-07-08", title:"Rendez-vous mémorisés", items:[
+  { v:"v0.16.8", cur:true, date:"2026-07-08", title:"Robustesse et sécurité des rendez-vous", items:[
+    {t:"fix", x:"Rendez-vous : la liste ne peut plus se bloquer si une donnée enregistrée est incomplète ou corrompue (statut inconnu géré proprement)"},
+    {t:"fix", x:"Sécurité : les champs des rendez-vous (client, contact, sujet, lien, e-mail) et le formulaire de connexion d'agenda sont échappés à l'affichage (protection contre l'injection de code)"},
+    {t:"fix", x:"Rendez-vous : la note saisie dans une fiche est bien conservée après un rechargement"},
+    {t:"fix", x:"Une date invalide s'affiche proprement (« date inconnue ») au lieu d'un texte cassé"}
+  ]},
+  { v:"v0.16.7", date:"2026-07-08", title:"Rendez-vous mémorisés", items:[
     {t:"imp", x:"Rendez-vous : les changements de statut et les relances sont désormais enregistrés et conservés après un rechargement de la page"}
   ]},
   { v:"v0.16.6", date:"2026-07-08", title:"Activité récente réelle", items:[
@@ -3310,7 +3316,7 @@ function cbAsk(q){
   const hit=chat.forbidden.find(f=> split(f).some(fw=> words.includes(fw)));
   if(hit) cbTestLog.push({r:"block",x:"Sujet « "+hit+" » hors périmètre → "+chat.fallback,q:q});
   else {
-    const scoreOf=s=>{ const hay=((s.n||"")+" "+((s.tags||[]).join(" "))+" "+(s.prev||"")).toLowerCase(); return words.reduce((n,w)=>n+(hay.indexOf(w)>=0?1:0),0); };
+    const scoreOf=s=>{ const hay=((s.n||"")+" "+((Array.isArray(s.tags)?s.tags:[]).join(" "))+" "+(s.prev||"")).toLowerCase(); return words.reduce((n,w)=>n+(hay.indexOf(w)>=0?1:0),0); };
     let best=null, bestScore=0;
     (chat.sources||[]).forEach(s=>{ const sc=scoreOf(s); if(sc>bestScore){ bestScore=sc; best=s; } });
     if(best){ const snip=(best.prev||"").replace(/\s+/g," ").trim().slice(0,180); cbTestLog.push({r:"a",x:"D'après cette source : "+(snip||"(cette source n'a pas encore d'extrait)"),src:best.n,q:q}); }
@@ -3436,7 +3442,7 @@ let rdvData=[
   {day:"24",mon:"juin",time:"14:00",client:"Établissements Vermeulen-Delacroix & Fils",contact:"Marie-Alexandra de Montmollin",tel:"",email:"contact@vermeulen-delacroix.ch",secteur:"Luxe / Bijouterie",volume:"Plus de 100",link:"meet.google.com/zpr-fmna-lqe",sujet:"Renouvellement du contrat Dédié",who:"Jean-Christophe",mode:"visio",st:"honore",note:"Décision attendue au prochain comité de direction"}
 ];
 /* Persistance des rendez-vous : les changements de statut / relance survivent au rechargement. */
-try{ const _rs=JSON.parse(localStorage.getItem("chaskis_rdv_v1")); if(Array.isArray(_rs)&&_rs.length) rdvData=_rs; }catch(e){}
+try{ const _rs=JSON.parse(localStorage.getItem("chaskis_rdv_v1")); if(Array.isArray(_rs)&&_rs.length) rdvData=_rs.filter(r=>r&&typeof r==="object").map(r=>{ if(!RDV_STC[r.st]) r.st="avenir"; return r; }); }catch(e){}
 function saveRdv(){ try{ localStorage.setItem("chaskis_rdv_v1", JSON.stringify(rdvData)); }catch(e){ toast("Stockage plein : changement non enregistré."); } }
 const RDV_PERIODS={
   "7j":{curR:"23-29 juin",prevR:"16-22 juin",chart:{labels:["lun 23","mar 24","mer 25","jeu 26","ven 27","sam 28","dim 29"],vals:[1,2,1,2,1,0,2]}},
@@ -3486,13 +3492,13 @@ function renderCalFlow(){
   const steps='<div class="flow-steps">'+[1,2,3].map(s=>'<span class="fs'+(s<calFlow.step?" done":(s===calFlow.step?" on":""))+'">'+(s<calFlow.step?'✓':s)+'</span>').join('<i></i>')+'</div>';
   let body="";
   if(calFlow.step===1){
-    body='<div class="formf"><label>Nom de la personne</label><input id="cfName" placeholder="Ex. Marc Dupont" value="'+(calFlow.name||"")+'"></div>'+
-         '<div class="formf"><label>Lien Calendly</label><input id="cfLink" placeholder="calendly.com/votre-lien" value="'+(calFlow.link||"")+'"></div>'+
+    body='<div class="formf"><label>Nom de la personne</label><input id="cfName" placeholder="Ex. Marc Dupont" value="'+escAttr(calFlow.name||"")+'"></div>'+
+         '<div class="formf"><label>Lien Calendly</label><input id="cfLink" placeholder="calendly.com/votre-lien" value="'+escAttr(calFlow.link||"")+'"></div>'+
          '<div class="flow-acts"><button class="btn ghost" id="cfCancel">Annuler</button><button class="btn primary" id="cfNext">Suivant</button></div>';
   } else if(calFlow.step===2){
     body='<div class="flow-connecting"><div class="spin"></div>Connexion à Calendly…</div><div class="flow-acts"><button class="btn" id="cfBack">Retour</button><button class="btn primary" id="cfNext">J\'ai autorisé l\'accès</button></div>';
   } else {
-    body='<div class="flow-done"><span class="avatar lg">'+initials(calFlow.name)+'</span><div><div class="cn">'+calFlow.name+'</div><div class="ch">'+(calFlow.link||"calendly.com/…")+'</div><div class="cal-ok" style="margin-top:4px">● Connecté</div></div></div><div class="flow-acts"><button class="btn primary" id="cfFinish">Terminer</button></div>';
+    body='<div class="flow-done"><span class="avatar lg">'+initials(calFlow.name)+'</span><div><div class="cn">'+escHtml(calFlow.name)+'</div><div class="ch">'+escHtml(calFlow.link||"calendly.com/…")+'</div><div class="cal-ok" style="margin-top:4px">● Connecté</div></div></div><div class="flow-acts"><button class="btn primary" id="cfFinish">Terminer</button></div>';
   }
   f.innerHTML=steps+body;
   if(calFlow.step===1){
@@ -3527,7 +3533,7 @@ function renderRdvTable(){
   const start=(rdvPage-1)*RDV_PER_PAGE, pageIdxs=idxs.slice(start,start+RDV_PER_PAGE);
   if(!total){ const tr=document.createElement("tr"); tr.innerHTML='<td colspan="9" style="color:var(--muted);padding:14px">Aucun rendez-vous pour ce filtre.</td>'; b.appendChild(tr); }
   pageIdxs.forEach(i=>{ const r=rdvData[i];
-    const sc=RDV_STC[r.st], past=(r.st!=="avenir"), sent=r.relance&&r.relance.sent;
+    const sc=RDV_STC[r.st]||RDV_STC.avenir, past=(r.st!=="avenir"), sent=r.relance&&r.relance.sent;
     const relok = past && r.st!=="refuse";
     const open=(rdvOpenRow===i);
     const arrowSvg='<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="'+sc.c+'" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>';
@@ -3541,9 +3547,9 @@ function renderRdvTable(){
     const tr=document.createElement("tr"); tr.className="rdv-row"+(open?" row-open":"");
     tr.innerHTML='<td class="chk">'+chk+'</td>'+
       '<td><div class="dt-d">'+r.day+' '+r.mon+'</div><div class="dt-t">'+r.time+'</div></td>'+
-      '<td><div class="cl-co" title="'+escHtml(r.client)+'">'+r.client+'</div>'+(r.contact?'<div class="cl-ct" title="'+escHtml(r.contact)+'">'+r.contact+'</div>':'')+'</td>'+
-      '<td>'+r.sujet+'</td>'+
-      '<td style="white-space:nowrap"><span class="who"><span class="avatar xs">'+initials(r.who)+'</span><span class="who-n" title="'+escHtml(r.who)+'">'+r.who+'</span></span></td>'+
+      '<td><div class="cl-co" title="'+escHtml(r.client)+'">'+escHtml(r.client)+'</div>'+(r.contact?'<div class="cl-ct" title="'+escHtml(r.contact)+'">'+escHtml(r.contact)+'</div>':'')+'</td>'+
+      '<td>'+escHtml(r.sujet)+'</td>'+
+      '<td style="white-space:nowrap"><span class="who"><span class="avatar xs">'+initials(r.who)+'</span><span class="who-n" title="'+escHtml(r.who)+'">'+escHtml(r.who)+'</span></span></td>'+
       '<td style="white-space:nowrap">'+sel+'</td>'+
       '<td><button class="notecell'+(r.note?'':' empty')+'"'+(r.note?' title="'+escHtml(r.note)+'"':'')+'>'+preview+'</button></td>'+
       '<td style="white-space:nowrap">'+relCell+'</td>'+
@@ -3597,11 +3603,11 @@ function rdvFicheInner(i){
   // coordonnées : selon le mode (appel = numéro, visio = lien)
   let acts="";
   if(r.mode==="visio"){
-    if(r.link) acts+='<a class="fiche-act" href="https://'+r.link+'" target="_blank" rel="noopener"><span class="fa-ic"><i data-lucide="video"></i></span><span class="fa-tx"><span class="fa-l">Rejoindre la visio</span><span class="fa-v">'+r.link+'</span></span></a>';
+    if(r.link) acts+='<a class="fiche-act" href="https://'+escAttr(r.link)+'" target="_blank" rel="noopener"><span class="fa-ic"><i data-lucide="video"></i></span><span class="fa-tx"><span class="fa-l">Rejoindre la visio</span><span class="fa-v">'+escHtml(r.link)+'</span></span></a>';
   } else {
-    if(r.tel) acts+='<a class="fiche-act" href="tel:'+telClean+'"><span class="fa-ic"><i data-lucide="phone"></i></span><span class="fa-tx"><span class="fa-l">Appeler '+(r.contact||r.client)+'</span><span class="fa-v">'+r.tel+'</span></span></a>';
+    if(r.tel) acts+='<a class="fiche-act" href="tel:'+telClean+'"><span class="fa-ic"><i data-lucide="phone"></i></span><span class="fa-tx"><span class="fa-l">Appeler '+escHtml(r.contact||r.client)+'</span><span class="fa-v">'+escHtml(r.tel)+'</span></span></a>';
   }
-  if(r.email) acts+='<a class="fiche-act" href="mailto:'+r.email+'"><span class="fa-ic"><i data-lucide="mail"></i></span><span class="fa-tx"><span class="fa-l">Écrire un email</span><span class="fa-v">'+r.email+'</span></span></a>';
+  if(r.email) acts+='<a class="fiche-act" href="mailto:'+escAttr(r.email)+'"><span class="fa-ic"><i data-lucide="mail"></i></span><span class="fa-tx"><span class="fa-l">Écrire un email</span><span class="fa-v">'+escHtml(r.email)+'</span></span></a>';
   if(!acts) acts='<p class="fiche-hint">Aucune coordonnée renseignée.</p>';
 
   // relance : état/action compact, en ligne avec l'enregistrement de la note
@@ -3612,7 +3618,7 @@ function rdvFicheInner(i){
   else relInline='<button class="btn" id="dRelSend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Relancer le client</button>';
 
   const head='<div class="fiche-hd"><div class="who-lg"><span class="avatar lg">'+initials(r.client)+'</span>'+
-    '<div class="who-tx"><div class="nm" title="'+escHtml(r.client)+'">'+r.client+'</div><div class="sb">'+escHtml(r.sujet)+' · '+r.day+' '+r.mon+' à '+r.time+'</div></div></div>'+
+    '<div class="who-tx"><div class="nm" title="'+escHtml(r.client)+'">'+escHtml(r.client)+'</div><div class="sb">'+escHtml(r.sujet)+' · '+r.day+' '+r.mon+' à '+r.time+'</div></div></div>'+
     '<div class="hd-r"><span class="fmode fmode-'+mi.cls+'"><i data-lucide="'+mi.icon+'"></i>'+mi.label+'</span>'+
     '<button class="x-close" id="dClose" title="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div></div>';
 
@@ -3636,7 +3642,7 @@ function openRdvDrawer(i){
   const d=document.getElementById("rdvDrawer"), s=document.getElementById("rdvScrim");
   d.innerHTML=rdvFicheInner(i);
   s.classList.add("show"); d.classList.add("show"); refreshIcons();
-  const ns=d.querySelector("#dNoteSave"); if(ns) ns.onclick=()=>{ rdvData[i].note=d.querySelector("#dNote").value.trim(); toast("Note enregistrée"); openRdvDrawer(i); };
+  const ns=d.querySelector("#dNoteSave"); if(ns) ns.onclick=()=>{ rdvData[i].note=d.querySelector("#dNote").value.trim(); saveRdv(); toast("Note enregistrée"); openRdvDrawer(i); };
   const send=d.querySelector("#dRelSend"); if(send) send.onclick=()=>{ rdvData[i].relance={sent:true,date:RDV_TODAY}; saveRdv(); toast("Relance envoyée à "+rdvData[i].client+" (simulé)"); openRdvDrawer(i); };
   const cl=d.querySelector("#dClose"); if(cl) cl.onclick=closeRdvDrawer;
   renderRdvTable();

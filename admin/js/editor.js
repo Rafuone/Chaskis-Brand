@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.8" };
+const ADMIN_BUILD = { version: "0.16.9" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1126,7 +1126,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.8", cur:true, date:"2026-07-08", title:"Robustesse et sécurité des rendez-vous", items:[
+  { v:"v0.16.9", cur:true, date:"2026-07-08", title:"Suivi d'avancement remis à jour", items:[
+    {t:"imp", x:"Avancement : l'état, la version et les nouveautés de chaque page de l'admin sont remis à jour après les récentes améliorations"},
+    {t:"imp", x:"Suivi technique : le pourcentage d'intégration reflète l'avancement réel (socle serveur et contrat de publication posés, préparations côté interface), et « reste à intégrer » diminue à mesure qu'on avance"}
+  ]},
+  { v:"v0.16.8", date:"2026-07-08", title:"Robustesse et sécurité des rendez-vous", items:[
     {t:"fix", x:"Rendez-vous : la liste ne peut plus se bloquer si une donnée enregistrée est incomplète ou corrompue (statut inconnu géré proprement)"},
     {t:"fix", x:"Sécurité : les champs des rendez-vous (client, contact, sujet, lien, e-mail) et le formulaire de connexion d'agenda sont échappés à l'affichage (protection contre l'injection de code)"},
     {t:"fix", x:"Rendez-vous : la note saisie dans une fiche est bien conservée après un rechargement"},
@@ -1339,20 +1343,20 @@ function renderReleaseLog(){ const host=document.getElementById("relLog"); if(!h
 const APP_ENV={dev:{lbl:"Développement",c:"#6B4CC4"},preprod:{lbl:"Pré-production (test)",c:"#C7891B"},prod:{lbl:"En production",c:"#0E7D48"}};
 const APP_STAGE={stable:{lbl:"Stable",c:"#0E7D48"},beta:{lbl:"Bêta",c:"#C7891B"},alpha:{lbl:"Alpha",c:"#B4632A"}};
 const PROGRESS=[
-  {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.15.1",recent:["Avancement et Équipe côte à côte","Échéances retirées"]},
+  {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.16.0",recent:["Activité récente tirée des vraies publications","Tuile Rendez-vous à venir réelle"]},
   {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.11.0",recent:["Édition multi-pages","Coach de contenu","Contenus structurés"]},
   {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.0",recent:["Rôle de chaque page et section"]},
-  {view:"media",name:"Médiathèque",env:"prod",stage:"stable",version:"1.0.1",recent:["Import image et vidéo","Correctif d'affichage des vignettes"]},
-  {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.6.0",recent:["Timeline des publications","Retour à une version mis en avant"]},
+  {view:"media",name:"Médiathèque",env:"prod",stage:"stable",version:"1.0.2",recent:["Confirmation avant suppression d'un média"]},
+  {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.7.0",recent:["Restauration et aperçu sûrs sur les versions d'exemple"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
-  {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.0.0",recent:["Builder, périmètre, bac à test","Lecteur de fichier"]},
-  {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.0.0",recent:["Fiche unifiée","Panneau latéral"]},
+  {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.1.0",recent:["Bac à test basé sur les vraies sources","Affichage sécurisé"]},
+  {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.0",recent:["Statuts et relances mémorisés","Robustesse et sécurité renforcées"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.4.0",recent:["Découverte guidée","Simulateur d'offre"]},
-  {view:"stats",name:"Statistiques",env:"preprod",stage:"alpha",version:"0.5.0",recent:["Vue analytics (données d'exemple)","Pastilles d'icônes raccordées"]},
-  {view:"perf",name:"Performance",env:"preprod",stage:"alpha",version:"0.5.1",recent:["Jauge calée sur la note","Niveaux en pastel"]},
-  {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.4.1",recent:["Créer un jeu concours","Photos d'illustration"]},
-  {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.6.1",recent:["Deux colonnes sur grand écran","Bouton d'ajout dans la carte"]},
-  {view:"progress",name:"Avancement",env:"preprod",stage:"beta",version:"0.3.1",recent:["Avancement de l'interface en %","Stades en langage humain"]}
+  {view:"stats",name:"Statistiques",env:"preprod",stage:"alpha",version:"0.6.0",recent:["Plage de dates personnalisée fonctionnelle"]},
+  {view:"perf",name:"Performance",env:"preprod",stage:"alpha",version:"0.6.0",recent:["Date de dernière analyse réelle","Affichage plus robuste"]},
+  {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.5.0",recent:["Précisions du concours affichées","Alerte si stockage plein"]},
+  {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.6.2",recent:["Libellé de rôle corrigé"]},
+  {view:"progress",name:"Avancement",env:"preprod",stage:"beta",version:"0.4.0",recent:["Vrai pourcentage d'avancement de l'interface"]}
 ];
 function progressBadge(view){ const p=PROGRESS.find(x=>x.view===view); if(!p||p.stage==="stable") return null; return p.stage==="alpha"?"A":"B"; }
 function rdvUpcomingCount(){ try{ if(typeof rdvData!=="undefined"&&Array.isArray(rdvData)){ const n=rdvData.filter(r=>{ const s=(r.st||r.status||"").toString().toLowerCase(); return s==="avenir"||s==="à venir"||s==="a venir"; }).length; if(n) return n; } }catch(e){} return 3; }
@@ -1523,7 +1527,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:70,publish:15,versioning:25,analytics:30,calendly:20,auth:25,perf:30,media:20,chatbot:15};
+const TECH_DONE={host:70,publish:25,versioning:28,analytics:32,calendly:25,auth:25,perf:33,media:22,chatbot:20};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -1616,7 +1620,7 @@ function techPlanOrdered(){
   all.forEach(b=>{ if(order.indexOf(b.id)<0){ if(b.id==="versioning"&&order.indexOf("publish")>=0) order.splice(order.indexOf("publish")+1,0,b.id); else order.push(b.id); } });
   return order.map(id=>all.find(b=>b.id===id)).filter(Boolean);
 }
-function techGlobalEstimate(){ let mn=0,mx=0; techPlanOrdered().forEach(b=>{ const d=TECH_EFF_DAYS[b.effort]||[1,3]; mn+=d[0]; mx+=d[1]; }); return { pmin:Math.round(mn), pmax:Math.round(mx), pmed:Math.round((mn+mx)/2) }; }
+function techGlobalEstimate(){ let mn=0,mx=0; techPlanOrdered().forEach(b=>{ const d=TECH_EFF_DAYS[b.effort]||[1,3], rem=Math.max(0,1-(techDoneOf(b)/100)); mn+=d[0]*rem; mx+=d[1]*rem; }); return { pmin:Math.round(mn), pmax:Math.round(mx), pmed:Math.round((mn+mx)/2) }; }
 /* Avancement global du projet : moyenne pondérée par la charge (jours médians) de chaque chantier, pour qu'un gros chantier pèse plus qu'un petit. */
 function techGlobalDone(){ let num=0,den=0; techPlanOrdered().forEach(b=>{ const d=TECH_EFF_DAYS[b.effort]||[1,3], w=(d[0]+d[1])/2; num+=w*techDoneOf(b); den+=w; }); return den?Math.round(num/den):0; }
 function TPHX(est,solo,team){

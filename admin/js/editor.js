@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.4" };
+const ADMIN_BUILD = { version: "0.16.5" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -934,7 +934,7 @@ function renderDashStats(role){ const w=document.getElementById("dashStats"); if
   else cards=[
     {k:"Visites (30 j)", v:"4 280", trend:trendChip(12), ic:"eye", col:"blue", tip:dashTip("Visites","30 derniers jours","4 280","+12 % vs les 30 jours précédents")},
     {k:"Chatbot · conversations (30 j)", v:"1 248", trend:trendChip(18), ic:"message-square", col:"purple", tip:dashTip("Conversations chatbot","30 derniers jours","1 248","+18 % vs les 30 jours précédents")},
-    {k:"Rendez-vous à venir", v:"5", ic:"calendar", col:"teal", goto:"rdv"},
+    {k:"Rendez-vous à venir", v:String(rdvUpcomingCount()), ic:"calendar", col:"teal", goto:"rdv"},
     {k:"Conversion des RDV (30 j)", v:"34 %", trend:trendChip(5," pts"), ic:"target", col:"amber", goto:"rdv", tip:dashTip("Conversion des rendez-vous","RDV transformés en clients (30 j)","34 %","+5 pts vs les 30 jours précédents")}
   ];
   w.style.gridTemplateColumns="repeat("+cards.length+",1fr)"; w.innerHTML="";
@@ -1125,7 +1125,12 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.4", cur:true, date:"2026-07-08", title:"Plage de dates fonctionnelle et robustesse", items:[
+  { v:"v0.16.5", cur:true, date:"2026-07-08", title:"Chatbot testable et tuile Rendez-vous réelle", items:[
+    {t:"imp", x:"Chatbot : le bac à test répond désormais à partir de vos vraies sources configurées (extrait de la source la plus pertinente), au lieu d'une réponse générique"},
+    {t:"imp", x:"Tableau de bord : la tuile « Rendez-vous à venir » affiche le nombre réel au lieu d'une valeur fixe"},
+    {t:"fix", x:"Chatbot : l'affichage du bac à test échappe le contenu des sources (plus de risque d'injection de code)"}
+  ]},
+  { v:"v0.16.4", date:"2026-07-08", title:"Plage de dates fonctionnelle et robustesse", items:[
     {t:"add", x:"Statistiques : la plage de dates personnalisée fonctionne désormais — choisir deux dates affiche la période réelle la plus proche, au lieu d'un simple message"},
     {t:"fix", x:"Performance : la date de dernière analyse ne peut plus afficher « Invalid Date » si une valeur enregistrée est corrompue"}
   ]},
@@ -3253,7 +3258,7 @@ function renderCbTest(){
   if(clr) clr.style.display="";
   cbTestLog.forEach((m,idx)=>{ const b=document.createElement("div");
     if(m.r==="block"){ b.className="bub block"; b.textContent=m.x; }
-    else { b.className="bub "+m.r; b.innerHTML=m.x+(m.src?'<br><span style="font-size:10.5px;color:var(--muted)">source : '+m.src+'</span>':''); }
+    else { b.className="bub "+m.r; b.innerHTML=escHtml(m.x)+(m.src?'<br><span style="font-size:10.5px;color:var(--muted)">source : '+escHtml(m.src)+'</span>':''); }
     t.appendChild(b);
     if(m.r==="a"||m.r==="block") t.appendChild(cbFeedbackEl(m)); });
   t.scrollTop=t.scrollHeight;
@@ -3296,7 +3301,13 @@ function cbAsk(q){
   const words=split(q);
   const hit=chat.forbidden.find(f=> split(f).some(fw=> words.includes(fw)));
   if(hit) cbTestLog.push({r:"block",x:"Sujet « "+hit+" » hors périmètre → "+chat.fallback,q:q});
-  else cbTestLog.push({r:"a",x:"(réponse simulée) D'après les sources, voici ce que je peux répondre à votre question.",src:chat.sources[0]?chat.sources[0].n:"sources",q:q});
+  else {
+    const scoreOf=s=>{ const hay=((s.n||"")+" "+((s.tags||[]).join(" "))+" "+(s.prev||"")).toLowerCase(); return words.reduce((n,w)=>n+(hay.indexOf(w)>=0?1:0),0); };
+    let best=null, bestScore=0;
+    (chat.sources||[]).forEach(s=>{ const sc=scoreOf(s); if(sc>bestScore){ bestScore=sc; best=s; } });
+    if(best){ const snip=(best.prev||"").replace(/\s+/g," ").trim().slice(0,180); cbTestLog.push({r:"a",x:"D'après cette source : "+(snip||"(cette source n'a pas encore d'extrait)"),src:best.n,q:q}); }
+    else cbTestLog.push({r:"a",x:(chat.fallback||"Je n'ai pas trouvé de réponse dans les sources configurées."),src:"repli",q:q});
+  }
   renderCbTest();
 }
 (function wireChatbot(){

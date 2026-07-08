@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.11" };
+const ADMIN_BUILD = { version: "0.16.12" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1126,7 +1126,10 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.11", cur:true, date:"2026-07-08", title:"Filtre rendez-vous complet, affichage Performance corrigé", items:[
+  { v:"v0.16.12", cur:true, date:"2026-07-08", title:"Copilote : fin de rendez-vous utile", items:[
+    {t:"imp", x:"Copilote : « Terminer » archive le compte-rendu et le télécharge en fichier texte, au lieu de ne rien faire (plus de perte au passage à un nouveau rendez-vous)"}
+  ]},
+  { v:"v0.16.11", date:"2026-07-08", title:"Filtre rendez-vous complet, affichage Performance corrigé", items:[
     {t:"imp", x:"Rendez-vous : le filtre par personne liste désormais tous les commerciaux présents dans les données (plus de rendez-vous invisible)"},
     {t:"fix", x:"Performance : la liste « ce qui va déjà bien » s'affiche correctement (style corrigé)"}
   ]},
@@ -1358,7 +1361,7 @@ const PROGRESS=[
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.1.0",recent:["Bac à test basé sur les vraies sources","Affichage sécurisé"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
-  {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.4.0",recent:["Découverte guidée","Simulateur d'offre"]},
+  {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.5.0",recent:["« Terminer » archive et télécharge le compte-rendu","Découverte guidée et simulateur d'offre"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"alpha",version:"0.6.0",recent:["Plage de dates personnalisée fonctionnelle"]},
   {view:"perf",name:"Performance",env:"preprod",stage:"alpha",version:"0.6.1",recent:["Affichage des points forts corrigé","Date de dernière analyse réelle"]},
   {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.5.0",recent:["Précisions du concours affichées","Alerte si stockage plein"]},
@@ -3384,7 +3387,15 @@ function cbAsk(q){
   const copN=document.getElementById("copNotes"); if(copN) copN.addEventListener("input",e=>{ copState.notes=e.target.value; copSave(); renderCopRecap(); });
   const copRz=document.getElementById("copReset"); if(copRz) copRz.addEventListener("click",()=>{ if(!confirm("Démarrer un nouveau RDV ? Les infos en cours seront effacées.")) return; copState=copBlank(); copSave(); renderCopilot(); toast("Nouveau RDV"); });
   const copCp=document.getElementById("copCopy"); if(copCp) copCp.addEventListener("click",()=>{ const t=copRecapText(); if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(()=>toast("Compte-rendu copié"),()=>toast("Copie indisponible")); } else toast("Copie indisponible"); });
-  const copF=document.getElementById("copFinish"); if(copF) copF.addEventListener("click",()=>{ copSave(); toast("RDV enregistré · compte-rendu prêt"); });
+  const copF=document.getElementById("copFinish"); if(copF) copF.addEventListener("click",()=>{
+    copSave();
+    const txt=copRecapText();
+    let hist=[]; try{ hist=JSON.parse(localStorage.getItem("chaskis_copilot_hist"))||[]; }catch(e){}
+    hist.unshift({ date:new Date().toISOString(), company:(copState.company||""), recap:txt });
+    try{ localStorage.setItem("chaskis_copilot_hist", JSON.stringify(hist.slice(0,50))); }catch(e){}
+    try{ const blob=new Blob([txt],{type:"text/plain;charset=utf-8"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="compte-rendu-"+((copState.company||"rdv").replace(/[^a-z0-9]+/gi,"-").toLowerCase()||"rdv")+".txt"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ try{ URL.revokeObjectURL(url); }catch(e){} },1000); }catch(e){}
+    toast("RDV terminé : compte-rendu téléchargé et archivé");
+  });
   // Utilisateurs & accès
   const uAdd=document.getElementById("usrAdd"); if(uAdd) uAdd.addEventListener("click",()=>openUsrModal(null));
   const uClose=document.getElementById("usrClose"); if(uClose) uClose.addEventListener("click",closeUsrModal);

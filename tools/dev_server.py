@@ -4,6 +4,10 @@ Run: python tools/dev_server.py [port]
 
 Mirrors the current vercel.json rewrites so /suivi/:code, /app, /commander, etc.
 behave the same locally as in production.
+
+NOTE: this is a STATIC server. It does NOT run the Vercel Serverless Functions in
+/api. Any request to /api/* returns an explicit 501 (not a silent 404). To exercise
+the Functions locally, use `vercel dev` (serves static + /api + vercel.json rewrites).
 """
 import http.server
 import socketserver
@@ -31,6 +35,15 @@ SUIVI_RE = re.compile(r'^/suivi/([^/?#]+)/?$')
 class VercelLikeHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
+
+    def send_head(self):
+        # Point commun a do_GET ET do_HEAD : /api n'est pas servi ici (les Functions
+        # Vercel ne tournent qu'avec `vercel dev`). 501 explicite plutot qu'un 404 muet
+        # (ou pire, servir le .js source en HEAD) qui ferait croire a un bug de code.
+        if self.path == '/api' or self.path.startswith('/api/') or self.path.startswith('/api?'):
+            self.send_error(501, "Utiliser `vercel dev` pour tester les Functions /api (dev_server.py ne sert que le statique)")
+            return None
+        return super().send_head()
 
     def do_GET(self):
         parts = urlsplit(self.path)

@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.15.5" };
+const ADMIN_BUILD = { version: "0.16.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1125,7 +1125,12 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.15.5", cur:true, date:"2026-07-04", title:"Frise d'ordre en vraie timeline", items:[
+  { v:"v0.16.0", cur:true, date:"2026-07-08", title:"Fondations techniques pour la publication", items:[
+    {t:"add", x:"Socle serveur posé : le site peut désormais accueillir les fonctions serveur prévues au plan (publication du contenu, statistiques, chatbot), sans surcoût"},
+    {t:"add", x:"Espace d'administration rendu invisible pour les moteurs de recherche"},
+    {t:"imp", x:"Règles de sécurité du contenu publié définies pour bloquer tout contenu indésirable avant sa mise en ligne"}
+  ]},
+  { v:"v0.15.5", date:"2026-07-04", title:"Frise d'ordre en vraie timeline", items:[
     {t:"imp", x:"Suivi technique : l'ordre conseillé redevient une frise reliée (pastilles numérotées sur un fil, titre et priorité en dessous), sans trait qui traverse le texte, et toujours compacte"}
   ]},
   { v:"v0.15.4", date:"2026-07-04", title:"Avancement pleine largeur et icônes de page", items:[
@@ -1469,13 +1474,13 @@ function renderTech(){ const tabs=document.getElementById("techTabs"), body=docu
   refreshIcons();
 }
 function techEsc(s){ return escHtml(String(s==null?"":s)); }
-const TECH_UPDATED="4 juillet 2026";
+const TECH_UPDATED="8 juillet 2026";
 const TECH_EFF_LBL={S:"Rapide",M:"Moyen",L:"Long"};
 const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Arthur",calendly:"Paul",auth:"Youcef",perf:"Arthur",media:"Arthur",chatbot:"Youcef"};
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:10,publish:15,versioning:25,analytics:30,calendly:20,auth:25,perf:30,media:20,chatbot:15};
+const TECH_DONE={host:70,publish:15,versioning:25,analytics:30,calendly:20,auth:25,perf:30,media:20,chatbot:15};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */

@@ -6,9 +6,28 @@
     { "source": "/dashboard", "destination": "/dashboard.html" },
     { "source": "/postuler", "destination": "/postuler.html" },
     { "source": "/mobilite", "destination": "/mobilite.html" },
-    { "source": "/suivi/:code", "destination": "/app.html?code=:code" }
+    { "source": "/suivi/:code", "destination": "/app.html?code=:code" },
+    { "source": "/admin", "destination": "/admin/editor.html" }
   ],
   "headers": [
+    {
+      "source": "/admin",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    },
+    {
+      "source": "/admin/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    },
     {
       "source": "/(.*\\.html)",
       "headers": [

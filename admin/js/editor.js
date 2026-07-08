@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.13" };
+const ADMIN_BUILD = { version: "0.16.14" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1126,7 +1126,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.13", cur:true, date:"2026-07-08", title:"Structure : sections masquées signalées", items:[
+  { v:"v0.16.14", cur:true, date:"2026-07-08", title:"Base de la publication : le site sait lire le contenu publié", items:[
+    {t:"add", x:"Le site public sait désormais charger le contenu publié et l'appliquer, avec repli automatique sur les valeurs par défaut si rien n'est publié (aucun risque pour le site en ligne)"},
+    {t:"imp", x:"Chantier « Publication » : la moitié « lecture » est en place et testée ; reste l'écriture réelle (le bouton Publier, qui nécessitera l'accès GitHub)"}
+  ]},
+  { v:"v0.16.13", date:"2026-07-08", title:"Structure : sections masquées signalées", items:[
     {t:"imp", x:"Structure et stratégie : une section masquée de l'accueil porte désormais un badge « actuellement masquée », pour voir d'un coup d'œil ce qui est retiré du site public"}
   ]},
   { v:"v0.16.12", date:"2026-07-08", title:"Copilote : fin de rendez-vous utile", items:[
@@ -1540,7 +1544,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:70,publish:25,versioning:28,analytics:30,calendly:25,auth:25,perf:30,media:20,chatbot:20};
+const TECH_DONE={host:70,publish:30,versioning:28,analytics:30,calendly:25,auth:25,perf:30,media:20,chatbot:20};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */

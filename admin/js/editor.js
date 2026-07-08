@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.18.1" };
+const ADMIN_BUILD = { version: "0.18.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1126,7 +1126,10 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.18.1", cur:true, date:"2026-07-08", title:"Publication : fichier prêt à mettre en ligne", items:[
+  { v:"v0.18.2", cur:true, date:"2026-07-08", title:"Audit technique : couverture des nouveautés", items:[
+    {t:"imp", x:"L'audit automatique du Suivi technique vérifie maintenant aussi l'analyse Performance réelle et la conformité du fichier de publication, pour repérer toute régression future"}
+  ]},
+  { v:"v0.18.1", date:"2026-07-08", title:"Publication : fichier prêt à mettre en ligne", items:[
     {t:"imp", x:"Dans la fenêtre Publier, « Exporter » produit désormais le fichier exact qui sera mis en ligne (vos textes et vos tarifs), déjà au format validé par le serveur ; il ne restera qu'à fournir l'accès technique pour publier en un clic"}
   ]},
   { v:"v0.18.0", date:"2026-07-08", title:"Performance : audit plus complet et historique", items:[
@@ -1549,7 +1552,9 @@ const TECH_AUDIT=[
   {n:"Tutoriel guidé disponible et générique", fn:()=>typeof startCoach==="function"&&typeof coachTargetRect==="function"},
   {n:"Config pricing sérialisable (prête à publier)", fn:()=>{ JSON.parse(JSON.stringify(getPricing())); return true; }},
   {n:"Lecteur de fichier : pagination d'un document", fn:()=>fvPaginate("a\n\nb\n\nc").length>=1},
-  {n:"Environnement dev/prod cohérent", fn:()=>{ const e=getEnv(); return e==="dev"||e==="prod"; }}
+  {n:"Environnement dev/prod cohérent", fn:()=>{ const e=getEnv(); return e==="dev"||e==="prod"; }},
+  {n:"Performance : l'analyse réelle est prête", fn:()=>typeof perfAnalyzeReal==="function"&&typeof perfBuildModel==="function"&&typeof perfAuditDoc==="function"},
+  {n:"Publication : le fichier à publier respecte le contrat", fn:()=>{ const c=buildSiteContent(); if(!c||c.schemaVersion!==1) return false; const allow=["schemaVersion","version","updatedAt","updatedBy","pricing","testimonials","logos","pages"]; if(Object.keys(c).some(k=>allow.indexOf(k)<0)) return false; if(c.pricing){ const pk=["days","tiers","zones","flexMonthly","flexIncluded","express","promos"]; if(Object.keys(c.pricing).some(k=>pk.indexOf(k)<0)) return false; } if(c.pages){ const ok=["accueil","mobilite","recrutement","commander","suivi","dashboard"]; if(Object.keys(c.pages).some(k=>ok.indexOf(k)<0)) return false; } return true; }}
 ];
 let techTab="plan";
 function renderTech(){ const tabs=document.getElementById("techTabs"), body=document.getElementById("techBody"); if(!tabs||!body) return;

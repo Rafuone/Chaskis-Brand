@@ -65,7 +65,10 @@ class VercelLikeHandler(http.server.SimpleHTTPRequestHandler):
         return super().do_GET()
 
     def end_headers(self):
-        if self.path.endswith('.html') or self.path.split('?')[0].endswith('.html'):
+        # En dev on veut TOUJOURS la derniere version : no-store sur html/js/css/json
+        # pour ne jamais servir un asset perime dans l'apercu (ex. editor.js en cache).
+        p = self.path.split('?')[0]
+        if p.endswith('.html') or p.endswith('.js') or p.endswith('.css') or p.endswith('.json'):
             self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
         super().end_headers()
 

@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.6" };
+const ADMIN_BUILD = { version: "0.16.7" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1126,7 +1126,10 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.6", cur:true, date:"2026-07-08", title:"Activité récente réelle", items:[
+  { v:"v0.16.7", cur:true, date:"2026-07-08", title:"Rendez-vous mémorisés", items:[
+    {t:"imp", x:"Rendez-vous : les changements de statut et les relances sont désormais enregistrés et conservés après un rechargement de la page"}
+  ]},
+  { v:"v0.16.6", date:"2026-07-08", title:"Activité récente réelle", items:[
     {t:"imp", x:"Tableau de bord : « Activité récente » reflète désormais vos vraies publications (auteur, version, changements) au lieu d'exemples fictifs"},
     {t:"fix", x:"Rendez-vous : les noms des comptes d'agenda connectés sont échappés à l'affichage (sécurité)"}
   ]},
@@ -3432,6 +3435,9 @@ let rdvData=[
   {day:"25",mon:"juin",time:"09:30",client:"Librairie Page 12",contact:"Élise Favre",tel:"",email:"libraire@page12.ch",secteur:"E-commerce / Retail",volume:"10 à 30",link:"meet.google.com/vwo-ktsd-ign",sujet:"Découverte",who:"Marc",mode:"visio",st:"noshow",note:"Relancer par mail",relance:{sent:true,date:"27 juin"}},
   {day:"24",mon:"juin",time:"14:00",client:"Établissements Vermeulen-Delacroix & Fils",contact:"Marie-Alexandra de Montmollin",tel:"",email:"contact@vermeulen-delacroix.ch",secteur:"Luxe / Bijouterie",volume:"Plus de 100",link:"meet.google.com/zpr-fmna-lqe",sujet:"Renouvellement du contrat Dédié",who:"Jean-Christophe",mode:"visio",st:"honore",note:"Décision attendue au prochain comité de direction"}
 ];
+/* Persistance des rendez-vous : les changements de statut / relance survivent au rechargement. */
+try{ const _rs=JSON.parse(localStorage.getItem("chaskis_rdv_v1")); if(Array.isArray(_rs)&&_rs.length) rdvData=_rs; }catch(e){}
+function saveRdv(){ try{ localStorage.setItem("chaskis_rdv_v1", JSON.stringify(rdvData)); }catch(e){ toast("Stockage plein : changement non enregistré."); } }
 const RDV_PERIODS={
   "7j":{curR:"23-29 juin",prevR:"16-22 juin",chart:{labels:["lun 23","mar 24","mer 25","jeu 26","ven 27","sam 28","dim 29"],vals:[1,2,1,2,1,0,2]}},
   "30j":{curR:"1-30 juin",prevR:"1-31 mai",chart:{labels:["2-8 juin","9-15 juin","16-22 juin","23-30 juin"],vals:[5,7,6,9]}},
@@ -3546,11 +3552,11 @@ function renderRdvTable(){
     tr.addEventListener("click",()=>openRdvDrawer(i));
     // les contrôles interactifs ne doivent pas ouvrir le panneau
     const st=tr.querySelector(".statusel");
-    st.addEventListener("change",e=>{ e.stopPropagation(); rdvData[i].st=e.target.value; rdvSel.delete(i); renderRdv(); });
+    st.addEventListener("change",e=>{ e.stopPropagation(); rdvData[i].st=e.target.value; rdvSel.delete(i); saveRdv(); renderRdv(); });
     enhanceSelect(st);
     const cb=tr.querySelector(".rsel"); if(cb){ cb.addEventListener("click",e=>e.stopPropagation()); cb.addEventListener("change",e=>{ if(e.target.checked) rdvSel.add(i); else rdvSel.delete(i); renderRdvBulk(); }); }
     // relance en action rapide (un clic, sans ouvrir le panneau)
-    const rb=tr.querySelector('[data-rel]'); if(rb){ rb.addEventListener("click",e=>{ e.stopPropagation(); rdvData[i].relance={sent:true,date:RDV_TODAY}; rdvSel.delete(i); toast("Relance envoyée à "+rdvData[i].client+" (simulé)"); renderRdv(); }); }
+    const rb=tr.querySelector('[data-rel]'); if(rb){ rb.addEventListener("click",e=>{ e.stopPropagation(); rdvData[i].relance={sent:true,date:RDV_TODAY}; rdvSel.delete(i); saveRdv(); toast("Relance envoyée à "+rdvData[i].client+" (simulé)"); renderRdv(); }); }
     b.appendChild(tr);
   });
   renderPager(total,pages,start,pageIdxs.length);
@@ -3578,7 +3584,7 @@ function renderRdvBulk(){
   if(!n){ el.style.display="none"; el.innerHTML=""; return; }
   el.style.display="";
   el.innerHTML='<span class="lbl"><b>'+n+'</b> rendez-vous sélectionné'+(n>1?"s":"")+'</span><span class="sp"></span><button class="btn ghost" id="bulkClear">Tout désélectionner</button><button class="btn primary" id="bulkRel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Relancer la sélection</button>';
-  el.querySelector("#bulkRel").onclick=()=>{ let c=0; rdvSel.forEach(i=>{ const r=rdvData[i]; if(r && r.st!=="avenir" && r.st!=="refuse" && !(r.relance&&r.relance.sent)){ r.relance={sent:true,date:RDV_TODAY}; c++; } }); rdvSel.clear(); toast(c+" relance"+(c>1?"s":"")+" envoyée"+(c>1?"s":"")+" (simulé)"); renderRdv(); };
+  el.querySelector("#bulkRel").onclick=()=>{ let c=0; rdvSel.forEach(i=>{ const r=rdvData[i]; if(r && r.st!=="avenir" && r.st!=="refuse" && !(r.relance&&r.relance.sent)){ r.relance={sent:true,date:RDV_TODAY}; c++; } }); rdvSel.clear(); saveRdv(); toast(c+" relance"+(c>1?"s":"")+" envoyée"+(c>1?"s":"")+" (simulé)"); renderRdv(); };
   el.querySelector("#bulkClear").onclick=()=>{ rdvSel.clear(); renderRdvTable(); };
 }
 function rdvFicheInner(i){
@@ -3631,7 +3637,7 @@ function openRdvDrawer(i){
   d.innerHTML=rdvFicheInner(i);
   s.classList.add("show"); d.classList.add("show"); refreshIcons();
   const ns=d.querySelector("#dNoteSave"); if(ns) ns.onclick=()=>{ rdvData[i].note=d.querySelector("#dNote").value.trim(); toast("Note enregistrée"); openRdvDrawer(i); };
-  const send=d.querySelector("#dRelSend"); if(send) send.onclick=()=>{ rdvData[i].relance={sent:true,date:RDV_TODAY}; toast("Relance envoyée à "+rdvData[i].client+" (simulé)"); openRdvDrawer(i); };
+  const send=d.querySelector("#dRelSend"); if(send) send.onclick=()=>{ rdvData[i].relance={sent:true,date:RDV_TODAY}; saveRdv(); toast("Relance envoyée à "+rdvData[i].client+" (simulé)"); openRdvDrawer(i); };
   const cl=d.querySelector("#dClose"); if(cl) cl.onclick=closeRdvDrawer;
   renderRdvTable();
 }

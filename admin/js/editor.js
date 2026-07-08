@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.17" };
+const ADMIN_BUILD = { version: "0.17.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1126,7 +1126,12 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.17", cur:true, date:"2026-07-08", title:"Préparation de la sauvegarde et nettoyage technique", items:[
+  { v:"v0.17.0", cur:true, date:"2026-07-08", title:"Performance : l'analyse devient réelle", items:[
+    {t:"add", x:"Le bouton « Relancer l'analyse » lance désormais un vrai audit de votre site, sans aucun outil externe : il parcourt vos pages et mesure le référencement (titres, descriptions, données structurées, plan du site), la lisibilité (descriptions d'images, étiquettes de formulaire, ordre des titres) et le poids des pages"},
+    {t:"add", x:"Les points « à améliorer », « ce qui va déjà bien » et le détail technique reflètent maintenant l'état réel de vos pages, avec la date de l'analyse"},
+    {t:"imp", x:"La vitesse ressentie fine (Core Web Vitals) reste estimée pour l'instant : elle sera mesurée automatiquement à l'étape Google PageSpeed / Lighthouse"}
+  ]},
+  { v:"v0.16.17", date:"2026-07-08", title:"Préparation de la sauvegarde et nettoyage technique", items:[
     {t:"imp", x:"Base technique posée pour exporter/sauvegarder tout le contenu de l'admin en un seul bloc (préparera le bouton Publier et les sauvegardes)"},
     {t:"fix", x:"Retrait d'un morceau de code inutilisé dans le Suivi technique (fichier plus léger, plus fiable)"}
   ]},
@@ -1380,7 +1385,7 @@ const PROGRESS=[
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.5.0",recent:["« Terminer » archive et télécharge le compte-rendu","Découverte guidée et simulateur d'offre"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"alpha",version:"0.6.0",recent:["Plage de dates personnalisée fonctionnelle"]},
-  {view:"perf",name:"Performance",env:"preprod",stage:"alpha",version:"0.6.1",recent:["Affichage des points forts corrigé","Date de dernière analyse réelle"]},
+  {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.7.0",recent:["Analyse réelle du référencement, de la lisibilité et du contenu (sans outil externe)","Vitesse fine (Core Web Vitals) encore estimée, à venir avec Lighthouse"]},
   {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.5.0",recent:["Précisions du concours affichées","Alerte si stockage plein"]},
   {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.6.2",recent:["Libellé de rôle corrigé"]},
   {view:"progress",name:"Avancement",env:"preprod",stage:"beta",version:"0.4.0",recent:["Vrai pourcentage d'avancement de l'interface"]}
@@ -1554,7 +1559,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:70,publish:40,versioning:28,analytics:30,calendly:25,auth:25,perf:30,media:20,chatbot:20};
+const TECH_DONE={host:70,publish:40,versioning:28,analytics:30,calendly:25,auth:25,perf:45,media:20,chatbot:20};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -1609,7 +1614,7 @@ const TECH_BRIEF={
     steps:["Ajouter un petit outil de mesure sans cookie sur toutes les pages.","Repérer d'où viennent les visiteurs (liens, réseaux, recherche).","Brancher la page Statistiques sur ces vraies données.","Ajouter une ligne dans la politique de confidentialité."],
     src:[{t:"Umami, tarifs",u:"https://umami.is/pricing"},{t:"Plausible, tarifs",u:"https://plausible.io/#pricing"}] },
   perf:{ sum:"Mesurer pour de vrai la vitesse et le référencement du site.",
-    today:"La note de performance est un exemple, pas une vraie mesure.",
+    today:"Le référencement, la lisibilité et le contenu sont désormais mesurés pour de vrai dans l'admin (bouton « Relancer l'analyse », sans outil externe). La vitesse fine (Core Web Vitals) reste estimée : elle sera mesurée automatiquement à l'étape Google PageSpeed / Lighthouse.",
     goal:"Une vraie mesure de vitesse et de référencement, mise à jour automatiquement.",
     cost:"Gratuit.", note:"",
     steps:["Utiliser l'outil de mesure gratuit de Google.","Mesurer les pages clés automatiquement, à intervalle régulier.","Traduire les scores en langage clair, avec une action par point."],
@@ -1941,9 +1946,154 @@ const PERF_CONTENT=[
   {k:"Les mots que cherchent vos clients", st:"warn", plain:"Les termes que tapent vos clients (livraison, coursier, Genève…) doivent apparaître dans vos textes.", tip:"Écrivez avec les mots de vos clients, pas du jargon interne."},
   {k:"Des images décrites", st:"warn", plain:"Chaque image porte une courte description, utile à Google comme aux malvoyants.", tip:"Une phrase qui dit ce qu'on voit."}
 ];
+/* ============================================================
+   Analyse Performance RÉELLE (aucune API externe, 100% navigateur).
+   Récupère les pages publiques, parse leur HTML et mesure des signaux
+   vérifiables : Référencement (title, meta, H1, données structurées,
+   langue, sitemap), Lisibilité (alt d'images, étiquettes de champs,
+   ordre des titres) et Contenu. La vitesse fine (Core Web Vitals) reste
+   estimée jusqu'à l'étape Lighthouse ; on affiche le poids réel des pages.
+   Repli : si la récupération échoue, on garde les données d'exemple (démo).
+   Les valeurs par défaut (PERF_PILLARS/ACTIONS/GOOD/CONTENT) restent la
+   démo tant qu'aucune analyse réelle n'a tourné (perfLive === null).
+   ============================================================ */
+const PERF_PAGES=[
+  {file:"index.html",label:"Accueil"},
+  {file:"mobilite.html",label:"Mobilité"},
+  {file:"postuler.html",label:"Recrutement"},
+  {file:"commander.html",label:"Commander"},
+  {file:"dashboard.html",label:"Tableau de bord"}
+];
+const PERF_LIVE_KEY="chaskis_perf_live";
+let perfLive=null;
+try{ var _perfRaw=localStorage.getItem(PERF_LIVE_KEY); if(_perfRaw) perfLive=JSON.parse(_perfRaw); }catch(e){ perfLive=null; }
+function perfPillars(){ return (perfLive&&perfLive.pillars)||PERF_PILLARS; }
+function perfActs(){ return (perfLive&&perfLive.actions)||PERF_ACTIONS; }
+function perfGoods(){ return (perfLive&&perfLive.good)||PERF_GOOD; }
+function perfConts(){ return (perfLive&&perfLive.content)||PERF_CONTENT; }
+function perfClone(o){ return JSON.parse(JSON.stringify(o)); }
+function perfAuditDoc(doc){
+  var qa=function(s){ return Array.prototype.slice.call(doc.querySelectorAll(s)); };
+  var tEl=doc.querySelector("title"), title=tEl?(tEl.textContent||"").trim():"";
+  var dEl=doc.querySelector('meta[name="description"]'), desc=dEl?(dEl.getAttribute("content")||"").trim():"";
+  var imgs=qa("img"), imgsNoAlt=imgs.filter(function(im){ return !im.hasAttribute("alt"); }).length;
+  var levels=qa("h1,h2,h3,h4,h5,h6").map(function(h){ return +h.tagName.charAt(1); });
+  var skip=false, prev=0; levels.forEach(function(l){ if(prev&&l>prev+1) skip=true; prev=l; });
+  var fields=qa("input:not([type=hidden]):not([type=submit]):not([type=button]),select,textarea");
+  var fieldsNoLabel=fields.filter(function(el){
+    if(el.getAttribute("aria-label")||el.getAttribute("aria-labelledby")) return false;
+    var id=el.getAttribute("id");
+    if(id){ try{ if(doc.querySelector('label[for="'+((window.CSS&&CSS.escape)?CSS.escape(id):id)+'"]')) return false; }catch(e){} }
+    if(el.closest&&el.closest("label")) return false;
+    return true;
+  }).length;
+  var body=doc.body?doc.body.cloneNode(true):null;
+  if(body){ Array.prototype.slice.call(body.querySelectorAll("script,style,noscript,template")).forEach(function(n){ n.remove(); }); }
+  var txt=body?(body.textContent||"").replace(/\s+/g," ").trim():"";
+  return { title:title, titleLen:title.length, desc:desc, descLen:desc.length,
+    h1:qa("h1").length, imgs:imgs.length, imgsNoAlt:imgsNoAlt,
+    jsonld:qa('script[type="application/ld+json"]').length,
+    lang:(doc.documentElement.getAttribute("lang")||"").trim(),
+    skip:skip, fields:fields.length, fieldsNoLabel:fieldsNoLabel,
+    words:txt?txt.split(" ").filter(Boolean).length:0,
+    assetRefs:qa("script[src]").length+qa('link[rel="stylesheet"]').length+imgs.length };
+}
+function perfBuildModel(pages,sitemap){
+  var n=pages.length, sum=function(f){ return pages.reduce(function(a,p){ return a+f(p); },0); };
+  var names=function(pred){ return pages.filter(pred).map(function(p){ return p.label; }); };
+  var join=function(a){ return a.join(", "); };
+  var noTitle=names(function(p){ return !p.titleLen; }), badTitle=names(function(p){ return p.titleLen&&(p.titleLen<20||p.titleLen>70); });
+  var noDesc=names(function(p){ return !p.descLen; }), longDesc=names(function(p){ return p.descLen>170; }), shortDesc=names(function(p){ return p.descLen&&p.descLen<70; });
+  var noH1=names(function(p){ return p.h1===0; }), multiH1=names(function(p){ return p.h1>1; });
+  var noLang=names(function(p){ return !p.lang; }), noJsonld=names(function(p){ return p.jsonld===0; });
+  var seo=100-(noTitle.length*15+badTitle.length*4+noDesc.length*12+longDesc.length*4+shortDesc.length*3+noH1.length*10+multiH1.length*4+noLang.length*10+noJsonld.length*3+(sitemap?0:6));
+  seo=Math.max(0,Math.min(100,Math.round(seo)));
+  var totNoAlt=sum(function(p){ return p.imgsNoAlt; }), totNoLabel=sum(function(p){ return p.fieldsNoLabel; });
+  var skips=names(function(p){ return p.skip; });
+  var a11y=100-(Math.min(30,totNoAlt*3)+Math.min(20,totNoLabel*3)+skips.length*5+noLang.length*8);
+  a11y=Math.max(0,Math.min(100,Math.round(a11y)));
+  var avgKb=Math.round(sum(function(p){ return p.bytes||0; })/n/1024), avgReq=Math.round(sum(function(p){ return p.assetRefs; })/n);
+  var speed=100; if(avgKb>120) speed-=16; else if(avgKb>70) speed-=6; if(avgReq>40) speed-=10; else if(avgReq>25) speed-=4;
+  speed=Math.max(45,Math.min(94,speed));
+  var st=function(sc){ return sc>=80?"good":sc>=60?"warn":"bad"; };
+  var base=perfClone(PERF_PILLARS), P={}; base.forEach(function(p){ P[p.key]=p; });
+  P.seo.score=seo; P.seo.status=st(seo);
+  P.seo.detail=[
+    {k:"Titre et description de chaque page", tech:"title / meta", v:(noTitle.length||noDesc.length)?"à compléter":"complets", st:(noTitle.length||noDesc.length)?"warn":"good"},
+    {k:"Longueur des descriptions", tech:"meta description", v:(longDesc.length||shortDesc.length)?((longDesc.length?(longDesc.length+" trop longue"+(longDesc.length>1?"s":"")):"")+(longDesc.length&&shortDesc.length?", ":"")+(shortDesc.length?(shortDesc.length+" trop courte"+(shortDesc.length>1?"s":"")):"")):"optimales", st:(longDesc.length||shortDesc.length)?"warn":"good"},
+    {k:"Un seul titre principal par page", tech:"balise H1", v:noH1.length?("manque sur "+noH1.length):(multiH1.length?("plusieurs sur "+multiH1.length):"oui"), st:(noH1.length||multiH1.length)?"warn":"good"},
+    {k:"Fiche d'infos pour Google", tech:"données structurées", v:noJsonld.length?("manque sur "+noJsonld.length+" page"+(noJsonld.length>1?"s":"")):"présentes", st:noJsonld.length?"warn":"good"},
+    {k:"Plan du site fourni à Google", tech:"sitemap.xml", v:sitemap?"présent":"absent", st:sitemap?"good":"warn"}
+  ];
+  P.a11y.score=a11y; P.a11y.status=st(a11y);
+  P.a11y.detail=[
+    {k:"Descriptions des images", tech:"attribut alt", v:totNoAlt?(totNoAlt+" manquante"+(totNoAlt>1?"s":"")):"toutes présentes", st:totNoAlt?"warn":"good"},
+    {k:"Étiquettes des formulaires", tech:"labels", v:totNoLabel?(totNoLabel+" champ"+(totNoLabel>1?"s":"")+" sans étiquette"):"toutes présentes", st:totNoLabel?"warn":"good"},
+    {k:"Langue de la page déclarée", tech:"attribut lang", v:noLang.length?(noLang.length+" page"+(noLang.length>1?"s":"")+" sans langue"):"oui, partout", st:noLang.length?"warn":"good"},
+    {k:"Ordre des titres", tech:"H1 puis H2, H3", v:skips.length?("à revoir sur "+skips.length):"cohérent", st:skips.length?"warn":"good"}
+  ];
+  P.speed.score=speed; P.speed.status=st(speed);
+  P.speed.detail=[
+    {k:"Poids moyen d'une page", tech:"HTML", v:avgKb+" Ko", st:avgKb>120?"warn":"good"},
+    {k:"Éléments chargés par page", tech:"estimation", v:String(avgReq), st:avgReq>40?"warn":"good"},
+    {k:"Vitesse ressentie", tech:"LCP / INP / CLS", v:"mesure fine à venir (Lighthouse)", st:"warn"}
+  ];
+  var acts=[];
+  if(noH1.length) acts.push({ title:"Titre principal (H1) manquant sur "+join(noH1), impact:"fort", area:"Référencement", icon:"heading", why:"Le titre principal (H1) indique à Google le sujet de la page. Sans lui, la page est plus difficile à référencer.", fix:{mode:"gamma", note:"Ajouter un titre principal est un réglage de structure, "+GAMMA+" s'en occupe."} });
+  if(!sitemap) acts.push({ title:"Le plan du site (sitemap.xml) est absent", impact:"fort", area:"Référencement", icon:"map", why:"Le plan du site aide Google à découvrir toutes vos pages rapidement.", fix:{mode:"gamma", note:GAMMA+" peut générer et publier le plan du site."} });
+  if(longDesc.length) acts.push({ title:"Description trop longue sur "+join(longDesc), impact:"moyen", area:"Référencement", icon:"text", why:"Au-delà d'environ 160 caractères, Google coupe la description dans les résultats : votre phrase d'accroche est tronquée.", fix:{mode:"gamma", note:"L'ajustement des descriptions arrive bientôt dans l'éditeur. En attendant, "+GAMMA+" peut les raccourcir."} });
+  if(noJsonld.length) acts.push({ title:"Fiche d'infos Google manquante sur "+noJsonld.length+" page"+(noJsonld.length>1?"s":""), impact:"moyen", area:"Référencement", icon:"tag", why:"Cette fiche permet à Google d'afficher vos avis, horaires ou prix directement dans les résultats.", fix:{mode:"gamma", note:"C'est un réglage technique, "+GAMMA+" s'en occupe."} });
+  if(totNoAlt) acts.push({ title:totNoAlt+" image"+(totNoAlt>1?"s":"")+" sans description", impact:"moyen", area:"Référencement et lisibilité", icon:"image", why:"Une description aide Google à comprendre l'image et permet aux personnes malvoyantes de savoir ce qu'elle montre.", fix:{mode:"gamma", note:"L'ajout d'une description d'image arrive bientôt dans l'éditeur. En attendant, "+GAMMA+" peut le faire."} });
+  if(totNoLabel) acts.push({ title:totNoLabel+" champ"+(totNoLabel>1?"s":"")+" de formulaire sans étiquette", impact:"moyen", area:"Lisibilité", icon:"form-input", why:"Ces champs s'appuient seulement sur le texte gris d'exemple (placeholder), qui disparaît dès qu'on écrit et n'est pas lu de façon fiable par les lecteurs d'écran. Une étiquette visible aide tout le monde à savoir quoi remplir.", fix:{mode:"gamma", note:"Ajouter les étiquettes de formulaire est un réglage de gabarit, "+GAMMA+" s'en occupe."} });
+  if(shortDesc.length) acts.push({ title:"Description un peu courte sur "+join(shortDesc), impact:"leger", area:"Référencement", icon:"text", why:"Une description trop courte n'exploite pas toute la place offerte par Google pour donner envie de cliquer.", fix:{mode:"gamma", note:GAMMA+" peut étoffer ces descriptions."} });
+  if(skips.length) acts.push({ title:"Ordre des titres à revoir sur "+join(skips), impact:"leger", area:"Lisibilité", icon:"list", why:"Un saut de niveau (par exemple un H3 sans H2 avant) gêne les lecteurs d'écran et la lecture par Google.", fix:{mode:"gamma", note:GAMMA+" peut réordonner les titres."} });
+  var good=[];
+  if(!totNoAlt) good.push({t:"Toutes vos images ont une description.", cat:"Lisibilité"});
+  if(!noLang.length) good.push({t:"Chaque page déclare sa langue.", cat:"Lisibilité"});
+  if(sitemap) good.push({t:"Google a le plan de votre site.", cat:"Référencement"});
+  if(!noTitle.length&&!noDesc.length) good.push({t:"Chaque page a un titre et une description.", cat:"Référencement"});
+  if(!noH1.length&&!multiH1.length) good.push({t:"Un seul titre principal par page.", cat:"Référencement"});
+  if(!totNoLabel) good.push({t:"Vos formulaires sont bien étiquetés.", cat:"Lisibilité"});
+  if(avgKb<=120) good.push({t:"Vos pages sont légères ("+avgKb+" Ko de HTML en moyenne).", cat:"Rapidité"});
+  var lowText=names(function(p){ return p.words<80; });
+  var content=[
+    {k:"Un grand titre clair par page", st:(noH1.length||multiH1.length)?"warn":"good", plain:"Chaque page a un titre principal unique qui dit tout de suite de quoi elle parle.", tip:"Un seul grand titre par page, court et parlant."},
+    {k:"Une description qui donne envie", st:(noDesc.length||longDesc.length||shortDesc.length)?"warn":"good", plain:"Le petit texte affiché sous votre lien dans Google est rempli et bien dimensionné.", tip:"120 à 160 caractères, donnez envie de cliquer."},
+    {k:"Assez de texte sur la page", st:lowText.length?"warn":"good", plain:"Vos pages ont assez de contenu pour que Google comprenne le sujet.", tip:"Ne videz pas une page de son texte, Google a besoin de mots pour vous classer."},
+    {k:"Des images décrites", st:totNoAlt?"warn":"good", plain:"Chaque image porte une courte description, utile à Google comme aux malvoyants.", tip:"Une phrase qui dit ce qu'on voit."}
+  ];
+  return { pillars:[P.speed,P.seo,P.a11y], actions:acts, good:good, content:content };
+}
+async function perfAnalyzeReal(){
+  var btn=document.getElementById("perfRun");
+  if(btn){ if(btn.dataset.busy==="1") return; btn.dataset.busy="1"; btn.disabled=true; btn.innerHTML='<i data-lucide="refresh-cw"></i>Analyse en cours…'; refreshIcons(); }
+  var pages=[];
+  for(var i=0;i<PERF_PAGES.length;i++){
+    var p=PERF_PAGES[i];
+    try{
+      var res=await fetch("/"+p.file,{cache:"no-store"});
+      var html=await res.text();
+      var doc=new DOMParser().parseFromString(html,"text/html");
+      var a=perfAuditDoc(doc); a.file=p.file; a.label=p.label; a.status=res.status;
+      try{ a.bytes=new Blob([html]).size; }catch(e){ a.bytes=html.length; }
+      pages.push(a);
+    }catch(e){}
+  }
+  var sitemap=false; try{ var sm=await fetch("/sitemap.xml",{cache:"no-store"}); sitemap=sm.ok; }catch(e){}
+  if(btn){ btn.dataset.busy="0"; btn.disabled=false; btn.innerHTML='<i data-lucide="refresh-cw"></i>Relancer l\'analyse'; refreshIcons(); }
+  if(!pages.length){ toast("Analyse impossible (pages non accessibles). Données d'exemple conservées."); return; }
+  perfLive=perfBuildModel(pages,sitemap); perfLive.at=Date.now(); perfLive.n=pages.length;
+  try{ localStorage.setItem(PERF_LIVE_KEY,JSON.stringify(perfLive)); localStorage.setItem("chaskis_perf_last",String(perfLive.at)); }catch(e){}
+  toast("Analyse réelle terminée : "+pages.length+" pages mesurées"); renderPerf();
+}
+function perfUpdateNote(){ var el=document.getElementById("perfDraftNote"); if(!el) return;
+  if(perfLive&&perfLive.at){ el.innerHTML="Analyse réelle du "+escHtml(new Date(perfLive.at).toLocaleString("fr-CH",{day:"2-digit",month:"long",hour:"2-digit",minute:"2-digit"}))+" : référencement, lisibilité et contenu mesurés sur vos "+(perfLive.n||0)+" pages. La vitesse fine (Core Web Vitals) sera mesurée à l'étape Lighthouse."; }
+  else{ el.innerHTML="Ébauche : les résultats affichés sont des exemples. Cliquez « Relancer l'analyse » pour lancer un audit réel de votre site (référencement, lisibilité, contenu). La vitesse fine (Core Web Vitals) arrivera avec l'étape Lighthouse."; }
+}
 function renderPerf(){
   const last=document.getElementById("perfLast"); if(last){ let _pl=null; try{ _pl=localStorage.getItem("chaskis_perf_last"); }catch(e){} const _n=_pl!=null?+_pl:NaN; last.textContent=Number.isFinite(_n)?("Dernière analyse : "+new Date(_n).toLocaleString("fr-CH",{day:"2-digit",month:"long",hour:"2-digit",minute:"2-digit"})):"Analyse pas encore lancée"; }
-  const scores=PERF_PILLARS.map(p=>p.score), overall=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  perfUpdateNote();
+  const scores=perfPillars().map(p=>p.score), overall=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
   renderPerfVerdict(overall);
   renderPerfPillars(); renderPerfActions(); renderPerfGood(); renderPerfContent();
   refreshIcons();
@@ -1953,8 +2103,8 @@ function renderPerfVerdict(overall){ const w=document.getElementById("perfVerdic
   const b=pfScore(overall), col=b.c;
   const heads={ Excellent:{ic:"check-circle-2", t:"Votre site est en excellente santé"}, Bon:{ic:"check-circle-2", t:"Votre site est en bonne santé"}, Correct:{ic:"sparkles", t:"Votre site va bien, quelques réglages à peaufiner"}, "À surveiller":{ic:"alert-triangle", t:"Quelques points sont à surveiller"}, Critique:{ic:"alert-triangle", t:"Des points importants sont à corriger"} };
   const m=heads[b.w]||heads.Bon;
-  const goodN=PERF_PILLARS.filter(p=>p.score>=80).length, actN=PERF_ACTIONS.length;
-  const sub=goodN+" domaine"+(goodN>1?"s":"")+" au vert sur "+PERF_PILLARS.length+", "+actN+" point"+(actN>1?"s":"")+" à améliorer, expliqués et guidés plus bas.";
+  const goodN=perfPillars().filter(p=>p.score>=80).length, actN=perfActs().length;
+  const sub=goodN+" domaine"+(goodN>1?"s":"")+" au vert sur "+perfPillars().length+", "+actN+" point"+(actN>1?"s":"")+" à améliorer, expliqués et guidés plus bas.";
   w.className="perf-verdict";
   const scaleDesc=PF_SCALE.slice().reverse();
   w.innerHTML='<div class="pv-gauge">'+perfRing(overall,66,col)+'<span class="pv-cap">note globale<br>sur 100</span></div>'
@@ -1965,7 +2115,7 @@ function renderPerfVerdict(overall){ const w=document.getElementById("perfVerdic
       +'</div><div class="pv-scale-lbls">'+scaleDesc.map(bd=>'<span'+(bd.w===b.w?' class="on" style="color:'+bd.c+'"':'')+'>'+bd.w+'</span>').join("")+'</div></div></div>';
 }
 function renderPerfPillars(){ const w=document.getElementById("perfPillars"); if(!w) return; w.innerHTML="";
-  PERF_PILLARS.forEach(p=>{ const b=pfScore(p.score); const el=document.createElement("div"); el.className="pcard";
+  perfPillars().forEach(p=>{ const b=pfScore(p.score); const el=document.createElement("div"); el.className="pcard";
     el.innerHTML='<div class="pcard-top"><span class="pcard-ic" style="background:'+b.bg+';color:'+b.c+'"><i data-lucide="'+p.icon+'"></i></span><span class="pcard-t">'+p.title+'</span>'+perfRing(p.score,36,b.c,4)+'</div>'
       +'<div class="pcard-plain">'+p.plain+'</div>'
       +'<span class="pf-pill pcard-pill" style="color:'+b.c+';background:'+b.bg+'">'+b.w+'</span>'
@@ -1975,7 +2125,7 @@ function renderPerfPillars(){ const w=document.getElementById("perfPillars"); if
     el.querySelector(".pcard-toggle").addEventListener("click",()=>el.classList.toggle("open"));
     w.appendChild(el); }); }
 function renderPerfActions(){ const w=document.getElementById("perfActions"); if(!w) return; const hint=document.getElementById("perfActionsHint");
-  const acts=PERF_ACTIONS.slice().sort((a,b)=>(PF_IMPACT_ORDER[a.impact]-PF_IMPACT_ORDER[b.impact]));
+  const acts=perfActs().slice().sort((a,b)=>(PF_IMPACT_ORDER[a.impact]-PF_IMPACT_ORDER[b.impact]));
   if(hint) hint.textContent=acts.length+" point"+(acts.length>1?"s":"");
   w.className="perf-acts";
   if(!acts.length){ w.innerHTML='<div class="perf-allgood"><span class="pg-chk"><i data-lucide="check"></i></span><span>Rien à corriger, tout est au vert.</span></div>'; refreshIcons(); return; }
@@ -1994,13 +2144,13 @@ function renderPerfActions(){ const w=document.getElementById("perfActions"); if
     const fb=el.querySelector("[data-fix]"); if(fb){ if(fx.mode==="self") fb.addEventListener("click",()=>perfFix(a)); else fb.addEventListener("click",perfSignalGamma); }
     w.appendChild(el); }); refreshIcons(); }
 function renderPerfGood(){ const w=document.getElementById("perfGood"); if(!w) return; w.className="perf-good-list";
-  w.innerHTML=PERF_GOOD.map(g=>'<div class="perf-good-item"><span class="pg-chk"><i data-lucide="check"></i></span><span class="pg-t">'+escHtml(g.t)+'</span><span class="pg-cat">'+escHtml(g.cat)+'</span></div>').join(""); refreshIcons(); }
+  w.innerHTML=perfGoods().map(g=>'<div class="perf-good-item"><span class="pg-chk"><i data-lucide="check"></i></span><span class="pg-t">'+escHtml(g.t)+'</span><span class="pg-cat">'+escHtml(g.cat)+'</span></div>').join(""); refreshIcons(); }
 let perfContentMode="simple";
 function renderPerfContent(){ const w=document.getElementById("perfContent"); if(!w) return; const detailed=perfContentMode==="detailed";
-  const warnN=PERF_CONTENT.filter(c=>c.st!=="good").length;
+  const warnN=perfConts().filter(c=>c.st!=="good").length;
   let h='<div class="pc-top"><div class="pc-intro">Ce que vos textes changent pour Google et vos visiteurs. '+(warnN?('<b>'+warnN+' point'+(warnN>1?"s":"")+' à revoir.</b>'):'Tout est au point.')+'</div>'
     +'<div class="seg pc-toggle" id="pcToggle"><button data-m="simple" class="'+(detailed?"":"on")+'">Simple</button><button data-m="detailed" class="'+(detailed?"on":"")+'">Détaillé</button></div></div>';
-  const ordered=PERF_CONTENT.slice().sort((a,b)=>(a.st==="good"?1:0)-(b.st==="good"?1:0));
+  const ordered=perfConts().slice().sort((a,b)=>(a.st==="good"?1:0)-(b.st==="good"?1:0));
   h+='<div class="pc-list">'+ordered.map(c=>{ const s=pfStat(c.st), ok=c.st==="good", ic=ok?"check":"alert-triangle";
     return '<div class="pc-item"><span class="pc-chk" style="background:'+s.bg+';color:'+s.c+'"><i data-lucide="'+ic+'"></i></span><div class="pc-body"><div class="pc-krow"><span class="pc-k">'+c.k+'</span><span class="pc-status" style="color:'+s.c+'">'+(ok?"Au point":"À revoir")+'</span></div>'
       +(detailed?('<div class="pc-plain">'+c.plain+'</div><div class="pc-tip"><i data-lucide="lightbulb"></i><span>'+c.tip+'</span></div>'):'')
@@ -3378,7 +3528,7 @@ function cbAsk(q){
   document.getElementById("cbLogClose").addEventListener("click",closeCbLog);
   document.getElementById("cbLogModal").addEventListener("click",e=>{ if(e.target.id==="cbLogModal") closeCbLog(); });
   // Performance : bouton d'analyse (ébauche)
-  const prun=document.getElementById("perfRun"); if(prun) prun.addEventListener("click",()=>{ try{ localStorage.setItem("chaskis_perf_last", String(Date.now())); }catch(e){} toast("Analyse relancée (données d'exemple)"); renderPerf(); });
+  const prun=document.getElementById("perfRun"); if(prun) prun.addEventListener("click",()=>{ perfAnalyzeReal(); });
   const chC=document.getElementById("contentHealth"); if(chC) chC.addEventListener("click",()=>showView("perf"));
   // Affiliation : ajout / édition / suppression de restaurants
   const aAdd=document.getElementById("affilAdd"); if(aAdd) aAdd.addEventListener("click",()=>openAffilModal(null));

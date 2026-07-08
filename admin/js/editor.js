@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.16" };
+const ADMIN_BUILD = { version: "0.16.17" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1126,7 +1126,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.16", cur:true, date:"2026-07-08", title:"Publication : la fonction serveur d'écriture est prête", items:[
+  { v:"v0.16.17", cur:true, date:"2026-07-08", title:"Préparation de la sauvegarde et nettoyage technique", items:[
+    {t:"imp", x:"Base technique posée pour exporter/sauvegarder tout le contenu de l'admin en un seul bloc (préparera le bouton Publier et les sauvegardes)"},
+    {t:"fix", x:"Retrait d'un morceau de code inutilisé dans le Suivi technique (fichier plus léger, plus fiable)"}
+  ]},
+  { v:"v0.16.16", date:"2026-07-08", title:"Publication : la fonction serveur d'écriture est prête", items:[
     {t:"add", x:"La partie serveur de la publication est écrite et testée : elle authentifie la demande, valide le contenu et enregistre le fichier dans le dépôt (avec gestion des conflits). Reste à relier le bouton Publier et à fournir l'accès GitHub pour l'activer réellement"}
   ]},
   { v:"v0.16.15", date:"2026-07-08", title:"Publication : lecture active sur tout le site", items:[
@@ -1646,17 +1650,6 @@ function techPlanOrdered(){
 function techGlobalEstimate(){ let mn=0,mx=0; techPlanOrdered().forEach(b=>{ const d=TECH_EFF_DAYS[b.effort]||[1,3], rem=Math.max(0,1-(techDoneOf(b)/100)); mn+=d[0]*rem; mx+=d[1]*rem; }); return { pmin:Math.round(mn), pmax:Math.round(mx), pmed:Math.round((mn+mx)/2) }; }
 /* Avancement global du projet : moyenne pondérée par la charge (jours médians) de chaque chantier, pour qu'un gros chantier pèse plus qu'un petit. */
 function techGlobalDone(){ let num=0,den=0; techPlanOrdered().forEach(b=>{ const d=TECH_EFF_DAYS[b.effort]||[1,3], w=(d[0]+d[1])/2; num+=w*techDoneOf(b); den+=w; }); return den?Math.round(num/den):0; }
-function TPHX(est,solo,team){
-  var T=est.pmin+' à '+est.pmax+' j', S=solo[0]+' à '+solo[1]+' sem', E=team[0]+' à '+team[1]+' sem', D=TECH_UPDATED;
-  var btns='<button type="button" class="btn primary sm tphx-dl"><i data-lucide="download"></i>Télécharger le dossier d\'intégration</button><button type="button" class="btn sec-b sm tphx-md"><i data-lucide="file-code-2"></i>Version Markdown</button>';
-  function frame(letter,name,inner){ return '<div class="tphx"><div class="tphx-lbl"><span class="tphx-k">'+letter+'</span>'+name+'</div>'+inner+'</div>'; }
-  var A=frame('A','Étiquette et phrase','<div class="tp-top ha"><div class="ha-l"><div class="ha-lbl">Reste à intégrer</div><div class="ha-main">environ '+est.pmin+' à '+est.pmax+' jours de développement</div><div class="ha-sub">Youcef seul '+S+' · en équipe '+E+' · à jour au '+D+'</div></div><div class="tphx-btns">'+btns+'</div></div>');
-  var B=frame('B','Trois repères','<div class="tp-top hb"><div class="hb-stats"><div class="hb-st"><div class="hb-k">À intégrer</div><div class="hb-v">'+T+'</div></div><div class="hb-st"><div class="hb-k">Youcef seul</div><div class="hb-v">'+S+'</div></div><div class="hb-st"><div class="hb-k">En équipe</div><div class="hb-v">'+E+'</div></div></div><div class="tphx-btns">'+btns+'</div></div>');
-  var C=frame('C','Deux blocs','<div class="tp-top hc"><div class="hc-l"><div class="ha-lbl">Reste à intégrer</div><div class="ha-main">'+est.pmin+' à '+est.pmax+' jours de dév.</div></div><div class="hc-dl"><span>Youcef seul</span><b>'+S+'</b><span>En équipe</span><b>'+E+'</b></div><div class="tphx-btns">'+btns+'</div></div>');
-  var Dv=frame('D','Compact','<div class="tp-top hd"><span class="hd-lead">Reste à intégrer</span><span class="hd-chip">'+T+'</span><span class="hd-chip">seul '+S+'</span><span class="hd-chip">équipe '+E+'</span><div class="tphx-btns">'+btns+'</div></div>');
-  var Ev=frame('E','Accent équipe','<div class="tp-top he"><div class="ha-l"><div class="ha-lbl">Reste à intégrer, en équipe</div><div class="he-main">'+E+'</div><div class="ha-sub">seul '+S+' · total '+T+' de dév. · à jour au '+D+'</div></div><div class="tphx-btns">'+btns+'</div></div>');
-  return '<div class="tphx-intro"><b>Choisis la version du header</b> : dis-moi A, B, C, D ou E, je garde celle-là et je retire les autres. (Les cartes en dessous sont indépendantes.)</div>'+A+B+C+Dv+Ev;
-}
 function renderTechPlan(body){
   const plan=techPlanOrdered(), est=techGlobalEstimate();
   const wk=n=>Math.max(1,Math.round(n/5)), solo=[wk(est.pmin),wk(est.pmax)], team=[wk(est.pmin/2),wk(est.pmax/2)];
@@ -2719,6 +2712,17 @@ function syncHeaderTitle(view){
 }
 function saveUI(patch){ let s={}; try{ s=JSON.parse(localStorage.getItem(UI_KEY))||{}; }catch(e){} Object.assign(s,patch); localStorage.setItem(UI_KEY, JSON.stringify(s)); }
 function loadUI(){ try{ return JSON.parse(localStorage.getItem(UI_KEY))||{}; }catch(e){ return {}; } }
+/* Agrège tout l'état de l'admin (toutes les clés localStorage) en un objet unique :
+   socle du futur bouton Publier et base d'une sauvegarde/export auditable. Lecture seule. */
+function exportDraftBundle(){
+  const KEYS={ draft:STORE_KEY, versions:VERS_KEY, ui:UI_KEY, pricing:PRICING_KEY, bugs:BUG_KEY,
+    affiliation:AFFIL_KEY, affilCats:AFFIL_CATS_KEY, contests:AFFIL_CONTESTS_KEY, copilot:COP_KEY,
+    copilotHist:"chaskis_copilot_hist", chatbot:CHAT_KEY, users:USERS_KEY, roleAccess:ACCESS_KEY,
+    roleCaps:CAPS_KEY, rdv:"chaskis_rdv_v1", perfLast:"chaskis_perf_last" };
+  const data={};
+  Object.keys(KEYS).forEach(function(k){ try{ const raw=localStorage.getItem(KEYS[k]); data[k]=raw?JSON.parse(raw):null; }catch(e){ data[k]=null; } });
+  return { app:"chaskis-admin", version:(typeof ADMIN_BUILD!=="undefined"?ADMIN_BUILD.version:null), page:PAGE, exportedAt:new Date().toISOString(), data:data };
+}
 
 document.getElementById("navlist").addEventListener("click",(e)=>{
   const b=e.target.closest(".nav-i"); if(!b||b.classList.contains("dis")||!b.dataset.view) return;

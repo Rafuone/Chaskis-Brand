@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.1" };
+const ADMIN_BUILD = { version: "0.16.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -367,7 +367,7 @@ function applyMedia(src){
   markDirty();
 }
 function pickMedia(src){ if(!mediaTarget){ return; } applyMedia(src); document.getElementById("mediaModalBg").classList.remove("show"); toast("Image mise à jour"); }
-function deleteMediaAt(i){ draft.media.splice(i,1); save(); renderAllMedia(); updateDashboard(); }
+function deleteMediaAt(i){ const m=draft.media[i]; if(m && !confirm("Supprimer « "+(m.name||"ce média")+" » de la médiathèque ? Action définitive.")) return; draft.media.splice(i,1); save(); renderAllMedia(); updateDashboard(); }
 function importMediaFile(file){
   if(!file) return;
   const isVid=file.type.startsWith("video/");
@@ -979,7 +979,8 @@ function fillDashChart(){ const svg=document.getElementById("dashChart"); if(!sv
 function fillDashVersions(){ const dv=document.getElementById("dashVersions"); if(!dv) return;
   if(!versions.length){ dv.innerHTML='<p class="hint" style="margin:0">Aucune version publiée. Cliquez « Publier » quand vos modifications sont prêtes.</p>'; return; }
   dv.innerHTML=""; versions.slice(0,3).forEach((v,i)=>{ const row=document.createElement("div"); row.className="ver-row";
-    row.innerHTML='<span class="vid'+(i===0?" cur":"")+'">'+v.id+'</span><div class="vinfo"><div class="vd">'+fmtShort(v.date)+'</div><div class="vs">'+v.summary+'</div></div>'+(i===0?'<span class="badge-live">en ligne</span>':'<button class="btn" data-restore="'+v.id+'">Restaurer</button>');
+    const demo=!v.snapshot||Object.keys(v.snapshot).length===0;
+    row.innerHTML='<span class="vid'+(i===0?" cur":"")+'">'+v.id+'</span><div class="vinfo"><div class="vd">'+fmtShort(v.date)+'</div><div class="vs">'+escHtml(v.summary||(v.changes&&v.changes[0])||"Mise à jour")+'</div></div>'+(i===0?'<span class="badge-live">en ligne</span>':(demo?'<span class="hint" style="margin:0">exemple</span>':'<button class="btn" data-restore="'+v.id+'">Restaurer</button>'));
     const rb=row.querySelector("[data-restore]"); if(rb) rb.addEventListener("click",()=>restoreVersion(v.id)); dv.appendChild(row); }); }
 function fillDashMedia(){ const dt=document.getElementById("dashMedia"); if(!dt) return;
   const imgs=draft.media.filter(m=>m.kind!=="video"&&m.src), list=imgs.slice(0,4); let h='<div class="dthumbs">';
@@ -1105,12 +1106,12 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
     +(c.total?'<ul class="vtl-changes">'+humanChanges(draft).map(x=>'<li>'+escHtml(x)+'</li>').join("")+'</ul>':'<div class="vtl-empty">Aucune modification non publiée.</div>')+'</div>';
   vl.appendChild(head);
   const hp=head.querySelector("#vlPublish"); if(hp) hp.addEventListener("click",openPublish);
-  versions.forEach((v,i)=>{ const live=i===0, changes=(v.changes&&v.changes.length)?v.changes:[v.summary||"Mise à jour"];
+  versions.forEach((v,i)=>{ const live=i===0, changes=(v.changes&&v.changes.length)?v.changes:[v.summary||"Mise à jour"], demo=!v.snapshot||Object.keys(v.snapshot).length===0;
     const it=document.createElement("div"); it.className="vtl-item";
     it.innerHTML='<div class="vtl-rail"><span class="vtl-dot'+(live?" live":"")+'"></span></div>'
       +'<div class="vtl-card"><div class="vtl-hd"><span class="vtl-id">'+v.id+'</span>'+(live?'<span class="vtl-badge live">En ligne</span>':'<span class="vtl-badge">Précédente</span>')+'<span class="vtl-date">'+fmtDate(v.date)+(v.author?' · '+escHtml(v.author):"")+'</span></div>'
       +'<ul class="vtl-changes">'+changes.map(x=>'<li>'+escHtml(x)+'</li>').join("")+'</ul>'
-      +'<div class="vtl-acts">'+(live?'':'<button class="vtl-restore" data-restore="'+v.id+'"><i data-lucide="rotate-ccw"></i>Restaurer cette version</button>')+'<button class="btn ghost sm" data-prev="'+v.id+'"><i data-lucide="eye"></i>Prévisualiser</button>'+(live?'':'<span class="vtl-restore-note"><i data-lucide="corner-up-left"></i>remet le site dans cet état</span>')+'</div></div>';
+      +'<div class="vtl-acts">'+(demo?'<span class="vtl-restore-note"><i data-lucide="info"></i>Aperçu et restauration indisponibles (historique d\'exemple)</span>':((live?'':'<button class="vtl-restore" data-restore="'+v.id+'"><i data-lucide="rotate-ccw"></i>Restaurer cette version</button>')+'<button class="btn ghost sm" data-prev="'+v.id+'"><i data-lucide="eye"></i>Prévisualiser</button>'+(live?'':'<span class="vtl-restore-note"><i data-lucide="corner-up-left"></i>remet le site dans cet état</span>')))+'</div></div>';
     const pv=it.querySelector("[data-prev]"); if(pv) pv.addEventListener("click",()=>previewVersion(v.id));
     const rb=it.querySelector("[data-restore]"); if(rb) rb.addEventListener("click",()=>restoreVersion(v.id));
     vl.appendChild(it); });
@@ -1125,7 +1126,14 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.1", cur:true, date:"2026-07-08", title:"Page Confidentialité", items:[
+  { v:"v0.16.2", cur:true, date:"2026-07-08", title:"Éditeur plus sûr et plus honnête", items:[
+    {t:"fix", x:"Suppression d'un média : une confirmation est désormais demandée (fini la perte en un clic)"},
+    {t:"fix", x:"Historique des versions : les versions d'exemple ne peuvent plus être restaurées par erreur (ce qui remettait le site à vide)"},
+    {t:"fix", x:"Alerte si le stockage est plein à l'ajout d'un partenaire ou d'un jeu concours (fini la perte silencieuse)"},
+    {t:"imp", x:"Performance et Statistiques : les données d'exemple sont clairement signalées, et la plage de dates factice est désactivée"},
+    {t:"fix", x:"Utilisateurs : le libellé « manager » devient « administrateur »"}
+  ]},
+  { v:"v0.16.1", date:"2026-07-08", title:"Page Confidentialité", items:[
     {t:"add", x:"Ajout d'une page Politique de confidentialité (structurée selon la nLPD suisse), accessible depuis le pied de page de tout le site"},
     {t:"fix", x:"Le lien « Confidentialité » du pied de page ne menait nulle part : il ouvre désormais la vraie page"}
   ]},
@@ -1883,7 +1891,7 @@ const PERF_CONTENT=[
   {k:"Des images décrites", st:"warn", plain:"Chaque image porte une courte description, utile à Google comme aux malvoyants.", tip:"Une phrase qui dit ce qu'on voit."}
 ];
 function renderPerf(){
-  const last=document.getElementById("perfLast"); if(last) last.textContent="Dernière analyse : hier, 09:12";
+  const last=document.getElementById("perfLast"); if(last) last.textContent="Analyse d'exemple (mesure réelle à brancher)";
   const scores=PERF_PILLARS.map(p=>p.score), overall=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
   renderPerfVerdict(overall);
   renderPerfPillars(); renderPerfActions(); renderPerfGood(); renderPerfContent();
@@ -2119,7 +2127,7 @@ function loadAffil(){ try{ const s=JSON.parse(localStorage.getItem(AFFIL_KEY)); 
     {id:4, cat:"sport", name:"Fit Léman", addr:"Route de Berne 8, 1010 Lausanne", advType:"amount", advValue:"10", offer:"Sur l'abonnement mensuel"}
   ];
 }
-function saveAffil(){ try{ localStorage.setItem(AFFIL_KEY, JSON.stringify(affilData)); }catch(e){} }
+function saveAffil(){ try{ localStorage.setItem(AFFIL_KEY, JSON.stringify(affilData)); }catch(e){ toast("Stockage plein : non enregistré. Réduisez la taille des photos ou supprimez des éléments."); } }
 const AFFIL_CONTESTS_KEY="chaskis_affil_contests";
 function defaultContests(){ return [
   {id:1, kind:"tirage", title:"Tirage au sort mensuel", prize:"Un bon d’achat de 150 CHF", period:"Jusqu’au 31 juillet", status:"good", photo:"", prompt:"Photo produit en gros plan d’un bon cadeau et d’un ticket doré posés sur un comptoir en bois clair, lumière naturelle latérale, ambiance chaleureuse, quelques confettis flous en arrière-plan, tons violets et sarcelle discrets, style éditorial premium."},
@@ -2127,7 +2135,7 @@ function defaultContests(){ return [
   {id:3, kind:"parrainage", title:"Prime de parrainage", prize:"50 CHF par filleul actif", period:"En continu", status:"warn", photo:"", prompt:"Vue de dessus à plat (flat lay) de deux mains qui se serrent au-dessus d’une table, entourées d’enveloppes et de billets stylisés, fond uni vert sarcelle doux, composition graphique et épurée, lumière diffuse, esthétique moderne et amicale."}
 ];}
 function loadContests(){ try{ const s=JSON.parse(localStorage.getItem(AFFIL_CONTESTS_KEY)); if(Array.isArray(s)&&s.length) return s; }catch(e){} return defaultContests(); }
-function saveContests(){ try{ localStorage.setItem(AFFIL_CONTESTS_KEY, JSON.stringify(contestData)); }catch(e){} }
+function saveContests(){ try{ localStorage.setItem(AFFIL_CONTESTS_KEY, JSON.stringify(contestData)); }catch(e){ toast("Stockage plein : non enregistré. Réduisez la taille des photos ou supprimez des éléments."); } }
 let contestData=loadContests();
 function affilAdvBadge(r){ const t=r.advType||"pct", v=(r.advValue||"").toString().trim();
   if(t==="amount") return '<span class="ac-adv amount"><span>-'+(parseInt(v,10)||0)+' CHF</span></span>';
@@ -2520,11 +2528,11 @@ function renderUsers(){
   renderUsrAccess(); refreshIcons();
 }
 function setUserRole(id, role){ const u=adminUsers.find(x=>x.id===id); if(!u) return;
-  if(u.role==="admin" && role!=="admin" && adminUsers.filter(x=>x.role==="admin").length<=1){ toast("Gardez au moins un manager"); renderUsers(); return; }
+  if(u.role==="admin" && role!=="admin" && adminUsers.filter(x=>x.role==="admin").length<=1){ toast("Gardez au moins un administrateur"); renderUsers(); return; }
   u.role=role; saveUsers(); if(id===currentUser().id) applyRole(); toast("Rôle mis à jour"); renderUsers(); }
 function delUser(id){ const u=adminUsers.find(x=>x.id===id); if(!u) return;
   if(id===currentUser().id){ toast("Vous ne pouvez pas vous retirer"); return; }
-  if(u.role==="admin" && adminUsers.filter(x=>x.role==="admin").length<=1){ toast("Gardez au moins un manager"); return; }
+  if(u.role==="admin" && adminUsers.filter(x=>x.role==="admin").length<=1){ toast("Gardez au moins un administrateur"); return; }
   if(!confirm("Retirer "+u.name+" ?")) return; adminUsers=adminUsers.filter(x=>x.id!==id); saveUsers(); renderUsers(); toast("Utilisateur retiré"); }
 let accCollapsed=null; /* init paresseux : CAP_GROUPS est défini plus bas dans le script */
 function roleHasCap(role, cap){ return role==="admin" || (roleCaps[role]||[]).indexOf(cap)>=0; }

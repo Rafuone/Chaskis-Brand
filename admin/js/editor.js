@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.2" };
+const ADMIN_BUILD = { version: "0.16.3" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -979,8 +979,7 @@ function fillDashChart(){ const svg=document.getElementById("dashChart"); if(!sv
 function fillDashVersions(){ const dv=document.getElementById("dashVersions"); if(!dv) return;
   if(!versions.length){ dv.innerHTML='<p class="hint" style="margin:0">Aucune version publiée. Cliquez « Publier » quand vos modifications sont prêtes.</p>'; return; }
   dv.innerHTML=""; versions.slice(0,3).forEach((v,i)=>{ const row=document.createElement("div"); row.className="ver-row";
-    const demo=!v.snapshot||Object.keys(v.snapshot).length===0;
-    row.innerHTML='<span class="vid'+(i===0?" cur":"")+'">'+v.id+'</span><div class="vinfo"><div class="vd">'+fmtShort(v.date)+'</div><div class="vs">'+escHtml(v.summary||(v.changes&&v.changes[0])||"Mise à jour")+'</div></div>'+(i===0?'<span class="badge-live">en ligne</span>':(demo?'<span class="hint" style="margin:0">exemple</span>':'<button class="btn" data-restore="'+v.id+'">Restaurer</button>'));
+    row.innerHTML='<span class="vid'+(i===0?" cur":"")+'">'+v.id+'</span><div class="vinfo"><div class="vd">'+fmtShort(v.date)+'</div><div class="vs">'+escHtml(v.summary||(v.changes&&v.changes[0])||"Mise à jour")+'</div></div>'+(i===0?'<span class="badge-live">en ligne</span>':'<button class="btn" data-restore="'+v.id+'">Restaurer</button>');
     const rb=row.querySelector("[data-restore]"); if(rb) rb.addEventListener("click",()=>restoreVersion(v.id)); dv.appendChild(row); }); }
 function fillDashMedia(){ const dt=document.getElementById("dashMedia"); if(!dt) return;
   const imgs=draft.media.filter(m=>m.kind!=="video"&&m.src), list=imgs.slice(0,4); let h='<div class="dthumbs">';
@@ -1106,12 +1105,12 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
     +(c.total?'<ul class="vtl-changes">'+humanChanges(draft).map(x=>'<li>'+escHtml(x)+'</li>').join("")+'</ul>':'<div class="vtl-empty">Aucune modification non publiée.</div>')+'</div>';
   vl.appendChild(head);
   const hp=head.querySelector("#vlPublish"); if(hp) hp.addEventListener("click",openPublish);
-  versions.forEach((v,i)=>{ const live=i===0, changes=(v.changes&&v.changes.length)?v.changes:[v.summary||"Mise à jour"], demo=!v.snapshot||Object.keys(v.snapshot).length===0;
+  versions.forEach((v,i)=>{ const live=i===0, changes=(v.changes&&v.changes.length)?v.changes:[v.summary||"Mise à jour"];
     const it=document.createElement("div"); it.className="vtl-item";
     it.innerHTML='<div class="vtl-rail"><span class="vtl-dot'+(live?" live":"")+'"></span></div>'
       +'<div class="vtl-card"><div class="vtl-hd"><span class="vtl-id">'+v.id+'</span>'+(live?'<span class="vtl-badge live">En ligne</span>':'<span class="vtl-badge">Précédente</span>')+'<span class="vtl-date">'+fmtDate(v.date)+(v.author?' · '+escHtml(v.author):"")+'</span></div>'
       +'<ul class="vtl-changes">'+changes.map(x=>'<li>'+escHtml(x)+'</li>').join("")+'</ul>'
-      +'<div class="vtl-acts">'+(demo?'<span class="vtl-restore-note"><i data-lucide="info"></i>Aperçu et restauration indisponibles (historique d\'exemple)</span>':((live?'':'<button class="vtl-restore" data-restore="'+v.id+'"><i data-lucide="rotate-ccw"></i>Restaurer cette version</button>')+'<button class="btn ghost sm" data-prev="'+v.id+'"><i data-lucide="eye"></i>Prévisualiser</button>'+(live?'':'<span class="vtl-restore-note"><i data-lucide="corner-up-left"></i>remet le site dans cet état</span>')))+'</div></div>';
+      +'<div class="vtl-acts">'+(live?'':'<button class="vtl-restore" data-restore="'+v.id+'"><i data-lucide="rotate-ccw"></i>Restaurer cette version</button>')+'<button class="btn ghost sm" data-prev="'+v.id+'"><i data-lucide="eye"></i>Prévisualiser</button>'+(live?'':'<span class="vtl-restore-note"><i data-lucide="corner-up-left"></i>remet le site dans cet état</span>')+'</div></div>';
     const pv=it.querySelector("[data-prev]"); if(pv) pv.addEventListener("click",()=>previewVersion(v.id));
     const rb=it.querySelector("[data-restore]"); if(rb) rb.addEventListener("click",()=>restoreVersion(v.id));
     vl.appendChild(it); });
@@ -1126,7 +1125,13 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.2", cur:true, date:"2026-07-08", title:"Éditeur plus sûr et plus honnête", items:[
+  { v:"v0.16.3", cur:true, date:"2026-07-08", title:"Fonctionnalités rendues opérationnelles", items:[
+    {t:"imp", x:"Historique : les boutons Restaurer et Prévisualiser sont de nouveau visibles partout ; une version d'exemple affiche un message clair au lieu de vider le site"},
+    {t:"add", x:"Avancement : le pourcentage global de préparation de l'interface est désormais affiché (moyenne des stades des pages)"},
+    {t:"add", x:"Affiliation : les précisions saisies pour un jeu concours apparaissent maintenant sur sa carte"},
+    {t:"imp", x:"Performance : la date de dernière analyse devient une vraie date, mise à jour à chaque « Relancer l'analyse »"}
+  ]},
+  { v:"v0.16.2", date:"2026-07-08", title:"Éditeur plus sûr et plus honnête", items:[
     {t:"fix", x:"Suppression d'un média : une confirmation est désormais demandée (fini la perte en un clic)"},
     {t:"fix", x:"Historique des versions : les versions d'exemple ne peuvent plus être restaurées par erreur (ce qui remettait le site à vide)"},
     {t:"fix", x:"Alerte si le stockage est plein à l'ajout d'un partenaire ou d'un jeu concours (fini la perte silencieuse)"},
@@ -1341,10 +1346,11 @@ const APP_STAGE_H={stable:{lbl:"Prêt",pct:100,c:"#0E7D48"},beta:{lbl:"En test",
 function renderProgress(){ const el=document.getElementById("progressBody"); if(!el) return;
   const byEnv={prod:[],preprod:[],dev:[]}; PROGRESS.forEach(p=>{ (byEnv[p.env]||byEnv.preprod).push(p); });
   const total=PROGRESS.length||1;
+  const pct=Math.round(PROGRESS.reduce((s,p)=>s+((APP_STAGE_H[p.stage]||APP_STAGE_H.beta).pct),0)/total);
   const cnt={prod:byEnv.prod.length,preprod:byEnv.preprod.length,dev:byEnv.dev.length};
   const sumEnvs='<div class="av-sum-envs">'+["prod","preprod","dev"].map(k=>'<span class="av-sum-env"><span class="av-dot" style="background:'+APP_ENV[k].c+'"></span><b>'+cnt[k]+'</b>'+APP_ENV[k].lbl+'</span>').join("")+'</div>';
   let h='<div class="av-wrap">';
-  h+='<div class="av-sum"><div class="av-sum-l"><div class="av-sum-t">Interface d\'administration</div><div class="av-sum-cap">'+total+' pages, réparties par environnement. Le degré d\'intégration technique (mise en ligne réelle) se suit dans « Suivi technique ».</div></div><div class="av-sum-r">'+sumEnvs+'</div></div>';
+  h+='<div class="av-sum"><div class="av-sum-l"><div class="av-sum-t">Interface d\'administration</div><div class="av-sum-cap"><b style="color:var(--teal)">'+pct+' % prêt en moyenne</b> · '+total+' pages, réparties par environnement. Le degré d\'intégration technique (mise en ligne réelle) se suit dans « Suivi technique ».</div></div><div class="av-sum-r">'+sumEnvs+'</div></div>';
   ["prod","preprod","dev"].forEach(env=>{ const list=byEnv[env]; if(!list||!list.length) return; const e=APP_ENV[env];
     h+='<div class="av-group"><div class="av-group-h"><span class="av-dot" style="background:'+e.c+'"></span>'+e.lbl+'<span class="av-group-n">'+list.length+'</span></div><div class="av-grid">'
       +list.map(p=>{ const st=APP_STAGE_H[p.stage]||APP_STAGE_H.beta;
@@ -1404,6 +1410,7 @@ function decoratePageTitles(){ document.querySelectorAll(".views .view[id^='view
 (function(){ function _pgInit(){ try{ applyProgressBadges(); }catch(e){} try{ initBugButton(); }catch(e){} try{ decoratePageTitles(); }catch(e){} } if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",_pgInit); else _pgInit(); })();
 function nextVersionId(){ const n=versions.reduce((m,x)=>Math.max(m, parseInt(String(x.id||"v0").replace(/\D/g,""))||0),0)+1; return "v"+n; }
 function restoreVersion(id){ const v=versions.find(x=>x.id===id); if(!v) return;
+  if(!v.snapshot||Object.keys(v.snapshot).length===0){ toast("Version d'exemple : la restauration réelle sera disponible après votre première publication."); return; }
   if(!confirm("Restaurer "+id+" ("+fmtShort(v.date)+") ? Vos modifications non publiées seront remplacées.")) return;
   draft=Object.assign(blankDraft(), JSON.parse(JSON.stringify(v.snapshot||{}))); save(true);
   toast(id+" restaurée"); reloadIframe("Restauration de "+id+"…");
@@ -1412,6 +1419,7 @@ function publishVersion(){ const v={ id:nextVersionId(), date:new Date().toISOSt
   versions.unshift(v); saveVersions();
   toast("Version "+v.id+" publiée"); renderVersions(); updateDashboard(); }
 function previewVersion(id){ const v=versions.find(x=>x.id===id); if(!v) return;
+  if(!v.snapshot||Object.keys(v.snapshot).length===0){ toast("Version d'exemple : aucun contenu à prévisualiser (disponible après votre première publication)."); return; }
   if(!_verPreview) _verPreview={ backup:JSON.parse(JSON.stringify(draft)) };
   _verPreview.id=id;
   draft=Object.assign(blankDraft(), JSON.parse(JSON.stringify(v.snapshot||{})));
@@ -1891,7 +1899,7 @@ const PERF_CONTENT=[
   {k:"Des images décrites", st:"warn", plain:"Chaque image porte une courte description, utile à Google comme aux malvoyants.", tip:"Une phrase qui dit ce qu'on voit."}
 ];
 function renderPerf(){
-  const last=document.getElementById("perfLast"); if(last) last.textContent="Analyse d'exemple (mesure réelle à brancher)";
+  const last=document.getElementById("perfLast"); if(last){ let _pl=null; try{ _pl=localStorage.getItem("chaskis_perf_last"); }catch(e){} last.textContent=_pl?("Dernière analyse : "+new Date(+_pl).toLocaleString("fr-CH",{day:"2-digit",month:"long",hour:"2-digit",minute:"2-digit"})):"Analyse pas encore lancée"; }
   const scores=PERF_PILLARS.map(p=>p.score), overall=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
   renderPerfVerdict(overall);
   renderPerfPillars(); renderPerfActions(); renderPerfGood(); renderPerfContent();
@@ -2203,7 +2211,7 @@ function renderAffiliation(){
         +'<div class="cc-top"><span class="cc-tile" style="background:'+k.bg+';color:'+k.col+'"><i data-lucide="'+k.ic+'"></i></span><span class="cc-kind" style="color:'+k.col+';background:'+k.bg+'">'+k.label+'</span><span class="pf-pill pf-'+c.status+' cc-status">'+(c.status==="good"?"En cours":"Bientôt")+'</span></div>'
         +'<div class="cc-title">'+escHtml(c.title)+'</div>'
         +'<div class="cc-prize">'+escHtml(c.prize)+'</div>'
-        +'<div class="cc-period"><i data-lucide="calendar"></i>'+escHtml(c.period||"—")+'</div>'
+        +'<div class="cc-period"><i data-lucide="calendar"></i>'+escHtml(c.period||"—")+'</div>'+(c.desc?'<div class="cc-desc" style="font-size:.82rem;color:var(--ink-light);margin-top:6px">'+escHtml(c.desc)+'</div>':'')
       +'</div>';
     const ph=d.querySelector(".cc-photo"); if(c.photo){ ph.style.backgroundImage="url('"+c.photo+"')"; ph.style.backgroundPosition="center "+(c.photoPosY!=null?c.photoPosY:50)+"%"; }
     d.querySelector("[data-cedit]").addEventListener("click",()=>openContestModal(c.id));
@@ -3308,7 +3316,7 @@ function cbAsk(q){
   document.getElementById("cbLogClose").addEventListener("click",closeCbLog);
   document.getElementById("cbLogModal").addEventListener("click",e=>{ if(e.target.id==="cbLogModal") closeCbLog(); });
   // Performance : bouton d'analyse (ébauche)
-  const prun=document.getElementById("perfRun"); if(prun) prun.addEventListener("click",()=>{ toast("Analyse simulée · à brancher sur PageSpeed"); renderPerf(); });
+  const prun=document.getElementById("perfRun"); if(prun) prun.addEventListener("click",()=>{ try{ localStorage.setItem("chaskis_perf_last", String(Date.now())); }catch(e){} toast("Analyse relancée (données d'exemple)"); renderPerf(); });
   const chC=document.getElementById("contentHealth"); if(chC) chC.addEventListener("click",()=>showView("perf"));
   // Affiliation : ajout / édition / suppression de restaurants
   const aAdd=document.getElementById("affilAdd"); if(aAdd) aAdd.addEventListener("click",()=>openAffilModal(null));

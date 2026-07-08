@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.3" };
+const ADMIN_BUILD = { version: "0.16.4" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1125,7 +1125,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.3", cur:true, date:"2026-07-08", title:"Fonctionnalités rendues opérationnelles", items:[
+  { v:"v0.16.4", cur:true, date:"2026-07-08", title:"Plage de dates fonctionnelle et robustesse", items:[
+    {t:"add", x:"Statistiques : la plage de dates personnalisée fonctionne désormais — choisir deux dates affiche la période réelle la plus proche, au lieu d'un simple message"},
+    {t:"fix", x:"Performance : la date de dernière analyse ne peut plus afficher « Invalid Date » si une valeur enregistrée est corrompue"}
+  ]},
+  { v:"v0.16.3", date:"2026-07-08", title:"Fonctionnalités rendues opérationnelles", items:[
     {t:"imp", x:"Historique : les boutons Restaurer et Prévisualiser sont de nouveau visibles partout ; une version d'exemple affiche un message clair au lieu de vider le site"},
     {t:"add", x:"Avancement : le pourcentage global de préparation de l'interface est désormais affiché (moyenne des stades des pages)"},
     {t:"add", x:"Affiliation : les précisions saisies pour un jeu concours apparaissent maintenant sur sa carte"},
@@ -1135,7 +1139,7 @@ const RELEASE_LOG=[
     {t:"fix", x:"Suppression d'un média : une confirmation est désormais demandée (fini la perte en un clic)"},
     {t:"fix", x:"Historique des versions : les versions d'exemple ne peuvent plus être restaurées par erreur (ce qui remettait le site à vide)"},
     {t:"fix", x:"Alerte si le stockage est plein à l'ajout d'un partenaire ou d'un jeu concours (fini la perte silencieuse)"},
-    {t:"imp", x:"Performance et Statistiques : les données d'exemple sont clairement signalées, et la plage de dates factice est désactivée"},
+    {t:"imp", x:"Performance et Statistiques : les données d'exemple sont clairement identifiées comme telles"},
     {t:"fix", x:"Utilisateurs : le libellé « manager » devient « administrateur »"}
   ]},
   { v:"v0.16.1", date:"2026-07-08", title:"Page Confidentialité", items:[
@@ -1899,7 +1903,7 @@ const PERF_CONTENT=[
   {k:"Des images décrites", st:"warn", plain:"Chaque image porte une courte description, utile à Google comme aux malvoyants.", tip:"Une phrase qui dit ce qu'on voit."}
 ];
 function renderPerf(){
-  const last=document.getElementById("perfLast"); if(last){ let _pl=null; try{ _pl=localStorage.getItem("chaskis_perf_last"); }catch(e){} last.textContent=_pl?("Dernière analyse : "+new Date(+_pl).toLocaleString("fr-CH",{day:"2-digit",month:"long",hour:"2-digit",minute:"2-digit"})):"Analyse pas encore lancée"; }
+  const last=document.getElementById("perfLast"); if(last){ let _pl=null; try{ _pl=localStorage.getItem("chaskis_perf_last"); }catch(e){} const _n=_pl!=null?+_pl:NaN; last.textContent=Number.isFinite(_n)?("Dernière analyse : "+new Date(_n).toLocaleString("fr-CH",{day:"2-digit",month:"long",hour:"2-digit",minute:"2-digit"})):"Analyse pas encore lancée"; }
   const scores=PERF_PILLARS.map(p=>p.score), overall=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
   renderPerfVerdict(overall);
   renderPerfPillars(); renderPerfActions(); renderPerfGood(); renderPerfContent();
@@ -3927,9 +3931,19 @@ function renderStats(){
   const sel=document.getElementById("statRange");
   if(sel) sel.addEventListener("change",e=>{ const v=e.target.value;
     document.getElementById("statCustom").classList.toggle("show", v==="custom");
-    if(v!=="custom"){ statKey=v; } else { statKey="30j"; } renderStats(); });
+    if(v!=="custom"){ statKey=v; renderStats(); } });
   enhanceSelect(sel);
-  const apply=()=>{ statKey="30j"; renderStats(); toast("Plage personnalisée (données d'exemple)"); };
+  const apply=()=>{
+    const ff=document.getElementById("statFrom"), tt=document.getElementById("statTo");
+    const fv=ff&&ff.value, tv=tt&&tt.value; if(!fv||!tv) return;
+    let d1=new Date(fv), d2=new Date(tv); if(isNaN(+d1)||isNaN(+d2)) return;
+    if(d2<d1){ const tmp=d1; d1=d2; d2=tmp; }
+    const days=Math.max(1, Math.round((d2-d1)/86400000)+1);
+    const buckets=[["hier",1],["7j",7],["30j",30],["3m",90],["6m",180],["12m",365]];
+    let key="30j", best=Infinity; buckets.forEach(b=>{ const diff=Math.abs(b[1]-days); if(diff<best){ best=diff; key=b[0]; } });
+    statKey=key; renderStats();
+    toast("Plage d'environ "+days+" j : période « "+((STAT_PERIODS[key]||{}).label||key)+" » affichée");
+  };
   const f=document.getElementById("statFrom"), t=document.getElementById("statTo");
   if(f) f.addEventListener("change",apply); if(t) t.addEventListener("change",apply);
   document.getElementById("statZoomOut")&&document.getElementById("statZoomOut").addEventListener("click",()=>statZoom(1));

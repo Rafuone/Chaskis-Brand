@@ -1091,6 +1091,7 @@
   .pg-chk svg{width:14px;height:14px}
   .pg-t{flex:1;min-width:0;font-size:12.5px;color:var(--ink);line-height:1.4}
   .pg-cat{flex-shrink:0;font-size:10.5px;font-weight:600;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:3px 10px;margin-left:6px}
+  .perf-good-item{display:flex;gap:9px;align-items:flex-start;padding:8px 0;font-size:12.5px;color:var(--ink-soft);line-height:1.45}
   .pc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
   .pc-intro{font-size:12px;color:var(--ink-soft);line-height:1.45;flex:1;min-width:0}
   .pc-intro b{color:#A9791A;font-weight:700}

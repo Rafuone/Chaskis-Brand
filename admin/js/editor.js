@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.16.10" };
+const ADMIN_BUILD = { version: "0.16.11" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1126,7 +1126,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.16.10", cur:true, date:"2026-07-08", title:"Estimations d'avancement affinées", items:[
+  { v:"v0.16.11", cur:true, date:"2026-07-08", title:"Filtre rendez-vous complet, affichage Performance corrigé", items:[
+    {t:"imp", x:"Rendez-vous : le filtre par personne liste désormais tous les commerciaux présents dans les données (plus de rendez-vous invisible)"},
+    {t:"fix", x:"Performance : la liste « ce qui va déjà bien » s'affiche correctement (style corrigé)"}
+  ]},
+  { v:"v0.16.10", date:"2026-07-08", title:"Estimations d'avancement affinées", items:[
     {t:"imp", x:"Suivi technique : les estimations d'avancement sont rendues plus prudentes (on ne compte que ce qui est réellement avancé)"}
   ]},
   { v:"v0.16.9", date:"2026-07-08", title:"Suivi d'avancement remis à jour", items:[
@@ -1353,10 +1357,10 @@ const PROGRESS=[
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.7.0",recent:["Restauration et aperçu sûrs sur les versions d'exemple"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.1.0",recent:["Bac à test basé sur les vraies sources","Affichage sécurisé"]},
-  {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.0",recent:["Statuts et relances mémorisés","Robustesse et sécurité renforcées"]},
+  {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.4.0",recent:["Découverte guidée","Simulateur d'offre"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"alpha",version:"0.6.0",recent:["Plage de dates personnalisée fonctionnelle"]},
-  {view:"perf",name:"Performance",env:"preprod",stage:"alpha",version:"0.6.0",recent:["Date de dernière analyse réelle","Affichage plus robuste"]},
+  {view:"perf",name:"Performance",env:"preprod",stage:"alpha",version:"0.6.1",recent:["Affichage des points forts corrigé","Date de dernière analyse réelle"]},
   {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.5.0",recent:["Précisions du concours affichées","Alerte si stockage plein"]},
   {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.6.2",recent:["Libellé de rôle corrigé"]},
   {view:"progress",name:"Avancement",env:"preprod",stage:"beta",version:"0.4.0",recent:["Vrai pourcentage d'avancement de l'interface"]}
@@ -1981,7 +1985,7 @@ function renderPerfActions(){ const w=document.getElementById("perfActions"); if
     const fb=el.querySelector("[data-fix]"); if(fb){ if(fx.mode==="self") fb.addEventListener("click",()=>perfFix(a)); else fb.addEventListener("click",perfSignalGamma); }
     w.appendChild(el); }); refreshIcons(); }
 function renderPerfGood(){ const w=document.getElementById("perfGood"); if(!w) return; w.className="perf-good-list";
-  w.innerHTML=PERF_GOOD.map(g=>'<div class="pg-item"><span class="pg-chk"><i data-lucide="check"></i></span><span class="pg-t">'+g.t+'</span><span class="pg-cat">'+g.cat+'</span></div>').join(""); refreshIcons(); }
+  w.innerHTML=PERF_GOOD.map(g=>'<div class="perf-good-item"><span class="pg-chk"><i data-lucide="check"></i></span><span class="pg-t">'+escHtml(g.t)+'</span><span class="pg-cat">'+escHtml(g.cat)+'</span></div>').join(""); refreshIcons(); }
 let perfContentMode="simple";
 function renderPerfContent(){ const w=document.getElementById("perfContent"); if(!w) return; const detailed=perfContentMode==="detailed";
   const warnN=PERF_CONTENT.filter(c=>c.st!=="good").length;
@@ -3830,6 +3834,7 @@ function enhanceSelect(sel){
   const rg=document.getElementById("rdvRange"); if(rg) rg.addEventListener("change",e=>{ rdvKey=e.target.value; renderRdv(); });
   const wo=document.getElementById("rdvWhoSel"); if(wo) wo.addEventListener("change",e=>{ rdvWho=e.target.value; rdvOpenRow=-1; rdvSel.clear(); rdvPage=1; renderRdv(); });
   const ft=document.getElementById("rdvFilter"); if(ft) ft.addEventListener("change",()=>{ rdvOpenRow=-1; rdvSel.clear(); rdvPage=1; renderRdvTable(); });
+  if(wo){ const whos=[...new Set(rdvData.map(r=>r.who).filter(Boolean))]; wo.innerHTML='<option value="all">Toute l\'équipe</option>'+whos.map(w=>'<option value="'+escAttr(w)+'">'+escHtml(w)+'</option>').join(""); }
   enhanceSelect(wo); enhanceSelect(rg); enhanceSelect(ft);
   const sa=document.getElementById("rdvSelAll"); if(sa) sa.addEventListener("change",e=>{ rdvSel.clear(); if(e.target.checked) eligibleVisibleRdv().forEach(i=>rdvSel.add(i)); renderRdvTable(); });
   document.getElementById("rdvZoomOut")&&document.getElementById("rdvZoomOut").addEventListener("click",()=>rdvZoom(1));

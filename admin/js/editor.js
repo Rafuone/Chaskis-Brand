@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.17.0" };
+const ADMIN_BUILD = { version: "0.18.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1126,7 +1126,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.17.0", cur:true, date:"2026-07-08", title:"Performance : l'analyse devient réelle", items:[
+  { v:"v0.18.0", cur:true, date:"2026-07-08", title:"Performance : audit plus complet et historique", items:[
+    {t:"add", x:"L'analyse vérifie aussi l'adaptation au téléphone, l'adresse canonique et l'aperçu de partage sur les réseaux sociaux (Open Graph), en plus du référencement et de la lisibilité"},
+    {t:"add", x:"Un historique daté des analyses est conservé : vous voyez l'évolution de la note globale et de chaque domaine d'une analyse à la suivante"}
+  ]},
+  { v:"v0.17.0", date:"2026-07-08", title:"Performance : l'analyse devient réelle", items:[
     {t:"add", x:"Le bouton « Relancer l'analyse » lance désormais un vrai audit de votre site, sans aucun outil externe : il parcourt vos pages et mesure le référencement (titres, descriptions, données structurées, plan du site), la lisibilité (descriptions d'images, étiquettes de formulaire, ordre des titres) et le poids des pages"},
     {t:"add", x:"Les points « à améliorer », « ce qui va déjà bien » et le détail technique reflètent maintenant l'état réel de vos pages, avec la date de l'analyse"},
     {t:"imp", x:"La vitesse ressentie fine (Core Web Vitals) reste estimée pour l'instant : elle sera mesurée automatiquement à l'étape Google PageSpeed / Lighthouse"}
@@ -1385,7 +1389,7 @@ const PROGRESS=[
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.5.0",recent:["« Terminer » archive et télécharge le compte-rendu","Découverte guidée et simulateur d'offre"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"alpha",version:"0.6.0",recent:["Plage de dates personnalisée fonctionnelle"]},
-  {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.7.0",recent:["Analyse réelle du référencement, de la lisibilité et du contenu (sans outil externe)","Vitesse fine (Core Web Vitals) encore estimée, à venir avec Lighthouse"]},
+  {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audit réel enrichi (mobile, adresse canonique, partage réseaux)","Historique daté des analyses","Vitesse fine (Core Web Vitals) encore estimée, à venir avec Lighthouse"]},
   {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.5.0",recent:["Précisions du concours affichées","Alerte si stockage plein"]},
   {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.6.2",recent:["Libellé de rôle corrigé"]},
   {view:"progress",name:"Avancement",env:"preprod",stage:"beta",version:"0.4.0",recent:["Vrai pourcentage d'avancement de l'interface"]}
@@ -1559,7 +1563,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:70,publish:40,versioning:28,analytics:30,calendly:25,auth:25,perf:45,media:20,chatbot:20};
+const TECH_DONE={host:70,publish:40,versioning:28,analytics:30,calendly:25,auth:25,perf:52,media:20,chatbot:20};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -1996,6 +2000,9 @@ function perfAuditDoc(doc){
     lang:(doc.documentElement.getAttribute("lang")||"").trim(),
     skip:skip, fields:fields.length, fieldsNoLabel:fieldsNoLabel,
     words:txt?txt.split(" ").filter(Boolean).length:0,
+    viewport:!!doc.querySelector('meta[name="viewport"]'),
+    canonical:!!doc.querySelector('link[rel="canonical"]'),
+    og:(!!doc.querySelector('meta[property="og:title"]')||!!doc.querySelector('meta[property="og:image"]')),
     assetRefs:qa("script[src]").length+qa('link[rel="stylesheet"]').length+imgs.length };
 }
 function perfBuildModel(pages,sitemap){
@@ -2006,7 +2013,8 @@ function perfBuildModel(pages,sitemap){
   var noDesc=names(function(p){ return !p.descLen; }), longDesc=names(function(p){ return p.descLen>170; }), shortDesc=names(function(p){ return p.descLen&&p.descLen<70; });
   var noH1=names(function(p){ return p.h1===0; }), multiH1=names(function(p){ return p.h1>1; });
   var noLang=names(function(p){ return !p.lang; }), noJsonld=names(function(p){ return p.jsonld===0; });
-  var seo=100-(noTitle.length*15+badTitle.length*4+noDesc.length*12+longDesc.length*4+shortDesc.length*3+noH1.length*10+multiH1.length*4+noLang.length*10+noJsonld.length*3+(sitemap?0:6));
+  var noViewport=names(function(p){ return !p.viewport; }), noCanonical=names(function(p){ return !p.canonical; }), noOg=names(function(p){ return !p.og; });
+  var seo=100-(noTitle.length*15+badTitle.length*4+noDesc.length*12+longDesc.length*4+shortDesc.length*3+noH1.length*10+multiH1.length*4+noLang.length*10+noJsonld.length*3+(sitemap?0:6)+noCanonical.length*3+noOg.length*2);
   seo=Math.max(0,Math.min(100,Math.round(seo)));
   var totNoAlt=sum(function(p){ return p.imgsNoAlt; }), totNoLabel=sum(function(p){ return p.fieldsNoLabel; });
   var skips=names(function(p){ return p.skip; });
@@ -2023,7 +2031,9 @@ function perfBuildModel(pages,sitemap){
     {k:"Longueur des descriptions", tech:"meta description", v:(longDesc.length||shortDesc.length)?((longDesc.length?(longDesc.length+" trop longue"+(longDesc.length>1?"s":"")):"")+(longDesc.length&&shortDesc.length?", ":"")+(shortDesc.length?(shortDesc.length+" trop courte"+(shortDesc.length>1?"s":"")):"")):"optimales", st:(longDesc.length||shortDesc.length)?"warn":"good"},
     {k:"Un seul titre principal par page", tech:"balise H1", v:noH1.length?("manque sur "+noH1.length):(multiH1.length?("plusieurs sur "+multiH1.length):"oui"), st:(noH1.length||multiH1.length)?"warn":"good"},
     {k:"Fiche d'infos pour Google", tech:"données structurées", v:noJsonld.length?("manque sur "+noJsonld.length+" page"+(noJsonld.length>1?"s":"")):"présentes", st:noJsonld.length?"warn":"good"},
-    {k:"Plan du site fourni à Google", tech:"sitemap.xml", v:sitemap?"présent":"absent", st:sitemap?"good":"warn"}
+    {k:"Plan du site fourni à Google", tech:"sitemap.xml", v:sitemap?"présent":"absent", st:sitemap?"good":"warn"},
+    {k:"Adapté au téléphone", tech:"balise viewport", v:noViewport.length?("à revoir sur "+noViewport.length):"oui", st:noViewport.length?"warn":"good"},
+    {k:"Aperçu lors du partage", tech:"Open Graph", v:noOg.length?("manque sur "+noOg.length+" page"+(noOg.length>1?"s":"")):"complet", st:noOg.length?"warn":"good"}
   ];
   P.a11y.score=a11y; P.a11y.status=st(a11y);
   P.a11y.detail=[
@@ -2047,6 +2057,7 @@ function perfBuildModel(pages,sitemap){
   if(totNoLabel) acts.push({ title:totNoLabel+" champ"+(totNoLabel>1?"s":"")+" de formulaire sans étiquette", impact:"moyen", area:"Lisibilité", icon:"form-input", why:"Ces champs s'appuient seulement sur le texte gris d'exemple (placeholder), qui disparaît dès qu'on écrit et n'est pas lu de façon fiable par les lecteurs d'écran. Une étiquette visible aide tout le monde à savoir quoi remplir.", fix:{mode:"gamma", note:"Ajouter les étiquettes de formulaire est un réglage de gabarit, "+GAMMA+" s'en occupe."} });
   if(shortDesc.length) acts.push({ title:"Description un peu courte sur "+join(shortDesc), impact:"leger", area:"Référencement", icon:"text", why:"Une description trop courte n'exploite pas toute la place offerte par Google pour donner envie de cliquer.", fix:{mode:"gamma", note:GAMMA+" peut étoffer ces descriptions."} });
   if(skips.length) acts.push({ title:"Ordre des titres à revoir sur "+join(skips), impact:"leger", area:"Lisibilité", icon:"list", why:"Un saut de niveau (par exemple un H3 sans H2 avant) gêne les lecteurs d'écran et la lecture par Google.", fix:{mode:"gamma", note:GAMMA+" peut réordonner les titres."} });
+  if(noOg.length) acts.push({ title:"Aperçu de partage manquant sur "+join(noOg), impact:"leger", area:"Référencement", icon:"share-2", why:"Sans ces informations, un lien de votre site partagé sur les réseaux ou par messagerie s'affiche sans titre ni image, et donne beaucoup moins envie de cliquer.", fix:{mode:"gamma", note:GAMMA+" peut ajouter l'aperçu de partage (Open Graph)."} });
   var good=[];
   if(!totNoAlt) good.push({t:"Toutes vos images ont une description.", cat:"Lisibilité"});
   if(!noLang.length) good.push({t:"Chaque page déclare sa langue.", cat:"Lisibilité"});
@@ -2055,6 +2066,8 @@ function perfBuildModel(pages,sitemap){
   if(!noH1.length&&!multiH1.length) good.push({t:"Un seul titre principal par page.", cat:"Référencement"});
   if(!totNoLabel) good.push({t:"Vos formulaires sont bien étiquetés.", cat:"Lisibilité"});
   if(avgKb<=120) good.push({t:"Vos pages sont légères ("+avgKb+" Ko de HTML en moyenne).", cat:"Rapidité"});
+  if(!noViewport.length) good.push({t:"Vos pages s'adaptent au téléphone.", cat:"Rapidité"});
+  if(!noOg.length) good.push({t:"L'aperçu de partage sur les réseaux est configuré.", cat:"Référencement"});
   var lowText=names(function(p){ return p.words<80; });
   var content=[
     {k:"Un grand titre clair par page", st:(noH1.length||multiH1.length)?"warn":"good", plain:"Chaque page a un titre principal unique qui dit tout de suite de quoi elle parle.", tip:"Un seul grand titre par page, court et parlant."},
@@ -2084,17 +2097,34 @@ async function perfAnalyzeReal(){
   if(!pages.length){ toast("Analyse impossible (pages non accessibles). Données d'exemple conservées."); return; }
   perfLive=perfBuildModel(pages,sitemap); perfLive.at=Date.now(); perfLive.n=pages.length;
   try{ localStorage.setItem(PERF_LIVE_KEY,JSON.stringify(perfLive)); localStorage.setItem("chaskis_perf_last",String(perfLive.at)); }catch(e){}
+  perfPushHistory(perfLive);
   toast("Analyse réelle terminée : "+pages.length+" pages mesurées"); renderPerf();
 }
 function perfUpdateNote(){ var el=document.getElementById("perfDraftNote"); if(!el) return;
   if(perfLive&&perfLive.at){ el.innerHTML="Analyse réelle du "+escHtml(new Date(perfLive.at).toLocaleString("fr-CH",{day:"2-digit",month:"long",hour:"2-digit",minute:"2-digit"}))+" : référencement, lisibilité et contenu mesurés sur vos "+(perfLive.n||0)+" pages. La vitesse fine (Core Web Vitals) sera mesurée à l'étape Lighthouse."; }
   else{ el.innerHTML="Ébauche : les résultats affichés sont des exemples. Cliquez « Relancer l'analyse » pour lancer un audit réel de votre site (référencement, lisibilité, contenu). La vitesse fine (Core Web Vitals) arrivera avec l'étape Lighthouse."; }
 }
+const PERF_HIST_KEY="chaskis_perf_hist";
+function perfHistory(){ try{ var h=JSON.parse(localStorage.getItem(PERF_HIST_KEY)); return Array.isArray(h)?h:[]; }catch(e){ return []; } }
+function perfPushHistory(model){ if(!model||!model.pillars) return; var by={}; model.pillars.forEach(function(p){ by[p.key]=p.score; }); var ov=Math.round(model.pillars.reduce(function(a,p){ return a+p.score; },0)/model.pillars.length); var h=perfHistory(); h.unshift({at:model.at, overall:ov, speed:by.speed, seo:by.seo, a11y:by.a11y}); h=h.slice(0,12); try{ localStorage.setItem(PERF_HIST_KEY,JSON.stringify(h)); }catch(e){} }
+function renderPerfHistory(){ var w=document.getElementById("perfHistory"); if(!w) return; var h=perfHistory();
+  if(h.length<2){ w.innerHTML=""; w.style.display="none"; return; } w.style.display="";
+  var rows=h.slice(0,6).map(function(e,i){ var prev=h[i+1]; var d=prev?(e.overall-prev.overall):0; var darr=d>0?("+"+d):(d<0?String(d):"="); var dc=d>0?"#0E7D48":(d<0?"#B23B3B":"#8a8c89");
+    var dt=new Date(e.at).toLocaleString("fr-CH",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+    return '<div style="display:flex;align-items:center;gap:12px;padding:9px 2px;border-top:1px solid #EEF0EE;font-size:14px">'
+      +'<span style="color:var(--muted,#6b6f6b);min-width:132px">'+escHtml(dt)+'</span>'
+      +'<span style="font-weight:700;color:var(--ink,#1a1a1a)">'+e.overall+'<small style="font-weight:500;color:var(--muted,#8a8c89)">/100</small></span>'
+      +'<span style="font-weight:600;color:'+dc+';min-width:34px">'+darr+'</span>'
+      +'<span style="color:var(--muted,#6b6f6b);margin-left:auto;font-size:13px">Réf. '+(e.seo!=null?e.seo:"–")+' · Lis. '+(e.a11y!=null?e.a11y:"–")+' · Rap. '+(e.speed!=null?e.speed:"–")+'</span></div>';
+  }).join("");
+  w.innerHTML='<div class="dpan"><div class="pan-head"><h4><span class="hic teal"><i data-lucide="history"></i></span> Historique des analyses</h4><span class="hint" style="margin:0">'+h.length+' analyse'+(h.length>1?"s":"")+' enregistrée'+(h.length>1?"s":"")+'</span></div><div>'+rows+'</div></div>';
+  refreshIcons();
+}
 function renderPerf(){
   const last=document.getElementById("perfLast"); if(last){ let _pl=null; try{ _pl=localStorage.getItem("chaskis_perf_last"); }catch(e){} const _n=_pl!=null?+_pl:NaN; last.textContent=Number.isFinite(_n)?("Dernière analyse : "+new Date(_n).toLocaleString("fr-CH",{day:"2-digit",month:"long",hour:"2-digit",minute:"2-digit"})):"Analyse pas encore lancée"; }
   perfUpdateNote();
   const scores=perfPillars().map(p=>p.score), overall=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
-  renderPerfVerdict(overall);
+  renderPerfVerdict(overall); renderPerfHistory();
   renderPerfPillars(); renderPerfActions(); renderPerfGood(); renderPerfContent();
   refreshIcons();
 }

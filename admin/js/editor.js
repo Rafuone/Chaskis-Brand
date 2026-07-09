@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.21.1" };
+const ADMIN_BUILD = { version: "0.21.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -374,35 +374,51 @@ function deleteMediaAt(i){ const m=draft.media[i]; if(m && !confirm("Supprimer �
    null => l'appelant garde l'original tel quel (repli sûr, aucune régression possible).
    Ignore le SVG (vectoriel) et ne garde l'optimisé que s'il est plus léger ou redimensionné. */
 const MEDIA_MAX_DIM=1920, MEDIA_Q=0.82;
+/* Détecte une image animée (WebP « ANIM » / APNG « acTL ») pour NE PAS l'aplatir en une seule frame. */
+function mediaIsAnimated(buf, type){
+  try{
+    const marker = type==="image/webp" ? [0x41,0x4E,0x49,0x4D] : (type==="image/png" ? [0x61,0x63,0x54,0x4C] : null);
+    if(!marker) return false;
+    const b=new Uint8Array(buf), n=Math.min(b.length, 2*1024*1024); // les chunks d'animation sont en tête de fichier
+    for(let i=0;i<n-3;i++){ if(b[i]===marker[0]&&b[i+1]===marker[1]&&b[i+2]===marker[2]&&b[i+3]===marker[3]) return true; }
+  }catch(e){}
+  return false;
+}
 function mediaOptimize(file, done){
   try{
-    // Seules les images matricielles sont ré-encodées ; SVG (vectoriel) et vidéos passent leur tour.
+    // Seules les images matricielles STATIQUES sont ré-encodées ; SVG (vectoriel), vidéos et images animées passent leur tour.
     if(!file || !/^image\//.test(file.type) || file.type==="image/svg+xml"){ done(null); return; }
     const rd=new FileReader();
     rd.onerror=()=>done(null);
     rd.onload=()=>{
-      const im=new Image();
-      im.onerror=()=>done(null);
-      im.onload=()=>{
-        try{
-          const w0=im.naturalWidth, h0=im.naturalHeight; if(!w0||!h0){ done(null); return; }
-          let w=w0, h=h0; const mx=Math.max(w0,h0);
-          if(mx>MEDIA_MAX_DIM){ const k=MEDIA_MAX_DIM/mx; w=Math.round(w0*k); h=Math.round(h0*k); }
-          const cv=document.createElement("canvas"); cv.width=w; cv.height=h;
-          const ctx=cv.getContext("2d"); if(!ctx){ done(null); return; }
-          ctx.drawImage(im,0,0,w,h);
-          let out=""; try{ out=cv.toDataURL("image/webp",MEDIA_Q); }catch(e){ out=""; }
-          if(!out || out.indexOf("data:image/webp")!==0){ try{ out=cv.toDataURL("image/png"); }catch(e){ out=""; } }
-          if(!out || out.indexOf("data:image/")!==0){ done(null); return; }
-          const size=Math.round((out.length-out.indexOf(",")-1)*0.75);
-          const type=out.slice(5, out.indexOf(";"));
-          if(size>=file.size && w===w0 && h===h0){ done(null); return; } // pas plus léger, pas redimensionné
-          done({ src:out, w:w, h:h, size:size, type:type });
-        }catch(e){ done(null); }
-      };
-      im.src=rd.result;
+      try{
+        const buf=rd.result;
+        if(mediaIsAnimated(buf, file.type)){ done(null); return; } // WebP/APNG animé : garder l'original (animation préservée)
+        const url=URL.createObjectURL(new Blob([buf], {type:file.type}));
+        const im=new Image();
+        im.onerror=()=>{ try{ URL.revokeObjectURL(url); }catch(e){} done(null); };
+        im.onload=()=>{
+          try{
+            const w0=im.naturalWidth, h0=im.naturalHeight; if(!w0||!h0){ URL.revokeObjectURL(url); done(null); return; }
+            let w=w0, h=h0; const mx=Math.max(w0,h0);
+            if(mx>MEDIA_MAX_DIM){ const k=MEDIA_MAX_DIM/mx; w=Math.round(w0*k); h=Math.round(h0*k); }
+            const cv=document.createElement("canvas"); cv.width=w; cv.height=h;
+            const ctx=cv.getContext("2d"); if(!ctx){ URL.revokeObjectURL(url); done(null); return; }
+            ctx.drawImage(im,0,0,w,h);
+            let out=""; try{ out=cv.toDataURL("image/webp",MEDIA_Q); }catch(e){ out=""; }
+            if(!out || out.indexOf("data:image/webp")!==0){ try{ out=cv.toDataURL("image/png"); }catch(e){ out=""; } }
+            URL.revokeObjectURL(url);
+            if(!out || out.indexOf("data:image/")!==0){ done(null); return; }
+            const size=Math.round((out.length-out.indexOf(",")-1)*0.75);
+            const type=out.slice(5, out.indexOf(";"));
+            if(size>=file.size){ done(null); return; } // on ne garde l'optimisée QUE si elle est réellement plus légère (sinon repli sur l'original)
+            done({ src:out, w:w, h:h, size:size, type:type });
+          }catch(e){ try{ URL.revokeObjectURL(url); }catch(_){} done(null); }
+        };
+        im.src=url;
+      }catch(e){ done(null); }
     };
-    rd.readAsDataURL(file);
+    rd.readAsArrayBuffer(file);
   }catch(e){ done(null); }
 }
 function importMediaFile(file){
@@ -434,11 +450,12 @@ function importMediaFile(file){
     else if(fromPage){ const mv=document.getElementById("view-media"); if(mv&&mv.classList.contains("on")) openMediaDetail(draft.media.indexOf(entry)); }
   };
   mediaOptimize(file, function(opt){
-    if(opt){
-      if(opt.size > MEDIA.imgMax){ toast("Image encore trop lourde après optimisation (max 2 Mo)"); return; }
+    // L'optimisée n'est retenue que si elle est réellement plus légère ET sous la limite.
+    if(opt && opt.size <= MEDIA.imgMax){
       storeImg(opt.src, { size:opt.size, type:opt.type, w:opt.w, h:opt.h, optimized:true, origSize:file.size }); return;
     }
-    if(file.size > MEDIA.imgMax){ toast("Image trop lourde (max 2 Mo)"); return; }
+    // Sinon (pas d'optimisation utile, image animée, ou encore trop lourde) : on retombe sur l'original s'il tient dans la limite.
+    if(file.size > MEDIA.imgMax){ toast(opt ? "Image trop lourde même après optimisation (max 2 Mo)" : "Image trop lourde (max 2 Mo)"); return; }
     const rd=new FileReader(); rd.onload=()=>storeImg(rd.result, { size:file.size, type:file.type, optimized:false }); rd.readAsDataURL(file);
   });
 }
@@ -1173,7 +1190,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.21.1", cur:true, date:"2026-07-08", title:"Pages Mentions légales et CGV", items:[
+  { v:"v0.21.2", cur:true, date:"2026-07-08", title:"Correctifs médiathèque (revue qualité)", items:[
+    {t:"fix", x:"Import d'image : si l'optimisation n'allège pas le fichier (ou sur un navigateur ancien sans WebP), l'image originale valide est conservée au lieu d'être refusée à tort"},
+    {t:"fix", x:"Import d'image : les images animées (WebP ou PNG animé) sont désormais conservées telles quelles, au lieu d'être aplaties en une seule image"}
+  ]},
+  { v:"v0.21.1", date:"2026-07-08", title:"Pages Mentions légales et CGV", items:[
     {t:"add", x:"Deux nouvelles pages légales, Mentions légales et Conditions générales, sur le modèle de la page Confidentialité (modèles à faire valider par un juriste)"},
     {t:"fix", x:"Les liens « Mentions légales » et « CGV » du pied de page, jusqu'ici inactifs, mènent désormais aux bonnes pages sur tout le site"}
   ]},

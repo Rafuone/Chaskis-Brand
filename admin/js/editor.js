@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.21.3" };
+const ADMIN_BUILD = { version: "0.21.4" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1190,7 +1190,10 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.21.3", cur:true, date:"2026-07-08", title:"Performance : contrôle des titres en double", items:[
+  { v:"v0.21.4", cur:true, date:"2026-07-09", title:"Performance : espacement du bloc Historique corrigé", items:[
+    {t:"fix", x:"Page Performance : l'espacement autour du bloc « Historique des analyses » est rééquilibré (il était trop détaché du bilan du haut et presque collé au premier domaine)"}
+  ]},
+  { v:"v0.21.3", date:"2026-07-08", title:"Performance : contrôle des titres en double", items:[
     {t:"add", x:"L'analyse Performance signale désormais si deux pages partagent exactement le même titre (mauvais pour le référencement). À ce jour, vos titres sont tous distincts"}
   ]},
   { v:"v0.21.2", date:"2026-07-08", title:"Correctifs médiathèque (revue qualité)", items:[
@@ -1652,7 +1655,7 @@ function renderTech(){ const tabs=document.getElementById("techTabs"), body=docu
   refreshIcons();
 }
 function techEsc(s){ return escHtml(String(s==null?"":s)); }
-const TECH_UPDATED="8 juillet 2026";
+const TECH_UPDATED="9 juillet 2026";
 const TECH_EFF_LBL={S:"Rapide",M:"Moyen",L:"Long"};
 const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Arthur",calendly:"Paul",auth:"Youcef",perf:"Arthur",media:"Arthur",chatbot:"Youcef"};
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};

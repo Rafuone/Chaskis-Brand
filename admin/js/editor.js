@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.20.0" };
+const ADMIN_BUILD = { version: "0.21.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -368,12 +368,49 @@ function applyMedia(src){
 }
 function pickMedia(src){ if(!mediaTarget){ return; } applyMedia(src); document.getElementById("mediaModalBg").classList.remove("show"); toast("Image mise à jour"); }
 function deleteMediaAt(i){ const m=draft.media[i]; if(m && !confirm("Supprimer « "+(m.name||"ce média")+" » de la médiathèque ? Action définitive.")) return; draft.media.splice(i,1); save(); renderAllMedia(); updateDashboard(); }
+/* Optimisation d'image à l'import (chantier "media", étape « compresser/redimensionner ») :
+   redimensionne au-delà de MEDIA_MAX_DIM et ré-encode en WebP (transparence préservée ;
+   repli PNG si WebP non supporté). 100% navigateur, aucun service. done(result|null) :
+   null => l'appelant garde l'original tel quel (repli sûr, aucune régression possible).
+   Ignore le SVG (vectoriel) et ne garde l'optimisé que s'il est plus léger ou redimensionné. */
+const MEDIA_MAX_DIM=1920, MEDIA_Q=0.82;
+function mediaOptimize(file, done){
+  try{
+    // Seules les images matricielles sont ré-encodées ; SVG (vectoriel) et vidéos passent leur tour.
+    if(!file || !/^image\//.test(file.type) || file.type==="image/svg+xml"){ done(null); return; }
+    const rd=new FileReader();
+    rd.onerror=()=>done(null);
+    rd.onload=()=>{
+      const im=new Image();
+      im.onerror=()=>done(null);
+      im.onload=()=>{
+        try{
+          const w0=im.naturalWidth, h0=im.naturalHeight; if(!w0||!h0){ done(null); return; }
+          let w=w0, h=h0; const mx=Math.max(w0,h0);
+          if(mx>MEDIA_MAX_DIM){ const k=MEDIA_MAX_DIM/mx; w=Math.round(w0*k); h=Math.round(h0*k); }
+          const cv=document.createElement("canvas"); cv.width=w; cv.height=h;
+          const ctx=cv.getContext("2d"); if(!ctx){ done(null); return; }
+          ctx.drawImage(im,0,0,w,h);
+          let out=""; try{ out=cv.toDataURL("image/webp",MEDIA_Q); }catch(e){ out=""; }
+          if(!out || out.indexOf("data:image/webp")!==0){ try{ out=cv.toDataURL("image/png"); }catch(e){ out=""; } }
+          if(!out || out.indexOf("data:image/")!==0){ done(null); return; }
+          const size=Math.round((out.length-out.indexOf(",")-1)*0.75);
+          const type=out.slice(5, out.indexOf(";"));
+          if(size>=file.size && w===w0 && h===h0){ done(null); return; } // pas plus léger, pas redimensionné
+          done({ src:out, w:w, h:h, size:size, type:type });
+        }catch(e){ done(null); }
+      };
+      im.src=rd.result;
+    };
+    rd.readAsDataURL(file);
+  }catch(e){ done(null); }
+}
 function importMediaFile(file){
   if(!file) return;
   const isVid=file.type.startsWith("video/");
   const okType = isVid ? MEDIA.vidTypes.includes(file.type) : MEDIA.imgTypes.includes(file.type);
   if(!okType){ toast("Format non supporté (WebP, PNG, JPEG, SVG, MP4, WebM)"); return; }
-  if(file.size > (isVid?MEDIA.vidMax:MEDIA.imgMax)){ toast((isVid?"Vidéo trop lourde (max 50 Mo)":"Image trop lourde (max 2 Mo)")); return; }
+  if(isVid && file.size > MEDIA.vidMax){ toast("Vidéo trop lourde (max 50 Mo)"); return; }
   if(isVid){
     // POC local : on enregistre la référence + les métadonnées ; le fichier ira sur le serveur à la publication
     const entry={ name:file.name, origin:"upload", kind:"video", size:file.size, type:file.type, alt:"" };
@@ -385,15 +422,25 @@ function importMediaFile(file){
     v.onerror=()=>URL.revokeObjectURL(url); v.src=url;
     return;
   }
-  const rd=new FileReader();
-  rd.onload=()=>{ const src=rd.result; const entry={src,name:file.name,origin:"upload",kind:"image",size:file.size,type:file.type,alt:""}; draft.media.push(entry);
-    const fromPage = !mediaTarget;
-    if(mediaTarget){ applyMedia(src); document.getElementById("mediaModalBg").classList.remove("show"); toast("Image importée"); }
-    else { save(); toast("Image ajoutée à la médiathèque"); }
+  const fromPage = !mediaTarget;
+  const storeImg=(src, meta)=>{
+    const entry=Object.assign({ src:src, name:file.name, origin:"upload", kind:"image", alt:"" }, meta);
+    draft.media.push(entry);
+    if(mediaTarget){ applyMedia(src); document.getElementById("mediaModalBg").classList.remove("show"); toast(meta.optimized?"Image importée et optimisée":"Image importée"); }
+    else { save(); toast(meta.optimized?"Image ajoutée et optimisée":"Image ajoutée à la médiathèque"); }
     renderAllMedia(); updateDashboard();
-    const im=new Image(); im.onload=()=>{ entry.w=im.naturalWidth; entry.h=im.naturalHeight; save(); renderAllMedia();
-      if(fromPage){ const mv=document.getElementById("view-media"); if(mv&&mv.classList.contains("on")) openMediaDetail(draft.media.indexOf(entry)); } }; im.src=src; };
-  rd.readAsDataURL(file);
+    if(!entry.w||!entry.h){ const im=new Image(); im.onload=()=>{ entry.w=im.naturalWidth; entry.h=im.naturalHeight; save(); renderAllMedia();
+      if(fromPage){ const mv=document.getElementById("view-media"); if(mv&&mv.classList.contains("on")) openMediaDetail(draft.media.indexOf(entry)); } }; im.src=src; }
+    else if(fromPage){ const mv=document.getElementById("view-media"); if(mv&&mv.classList.contains("on")) openMediaDetail(draft.media.indexOf(entry)); }
+  };
+  mediaOptimize(file, function(opt){
+    if(opt){
+      if(opt.size > MEDIA.imgMax){ toast("Image encore trop lourde après optimisation (max 2 Mo)"); return; }
+      storeImg(opt.src, { size:opt.size, type:opt.type, w:opt.w, h:opt.h, optimized:true, origSize:file.size }); return;
+    }
+    if(file.size > MEDIA.imgMax){ toast("Image trop lourde (max 2 Mo)"); return; }
+    const rd=new FileReader(); rd.onload=()=>storeImg(rd.result, { size:file.size, type:file.type, optimized:false }); rd.readAsDataURL(file);
+  });
 }
 function makeMediaInput(){
   const inp=document.createElement("input"); inp.type="file";
@@ -1126,7 +1173,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.20.0", cur:true, date:"2026-07-08", title:"Statistiques : la vraie mesure démarre (sans cookie)", items:[
+  { v:"v0.21.0", cur:true, date:"2026-07-08", title:"Médiathèque : images optimisées à l'import", items:[
+    {t:"add", x:"Les images importées sont maintenant redimensionnées (jusqu'à 1920 px) et compressées (WebP) directement dans le navigateur : les grandes photos passent sans souci et pèsent bien moins lourd. Les fichiers SVG et les vidéos ne sont pas modifiés"},
+    {t:"imp", x:"Une photo trop lourde peut désormais être acceptée après optimisation, au lieu d'être refusée d'emblée"}
+  ]},
+  { v:"v0.20.0", date:"2026-07-08", title:"Statistiques : la vraie mesure démarre (sans cookie)", items:[
     {t:"add", x:"Une vraie mesure de fréquentation, sans cookie et sans outil tiers, est maintenant active sur toutes les pages du site. La page Statistiques affiche un bloc « mesuré réellement sur cet appareil » (pages vues, provenance, part mobile), en plus des données d'exemple"},
     {t:"imp", x:"Les prévisualisations de l'éditeur ne sont pas comptées, seules les vraies visites le sont. L'agrégation de tous les visiteurs viendra avec la mise en ligne"}
   ]},
@@ -1396,7 +1447,7 @@ const PROGRESS=[
   {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.16.0",recent:["Activité récente tirée des vraies publications","Tuile Rendez-vous à venir réelle"]},
   {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.11.0",recent:["Édition multi-pages","Coach de contenu","Contenus structurés"]},
   {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.1",recent:["Badge « actuellement masquée » sur les sections de l'accueil","Rôle de chaque page et section"]},
-  {view:"media",name:"Médiathèque",env:"prod",stage:"stable",version:"1.0.2",recent:["Confirmation avant suppression d'un média"]},
+  {view:"media",name:"Médiathèque",env:"prod",stage:"stable",version:"1.1.0",recent:["Compression et redimensionnement des images à l'import","Confirmation avant suppression d'un média"]},
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.7.0",recent:["Restauration et aperçu sûrs sur les versions d'exemple"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.1.0",recent:["Bac à test basé sur les vraies sources","Affichage sécurisé"]},
@@ -1579,7 +1630,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:70,publish:58,versioning:28,analytics:38,calendly:25,auth:25,perf:52,media:20,chatbot:20};
+const TECH_DONE={host:70,publish:58,versioning:28,analytics:38,calendly:25,auth:25,perf:52,media:30,chatbot:20};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */

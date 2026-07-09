@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.19.0" };
+const ADMIN_BUILD = { version: "0.20.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1126,7 +1126,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.19.0", cur:true, date:"2026-07-08", title:"Le bouton Publier met vraiment le site en ligne", items:[
+  { v:"v0.20.0", cur:true, date:"2026-07-08", title:"Statistiques : la vraie mesure démarre (sans cookie)", items:[
+    {t:"add", x:"Une vraie mesure de fréquentation, sans cookie et sans outil tiers, est maintenant active sur toutes les pages du site. La page Statistiques affiche un bloc « mesuré réellement sur cet appareil » (pages vues, provenance, part mobile), en plus des données d'exemple"},
+    {t:"imp", x:"Les prévisualisations de l'éditeur ne sont pas comptées, seules les vraies visites le sont. L'agrégation de tous les visiteurs viendra avec la mise en ligne"}
+  ]},
+  { v:"v0.19.0", date:"2026-07-08", title:"Le bouton Publier met vraiment le site en ligne", items:[
     {t:"add", x:"« Publier » envoie désormais réellement vos textes et tarifs en ligne (via une clé de publication à saisir une seule fois), en plus d'enregistrer une version locale. Messages clairs en cas de souci : clé refusée, publication concurrente, réglage manquant"},
     {t:"imp", x:"Depuis l'aperçu local, la publication reste en local avec un message explicite ; la vraie mise en ligne se fait depuis le site en ligne. Il ne reste qu'à fournir les accès (voir la fenêtre Publier)"}
   ]},
@@ -1398,7 +1402,7 @@ const PROGRESS=[
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.1.0",recent:["Bac à test basé sur les vraies sources","Affichage sécurisé"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.5.0",recent:["« Terminer » archive et télécharge le compte-rendu","Découverte guidée et simulateur d'offre"]},
-  {view:"stats",name:"Statistiques",env:"preprod",stage:"alpha",version:"0.6.0",recent:["Plage de dates personnalisée fonctionnelle"]},
+  {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.7.0",recent:["Vraie mesure d'audience sans cookie (cet appareil)","Plage de dates personnalisée fonctionnelle"]},
   {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audit réel enrichi (mobile, adresse canonique, partage réseaux)","Historique daté des analyses","Vitesse fine (Core Web Vitals) encore estimée, à venir avec Lighthouse"]},
   {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.5.0",recent:["Précisions du concours affichées","Alerte si stockage plein"]},
   {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.6.2",recent:["Libellé de rôle corrigé"]},
@@ -1575,7 +1579,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:70,publish:58,versioning:28,analytics:30,calendly:25,auth:25,perf:52,media:20,chatbot:20};
+const TECH_DONE={host:70,publish:58,versioning:28,analytics:38,calendly:25,auth:25,perf:52,media:20,chatbot:20};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -4229,6 +4233,38 @@ function renderStats(){
       const vis=Math.round(v/sum*tv), share=Math.round(v/sum*100);
       c._tip='<div class="tt-h">'+hr+'h - '+((hr+1)%24)+'h</div><div class="tt-row"><span>Visites</span><b>'+nfr(vis)+'</b></div><div class="tt-sub">'+share+' % du trafic du jour</div>'+(hr===peak?'<div class="tt-peak">Heure de pointe</div>':'');
       h.appendChild(c); }); }
+  renderStatsReal();
+}
+/* Panneau « vraie mesure sur cet appareil » : lit chaskis_analytics_v1 (écrit sans cookie par
+   assets/js/analytics.js sur les vraies visites). Additif : les données de démo au-dessus
+   restent la vitrine ; ici, la preuve que la mesure réelle fonctionne déjà (par appareil ;
+   l'agrégation multi-visiteurs viendra avec la mise en ligne). */
+function renderStatsReal(){
+  const w=document.getElementById("statRealPan"); if(!w) return;
+  let s=null; try{ s=JSON.parse(localStorage.getItem("chaskis_analytics_v1")); }catch(e){}
+  if(!s||!Array.isArray(s.events)||!s.events.length){ w.style.display="none"; w.innerHTML=""; return; }
+  w.style.display="";
+  const ev=s.events, n=ev.length; const byPage={}, bySrc={}; let mob=0, desk=0;
+  ev.forEach(function(e){ const p=e.p||"/"; byPage[p]=(byPage[p]||0)+1; const r=(e.r||"Accès direct"); bySrc[r]=(bySrc[r]||0)+1; if((e.w||0)>0){ if(e.w<768) mob++; else desk++; } });
+  const top=(o,k)=>Object.keys(o).map(x=>[x,o[x]]).sort((a,b)=>b[1]-a[1]).slice(0,k);
+  const PLBL={ "/":"Accueil","/index.html":"Accueil","/mobilite":"Mobilité","/mobilite.html":"Mobilité","/postuler":"Postuler","/postuler.html":"Postuler","/commander":"Commander","/commander.html":"Commander","/dashboard":"Tableau de bord","/dashboard.html":"Tableau de bord" };
+  const pl=p=>PLBL[p]||p;
+  const dt=ts=>{ try{ return new Date(ts).toLocaleDateString("fr-CH",{day:"2-digit",month:"short"}); }catch(e){ return "?"; } };
+  const pagesRows=top(byPage,6).map(x=>'<tr><td>'+escHtml(pl(x[0]))+'</td><td style="text-align:right;font-weight:600">'+x[1]+'</td></tr>').join("");
+  const srcRows=top(bySrc,6).map(x=>'<tr><td>'+escHtml(x[0])+'</td><td style="text-align:right;font-weight:600">'+x[1]+'</td></tr>').join("");
+  const mobShare=(mob+desk)?Math.round(mob/(mob+desk)*100):0;
+  w.innerHTML='<div class="pan-head"><h4><span class="hic teal"><i data-lucide="activity"></i></span> Mesuré réellement sur cet appareil</h4><span class="hint" style="margin:0">sans cookie</span></div>'
+    +'<p class="hint" style="margin:2px 0 12px">Vraie mesure de fréquentation, déjà active (premier bloc concret du chantier Statistiques). Ici uniquement les visites de <b>cet appareil</b> ; l\'agrégation de tous les visiteurs viendra avec la mise en ligne. Les chiffres plus haut restent des exemples de démonstration.</p>'
+    +'<div style="display:flex;gap:26px;flex-wrap:wrap;margin-bottom:14px">'
+      +'<div><div style="font-size:26px;font-weight:700;color:var(--ink,#1a1a1a)">'+n+'</div><div class="hint" style="margin:0">page'+(n>1?"s":"")+' vue'+(n>1?"s":"")+'</div></div>'
+      +'<div><div style="font-size:26px;font-weight:700;color:var(--ink,#1a1a1a)">'+mobShare+'%</div><div class="hint" style="margin:0">sur mobile</div></div>'
+      +'<div><div style="font-size:15px;font-weight:600;color:var(--ink,#1a1a1a);margin-top:7px">'+dt(s.firstAt||ev[0].t)+' → '+dt(s.lastAt||ev[n-1].t)+'</div><div class="hint" style="margin:0">période mesurée</div></div>'
+    +'</div>'
+    +'<div style="display:flex;gap:24px;flex-wrap:wrap">'
+      +'<div style="flex:1;min-width:220px"><div style="font-weight:600;margin-bottom:6px">Pages les plus vues</div><table class="tbl"><tbody>'+pagesRows+'</tbody></table></div>'
+      +'<div style="flex:1;min-width:220px"><div style="font-weight:600;margin-bottom:6px">Provenance</div><table class="tbl"><tbody>'+srcRows+'</tbody></table></div>'
+    +'</div>';
+  refreshIcons();
 }
 /* infobulle de données partagée (globale, pour toutes les vues) */
 (function tipSystem(){

@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.21.2" };
+const ADMIN_BUILD = { version: "0.21.3" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1190,7 +1190,10 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.21.2", cur:true, date:"2026-07-08", title:"Correctifs médiathèque (revue qualité)", items:[
+  { v:"v0.21.3", cur:true, date:"2026-07-08", title:"Performance : contrôle des titres en double", items:[
+    {t:"add", x:"L'analyse Performance signale désormais si deux pages partagent exactement le même titre (mauvais pour le référencement). À ce jour, vos titres sont tous distincts"}
+  ]},
+  { v:"v0.21.2", date:"2026-07-08", title:"Correctifs médiathèque (revue qualité)", items:[
     {t:"fix", x:"Import d'image : si l'optimisation n'allège pas le fichier (ou sur un navigateur ancien sans WebP), l'image originale valide est conservée au lieu d'être refusée à tort"},
     {t:"fix", x:"Import d'image : les images animées (WebP ou PNG animé) sont désormais conservées telles quelles, au lieu d'être aplaties en une seule image"}
   ]},
@@ -2106,7 +2109,11 @@ function perfBuildModel(pages,sitemap){
   var noH1=names(function(p){ return p.h1===0; }), multiH1=names(function(p){ return p.h1>1; });
   var noLang=names(function(p){ return !p.lang; }), noJsonld=names(function(p){ return p.jsonld===0; });
   var noViewport=names(function(p){ return !p.viewport; }), noCanonical=names(function(p){ return !p.canonical; }), noOg=names(function(p){ return !p.og; });
-  var seo=100-(noTitle.length*15+badTitle.length*4+noDesc.length*12+longDesc.length*4+shortDesc.length*3+noH1.length*10+multiH1.length*4+noLang.length*10+noJsonld.length*3+(sitemap?0:6)+noCanonical.length*3+noOg.length*2);
+  var titleMap={}, descMap={};
+  pages.forEach(function(p){ var t=(p.title||"").trim().toLowerCase(); if(t){ (titleMap[t]=titleMap[t]||[]).push(p.label); } var d=(p.desc||"").trim().toLowerCase(); if(d){ (descMap[d]=descMap[d]||[]).push(p.label); } });
+  var dupTitle=Object.keys(titleMap).filter(function(k){ return titleMap[k].length>1; }).length;
+  var dupDesc=Object.keys(descMap).filter(function(k){ return descMap[k].length>1; }).length;
+  var seo=100-(noTitle.length*15+badTitle.length*4+noDesc.length*12+longDesc.length*4+shortDesc.length*3+noH1.length*10+multiH1.length*4+noLang.length*10+noJsonld.length*3+(sitemap?0:6)+noCanonical.length*3+noOg.length*2+dupTitle*4+dupDesc*3);
   seo=Math.max(0,Math.min(100,Math.round(seo)));
   var totNoAlt=sum(function(p){ return p.imgsNoAlt; }), totNoLabel=sum(function(p){ return p.fieldsNoLabel; });
   var skips=names(function(p){ return p.skip; });
@@ -2125,7 +2132,8 @@ function perfBuildModel(pages,sitemap){
     {k:"Fiche d'infos pour Google", tech:"données structurées", v:noJsonld.length?("manque sur "+noJsonld.length+" page"+(noJsonld.length>1?"s":"")):"présentes", st:noJsonld.length?"warn":"good"},
     {k:"Plan du site fourni à Google", tech:"sitemap.xml", v:sitemap?"présent":"absent", st:sitemap?"good":"warn"},
     {k:"Adapté au téléphone", tech:"balise viewport", v:noViewport.length?("à revoir sur "+noViewport.length):"oui", st:noViewport.length?"warn":"good"},
-    {k:"Aperçu lors du partage", tech:"Open Graph", v:noOg.length?("manque sur "+noOg.length+" page"+(noOg.length>1?"s":"")):"complet", st:noOg.length?"warn":"good"}
+    {k:"Aperçu lors du partage", tech:"Open Graph", v:noOg.length?("manque sur "+noOg.length+" page"+(noOg.length>1?"s":"")):"complet", st:noOg.length?"warn":"good"},
+    {k:"Titres uniques par page", tech:"balise title", v:dupTitle?(dupTitle+" en double"):"tous distincts", st:dupTitle?"warn":"good"}
   ];
   P.a11y.score=a11y; P.a11y.status=st(a11y);
   P.a11y.detail=[
@@ -2150,6 +2158,7 @@ function perfBuildModel(pages,sitemap){
   if(shortDesc.length) acts.push({ title:"Description un peu courte sur "+join(shortDesc), impact:"leger", area:"Référencement", icon:"text", why:"Une description trop courte n'exploite pas toute la place offerte par Google pour donner envie de cliquer.", fix:{mode:"gamma", note:GAMMA+" peut étoffer ces descriptions."} });
   if(skips.length) acts.push({ title:"Ordre des titres à revoir sur "+join(skips), impact:"leger", area:"Lisibilité", icon:"list", why:"Un saut de niveau (par exemple un H3 sans H2 avant) gêne les lecteurs d'écran et la lecture par Google.", fix:{mode:"gamma", note:GAMMA+" peut réordonner les titres."} });
   if(noOg.length) acts.push({ title:"Aperçu de partage manquant sur "+join(noOg), impact:"leger", area:"Référencement", icon:"share-2", why:"Sans ces informations, un lien de votre site partagé sur les réseaux ou par messagerie s'affiche sans titre ni image, et donne beaucoup moins envie de cliquer.", fix:{mode:"gamma", note:GAMMA+" peut ajouter l'aperçu de partage (Open Graph)."} });
+  if(dupTitle) acts.push({ title:"Des pages partagent le même titre", impact:"moyen", area:"Référencement", icon:"copy", why:"Deux pages avec un titre identique se font concurrence dans Google et sèment la confusion. Chaque page gagne à avoir un titre unique et parlant.", fix:{mode:"gamma", note:GAMMA+" peut différencier les titres des pages concernées."} });
   var good=[];
   if(!totNoAlt) good.push({t:"Toutes vos images ont une description.", cat:"Lisibilité"});
   if(!noLang.length) good.push({t:"Chaque page déclare sa langue.", cat:"Lisibilité"});

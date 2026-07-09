@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.21.0" };
+const ADMIN_BUILD = { version: "0.21.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1173,7 +1173,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.21.0", cur:true, date:"2026-07-08", title:"Médiathèque : images optimisées à l'import", items:[
+  { v:"v0.21.1", cur:true, date:"2026-07-08", title:"Pages Mentions légales et CGV", items:[
+    {t:"add", x:"Deux nouvelles pages légales, Mentions légales et Conditions générales, sur le modèle de la page Confidentialité (modèles à faire valider par un juriste)"},
+    {t:"fix", x:"Les liens « Mentions légales » et « CGV » du pied de page, jusqu'ici inactifs, mènent désormais aux bonnes pages sur tout le site"}
+  ]},
+  { v:"v0.21.0", date:"2026-07-08", title:"Médiathèque : images optimisées à l'import", items:[
     {t:"add", x:"Les images importées sont maintenant redimensionnées (jusqu'à 1920 px) et compressées (WebP) directement dans le navigateur : les grandes photos passent sans souci et pèsent bien moins lourd. Les fichiers SVG et les vidéos ne sont pas modifiés"},
     {t:"imp", x:"Une photo trop lourde peut désormais être acceptée après optimisation, au lieu d'être refusée d'emblée"}
   ]},

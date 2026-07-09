@@ -474,7 +474,13 @@
       <section class="view scroll" id="view-versions">
         <h1 class="pg-h">Versions</h1>
         <p class="pg-sub">Chaque publication crée une version. Restaurez une version antérieure si besoin. Pour les nouveautés et correctifs du projet, voir « Notes de version ».</p>
-        <div class="dpan" id="versionsPan"><div id="versionList"></div></div>
+        <div class="dpan" id="versionsPan">
+          <div class="vtl-tools" style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+            <input type="search" id="verSearch" placeholder="Rechercher dans l'historique (mot, auteur, date…)" autocomplete="off" style="flex:1;min-width:200px;box-sizing:border-box;padding:9px 12px;border:1px solid #D8DCD8;border-radius:10px;font:inherit;background:#fff">
+            <button type="button" class="btn sec-b sm" id="verPinFilter"><i data-lucide="pin"></i>Épinglées</button>
+          </div>
+          <div id="versionList"></div>
+        </div>
         <p class="hint" style="margin-top:14px">La comparaison visuelle de deux versions côte à côte arrivera avec la mise en ligne réelle. Pour l'instant, chaque version affiche le résumé de ce qu'elle contient.</p>
       </section>
 

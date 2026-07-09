@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.21.4" };
+const ADMIN_BUILD = { version: "0.22.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -102,6 +102,7 @@ let draft = loadDraft();
 let versions = loadVersions();
 let currentLang = "fr";
 let _verPreview = null;
+let verQuery = "", verPinnedOnly = false;
 
 function loadDraft(){ try{ const r=JSON.parse(localStorage.getItem(STORE_KEY)); if(r) return Object.assign(blankDraft(), r); }catch(e){} return blankDraft(); }
 function loadVersions(){ try{ const r=JSON.parse(localStorage.getItem(VERS_KEY)); if(Array.isArray(r)&&r.length) return r; }catch(e){} return JSON.parse(JSON.stringify(SEED_VERSIONS)); }
@@ -1164,23 +1165,38 @@ function humanChanges(dr){ const c=changeCount(dr), parts=[];
   return parts.length?parts:["Petites retouches"]; }
 function renderVersions(){ const vl=document.getElementById("versionList"); if(!vl) return; vl.className="vtl"; vl.innerHTML="";
   const c=changeCount(draft);
-  const head=document.createElement("div"); head.className="vtl-item";
-  head.innerHTML='<div class="vtl-rail"><span class="vtl-dot draft"></span></div>'
-    +'<div class="vtl-card draft"><div class="vtl-hd"><span class="vtl-id draft">Brouillon</span><span class="vtl-badge draft">Non publié</span><span class="vtl-sp"></span>'+(c.total?'<button class="btn primary sm" id="vlPublish"><i data-lucide="upload"></i>Publier</button>':'<span class="hint" style="margin:0">à jour</span>')+'</div>'
-    +(c.total?'<ul class="vtl-changes">'+humanChanges(draft).map(x=>'<li>'+escHtml(x)+'</li>').join("")+'</ul>':'<div class="vtl-empty">Aucune modification non publiée.</div>')+'</div>';
-  vl.appendChild(head);
-  const hp=head.querySelector("#vlPublish"); if(hp) hp.addEventListener("click",openPublish);
-  versions.forEach((v,i)=>{ const live=i===0, changes=(v.changes&&v.changes.length)?v.changes:[v.summary||"Mise à jour"];
+  const q=(verQuery||"").trim().toLowerCase(), filtering=(!!q||verPinnedOnly);
+  // Tête « brouillon » : c'est l'état courant (pas une version de l'historique), affiché hors filtre uniquement.
+  if(!filtering){
+    const head=document.createElement("div"); head.className="vtl-item";
+    head.innerHTML='<div class="vtl-rail"><span class="vtl-dot draft"></span></div>'
+      +'<div class="vtl-card draft"><div class="vtl-hd"><span class="vtl-id draft">Brouillon</span><span class="vtl-badge draft">Non publié</span><span class="vtl-sp"></span>'+(c.total?'<button class="btn primary sm" id="vlPublish"><i data-lucide="upload"></i>Publier</button>':'<span class="hint" style="margin:0">à jour</span>')+'</div>'
+      +(c.total?'<ul class="vtl-changes">'+humanChanges(draft).map(x=>'<li>'+escHtml(x)+'</li>').join("")+'</ul>':'<div class="vtl-empty">Aucune modification non publiée.</div>')+'</div>';
+    vl.appendChild(head);
+    const hp=head.querySelector("#vlPublish"); if(hp) hp.addEventListener("click",openPublish);
+  }
+  let list=versions.map((v,i)=>({v:v,live:i===0}));
+  if(verPinnedOnly) list=list.filter(x=>x.v.pinned);
+  if(q) list=list.filter(x=>{ const hay=[x.v.id||"",x.v.author||"",fmtDate(x.v.date)].concat(x.v.changes||[],[x.v.summary||""]).join(" ").toLowerCase(); return hay.indexOf(q)>=0; });
+  if(!list.length){ const e=document.createElement("div"); e.className="vtl-empty"; e.style.padding="6px 0";
+    e.textContent=(verPinnedOnly&&!q)?"Aucune version épinglée pour l'instant.":"Aucune version ne correspond à votre recherche."; vl.appendChild(e); refreshIcons(); return; }
+  list.forEach(function(x){ const v=x.v, live=x.live, changes=(v.changes&&v.changes.length)?v.changes:[v.summary||"Mise à jour"];
     const it=document.createElement("div"); it.className="vtl-item";
     it.innerHTML='<div class="vtl-rail"><span class="vtl-dot'+(live?" live":"")+'"></span></div>'
-      +'<div class="vtl-card"><div class="vtl-hd"><span class="vtl-id">'+v.id+'</span>'+(live?'<span class="vtl-badge live">En ligne</span>':'<span class="vtl-badge">Précédente</span>')+'<span class="vtl-date">'+fmtDate(v.date)+(v.author?' · '+escHtml(v.author):"")+'</span></div>'
-      +'<ul class="vtl-changes">'+changes.map(x=>'<li>'+escHtml(x)+'</li>').join("")+'</ul>'
-      +'<div class="vtl-acts">'+(live?'':'<button class="vtl-restore" data-restore="'+v.id+'"><i data-lucide="rotate-ccw"></i>Restaurer cette version</button>')+'<button class="btn ghost sm" data-prev="'+v.id+'"><i data-lucide="eye"></i>Prévisualiser</button>'+(live?'':'<span class="vtl-restore-note"><i data-lucide="corner-up-left"></i>remet le site dans cet état</span>')+'</div></div>';
+      +'<div class="vtl-card"><div class="vtl-hd"><span class="vtl-id">'+escHtml(v.id)+'</span>'+(live?'<span class="vtl-badge live">En ligne</span>':'<span class="vtl-badge">Précédente</span>')+(v.pinned?'<span class="vtl-badge" style="background:#E1F5EE;color:#0F6E56">Épinglée</span>':'')+'<span class="vtl-date">'+fmtDate(v.date)+(v.author?' · '+escHtml(v.author):"")+'</span><span class="vtl-sp"></span><button class="btn ghost sm" data-pin="'+escHtml(v.id)+'" title="'+(v.pinned?"Retirer l’épingle":"Épingler cette version (la garder en avant)")+'"'+(v.pinned?' style="color:#0F6E56"':'')+'><i data-lucide="pin"></i></button></div>'
+      +'<ul class="vtl-changes">'+changes.map(y=>'<li>'+escHtml(y)+'</li>').join("")+'</ul>'
+      +'<div class="vtl-acts">'+(live?'':'<button class="vtl-restore" data-restore="'+escHtml(v.id)+'"><i data-lucide="rotate-ccw"></i>Restaurer cette version</button>')+'<button class="btn ghost sm" data-prev="'+escHtml(v.id)+'"><i data-lucide="eye"></i>Prévisualiser</button>'+(live?'':'<span class="vtl-restore-note"><i data-lucide="corner-up-left"></i>remet le site dans cet état</span>')+'</div></div>';
     const pv=it.querySelector("[data-prev]"); if(pv) pv.addEventListener("click",()=>previewVersion(v.id));
     const rb=it.querySelector("[data-restore]"); if(rb) rb.addEventListener("click",()=>restoreVersion(v.id));
+    const pn=it.querySelector("[data-pin]"); if(pn) pn.addEventListener("click",()=>toggleVersionPin(v.id));
     vl.appendChild(it); });
   refreshIcons();
 }
+function toggleVersionPin(id){ const v=versions.find(x=>x.id===id); if(!v) return; v.pinned=!v.pinned; saveVersions(); toast(v.pinned?"Version épinglée":"Épingle retirée"); renderVersions(); }
+(function wireVersionTools(){
+  const s=document.getElementById("verSearch"); if(s) s.addEventListener("input",function(){ verQuery=s.value||""; renderVersions(); });
+  const pf=document.getElementById("verPinFilter"); if(pf) pf.addEventListener("click",function(){ verPinnedOnly=!verPinnedOnly; pf.style.background=verPinnedOnly?"#E1F5EE":""; pf.style.color=verPinnedOnly?"#0F6E56":""; renderVersions(); });
+})();
 /* ============================================================
    Journal des versions (notes de version produit) : ce qui a été
    ajouté, corrigé, amélioré au fil des versions, plus le reste à faire.
@@ -1190,7 +1206,11 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.21.4", cur:true, date:"2026-07-09", title:"Performance : espacement du bloc Historique corrigé", items:[
+  { v:"v0.22.0", cur:true, date:"2026-07-09", title:"Versions : recherche et épinglage de l'historique", items:[
+    {t:"add", x:"Une recherche dans tout l'historique des versions (par mot, auteur ou date) pour retrouver rapidement une version précise"},
+    {t:"add", x:"La possibilité d'épingler les versions clés (stables ou performantes) : un filtre « Épinglées » les regroupe pour ne jamais les perdre de vue"}
+  ]},
+  { v:"v0.21.4", date:"2026-07-09", title:"Performance : espacement du bloc Historique corrigé", items:[
     {t:"fix", x:"Page Performance : l'espacement autour du bloc « Historique des analyses » est rééquilibré (il était trop détaché du bilan du haut et presque collé au premier domaine)"}
   ]},
   { v:"v0.21.3", date:"2026-07-08", title:"Performance : contrôle des titres en double", items:[
@@ -1479,7 +1499,7 @@ const PROGRESS=[
   {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.11.0",recent:["Édition multi-pages","Coach de contenu","Contenus structurés"]},
   {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.1",recent:["Badge « actuellement masquée » sur les sections de l'accueil","Rôle de chaque page et section"]},
   {view:"media",name:"Médiathèque",env:"prod",stage:"stable",version:"1.1.0",recent:["Compression et redimensionnement des images à l'import","Confirmation avant suppression d'un média"]},
-  {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.7.0",recent:["Restauration et aperçu sûrs sur les versions d'exemple"]},
+  {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.8.0",recent:["Recherche dans l'historique","Épinglage des versions clés","Restauration et aperçu sûrs"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.1.0",recent:["Bac à test basé sur les vraies sources","Affichage sécurisé"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
@@ -1661,7 +1681,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:70,publish:58,versioning:28,analytics:38,calendly:25,auth:25,perf:52,media:30,chatbot:20};
+const TECH_DONE={host:70,publish:58,versioning:40,analytics:38,calendly:25,auth:25,perf:52,media:30,chatbot:20};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */

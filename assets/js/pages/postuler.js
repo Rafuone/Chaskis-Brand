@@ -111,7 +111,6 @@
     cards.forEach(c => {
       const active = c === card;
       c.classList.toggle('is-active', active);
-      c.setAttribute('aria-selected', active ? 'true' : 'false');
     });
   }
   cards.forEach(card => {

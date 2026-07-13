@@ -328,6 +328,14 @@ document.querySelectorAll('.mob-faq-q').forEach(q => {
 // ===== HERO H1 rotator (time-based) =====
 (function() {
   let i = 0;
+  // A11y : n'exposer que le mot actif au lecteur d'écran (sinon le H1 énonce toute la
+  // liste de mots à la suite). État initial + mise à jour à chaque rotation.
+  (function initRotA11y() {
+    const rot = document.getElementById('mobHeroRot');
+    if (!rot) return;
+    rot.querySelectorAll('.hero-rot-word').forEach(w =>
+      w.setAttribute('aria-hidden', w.classList.contains('is-active') ? 'false' : 'true'));
+  })();
   setInterval(() => {
     const rot = document.getElementById('mobHeroRot');
     if (!rot) return;
@@ -338,8 +346,10 @@ document.querySelectorAll('.mob-faq-q').forEach(q => {
     const next = words[i];
     current.classList.remove('is-active');
     current.classList.add('is-leaving');
+    current.setAttribute('aria-hidden', 'true');
     next.classList.remove('is-leaving');
     next.classList.add('is-active');
+    next.setAttribute('aria-hidden', 'false');
     setTimeout(() => current.classList.remove('is-leaving'), 900);
   }, 2800);
 })();

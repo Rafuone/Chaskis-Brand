@@ -21,20 +21,26 @@ structure DOM des cartes cohérente, 0 erreur console, aucune régression visuel
 
 ## Reste à faire (backlog, plus coûteux ou à vérifier au rendu)
 
+### Fait (v0.27.1)
+
+- **Rôles ARIA détournés** (postuler, `#rVolet`) : `role="tablist"`/`role="tab"`/
+  `aria-selected` retirés (le comportement reposait déjà sur `is-active`) + ligne
+  `setAttribute('aria-selected', …)` supprimée dans `assets/js/pages/postuler.js`. Vérifié :
+  carrousel clic + clavier OK, 0 régression.
+- **Mots rotatifs du H1** (mobilité) : `aria-hidden` géré par le rotateur — seul le mot
+  affiché est exposé au lecteur d'écran (`assets/js/pages/mobilite.js`).
+
+### Reste à faire
+
 Priorité décroissante :
 
 1. **Landmark `<main id="content">`** autour du contenu principal (index, mobilité,
    postuler…) + **lien d'évitement** clavier (`sr-only` focusable) vers `#content`.
-   Structurel : à vérifier qu'aucun sélecteur CSS `body > …` ne casse.
+   Structurel : aucun sélecteur CSS `body > …` détecté → risque faible, à vérifier au rendu.
 2. **Accordéons FAQ** (index, mobilité, postuler) : `aria-expanded` (basculé par le JS) +
    `aria-controls` vers le panneau de réponse. Touche le JS d'ouverture des FAQ.
-3. **Rôles ARIA détournés** (postuler, `#rVolet`) : les témoignages portent
-   `role="tablist"`/`role="tab"`/`aria-selected` sans motif d'onglets valide. Retirer ces
-   rôles (le comportement repose déjà sur la classe `is-active`) et la ligne
-   `setAttribute('aria-selected', …)` de `assets/js/pages/postuler.js`.
-4. **Mots rotatifs du H1** (mobilité) : `aria-hidden="true"` sur les mots inactifs (via le
-   JS de rotation) pour que le lecteur d'écran n'énonce pas la liste entière.
-5. **Hiérarchie des titres** : mobilité (`<h4>` suivant un `<h2>` → `<h3>`) et index (noms
+3. **Rotateur de signature** (mobilité, `.sig-word`) : même traitement `aria-hidden` que le H1.
+4. **Hiérarchie des titres** : mobilité (`<h4>` suivant un `<h2>` → `<h3>`) et index (noms
    d'offres en `<span>` → `<h3>`). Nécessite d'adapter le CSS pour garder l'apparence
    (donc à vérifier au rendu — pas invisible).
 

@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.27.0" };
+const ADMIN_BUILD = { version: "0.27.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.27.0", cur:true, date:"2026-07-13", title:"Rendez-vous : les vrais rendez-vous Calendly remontent dans l'admin", items:[
+  { v:"v0.27.1", cur:true, date:"2026-07-13", title:"Accessibilité : lecteurs d'écran (témoignages et titre animé)", items:[
+    {t:"fix", x:"Page Postuler : les cartes de témoignages n'usurpent plus des rôles d'« onglets » (qui trompaient les lecteurs d'écran) ; le comportement au clic et au clavier est inchangé"},
+    {t:"fix", x:"Page Mobilité : le titre animé n'énonce plus toute la liste de mots aux lecteurs d'écran, seulement le mot affiché"}
+  ]},
+  { v:"v0.27.0", date:"2026-07-13", title:"Rendez-vous : les vrais rendez-vous Calendly remontent dans l'admin", items:[
     {t:"add", x:"Bouton « Synchroniser Calendly » dans la vue Rendez-vous : dès qu'un accès Calendly est configuré, vos vrais rendez-vous remontent dans la liste et « le prochain rendez-vous », attribués automatiquement au commercial disponible. Synchronisation aussi automatique à l'ouverture de la vue"},
     {t:"add", x:"Repli sûr : sans accès configuré, la vue affiche les rendez-vous de démonstration comme avant (aucune régression). Un problème réseau ou de configuration n'efface jamais l'affichage"},
     {t:"imp", x:"Le filtre par personne inclut désormais tous les commerciaux (Jean-Christophe était manquant). Les statistiques agrégées (présence, conversion, équipe) restent estimées pour l'instant"}

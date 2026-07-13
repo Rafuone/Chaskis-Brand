@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.22.1" };
+const ADMIN_BUILD = { version: "0.22.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -46,7 +46,8 @@ const EDIT_PAGES=[
   {key:"recrutement", file:"postuler.html", label:"Recrutement"},
   {key:"commander", file:"commander.html", label:"Commander"},
   {key:"suivi", file:"app.html", label:"Suivi de commande"},
-  {key:"dashboard", file:"dashboard.html", label:"Tableau de bord"}
+  {key:"dashboard", file:"dashboard.html", label:"Tableau de bord"},
+  {key:"sandbox", file:"bac-a-sable.html", label:"Bac à sable (test)"}
 ];
 let editPage="accueil", previewOn=false;
 function currentEditPage(){ return EDIT_PAGES.find(x=>x.key===editPage)||EDIT_PAGES[0]; }
@@ -1206,7 +1207,10 @@ function toggleVersionPin(id){ const v=versions.find(x=>x.id===id); if(!v) retur
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.22.1", cur:true, date:"2026-07-13", title:"Publication : compatibilité élargie des clés d'accès", items:[
+  { v:"v0.22.2", cur:true, date:"2026-07-13", title:"Bac à sable pour tester la publication", items:[
+    {t:"add", x:"Ajout d'une page « Bac à sable » (temporaire) dans l'éditeur : elle permet de s'entraîner à publier en toute sécurité, sans jamais modifier les vraies pages du site"}
+  ]},
+  { v:"v0.22.1", date:"2026-07-13", title:"Publication : compatibilité élargie des clés d'accès", items:[
     {t:"fix", x:"La publication accepte désormais les deux formats de clé d'accès GitHub (classique et fine-grained) et tolère un espace collé par erreur, pour éviter les échecs d'authentification au moment de l'activation"}
   ]},
   { v:"v0.22.0", date:"2026-07-09", title:"Versions : recherche et épinglage de l'historique", items:[

@@ -10,7 +10,8 @@
     { "source": "/admin", "destination": "/admin/editor.html" },
     { "source": "/confidentialite", "destination": "/confidentialite.html" },
     { "source": "/mentions-legales", "destination": "/mentions-legales.html" },
-    { "source": "/cgv", "destination": "/cgv.html" }
+    { "source": "/cgv", "destination": "/cgv.html" },
+    { "source": "/bac-a-sable", "destination": "/bac-a-sable.html" }
   ],
   "headers": [
     {

@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap">
 <script src="https://unpkg.com/lucide@latest"></script>
-<link rel="stylesheet" href="/admin/css/editor.css?v=20260708b">
+<link rel="stylesheet" href="/admin/css/editor.css?v=20260714">
 </head>
 <body>
 <div class="app" id="app">
@@ -496,6 +496,17 @@
         <div id="perfVerdict"></div>
         <div id="perfHistory" style="margin-bottom:16px;display:none"></div>
         <div class="perf-pillars" id="perfPillars"></div>
+        <div class="dpan" id="perfCwvPan">
+          <div class="pan-head" style="align-items:flex-start;flex-wrap:wrap;gap:10px">
+            <div style="min-width:0"><h4 style="margin:0"><span class="hic teal"><i data-lucide="gauge"></i></span> Vitesse réelle, mesurée par Google</h4><span class="hint" style="display:block;margin:5px 0 0">Core Web Vitals : la vitesse telle que la ressentent vos visiteurs, mesurée par Google — pas une estimation.</span></div>
+            <div class="cwv-ctrl">
+              <select id="perfCwvPage" aria-label="Page à mesurer"></select>
+              <div class="seg" id="perfCwvStrat"><button type="button" data-s="mobile" class="on">Mobile</button><button type="button" data-s="desktop">Ordinateur</button></div>
+              <button class="btn sm primary" id="perfCwvRun"><i data-lucide="gauge"></i>Mesurer</button>
+            </div>
+          </div>
+          <div id="perfCwv"></div>
+        </div>
         <div class="dpan">
           <div class="pan-head"><h4><span class="hic amber"><i data-lucide="list-checks"></i></span> À améliorer en priorité</h4><span class="hint" id="perfActionsHint" style="margin:0"></span></div>
           <div id="perfActions"></div>
@@ -780,7 +791,7 @@
   </div>
 </div>
 
-<script src="/admin/data/tech-plan.js?v=20260708b"></script>
-<script src="/admin/js/editor.js?v=20260708b"></script>
+<script src="/admin/data/tech-plan.js?v=20260714"></script>
+<script src="/admin/js/editor.js?v=20260714"></script>
 </body>
 </html>

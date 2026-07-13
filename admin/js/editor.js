@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.29.1" };
+const ADMIN_BUILD = { version: "0.29.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.29.1", cur:true, date:"2026-07-13", title:"Performance : mesure de vitesse réelle prête (côté serveur)", items:[
+  { v:"v0.29.2", cur:true, date:"2026-07-13", title:"Chatbot : périmètre verrouillé (questions Chaskis uniquement)", items:[
+    {t:"imp", x:"L'assistant refuse désormais explicitement tout ce qui sort du périmètre Chaskis (culture générale, autres entreprises, code, opinions) et ignore les tentatives de détournement dans le message de l'utilisateur ; il redirige vers hello@chaskis.ch. Longueur des réponses plafonnée (coût maîtrisé)."}
+  ]},
+  { v:"v0.29.1", date:"2026-07-13", title:"Performance : mesure de vitesse réelle prête (côté serveur)", items:[
     {t:"add", x:"La partie serveur des Core Web Vitals (vitesse perçue mesurée par Google : LCP, CLS, temps de blocage) est écrite et testée. Reste à fournir une clé Google PageSpeed (gratuite) pour l'activer ; l'audit local (référencement, lisibilité, poids) reste disponible sans compte"}
   ]},
   { v:"v0.29.0", date:"2026-07-13", title:"Chatbot : vos réglages pilotent l'assistant en ligne", items:[

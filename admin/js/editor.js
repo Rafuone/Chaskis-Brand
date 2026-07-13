@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.23.1" };
+const ADMIN_BUILD = { version: "0.23.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.23.1", cur:true, date:"2026-07-13", title:"Renforcement sécurité et fiabilité (revue)", items:[
+  { v:"v0.23.2", cur:true, date:"2026-07-13", title:"Écrans de suivi alignés sur l'état réel", items:[
+    {t:"imp", x:"Mise à jour des écrans de suivi : la carte « Édition du site » de l'Avancement reflète maintenant la publication réelle en ligne. Version, dates, avancement des pages et pourcentages d'intégration alignés sur l'état réel du projet"}
+  ]},
+  { v:"v0.23.1", date:"2026-07-13", title:"Renforcement sécurité et fiabilité (revue)", items:[
     {t:"fix", x:"Publication : la clé d'accès tolère un espace en trop de manière cohérente sur toutes les fonctions (fini le blocage 401 impossible à débloquer)"},
     {t:"fix", x:"Robustesse serveur : lecture des requêtes corrigée (plus de blocage sur un gros contenu, accents préservés) et serveur de test durci (fichiers internes non exposés)"}
   ]},
@@ -1567,7 +1570,7 @@ const APP_ENV={dev:{lbl:"Développement",c:"#6B4CC4"},preprod:{lbl:"Pré-product
 const APP_STAGE={stable:{lbl:"Stable",c:"#0E7D48"},beta:{lbl:"Bêta",c:"#C7891B"},alpha:{lbl:"Alpha",c:"#B4632A"}};
 const PROGRESS=[
   {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.16.0",recent:["Activité récente tirée des vraies publications","Tuile Rendez-vous à venir réelle"]},
-  {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.11.0",recent:["Édition multi-pages","Coach de contenu","Contenus structurés"]},
+  {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.12.0",recent:["Publication réelle en ligne depuis le bouton Publier","Édition multi-pages","Coach de contenu"]},
   {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.1",recent:["Badge « actuellement masquée » sur les sections de l'accueil","Rôle de chaque page et section"]},
   {view:"media",name:"Médiathèque",env:"prod",stage:"stable",version:"1.1.0",recent:["Compression et redimensionnement des images à l'import","Confirmation avant suppression d'un média"]},
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},

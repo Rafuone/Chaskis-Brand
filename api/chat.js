@@ -77,9 +77,20 @@ function pricingPassages() {
   return out;
 }
 
+// Sources de connaissances configurées dans l'admin et PUBLIÉES (chatbot.sources).
+// Elles rejoignent la base du bot -> il répond aussi à partir des documents du client.
+// Sans langue -> ces passages sont considérés quelle que soit la langue de la question.
+function sourcePassages() {
+  var cfg = chatbotConfig();
+  var srcs = Array.isArray(cfg.sources) ? cfg.sources : [];
+  return srcs.map(function (s, i) {
+    return { id: 'src-' + i, title: String((s && s.title) || 'Source'), tags: (s && Array.isArray(s.tags)) ? s.tags : [], text: String((s && s.text) || '') };
+  }).filter(function (p) { return p.text; });
+}
+
 function loadPassages() {
   var base = (KB && Array.isArray(KB.passages)) ? KB.passages.slice() : [];
-  return pricingPassages().concat(base);
+  return sourcePassages().concat(pricingPassages()).concat(base);
 }
 
 // Index construit une fois par instance (module chargé une fois = cache chaud). Sur un
@@ -166,3 +177,4 @@ module.exports = async function handler(req, res) {
 // Exposé pour les tests uniquement.
 module.exports.isForbidden = isForbidden;
 module.exports._setTestConfig = function (c) { TEST_CFG = c; };
+module.exports._resetIndex = function () { INDEX = null; };

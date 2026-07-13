@@ -158,7 +158,15 @@ async function callChat(body, method) {
   ok(rFb.json().mode === 'fallback' && rFb.json().answer === 'Repli personnalisé de test.', 'endpoint : repli personnalisé utilisé pour une question hors-sujet');
   var rOk = fakeRes(); await chatMod(fakeReq('POST', { question: 'Quels sont vos tarifs ?', lang: 'fr' }), rOk);
   ok(rOk.json().mode === 'extractive' && rOk.json().answer.length > 0, 'endpoint : question autorisée répond normalement malgré la config');
-  chatMod._setTestConfig(null);
+
+  // Sources publiées -> indexées dans la base du bot (l'admin "entraîne" le bot, gratuit)
+  chatMod._setTestConfig({ sources: [{ title: 'Politique retours', tags: ['Retours'], text: "Les retours de colis sont acceptés sous 14 jours ouvrables, sans frais, via un point relais partenaire." }] });
+  chatMod._resetIndex();
+  var rSrc = fakeRes(); await chatMod(fakeReq('POST', { question: 'Comment fonctionnent les retours de colis ?', lang: 'fr' }), rSrc);
+  var jSrc = rSrc.json();
+  ok(rSrc.statusCode === 200 && /14 jours|retours/i.test(jSrc.answer), 'endpoint : répond à partir d\'une SOURCE publiée par l\'admin');
+  ok(jSrc.sources.some(function (s) { return /retours/i.test(s.title); }), 'endpoint : la source publiée apparaît dans les sources citées');
+  chatMod._setTestConfig(null); chatMod._resetIndex();
 
   // =========================================================================
   console.log('\n' + (fail === 0 ? '✅' : '❌') + ' ' + pass + ' réussis, ' + fail + ' échoués');

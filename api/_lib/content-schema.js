@@ -33,7 +33,9 @@ const PRICING_KEYS = ['days', 'tiers', 'zones', 'flexMonthly', 'flexIncluded', '
 // Cles autorisees dans chatbot : REGLAGES de l'assistant (chantier chatbot). Pas de
 // sources/documents ici (ils ne doivent pas fuir dans le JSON public) : uniquement la
 // configuration textuelle. `forbidden`/`allowed` sont des tableaux de libelles de sujets.
-const CHATBOT_KEYS = ['forbidden', 'allowed', 'tone', 'length', 'fallback', 'botName', 'instructions', 'address', 'emojiLevel', 'defaultLang', 'uncertain'];
+const CHATBOT_KEYS = ['forbidden', 'allowed', 'tone', 'length', 'fallback', 'botName', 'instructions', 'address', 'emojiLevel', 'defaultLang', 'uncertain', 'sources'];
+// Cles autorisees pour un element de chatbot.sources (base de connaissances publiee).
+const CHATBOT_SOURCE_KEYS = ['title', 'tags', 'text'];
 
 // Bornes de securite.
 const MAX_TOTAL_BYTES = 300 * 1024; // 300 Ko : du contenu texte reste petit ; au-dela = anomalie.
@@ -139,6 +141,16 @@ function validateContent(input) {
       if (k === 'forbidden' || k === 'allowed') {
         if (!Array.isArray(cv)) errors.push('chatbot.' + k + ' : tableau attendu');
         else cv.forEach((x, i) => { if (typeof x !== 'string') errors.push('chatbot.' + k + '[' + i + '] : chaine attendue'); });
+      } else if (k === 'sources') {
+        // Base de connaissances : tableau d'objets { title, tags:[], text }.
+        if (!Array.isArray(cv)) errors.push('chatbot.sources : tableau attendu');
+        else cv.forEach((s, i) => {
+          if (!isPlainObject(s)) { errors.push('chatbot.sources[' + i + '] : objet attendu'); return; }
+          for (const sk of Object.keys(s)) { if (CHATBOT_SOURCE_KEYS.indexOf(sk) < 0) errors.push('chatbot.sources[' + i + '].' + sk + ' : cle inconnue'); }
+          if ('title' in s && typeof s.title !== 'string') errors.push('chatbot.sources[' + i + '].title : chaine attendue');
+          if ('text' in s && typeof s.text !== 'string') errors.push('chatbot.sources[' + i + '].text : chaine attendue');
+          if ('tags' in s) { if (!Array.isArray(s.tags)) errors.push('chatbot.sources[' + i + '].tags : tableau attendu'); else s.tags.forEach((t, ti) => { if (typeof t !== 'string') errors.push('chatbot.sources[' + i + '].tags[' + ti + '] : chaine attendue'); }); }
+        });
       } else if (typeof cv !== 'string') {
         errors.push('chatbot.' + k + ' : chaine attendue');
       }

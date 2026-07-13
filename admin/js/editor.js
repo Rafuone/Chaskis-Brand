@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.29.2" };
+const ADMIN_BUILD = { version: "0.30.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.29.2", cur:true, date:"2026-07-13", title:"Chatbot : périmètre verrouillé (questions Chaskis uniquement)", items:[
+  { v:"v0.30.0", cur:true, date:"2026-07-13", title:"Chatbot : vos sources alimentent l'assistant en ligne", items:[
+    {t:"add", x:"Les sources que vous ajoutez dans la page Chatbot (fiches, extraits, FAQ) nourrissent désormais l'assistant EN LIGNE : quand vous publiez, il répond aussi à partir de votre propre base de connaissances, pas seulement des infos du site intégrées d'origine. C'est le « quoi » de l'assistant, entièrement sous votre contrôle et gratuit"},
+    {t:"imp", x:"Le texte des sources est publié de façon bornée (idéal pour des fiches et extraits ; les très gros documents seraient tronqués, réservés à une future indexation avancée), avec les mêmes garde-fous de sécurité que le reste du contenu"}
+  ]},
+  { v:"v0.29.2", date:"2026-07-13", title:"Chatbot : périmètre verrouillé (questions Chaskis uniquement)", items:[
     {t:"imp", x:"L'assistant refuse désormais explicitement tout ce qui sort du périmètre Chaskis (culture générale, autres entreprises, code, opinions) et ignore les tentatives de détournement dans le message de l'utilisateur ; il redirige vers hello@chaskis.ch. Longueur des réponses plafonnée (coût maîtrisé)."}
   ]},
   { v:"v0.29.1", date:"2026-07-13", title:"Performance : mesure de vitesse réelle prête (côté serveur)", items:[
@@ -1807,7 +1811,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:55,auth:25,perf:58,media:30,chatbot:52};
+const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:55,auth:25,perf:58,media:30,chatbot:60};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -1868,7 +1872,7 @@ const TECH_BRIEF={
     steps:["Utiliser l'outil de mesure gratuit de Google.","Mesurer les pages clés automatiquement, à intervalle régulier.","Traduire les scores en langage clair, avec une action par point."],
     src:[{t:"Google PageSpeed API (gratuite)",u:"https://developers.google.com/speed/docs/insights/v5/get-started"}] },
   chatbot:{ sum:"Rendre le chatbot vraiment intelligent à partir de vos propres documents.",
-    today:"L'assistant retrouve le bon passage dans le contenu réel du site et en donne l'essentiel (offres, zones, délais, recrutement, contact) ; les tarifs suivent la grille publiée ; et vos réglages (sujets interdits, repli, ton, nom, instructions) publiés depuis l'admin pilotent son comportement en ligne. Restent la réponse rédigée par IA (à activer avec une clé, compte de test gratuit ou Azure) et l'indexation de vos propres documents importés.",
+    today:"L'assistant retrouve le bon passage dans le contenu réel du site et en donne l'essentiel (offres, zones, délais, recrutement, contact) ; les tarifs suivent la grille publiée ; et vos réglages (sujets interdits, repli, ton, nom, instructions) publiés depuis l'admin pilotent son comportement en ligne. Vos sources ajoutées dans l'admin alimentent aussi le bot en ligne à la publication. Restent la réponse rédigée par IA (à activer avec une clé Groq gratuite) et l'indexation de très gros documents (base vectorielle).",
     goal:"Il répond à partir de vos documents, en restant dans le périmètre autorisé.",
     cost:"0 à 15 CHF par mois selon le volume, avec un plafond.",
     note:"C'est le chantier le plus long. Le coût dépend du nombre de messages, il reste borné, et la version simple actuelle reste le filet de sécurité gratuit.",
@@ -3167,6 +3171,18 @@ function buildSiteContent(){
     if(Array.isArray(chat.allowed)&&chat.allowed.length) C.allowed=chat.allowed.map(String);
     ["tone","length","fallback","botName","address","emojiLevel","defaultLang","uncertain"].forEach(function(k){ if(typeof chat[k]==="string"&&chat[k].trim()) C[k]=chat[k]; });
     if(typeof chat.instr==="string"&&chat.instr.trim()) C.instructions=chat.instr;
+    // Base de connaissances : on publie le TEXTE des sources (borné en taille) pour que le bot
+    // en ligne les utilise. Pas les binaires/gros documents (taille du JSON limitée).
+    if(Array.isArray(chat.sources)&&chat.sources.length){
+      const S=chat.sources.slice(0,15).map(function(s){
+        const o={ title:String((s&&(s.n||s.title))||"Source") };
+        if(s&&Array.isArray(s.tags)&&s.tags.length) o.tags=s.tags.map(String).slice(0,8);
+        const txt=((s&&(typeof s.prev==="string"?s.prev:(typeof s.text==="string"?s.text:"")))||"").trim();
+        if(txt) o.text=txt.slice(0,1500);
+        return o;
+      }).filter(function(o){ return o.text; });
+      if(S.length) C.sources=S;
+    }
     if(Object.keys(C).length) out.chatbot=C;
   } }catch(e){}
   return out;

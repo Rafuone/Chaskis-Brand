@@ -338,7 +338,8 @@
         <div class="pan-head" style="align-items:flex-start">
           <div><h1 class="pg-h">Rendez-vous</h1><p class="pg-sub" style="margin-bottom:0">Les rendez-vous pris via le calendrier du site.</p></div>
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-            <select class="rangesel" id="rdvWhoSel"><option value="all">Toute l'équipe</option><option value="Sarah">Sarah</option><option value="Marc">Marc</option></select>
+            <button class="btn sec-b sm" type="button" id="rdvSyncBtn"><i data-lucide="refresh-cw"></i>Synchroniser Calendly</button>
+            <select class="rangesel" id="rdvWhoSel"><option value="all">Toute l'équipe</option><option value="Sarah">Sarah</option><option value="Marc">Marc</option><option value="Jean-Christophe">Jean-Christophe</option></select>
             <select class="rangesel" id="rdvRange">
               <option value="7j">7 derniers jours</option>
               <option value="30j" selected>30 derniers jours</option>
@@ -348,7 +349,7 @@
             </select>
           </div>
         </div>
-        <div class="ex-note" style="margin-top:16px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg><div>Démo : la connexion Calendly est simulée (aucun compte requis). En vrai, la clé d'accès reste côté serveur, jamais exposée au visiteur.</div></div>
+        <div class="ex-note" style="margin-top:16px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg><div>Dès qu'un accès Calendly est configuré côté serveur, « Synchroniser Calendly » fait remonter ici vos vrais rendez-vous (attribués automatiquement au commercial disponible). Sans accès, des exemples sont affichés. La clé reste côté serveur, jamais exposée au visiteur.</div></div>
 
         <div class="rdv-main">
             <div class="dpan" id="rdvCalBar">

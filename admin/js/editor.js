@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.26.1" };
+const ADMIN_BUILD = { version: "0.27.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.26.1", cur:true, date:"2026-07-13", title:"Accessibilité et référencement des pages publiques", items:[
+  { v:"v0.27.0", cur:true, date:"2026-07-13", title:"Rendez-vous : les vrais rendez-vous Calendly remontent dans l'admin", items:[
+    {t:"add", x:"Bouton « Synchroniser Calendly » dans la vue Rendez-vous : dès qu'un accès Calendly est configuré, vos vrais rendez-vous remontent dans la liste et « le prochain rendez-vous », attribués automatiquement au commercial disponible. Synchronisation aussi automatique à l'ouverture de la vue"},
+    {t:"add", x:"Repli sûr : sans accès configuré, la vue affiche les rendez-vous de démonstration comme avant (aucune régression). Un problème réseau ou de configuration n'efface jamais l'affichage"},
+    {t:"imp", x:"Le filtre par personne inclut désormais tous les commerciaux (Jean-Christophe était manquant). Les statistiques agrégées (présence, conversion, équipe) restent estimées pour l'instant"}
+  ]},
+  { v:"v0.26.1", date:"2026-07-13", title:"Accessibilité et référencement des pages publiques", items:[
     {t:"imp", x:"Accessibilité : champs du simulateur reliés à leur libellé, boutons du sélecteur de rendez-vous (Mobilité) nommés pour les lecteurs d'écran, et structure des cartes « Ils en parlent » (Postuler) corrigée"},
     {t:"imp", x:"Référencement : titre de la page d'accueil et description de la page Mobilité ramenés à une longueur optimale pour Google"},
     {t:"fix", x:"Postuler : deux photos de témoignages avaient un texte alternatif inversé (nom ne correspondant pas), et une balise manquante déséquilibrait une carte — corrigé"}
@@ -1777,7 +1782,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:42,auth:25,perf:56,media:30,chatbot:42};
+const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:50,auth:25,perf:56,media:30,chatbot:42};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -1845,7 +1850,7 @@ const TECH_BRIEF={
     steps:["Lire et indexer vos documents une seule fois, à leur ajout.","À chaque question, retrouver les bons passages et répondre dans le périmètre autorisé.","Garder la version simple actuelle comme filet gratuit.","Plafonner le budget pour éviter toute surprise."],
     src:[{t:"Groq, tarifs",u:"https://groq.com/pricing"},{t:"Upstash Vector, tarifs",u:"https://upstash.com/pricing"}] },
   calendly:{ sum:"Brancher les vrais rendez-vous Calendly dans l'admin.",
-    today:"Le site prend de vrais rendez-vous via le calendrier Calendly embarqué sur la page d'accueil, et le moteur serveur sait déjà lire ces rendez-vous et les attribuer. Reste à afficher ces vrais rendez-vous dans la vue Rendez-vous de l'admin, et à baser les créneaux proposés sur la disponibilité combinée des agendas (calendrier agrégé, Phase 2).",
+    today:"Le site prend de vrais rendez-vous via le calendrier Calendly embarqué, et l'admin les fait remonter (bouton « Synchroniser Calendly ») dans la liste et « le prochain rendez-vous », attribués automatiquement au commercial disponible. Restent : la réattribution manuelle persistée, les statistiques agrégées réelles, la remontée en temps réel (webhook), et les créneaux du site basés sur la disponibilité combinée des agendas (calendrier agrégé, Phase 2).",
     goal:"La prise de rendez-vous passe par Calendly, et les rendez-vous remontent dans l'admin.",
     cost:"Réservation gratuite, ET lecture des rendez-vous dans l'admin gratuite aussi (l'API de lecture Calendly marche sur le plan gratuit) : 0 CHF pour tester. Seul le temps réel (webhook) demande ~10 CHF/mois, pour une seule page de réservation centrale.",
     note:"Les personnes qui utilisent l'admin ne paient rien. Un seul calendrier central suffit : la redistribution entre commerciaux se fait dans l'admin, donc pas besoin du round-robin de Calendly (qui, lui, coûterait le plan Teams, ~40-48 CHF/mois pour 3 sièges). Tester coûte 0 CHF ; on ne passe au plan payant (~10 CHF/mois) que pour la remontée en temps réel.",
@@ -3085,7 +3090,7 @@ function showView(name){
   if(name==="progress") renderProgress();
   if(name==="dashboard") updateDashboard();
   if(name==="chatbot") renderChatbot();
-  if(name==="rdv") renderRdv();
+  if(name==="rdv"){ renderRdv(); if(getStoredPublishKey()) syncCalendlyRdv(true); }
   if(name==="stats") renderStats();
   if(name==="perf") renderPerf();
   if(name==="structure") renderStructure();
@@ -4181,6 +4186,29 @@ function renderTeam(){
   });
   setTxt("rdvTeamPeriod", rdvPeriodLabel());
 }
+/* Synchronisation des vrais rendez-vous depuis Calendly (endpoint /api/calendly).
+   Additif et à repli SÛR : en cas d'absence de clé, d'endpoint non configuré (501) ou
+   d'erreur, on NE touche PAS à rdvData -> les données de démo restent affichées.
+   Les données live sont gardées en mémoire (rafraîchies à chaque synchro / ouverture de
+   la vue) ; elles ne remplacent jamais définitivement le jeu de démo dans le code. */
+let rdvLiveOn=false;
+function syncCalendlyRdv(silent){
+  const key=getStoredPublishKey();
+  if(!key){ if(!silent) toast("Renseignez d'abord la clé d'accès (via le bouton Publier)."); return; }
+  const btn=document.getElementById("rdvSyncBtn"); if(btn) btn.disabled=true;
+  fetch("/api/calendly",{headers:{"Authorization":"Bearer "+key}})
+    .then(r=>r.json().then(j=>({status:r.status,j})).catch(()=>({status:r.status,j:null})))
+    .then(({status,j})=>{
+      if(status===200 && j && j.ok && Array.isArray(j.rdv)){
+        rdvData=j.rdv.map(r=>Object.assign({},r)); rdvLiveOn=true; rdvOpenRow=-1; rdvSel.clear(); rdvPage=1; renderRdv();
+        if(!silent){ let m="Rendez-vous synchronisés depuis Calendly ("+j.count+")"; if(j.truncated) m+=" — volume élevé, liste partielle"; toast(m); }
+      } else if(status===501){ if(!silent) toast("Calendly pas encore connecté côté serveur — données de démonstration affichées."); }
+      else if(status===401){ if(!silent) toast("Accès refusé : vérifiez la clé (bouton Publier)."); }
+      else { if(!silent) toast((j&&j.error)?("Calendly : "+j.error):"Échec de la synchronisation Calendly."); }
+    })
+    .catch(()=>{ if(!silent) toast("Réseau indisponible pour Calendly."); })
+    .finally(()=>{ const b=document.getElementById("rdvSyncBtn"); if(b) b.disabled=false; });
+}
 function renderRdv(){
   renderCalendars();
   const scoped = rdvWho==="all" ? rdvData : rdvData.filter(r=>r.who===rdvWho);
@@ -4317,6 +4345,7 @@ function enhanceSelect(sel){
   const rg=document.getElementById("rdvRange"); if(rg) rg.addEventListener("change",e=>{ rdvKey=e.target.value; renderRdv(); });
   const wo=document.getElementById("rdvWhoSel"); if(wo) wo.addEventListener("change",e=>{ rdvWho=e.target.value; rdvOpenRow=-1; rdvSel.clear(); rdvPage=1; renderRdv(); });
   const ft=document.getElementById("rdvFilter"); if(ft) ft.addEventListener("change",()=>{ rdvOpenRow=-1; rdvSel.clear(); rdvPage=1; renderRdvTable(); });
+  const sb=document.getElementById("rdvSyncBtn"); if(sb) sb.addEventListener("click",()=>syncCalendlyRdv(false));
   if(wo){ const whos=[...new Set(rdvData.map(r=>r.who).filter(Boolean))]; wo.innerHTML='<option value="all">Toute l\'équipe</option>'+whos.map(w=>'<option value="'+escAttr(w)+'">'+escHtml(w)+'</option>').join(""); }
   enhanceSelect(wo); enhanceSelect(rg); enhanceSelect(ft);
   const sa=document.getElementById("rdvSelAll"); if(sa) sa.addEventListener("change",e=>{ rdvSel.clear(); if(e.target.checked) eligibleVisibleRdv().forEach(i=>rdvSel.add(i)); renderRdvTable(); });

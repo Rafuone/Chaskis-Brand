@@ -40,13 +40,16 @@ structure DOM des cartes cohérente, 0 erreur console, aucune régression visuel
   (Le rendu visuel du lien au focus se déclenche au vrai focus clavier — non capturable en
   focus programmatique dans un navigateur automatisé, mais la règle CSS est en place.)
 - Cache-buster des assets unifié à `?v=20260713b` sur toutes les pages.
+- **Accordéons FAQ** (index, mobilité, postuler) : `aria-expanded` géré par le JS
+  (`shared.js` pour `.faq-q`, `mobilite.js` pour `.mob-faq-q`) — init + bascule à l'ouverture/
+  fermeture, entièrement en JS (aucun edit HTML). `aria-controls` non ajouté (nécessiterait
+  des id sur chaque panneau ; `aria-expanded` est le gain principal). Vérifié index + mobilité.
 
 ### Reste à faire
 
 Priorité décroissante :
 
-1. **Accordéons FAQ** (index, mobilité, postuler) : `aria-expanded` (basculé par le JS) +
-   `aria-controls` vers le panneau de réponse. Touche le JS d'ouverture des FAQ.
+1. **`aria-controls`** sur les FAQ (id sur chaque panneau réponse) — complément de l'aria-expanded.
 3. **Rotateur de signature** (mobilité, `.sig-word`) : même traitement `aria-hidden` que le H1.
 4. **Hiérarchie des titres** : mobilité (`<h4>` suivant un `<h2>` → `<h3>`) et index (noms
    d'offres en `<span>` → `<h3>`). Nécessite d'adapter le CSS pour garder l'apparence

@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.27.2" };
+const ADMIN_BUILD = { version: "0.27.3" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.27.2", cur:true, date:"2026-07-13", title:"Accessibilité : navigation clavier (contenu principal et lien d'évitement)", items:[
+  { v:"v0.27.3", cur:true, date:"2026-07-13", title:"Accessibilité : questions fréquentes (FAQ) annoncées comme dépliables", items:[
+    {t:"fix", x:"Les questions fréquentes (accueil, mobilité, postuler) indiquent maintenant leur état ouvert/fermé aux lecteurs d'écran (aria-expanded) : une personne malvoyante sait qu'une question se déplie et si elle est ouverte"}
+  ]},
+  { v:"v0.27.2", date:"2026-07-13", title:"Accessibilité : navigation clavier (contenu principal et lien d'évitement)", items:[
     {t:"add", x:"Chaque page publique a un vrai « contenu principal » balisé et un lien d'évitement clavier (« Aller au contenu ») : les personnes qui naviguent au clavier ou au lecteur d'écran sautent directement au contenu"},
     {t:"fix", x:"Rafraîchissement du cache des fichiers (styles et scripts) pour que les améliorations récentes s'appliquent immédiatement, sans vieux fichiers en cache côté visiteur"}
   ]},

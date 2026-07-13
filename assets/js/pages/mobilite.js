@@ -307,6 +307,8 @@ function submitMobRequest(e) {
 
 // ===== FAQ ACCORDION =====
 document.querySelectorAll('.mob-faq-q').forEach(q => {
+  // a11y : état ouvert/fermé annoncé aux lecteurs d'écran
+  if (!q.hasAttribute('aria-expanded')) q.setAttribute('aria-expanded', q.parentElement.classList.contains('open') ? 'true' : 'false');
   q.addEventListener('click', () => {
     const item = q.parentElement;
     const answer = item.querySelector('.mob-faq-a');
@@ -314,10 +316,12 @@ document.querySelectorAll('.mob-faq-q').forEach(q => {
     document.querySelectorAll('.mob-faq-item.open').forEach(i => {
       i.classList.remove('open');
       i.querySelector('.mob-faq-a').style.maxHeight = '0';
+      const t = i.querySelector('.mob-faq-q'); if (t) t.setAttribute('aria-expanded', 'false');
     });
     if (!wasOpen) {
       item.classList.add('open');
       answer.style.maxHeight = answer.scrollHeight + 'px';
+      q.setAttribute('aria-expanded', 'true');
     }
   });
   q.addEventListener('keydown', e => {

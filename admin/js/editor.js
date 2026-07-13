@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.32.1" };
+const ADMIN_BUILD = { version: "0.32.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.32.1", cur:true, date:"2026-07-14", title:"Performance : le pilier Rapidité reprend la vraie mesure Google", items:[
+  { v:"v0.32.2", cur:true, date:"2026-07-14", title:"Performance : mesure de vitesse Google ACTIVÉE et vérifiée en ligne", items:[
+    {t:"add", x:"La clé Google PageSpeed est en place : le bouton « Mesurer » renvoie désormais de VRAIES mesures Core Web Vitals de votre site, vérifiées en direct sur la préversion (score de vitesse, affichage du contenu, stabilité, réactivité)"},
+    {t:"imp", x:"À savoir sur l'hébergement de test (plan gratuit) : une mesure peut afficher « trop longue » car Google prend souvent plus de 10 s — recliquez « Mesurer » et le résultat réel s'affiche (Google le garde en cache un court instant). Ce sera fluide sur l'hébergement final. Les scores PageSpeed varient d'un passage à l'autre, c'est normal"}
+  ]},
+  { v:"v0.32.1", date:"2026-07-14", title:"Performance : le pilier Rapidité reprend la vraie mesure Google", items:[
     {t:"imp", x:"Quand vous mesurez la vitesse réelle de l'accueil, le pilier « Rapidité » en haut affiche directement les vraies valeurs de Google (affichage du contenu principal, stabilité, réactivité) au lieu de la mention « mesure à venir » : le pilier et le bloc « Vitesse réelle » disent maintenant la même chose"}
   ]},
   { v:"v0.32.0", date:"2026-07-14", title:"Performance : la vitesse réelle de Google s'affiche dans l'admin", items:[
@@ -1658,7 +1662,7 @@ const PROGRESS=[
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.5.0",recent:["« Terminer » archive et télécharge le compte-rendu","Découverte guidée et simulateur d'offre"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.7.0",recent:["Vraie mesure d'audience sans cookie (cet appareil)","Plage de dates personnalisée fonctionnelle"]},
-  {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.9.1",recent:["Vitesse réelle mesurée par Google (Core Web Vitals) affichée dans l'admin","Le pilier Rapidité reprend la vraie mesure Google une fois l'accueil analysé","Audit réel enrichi (mobile, adresse canonique, partage réseaux)"]},
+  {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.9.2",recent:["Mesure de vitesse Google activée et vérifiée en ligne (clé PageSpeed)","Vraies mesures Core Web Vitals affichées, reprises dans le pilier Rapidité","Audit réel enrichi (référencement, lisibilité, contenu, poids)"]},
   {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.5.0",recent:["Précisions du concours affichées","Alerte si stockage plein"]},
   {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.6.2",recent:["Libellé de rôle corrigé"]},
   {view:"progress",name:"Avancement",env:"preprod",stage:"beta",version:"0.4.0",recent:["Vrai pourcentage d'avancement de l'interface"]}
@@ -1798,7 +1802,7 @@ const TECH_FEATURES=[
   { group:"Statistiques & Performance", items:[
     {n:"Vues Statistiques / Performance (démo)", s:"ok"},
     {n:"Sources de trafic + analytics réels", s:"todo"},
-    {n:"Performance branchée sur PageSpeed / Lighthouse", s:"wip"} ]},
+    {n:"Performance branchée sur PageSpeed / Lighthouse", s:"ok"} ]},
   { group:"Comptes & accès", items:[
     {n:"Rôles / capacités (modèle + matrice)", s:"ok"},
     {n:"Authentification réelle + can() vérifié serveur", s:"todo"} ]}
@@ -1835,7 +1839,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:55,auth:25,perf:66,media:30,chatbot:75};
+const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:55,auth:25,perf:72,media:30,chatbot:75};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -1890,7 +1894,7 @@ const TECH_BRIEF={
     steps:["Ajouter un petit outil de mesure sans cookie sur toutes les pages.","Repérer d'où viennent les visiteurs (liens, réseaux, recherche).","Brancher la page Statistiques sur ces vraies données.","Ajouter une ligne dans la politique de confidentialité."],
     src:[{t:"Umami, tarifs",u:"https://umami.is/pricing"},{t:"Plausible, tarifs",u:"https://plausible.io/#pricing"}] },
   perf:{ sum:"Mesurer pour de vrai la vitesse et le référencement du site.",
-    today:"Le référencement, la lisibilité et le contenu sont mesurés pour de vrai dans l'admin (bouton « Relancer l'analyse », sans outil externe). La vitesse fine (Core Web Vitals via Google PageSpeed) est désormais AFFICHÉE dans la page Performance : bouton « Mesurer » par page et par appareil, résultats traduits en langage clair. Il reste à fournir une clé PageSpeed gratuite (côté hébergement) pour l'activer ; sans elle, l'estimation locale reste la référence.",
+    today:"Le référencement, la lisibilité et le contenu sont mesurés pour de vrai dans l'admin (bouton « Relancer l'analyse », sans outil externe). La vitesse fine (Core Web Vitals via Google PageSpeed) est ACTIVÉE et vérifiée en ligne : la clé PageSpeed est en place, le bouton « Mesurer » renvoie de vraies mesures (score, LCP, stabilité, réactivité) par page et par appareil, reprises dans le pilier Rapidité. Limite de l'hébergement de test (plan gratuit, coupure ~10 s) : une mesure peut être « trop longue » et demander un second clic ; fluide sur l'hébergement final. Reste du confort : mesure automatique planifiée et historique des mesures.",
     goal:"Une vraie mesure de vitesse et de référencement, mise à jour automatiquement.",
     cost:"Gratuit.", note:"",
     steps:["Utiliser l'outil de mesure gratuit de Google.","Mesurer les pages clés automatiquement, à intervalle régulier.","Traduire les scores en langage clair, avec une action par point."],

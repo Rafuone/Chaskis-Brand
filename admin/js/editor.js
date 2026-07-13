@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.22.0" };
+const ADMIN_BUILD = { version: "0.22.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1206,7 +1206,10 @@ function toggleVersionPin(id){ const v=versions.find(x=>x.id===id); if(!v) retur
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.22.0", cur:true, date:"2026-07-09", title:"Versions : recherche et épinglage de l'historique", items:[
+  { v:"v0.22.1", cur:true, date:"2026-07-13", title:"Publication : compatibilité élargie des clés d'accès", items:[
+    {t:"fix", x:"La publication accepte désormais les deux formats de clé d'accès GitHub (classique et fine-grained) et tolère un espace collé par erreur, pour éviter les échecs d'authentification au moment de l'activation"}
+  ]},
+  { v:"v0.22.0", date:"2026-07-09", title:"Versions : recherche et épinglage de l'historique", items:[
     {t:"add", x:"Une recherche dans tout l'historique des versions (par mot, auteur ou date) pour retrouver rapidement une version précise"},
     {t:"add", x:"La possibilité d'épingler les versions clés (stables ou performantes) : un filtre « Épinglées » les regroupe pour ne jamais les perdre de vue"}
   ]},
@@ -1675,7 +1678,7 @@ function renderTech(){ const tabs=document.getElementById("techTabs"), body=docu
   refreshIcons();
 }
 function techEsc(s){ return escHtml(String(s==null?"":s)); }
-const TECH_UPDATED="9 juillet 2026";
+const TECH_UPDATED="13 juillet 2026";
 const TECH_EFF_LBL={S:"Rapide",M:"Moyen",L:"Long"};
 const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Arthur",calendly:"Paul",auth:"Youcef",perf:"Arthur",media:"Arthur",chatbot:"Youcef"};
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};

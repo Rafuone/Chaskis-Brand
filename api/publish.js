@@ -61,7 +61,9 @@ async function gh(url, opts, token) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 8000);
   const headers = Object.assign({
-    'Authorization': 'token ' + token,
+    // Bearer fonctionne pour les deux types de PAT GitHub (classic ghp_ ET fine-grained github_pat_) ;
+    // "token " ne marche de façon fiable qu'avec les classiques. On prend donc Bearer partout.
+    'Authorization': 'Bearer ' + token,
     'Accept': 'application/vnd.github+json',
     'User-Agent': 'chaskis-publish',
   }, opts.headers || {});
@@ -90,9 +92,11 @@ module.exports = async function handler(req, res) {
   if (!ok) return send(res, 400, { error: 'schéma invalide', details: errors });
 
   // 4. Config serveur.
-  const token = process.env.GITHUB_TOKEN;
-  const repo = process.env.GITHUB_REPO;
-  const branch = process.env.GITHUB_BRANCH || 'main';
+  // .trim() : un espace ou saut de ligne accidentel collé dans une variable d'env casse
+  // silencieusement l'auth (401) ou l'URL du dépôt (404). On nettoie systématiquement.
+  const token = (process.env.GITHUB_TOKEN || '').trim();
+  const repo = (process.env.GITHUB_REPO || '').trim();
+  const branch = (process.env.GITHUB_BRANCH || 'main').trim();
   if (!token || !repo) return send(res, 500, { error: 'configuration serveur incomplète (GITHUB_TOKEN / GITHUB_REPO)' });
 
   const apiUrl = 'https://api.github.com/repos/' + repo + '/contents/' + CONTENT_PATH;

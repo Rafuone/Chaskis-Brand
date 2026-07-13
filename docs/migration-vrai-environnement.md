@@ -79,6 +79,25 @@ géré par `tools/api-server.js`. C'est de la **configuration, pas du code**.
 settings ») : `PUBLISH_SECRET`, `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` — exactement les
 mêmes que sur Vercel.
 
+## Comptes et services externes : test ≠ définitif
+
+Les comptes créés pour tester (Clerk, Umami, Groq, Calendly…) sont **jetables** : ce ne seront
+pas les comptes finaux, et le **service** lui-même peut changer à l'arrivée sur Azure. Chaque
+service est donc branché **derrière une couture fine** :
+- **Secrets par variables d'environnement** → changer de compte = re-saisir une clé, rien d'autre.
+- **Appels isolés dans un endpoint / adaptateur** → changer de service = remplacer cet adaptateur,
+  sans toucher à l'éditeur, au site, ni au contrat de contenu.
+
+Équivalents Azure-natifs probables pour les versions finales (à privilégier le moment venu) :
+- Auth (test : Clerk) → **Entra ID / Azure AD B2C**, ou l'auth intégrée d'Azure Static Web Apps.
+- Chatbot LLM (test : Groq) → **Azure OpenAI**.
+- Analytics (test : Umami) → **Application Insights** ou un `/api/collect` maison (la mesure sans
+  cookie déjà en place peut l'alimenter).
+- Stockage du contenu (test : dépôt GitHub) → **Azure Repos** (Azure DevOps) ou **Azure Blob**.
+- Rendez-vous (test : Calendly) → Calendly conservé, ou **Microsoft Bookings** (M365).
+
+Règle : **ne jamais coupler dur à un SaaS.** Chaque intégration doit être remplaçable seule.
+
 ## Ce qui garantit la portabilité
 
 - Aucun `package.json`, aucune dépendance npm, aucun build : rien à reconstruire, rien qui

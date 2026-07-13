@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.22.2" };
+const ADMIN_BUILD = { version: "0.22.3" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1206,7 +1206,10 @@ function toggleVersionPin(id){ const v=versions.find(x=>x.id===id); if(!v) retur
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.22.2", cur:true, date:"2026-07-13", title:"Publication : clé mémorisée (une seule saisie)", items:[
+  { v:"v0.22.3", cur:true, date:"2026-07-13", title:"Publication fonctionnelle de bout en bout", items:[
+    {t:"add", x:"Étape majeure : le bouton Publier met réellement le contenu en ligne, testé et prouvé sur l'environnement de test (la modification écrite depuis l'éditeur apparaît bien sur le site, sans toucher au site public)"}
+  ]},
+  { v:"v0.22.2", date:"2026-07-13", title:"Publication : clé mémorisée (une seule saisie)", items:[
     {t:"imp", x:"La clé de publication est désormais mémorisée sur votre appareil : vous ne la saisissez qu'une seule fois, au lieu d'à chaque session. Mesure d'attente : la connexion par compte (à venir) supprimera complètement cette clé"}
   ]},
   { v:"v0.22.1", date:"2026-07-13", title:"Publication : compatibilité élargie des clés d'accès", items:[
@@ -1687,7 +1690,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:70,publish:58,versioning:40,analytics:38,calendly:25,auth:25,perf:52,media:30,chatbot:20};
+const TECH_DONE={host:80,publish:78,versioning:45,analytics:38,calendly:25,auth:25,perf:52,media:30,chatbot:20};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */

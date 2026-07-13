@@ -40,18 +40,16 @@ function safeEqual(a, b) {
 function readJson(req) {
   return new Promise((resolve) => {
     if (req.body && typeof req.body === 'object') return resolve(req.body);
-    let raw = '';
-    let tooBig = false;
-    req.on('data', (c) => {
-      raw += c;
-      if (raw.length > MAX_BODY_BYTES) { tooBig = true; req.destroy(); }
-    });
-    req.on('end', () => {
-      if (tooBig) return resolve({ __error: 'trop volumineux' });
-      if (!raw) return resolve(null);
-      try { resolve(JSON.parse(raw)); } catch (e) { resolve({ __error: 'JSON illisible' }); }
-    });
-    req.on('error', () => resolve({ __error: 'lecture interrompue' }));
+    // Bufferiser en Buffer (pas de `raw += chunk` : ça corromprait un caractère multi-octets
+    // coupé entre deux chunks — ex. accents français). `done` + écoute de 'close' garantissent
+    // que la Promise se résout TOUJOURS, y compris quand on coupe un corps trop gros (req.destroy
+    // n'émet ni 'end' ni 'error').
+    const chunks = []; let size = 0, done = false;
+    const finish = (v) => { if (!done) { done = true; resolve(v); } };
+    req.on('data', (c) => { chunks.push(c); size += c.length; if (size > MAX_BODY_BYTES) { finish({ __error: 'trop volumineux' }); try { req.destroy(); } catch (e) {} } });
+    req.on('end', () => { if (!chunks.length) return finish(null); try { finish(JSON.parse(Buffer.concat(chunks).toString('utf8'))); } catch (e) { finish({ __error: 'JSON illisible' }); } });
+    req.on('error', () => finish({ __error: 'lecture interrompue' }));
+    req.on('close', () => finish({ __error: 'connexion fermée' }));
   });
 }
 
@@ -78,7 +76,7 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'méthode non autorisée' });
 
   // 1. Auth : en-tête Authorization: Bearer <PUBLISH_SECRET>, comparé en temps constant.
-  const secret = process.env.PUBLISH_SECRET;
+  const secret = (process.env.PUBLISH_SECRET || '').trim();
   const auth = req.headers['authorization'] || '';
   const bearer = auth.replace(/^Bearer\s+/i, '');
   if (!secret || !safeEqual(bearer, secret)) return send(res, 401, { error: 'non autorisé' });

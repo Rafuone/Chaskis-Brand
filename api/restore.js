@@ -30,10 +30,12 @@ function safeEqual(a, b) {
 function readJson(req) {
   return new Promise((resolve) => {
     if (req.body && typeof req.body === 'object') return resolve(req.body);
-    let raw = '';
-    req.on('data', (c) => { raw += c; if (raw.length > 4096) req.destroy(); });
-    req.on('end', () => { if (!raw) return resolve(null); try { resolve(JSON.parse(raw)); } catch (e) { resolve({ __error: 'JSON illisible' }); } });
-    req.on('error', () => resolve({ __error: 'lecture interrompue' }));
+    const chunks = []; let size = 0, done = false;
+    const finish = (v) => { if (!done) { done = true; resolve(v); } };
+    req.on('data', (c) => { chunks.push(c); size += c.length; if (size > 4096) { finish({ __error: 'trop volumineux' }); try { req.destroy(); } catch (e) {} } });
+    req.on('end', () => { const raw = Buffer.concat(chunks).toString('utf8'); if (!raw) return finish(null); try { finish(JSON.parse(raw)); } catch (e) { finish({ __error: 'JSON illisible' }); } });
+    req.on('error', () => finish({ __error: 'lecture interrompue' }));
+    req.on('close', () => finish({ __error: 'connexion fermée' }));
   });
 }
 

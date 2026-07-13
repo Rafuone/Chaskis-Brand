@@ -64,9 +64,18 @@ const server = http.createServer(async function (req, res) {
   if (suivi) pathname = '/app.html';
   if (REWRITES[pathname]) pathname = REWRITES[pathname];
 
-  let filePath;
-  try { filePath = path.join(ROOT, decodeURIComponent(pathname)); } catch (e) { filePath = path.join(ROOT, pathname); }
-  if (!filePath.startsWith(ROOT)) { res.statusCode = 403; res.end('forbidden'); return; } // anti path-traversal
+  // Découpage en segments : refuse tout segment caché (.git, .env, dotfiles) ET tout '..'
+  // (commence par '.'), donc aucune traversée possible — y compris via '%2f' ré-injecté par
+  // decodeURIComponent. Confinement re-vérifié AVEC séparateur (pas juste startsWith(ROOT)).
+  let rel;
+  try { rel = decodeURIComponent(pathname); } catch (e) { rel = pathname; }
+  const segments = rel.split('/').filter(Boolean);
+  if (segments.some(function (s) { return s.charAt(0) === '.'; })) {
+    res.statusCode = 404; res.setHeader('Content-Type', 'text/plain; charset=utf-8'); res.end('404 Not Found'); return;
+  }
+  const filePath = path.join(ROOT, ...segments);
+  const rootSep = ROOT.endsWith(path.sep) ? ROOT : ROOT + path.sep;
+  if (filePath !== ROOT && filePath.indexOf(rootSep) !== 0) { res.statusCode = 403; res.end('forbidden'); return; }
 
   fs.stat(filePath, function (err, st) {
     if (err || !st.isFile()) {

@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.23.0" };
+const ADMIN_BUILD = { version: "0.23.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.23.0", cur:true, date:"2026-07-13", title:"Historique et restauration des versions en ligne", items:[
+  { v:"v0.23.1", cur:true, date:"2026-07-13", title:"Renforcement sécurité et fiabilité (revue)", items:[
+    {t:"fix", x:"Publication : la clé d'accès tolère un espace en trop de manière cohérente sur toutes les fonctions (fini le blocage 401 impossible à débloquer)"},
+    {t:"fix", x:"Robustesse serveur : lecture des requêtes corrigée (plus de blocage sur un gros contenu, accents préservés) et serveur de test durci (fichiers internes non exposés)"}
+  ]},
+  { v:"v0.23.0", date:"2026-07-13", title:"Historique et restauration des versions en ligne", items:[
     {t:"add", x:"La page Versions affiche l'historique réel de vos publications (chaque mise en ligne = une version datée), avec un bouton « Restaurer » pour revenir à une version précédente en un clic"},
     {t:"add", x:"Rien n'est jamais perdu : restaurer crée une nouvelle version, on peut donc toujours revenir en avant"}
   ]},
@@ -3189,9 +3193,6 @@ document.getElementById("specModal").addEventListener("click",(e)=>{ if(e.target
 
 /* publish */
 const pubBg=document.getElementById("pubModalBg");
-/* Clé de publication : mesure d'attente avant l'auth Clerk. Le PUBLISH_SECRET
-   (le meme que dans Vercel) est saisi une fois et gardé en sessionStorage (effacé
-   à la fermeture du navigateur), jamais en dur dans un fichier servi. */
 const PUBKEY_SS="chaskis_publish_key";
 /* Mesure d'attente avant l'auth Clerk : la clé est mémorisée sur cet appareil (localStorage),
    à ne saisir qu'une seule fois. Le futur système de connexion (Clerk) la remplacera. */
@@ -3236,7 +3237,7 @@ async function publishNow(){
     else if(res.status===501){ publishVersion(); pubBg.classList.remove("show"); toast("La mise en ligne se teste sur le site en ligne, pas dans cet aperçu local. Version enregistrée en local."); }
     else { toast("Publication indisponible pour le moment (code "+res.status+")."); }
   }catch(e){
-    publishVersion(); pubBg.classList.remove("show"); toast("Mise en ligne impossible depuis cet aperçu local (c'est normal). Sur le site en ligne, elle fonctionnera. Version enregistrée en local.");
+    publishVersion(); pubBg.classList.remove("show"); toast("Publication impossible pour le moment (réseau ou serveur injoignable). Réessayez. La version est enregistrée en local.");
   } finally { if(btn){ btn.disabled=false; btn.innerHTML=orig; } }
 }
 document.getElementById("pubExport").addEventListener("click",()=>{

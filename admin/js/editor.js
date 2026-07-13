@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.22.3" };
+const ADMIN_BUILD = { version: "0.23.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -103,6 +103,7 @@ let versions = loadVersions();
 let currentLang = "fr";
 let _verPreview = null;
 let verQuery = "", verPinnedOnly = false;
+let _onlineVer = null, _onlineVerLoaded = false, _onlineVerErr = null;
 
 function loadDraft(){ try{ const r=JSON.parse(localStorage.getItem(STORE_KEY)); if(r) return Object.assign(blankDraft(), r); }catch(e){} return blankDraft(); }
 function loadVersions(){ try{ const r=JSON.parse(localStorage.getItem(VERS_KEY)); if(Array.isArray(r)&&r.length) return r; }catch(e){} return JSON.parse(JSON.stringify(SEED_VERSIONS)); }
@@ -1163,7 +1164,7 @@ function humanChanges(dr){ const c=changeCount(dr), parts=[];
   if(dr.pricing) parts.push("Tarifs du simulateur mis à jour");
   if(dr.lists && Object.keys(dr.lists).length) parts.push("Points de listes modifiés");
   return parts.length?parts:["Petites retouches"]; }
-function renderVersions(){ const vl=document.getElementById("versionList"); if(!vl) return; vl.className="vtl"; vl.innerHTML="";
+function renderVersions(){ renderVersionsOnline(); const vl=document.getElementById("versionList"); if(!vl) return; vl.className="vtl"; vl.innerHTML="";
   const c=changeCount(draft);
   const q=(verQuery||"").trim().toLowerCase(), filtering=(!!q||verPinnedOnly);
   // Tête « brouillon » : c'est l'état courant (pas une version de l'historique), affiché hors filtre uniquement.
@@ -1193,6 +1194,59 @@ function renderVersions(){ const vl=document.getElementById("versionList"); if(!
   refreshIcons();
 }
 function toggleVersionPin(id){ const v=versions.find(x=>x.id===id); if(!v) return; v.pinned=!v.pinned; saveVersions(); toast(v.pinned?"Version épinglée":"Épingle retirée"); renderVersions(); }
+/* Historique RÉEL des publications (commits de site-content.json), lu via /api/history.
+   Repli silencieux : sans clé, ou si l'endpoint n'existe pas (aperçu local, non déployé),
+   le panneau se masque et seule la chronologie locale ci-dessous reste (démo intacte). */
+function fetchOnlineVersions(cb){
+  const key=getStoredPublishKey();
+  if(!key){ _onlineVer=null; _onlineVerLoaded=true; _onlineVerErr="nokey"; if(cb) cb(); return; }
+  fetch("/api/history",{ headers:{ "Authorization":"Bearer "+key }, cache:"no-store" })
+    .then(r=>r.ok?r.json():Promise.reject(r.status))
+    .then(d=>{ _onlineVer=(d&&d.versions)||[]; _onlineVerLoaded=true; _onlineVerErr=null; if(cb) cb(); })
+    .catch(err=>{ _onlineVer=null; _onlineVerLoaded=true; _onlineVerErr=String(err); if(cb) cb(); });
+}
+function renderVersionsOnline(forceReload){
+  const w=document.getElementById("versionsOnline"); if(!w) return;
+  if(!getStoredPublishKey()){ w.style.display="none"; w.innerHTML=""; return; }
+  if(!_onlineVerLoaded || forceReload){
+    w.style.display=""; w.innerHTML='<div class="pan-head"><h4><span class="hic teal"><i data-lucide="globe"></i></span> Versions publiées en ligne</h4></div><p class="hint" style="margin:0">Chargement de l\'historique…</p>'; refreshIcons();
+    fetchOnlineVersions(()=>paintOnlineVersions(w)); return;
+  }
+  paintOnlineVersions(w);
+}
+function paintOnlineVersions(w){
+  const list=_onlineVerErr?[]:(_onlineVer||[]);
+  if(!list.length){ w.style.display="none"; w.innerHTML=""; return; }
+  w.style.display="";
+  const rows=list.map(function(v,i){
+    const cur=(i===0);
+    let dt="—"; try{ if(v.date) dt=new Date(v.date).toLocaleString("fr-CH",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}); }catch(e){}
+    let msg=(v.message||"").replace(/^publish\s+/i,"").replace(/^restore\s+/i,"retour à ");
+    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 2px;border-top:1px solid #EEF0EE;font-size:14px">'
+      +'<span style="min-width:152px;color:var(--muted,#6b6f6b);font-size:13px">'+escHtml(dt)+'</span>'
+      +'<span style="flex:1;min-width:120px">'+escHtml(msg||v.shortSha||"")+(cur?' <span class="vtl-badge live" style="margin-left:4px">en ligne</span>':'')+'<span style="color:var(--muted,#8a8c89);font-size:12px"> · '+escHtml(v.author||"")+'</span></span>'
+      +(cur?'':'<button class="btn ghost sm" data-restore-sha="'+escHtml(v.sha||"")+'"><i data-lucide="rotate-ccw"></i>Restaurer</button>')
+      +'</div>';
+  }).join("");
+  w.innerHTML='<div class="pan-head"><h4><span class="hic teal"><i data-lucide="globe"></i></span> Versions publiées en ligne</h4><span class="hint" style="margin:0">l\'historique réel de vos mises en ligne</span></div><div>'+rows+'</div>';
+  w.querySelectorAll("[data-restore-sha]").forEach(b=>b.addEventListener("click",()=>restoreOnlineVersion(b.getAttribute("data-restore-sha"))));
+  refreshIcons();
+}
+function restoreOnlineVersion(sha){
+  if(!sha) return;
+  if(!confirm("Restaurer cette version ? Le site public reviendra à cet état. Une nouvelle version est créée, rien n'est perdu (on peut revenir en avant).")) return;
+  const key=getStoredPublishKey(); if(!key){ toast("Clé de publication requise."); return; }
+  toast("Restauration en cours…");
+  fetch("/api/restore",{ method:"POST", headers:{ "Authorization":"Bearer "+key, "Content-Type":"application/json" }, body:JSON.stringify({sha:sha}) })
+    .then(r=>r.json().then(d=>({s:r.status,d:d})).catch(()=>({s:r.status,d:{}})))
+    .then(o=>{
+      if(o.s===200){ toast("Version restaurée. Le site revient à cet état dans une minute environ."); renderVersionsOnline(true); }
+      else if(o.s===401){ setStoredPublishKey(""); toast("Clé refusée. Ressaisissez-la à la prochaine publication."); }
+      else if(o.s===409){ toast("Quelqu'un vient de publier. Rechargez, puis réessayez."); }
+      else { toast("Restauration impossible ("+((o.d&&o.d.error)||o.s)+")."); }
+    })
+    .catch(()=>toast("Restauration impossible depuis cet aperçu (à faire sur le site en ligne)."));
+}
 (function wireVersionTools(){
   const s=document.getElementById("verSearch"); if(s) s.addEventListener("input",function(){ verQuery=s.value||""; renderVersions(); });
   const pf=document.getElementById("verPinFilter"); if(pf) pf.addEventListener("click",function(){ verPinnedOnly=!verPinnedOnly; pf.style.background=verPinnedOnly?"#E1F5EE":""; pf.style.color=verPinnedOnly?"#0F6E56":""; renderVersions(); });
@@ -1206,7 +1260,11 @@ function toggleVersionPin(id){ const v=versions.find(x=>x.id===id); if(!v) retur
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.22.3", cur:true, date:"2026-07-13", title:"Publication fonctionnelle de bout en bout", items:[
+  { v:"v0.23.0", cur:true, date:"2026-07-13", title:"Historique et restauration des versions en ligne", items:[
+    {t:"add", x:"La page Versions affiche l'historique réel de vos publications (chaque mise en ligne = une version datée), avec un bouton « Restaurer » pour revenir à une version précédente en un clic"},
+    {t:"add", x:"Rien n'est jamais perdu : restaurer crée une nouvelle version, on peut donc toujours revenir en avant"}
+  ]},
+  { v:"v0.22.3", date:"2026-07-13", title:"Publication fonctionnelle de bout en bout", items:[
     {t:"add", x:"Étape majeure : le bouton Publier met réellement le contenu en ligne, testé et prouvé sur l'environnement de test (la modification écrite depuis l'éditeur apparaît bien sur le site, sans toucher au site public)"}
   ]},
   { v:"v0.22.2", date:"2026-07-13", title:"Publication : clé mémorisée (une seule saisie)", items:[
@@ -1508,7 +1566,7 @@ const PROGRESS=[
   {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.11.0",recent:["Édition multi-pages","Coach de contenu","Contenus structurés"]},
   {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.1",recent:["Badge « actuellement masquée » sur les sections de l'accueil","Rôle de chaque page et section"]},
   {view:"media",name:"Médiathèque",env:"prod",stage:"stable",version:"1.1.0",recent:["Compression et redimensionnement des images à l'import","Confirmation avant suppression d'un média"]},
-  {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.8.0",recent:["Recherche dans l'historique","Épinglage des versions clés","Restauration et aperçu sûrs"]},
+  {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.1.0",recent:["Bac à test basé sur les vraies sources","Affichage sécurisé"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
@@ -1690,7 +1748,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:80,publish:78,versioning:45,analytics:38,calendly:25,auth:25,perf:52,media:30,chatbot:20};
+const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:25,auth:25,perf:52,media:30,chatbot:20};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */

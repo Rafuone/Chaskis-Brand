@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.27.3" };
+const ADMIN_BUILD = { version: "0.28.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.27.3", cur:true, date:"2026-07-13", title:"Accessibilité : questions fréquentes (FAQ) annoncées comme dépliables", items:[
+  { v:"v0.28.0", cur:true, date:"2026-07-13", title:"Rendez-vous : réattribution manuelle à un autre commercial", items:[
+    {t:"add", x:"Dans la fiche d'un rendez-vous, un sélecteur « Commercial attribué » permet à l'admin ou au lead commercial de réassigner le rendez-vous à la main, en complément de l'attribution automatique"},
+    {t:"add", x:"Ce choix manuel est mémorisé et RÉ-APPLIQUÉ à chaque synchronisation Calendly : une resynchronisation n'écrase jamais une réattribution faite à la main"}
+  ]},
+  { v:"v0.27.3", date:"2026-07-13", title:"Accessibilité : questions fréquentes (FAQ) annoncées comme dépliables", items:[
     {t:"fix", x:"Les questions fréquentes (accueil, mobilité, postuler) indiquent maintenant leur état ouvert/fermé aux lecteurs d'écran (aria-expanded) : une personne malvoyante sait qu'une question se déplie et si elle est ouverte"}
   ]},
   { v:"v0.27.2", date:"2026-07-13", title:"Accessibilité : navigation clavier (contenu principal et lien d'évitement)", items:[
@@ -1793,7 +1797,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:50,auth:25,perf:56,media:30,chatbot:42};
+const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:55,auth:25,perf:56,media:30,chatbot:42};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -1861,7 +1865,7 @@ const TECH_BRIEF={
     steps:["Lire et indexer vos documents une seule fois, à leur ajout.","À chaque question, retrouver les bons passages et répondre dans le périmètre autorisé.","Garder la version simple actuelle comme filet gratuit.","Plafonner le budget pour éviter toute surprise."],
     src:[{t:"Groq, tarifs",u:"https://groq.com/pricing"},{t:"Upstash Vector, tarifs",u:"https://upstash.com/pricing"}] },
   calendly:{ sum:"Brancher les vrais rendez-vous Calendly dans l'admin.",
-    today:"Le site prend de vrais rendez-vous via le calendrier Calendly embarqué, et l'admin les fait remonter (bouton « Synchroniser Calendly ») dans la liste et « le prochain rendez-vous », attribués automatiquement au commercial disponible. Restent : la réattribution manuelle persistée, les statistiques agrégées réelles, la remontée en temps réel (webhook), et les créneaux du site basés sur la disponibilité combinée des agendas (calendrier agrégé, Phase 2).",
+    today:"Le site prend de vrais rendez-vous via le calendrier Calendly embarqué, et l'admin les fait remonter (bouton « Synchroniser Calendly ») dans la liste et « le prochain rendez-vous », attribués automatiquement au commercial disponible. La réattribution manuelle (persistée) est en place. Restent : les statistiques agrégées réelles, la remontée en temps réel (webhook), et les créneaux du site basés sur la disponibilité combinée des agendas (calendrier agrégé, Phase 2).",
     goal:"La prise de rendez-vous passe par Calendly, et les rendez-vous remontent dans l'admin.",
     cost:"Réservation gratuite, ET lecture des rendez-vous dans l'admin gratuite aussi (l'API de lecture Calendly marche sur le plan gratuit) : 0 CHF pour tester. Seul le temps réel (webhook) demande ~10 CHF/mois, pour une seule page de réservation centrale.",
     note:"Les personnes qui utilisent l'admin ne paient rien. Un seul calendrier central suffit : la redistribution entre commerciaux se fait dans l'admin, donc pas besoin du round-robin de Calendly (qui, lui, coûterait le plan Teams, ~40-48 CHF/mois pour 3 sièges). Tester coûte 0 CHF ; on ne passe au plan payant (~10 CHF/mois) que pour la remontée en temps réel.",
@@ -4140,6 +4144,7 @@ function rdvFicheInner(i){
   const cols='<div class="fiche-cols">'+
     '<div class="fiche-col"><div class="fiche-lbl">Le prospect</div>'+info+'<div class="fiche-acts">'+acts+'</div></div>'+
     '<div class="fiche-col"><div class="fiche-lbl">Votre suivi</div>'+
+      '<div class="fiche-reassign" style="margin-bottom:10px"><label for="dWho" style="display:block;font-size:12px;color:#6b7280;margin:0 0 4px;font-weight:600">Commercial attribué</label><select id="dWho" class="rangesel" style="width:100%">'+rdvOwnersList().map(function(o){return '<option'+(o===r.who?' selected':'')+'>'+escHtml(o)+'</option>';}).join('')+'</select></div>'+
       '<textarea class="dArea" id="dNote" rows="5" placeholder="Compte-rendu de l\'échange, prochaines étapes, devis envoyé…">'+escHtml(r.note||"")+'</textarea>'+
       '<div class="note-foot"><button class="btn" id="dNoteSave">Enregistrer la note</button>'+relInline+'</div>'+
     '</div>'+
@@ -4155,6 +4160,7 @@ function openRdvDrawer(i){
   const ns=d.querySelector("#dNoteSave"); if(ns) ns.onclick=()=>{ rdvData[i].note=d.querySelector("#dNote").value.trim(); saveRdv(); toast("Note enregistrée"); openRdvDrawer(i); };
   const send=d.querySelector("#dRelSend"); if(send) send.onclick=()=>{ rdvData[i].relance={sent:true,date:RDV_TODAY}; saveRdv(); toast("Relance envoyée à "+rdvData[i].client+" (simulé)"); openRdvDrawer(i); };
   const cl=d.querySelector("#dClose"); if(cl) cl.onclick=closeRdvDrawer;
+  const wsel=d.querySelector("#dWho"); if(wsel) wsel.onchange=()=>{ const v=wsel.value; if(!v||v===rdvData[i].who) return; rdvData[i].who=v; rdvData[i].assignedBy="manuel"; if(rdvData[i].calendlyUri) saveRdvOverride(rdvData[i].calendlyUri,{who:v}); else saveRdv(); toast("Rendez-vous réattribué à "+v); renderRdv(); openRdvDrawer(i); };
   renderRdvTable();
 }
 function closeRdvDrawer(){ rdvOpenRow=-1; renderRdvTable(); }
@@ -4203,6 +4209,14 @@ function renderTeam(){
    Les données live sont gardées en mémoire (rafraîchies à chaque synchro / ouverture de
    la vue) ; elles ne remplacent jamais définitivement le jeu de démo dans le code. */
 let rdvLiveOn=false;
+/* Réattribution manuelle persistée : l'admin/lead commercial peut réassigner un RDV à un
+   autre commercial. Pour les RDV Calendly (identifiés par calendlyUri), le choix est stocké
+   à part et RÉ-APPLIQUÉ après chaque synchronisation (sinon la synchro écraserait le choix). */
+const RDV_OVR_KEY="chaskis_rdv_overrides";
+function loadRdvOverrides(){ try{ return JSON.parse(localStorage.getItem(RDV_OVR_KEY))||{}; }catch(e){ return {}; } }
+function saveRdvOverride(uri, patch){ if(!uri) return; try{ const m=loadRdvOverrides(); m[uri]=Object.assign(m[uri]||{}, patch); localStorage.setItem(RDV_OVR_KEY, JSON.stringify(m)); }catch(e){} }
+function applyRdvOverrides(){ const m=loadRdvOverrides(); rdvData.forEach(r=>{ if(r&&r.calendlyUri&&m[r.calendlyUri]) Object.assign(r, m[r.calendlyUri]); }); }
+function rdvOwnersList(){ const s=new Set(["Sarah","Marc","Jean-Christophe"]); rdvData.forEach(r=>{ if(r&&r.who) s.add(r.who); }); return Array.from(s); }
 function syncCalendlyRdv(silent){
   const key=getStoredPublishKey();
   if(!key){ if(!silent) toast("Renseignez d'abord la clé d'accès (via le bouton Publier)."); return; }
@@ -4211,7 +4225,7 @@ function syncCalendlyRdv(silent){
     .then(r=>r.json().then(j=>({status:r.status,j})).catch(()=>({status:r.status,j:null})))
     .then(({status,j})=>{
       if(status===200 && j && j.ok && Array.isArray(j.rdv)){
-        rdvData=j.rdv.map(r=>Object.assign({},r)); rdvLiveOn=true; rdvOpenRow=-1; rdvSel.clear(); rdvPage=1; renderRdv();
+        rdvData=j.rdv.map(r=>Object.assign({},r)); applyRdvOverrides(); rdvLiveOn=true; rdvOpenRow=-1; rdvSel.clear(); rdvPage=1; renderRdv();
         if(!silent){ let m="Rendez-vous synchronisés depuis Calendly ("+j.count+")"; if(j.truncated) m+=" — volume élevé, liste partielle"; toast(m); }
       } else if(status===501){ if(!silent) toast("Calendly pas encore connecté côté serveur — données de démonstration affichées."); }
       else if(status===401){ if(!silent) toast("Accès refusé : vérifiez la clé (bouton Publier)."); }

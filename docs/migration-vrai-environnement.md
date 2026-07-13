@@ -2,10 +2,11 @@
 
 ## En clair (pour Alexandre)
 
-L'hébergement actuel (Vercel + le dépôt GitHub `Rafuone/Chaskis-Brand`) est **temporaire**,
-le temps de prouver que tout fonctionne de bout en bout. **Rien n'est verrouillé à cet
-hébergement** : le code a été écrit exprès pour être déplaçable presque sans effort.
-Ce document liste, pour les devs, le peu qu'il reste à faire pour passer sur le vrai serveur.
+L'hébergement actuel (Vercel + le dépôt GitHub `Rafuone/Chaskis-Brand`) est **un banc d'essai
+temporaire**, le temps de prouver que les outils fonctionnent. **La cible réelle est Azure
+(Azure DevOps / Azure App Service ou Azure Functions), PAS Vercel.** Le code est écrit exprès
+pour être host-agnostic : l'objectif est une intégration Azure en **heures, pas en mois**.
+Ce document liste, pour les devs, le peu qu'il reste à faire.
 
 Principe : **seul l'hébergement est jetable, pas le travail.**
 
@@ -31,12 +32,10 @@ Principe : **seul l'hébergement est jetable, pas le travail.**
 
 1. **Servir le site statique** depuis le vrai host (n'importe quel serveur statique ou CDN).
    Aucun build à lancer, ce sont des fichiers HTML/CSS/JS bruts.
-2. **Faire tourner le dossier `/api`** sur le vrai host :
-   - Vercel / Netlify Functions : tel quel.
-   - Serveur Node maison (Express/Fastify…) : les handlers sont du CommonJS n'utilisant que
-     des modules natifs de Node 18+ (`crypto`, `fetch` global). Monter
-     `module.exports = async (req, res) => …` sur la route `POST /api/publish`.
-     Rien à `npm install`.
+2. **Faire tourner le dossier `/api`** sur le vrai host (voir la section Azure ci-dessous) :
+   les handlers sont du CommonJS Node brut `(req, res)` (modules natifs Node 18+ : `crypto`,
+   `fetch` global), sans dépendance. `tools/api-server.js` les fait DÉJÀ tourner sur un serveur
+   Node nu (testé hors Vercel) — c'est la preuve de portabilité et la base pour Azure App Service.
 3. **Définir les variables d'environnement** côté serveur (jamais côté navigateur) :
    `PUBLISH_SECRET`, puis, selon le stockage choisi, `GITHUB_TOKEN` / `GITHUB_REPO` /
    `GITHUB_BRANCH`.
@@ -55,6 +54,31 @@ Principe : **seul l'hébergement est jetable, pas le travail.**
 6. **Pointer `content.js` sur la bonne URL** de `site-content.json` si elle n'est pas à la
    racine web (une seule ligne : le `fetch('/site-content.json')`).
 
+## Concrètement pour Azure (la cible réelle)
+
+Les Functions ne dépendent QUE de Node (signature `(req,res)`, `fetch`/`crypto` natifs, zéro
+dépendance). Deux chemins :
+
+**Option A — Azure App Service (Node), le plus rapide et recommandé.** `tools/api-server.js` est
+déjà un serveur Node qui sert le statique ET route `/api/<nom>` vers `api/<nom>.js`. Sur App
+Service : déposer le dépôt, ajouter un `package.json` minimal
+(`{ "scripts": { "start": "node tools/api-server.js" } }`, Node 18+), définir les variables
+d'environnement, démarrer. C'est tout. **Handlers inchangés** (testé hors Vercel en local :
+health 200 / auth 401 / validation 400).
+
+**Option B — Azure Functions.** Un mince adaptateur par endpoint (quelques lignes qui passent
+`request` → `(req, res)`) suffit, **sans toucher à la logique** des handlers. L'Option A évite
+même cet adaptateur.
+
+**Le seul vrai « Vercel-isme » = routage + en-têtes.** `vercel.json` (URLs propres + en-têtes
+`no-store` / `X-Robots-Tag` sur `/admin` et `/api`) se retranscrit en `staticwebapp.config.json`
+(Azure Static Web Apps) ou `web.config` / règles URL Rewrite (App Service/IIS) — ou est déjà
+géré par `tools/api-server.js`. C'est de la **configuration, pas du code**.
+
+**Variables d'environnement Azure** (App Service « Configuration » / Functions « Application
+settings ») : `PUBLISH_SECRET`, `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` — exactement les
+mêmes que sur Vercel.
+
 ## Ce qui garantit la portabilité
 
 - Aucun `package.json`, aucune dépendance npm, aucun build : rien à reconstruire, rien qui
@@ -65,12 +89,15 @@ Principe : **seul l'hébergement est jetable, pas le travail.**
 - Les endpoints `/api/*` sont des fonctions isolées et sans état : elles se déplacent une par
   une.
 
-## État au moment de l'écriture (2026-07-08)
+## État au moment de l'écriture (2026-07-13)
 
-- Fait et vérifié en local : contrat + validateur, lecteur `content.js` (câblé sur les 5 pages
-  publiques), Function `api/publish.js` (auth + validation + écriture GitHub, testée par
-  harness mocké), bouton Publier câblé (`publishNow()`, 7 cas d'erreur gérés).
-- En cours : test de bout en bout sur un déploiement **Preview** Vercel (branche
-  `feat/foundation-vercel`), isolé du site de production, avant toute bascule.
-- Non fait (attend un choix / des accès) : le vrai environnement d'hébergement, l'auth Clerk,
-  et les chantiers analytics / perf (PageSpeed) / chatbot / calendly / media.
+- **Prouvé de bout en bout sur le banc d'essai Vercel (Preview)** : publication réelle
+  (`api/publish.js`), historique (`api/history.js`) et restauration (`api/restore.js`) —
+  auth Bearer, validation via le contrat, écriture/lecture GitHub. Le bouton Publier et la
+  vue Versions (historique + restauration) fonctionnent depuis l'admin.
+- **Portabilité prouvée** : `tools/api-server.js` (Node nu, zéro dépendance) fait tourner les
+  `/api` hors Vercel (testé). C'est la base d'intégration Azure App Service.
+- Auth GitHub en `Bearer` + `.trim()` des variables d'env (compatible PAT classic ET
+  fine-grained ; tolère un espace collé par erreur).
+- Non fait (attend un choix / des accès) : la bascule sur Azure, l'auth Clerk (remplace la clé
+  de publication), et les chantiers analytics / perf (PageSpeed) / chatbot / calendly / media.

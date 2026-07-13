@@ -6,24 +6,29 @@
    l'analyse » de la vue Performance parcourt les 5 pages et mesure le référencement
    (titres, meta, données structurées, plan du site), la lisibilité (alt, étiquettes,
    ordre des titres) et le poids. Aucune dépendance externe.
-2. **Core Web Vitals réels (couture, à activer)** — `api/perf.js` mesure la vitesse
-   perçue (LCP, CLS, TBT, score de performance) via Google PageSpeed Insights. C'est la
-   seule mesure que l'audit navigateur ne peut pas faire.
+2. **Core Web Vitals réels (ACTIVÉ)** — `api/perf.js` mesure la vitesse perçue (LCP, CLS,
+   TBT, score de performance) via Google PageSpeed Insights, **plus** les notes Lighthouse
+   Accessibilité / SEO / Bonnes pratiques (même passage). Affiché dans le bloc « Vitesse
+   réelle, mesurée par Google » de la vue Performance (bande des 4 notes + tuiles CWV +
+   historique + reprise auto sur timeout). Le score de vitesse est aussi repris dans le
+   pilier Rapidité quand l'accueil est mesuré.
 
 ## Endpoint `GET /api/perf`
 
 - Paramètres : `url=<page http(s)>`, `strategy=mobile|desktop` (défaut mobile).
 - Auth : `Authorization: Bearer <PUBLISH_SECRET>` (comme les autres endpoints).
-- Réponse : `{ ok, url, strategy, score, metrics:{ lcp, cls, tbt, fcp, si } }`.
-- Sans `PAGESPEED_KEY` → `501` (l'admin garde son estimation).
+- Réponse : `{ ok, url, strategy, score, categories:{ performance, accessibility, seo, bestPractices }, metrics:{ lcp, cls, tbt, fcp, si } }` (`score` = performance, rétrocompat).
+- Sans `PAGESPEED_KEY` → `501` (l'admin garde son estimation). Sans `url` valide → `400`
+  (utile comme sonde « clé active ? » sans consommer de quota PageSpeed).
 
 ## Activer
 
 1. Créer une **clé API Google PageSpeed Insights** (gratuite) :
    https://developers.google.com/speed/docs/insights/v5/get-started
 2. Variable d'environnement de l'hôte : `PAGESPEED_KEY = <la clé>`.
-3. C'est tout côté serveur. (Le branchement d'affichage dans la vue Performance — afficher
-   les CWV réels à côté de l'audit local — est un petit ajout front à faire ensuite.)
+3. C'est tout côté serveur. Sur Vercel, un changement de variable ne prend effet qu'au
+   **prochain déploiement** (pousser un commit ou « Redeploy »). L'affichage front est déjà
+   branché (vue Performance).
 
 ## ⚠️ Timeout — point d'hébergement
 
@@ -38,7 +43,7 @@ hôte au timeout plus large :
 ## Tester en local
 
 ```
-node tools/perf.test.js                                   # 10 tests, sans réseau
+node tools/perf.test.js                                   # 12 tests, sans réseau
 PUBLISH_SECRET=x node tools/api-server.js 3199
 curl -H 'Authorization: Bearer x' 'localhost:3199/api/perf?url=https://chaskis.ch'   # 501 tant que PAGESPEED_KEY absent
 ```

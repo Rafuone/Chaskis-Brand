@@ -17,7 +17,7 @@ async function call(url, headers) { var h = load(); var res = fakeRes(); await h
 (async function () {
   section('extract() — parsing Lighthouse');
   var perf = load();
-  var sample = { lighthouseResult: { categories: { performance: { score: 0.92 } }, audits: {
+  var sample = { lighthouseResult: { categories: { performance: { score: 0.92 }, accessibility: { score: 0.88 }, seo: { score: 1 }, 'best-practices': { score: 0.75 } }, audits: {
     'largest-contentful-paint': { numericValue: 2100, displayValue: '2.1 s' },
     'cumulative-layout-shift': { numericValue: 0.03, displayValue: '0.03' },
     'total-blocking-time': { numericValue: 150, displayValue: '150 ms' },
@@ -26,9 +26,10 @@ async function call(url, headers) { var h = load(); var res = fakeRes(); await h
   } } };
   var e = perf.extract(sample);
   ok(e.score === 92, 'score performance 0.92 -> 92');
+  ok(e.categories.performance === 92 && e.categories.accessibility === 88 && e.categories.seo === 100 && e.categories.bestPractices === 75, 'catégories Lighthouse extraites (perf/a11y/seo/bonnes pratiques)');
   ok(e.metrics.lcp.ms === 2100 && e.metrics.lcp.display === '2.1 s', 'LCP extrait');
   ok(e.metrics.cls.value === 0.03 && e.metrics.tbt.ms === 150, 'CLS + TBT extraits');
-  ok(perf.extract({}).score === null, 'résultat vide -> score null (pas de crash)');
+  ok(perf.extract({}).score === null && perf.extract({}).categories.seo === null, 'résultat vide -> scores null (pas de crash)');
 
   section('Endpoint GET /api/perf');
   var saved = process.env.PUBLISH_SECRET, savedK = process.env.PAGESPEED_KEY;
@@ -50,6 +51,7 @@ async function call(url, headers) { var h = load(); var res = fakeRes(); await h
   global.fetch = realFetch;
   var j = r200.json();
   ok(r200.statusCode === 200 && j.ok && j.score === 92 && j.metrics.lcp.ms === 2100, '200 : CWV réels renvoyés (fetch mocké)');
+  ok(j.categories && j.categories.accessibility === 88 && j.categories.seo === 100, '200 : catégories accessibilité/SEO renvoyées');
   ok(j.strategy === 'mobile' && j.url === 'https://chaskis.ch', 'écho url + strategy');
 
   process.env.PUBLISH_SECRET = saved; if (saved === undefined) delete process.env.PUBLISH_SECRET;

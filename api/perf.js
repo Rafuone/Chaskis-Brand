@@ -39,11 +39,21 @@ function safeEqual(a, b) {
 function extract(j) {
   var lr = (j && j.lighthouseResult) || {};
   var au = lr.audits || {};
-  var cat = (lr.categories && lr.categories.performance) || {};
+  var cats = lr.categories || {};
+  function catScore(k) { var c = cats[k]; return (c && typeof c.score === 'number') ? Math.round(c.score * 100) : null; } // 0..100
   function num(id) { var a = au[id]; return (a && typeof a.numericValue === 'number') ? a.numericValue : null; }
   function disp(id) { var a = au[id]; return (a && a.displayValue) || null; }
   return {
-    score: (typeof cat.score === 'number') ? Math.round(cat.score * 100) : null, // 0..100
+    score: catScore('performance'), // rétrocompat : score = performance
+    // Google (Lighthouse) note quatre domaines dans le même passage. La vitesse (performance)
+    // alimente les tuiles CWV ; accessibilité / SEO / bonnes pratiques donnent l'avis de Google
+    // en complément de l'audit local de l'admin.
+    categories: {
+      performance: catScore('performance'),
+      accessibility: catScore('accessibility'),
+      seo: catScore('seo'),
+      bestPractices: catScore('best-practices'),
+    },
     metrics: {
       lcp: { ms: num('largest-contentful-paint'), display: disp('largest-contentful-paint') },
       cls: { value: num('cumulative-layout-shift'), display: disp('cumulative-layout-shift') },
@@ -78,13 +88,14 @@ module.exports = async function handler(req, res) {
   var ctrl = new AbortController();
   var timer = setTimeout(function () { ctrl.abort(); }, 9000);
   try {
-    var api = PSI + '?url=' + encodeURIComponent(url) + '&strategy=' + strategy + '&category=performance&key=' + encodeURIComponent(key);
+    var cats = ['performance', 'accessibility', 'seo', 'best-practices'];
+    var api = PSI + '?url=' + encodeURIComponent(url) + '&strategy=' + strategy + cats.map(function (c) { return '&category=' + c; }).join('') + '&key=' + encodeURIComponent(key);
     var r = await fetch(api, { signal: ctrl.signal });
     if (r.status === 429) return send(res, 429, { error: 'quota PageSpeed dépassé' });
     if (!r.ok) return send(res, 502, { error: 'PageSpeed a échoué (' + r.status + ')' });
     var j = await r.json();
     var out = extract(j);
-    return send(res, 200, { ok: true, url: url, strategy: strategy, score: out.score, metrics: out.metrics });
+    return send(res, 200, { ok: true, url: url, strategy: strategy, score: out.score, categories: out.categories, metrics: out.metrics });
   } catch (e) {
     var aborted = e && e.name === 'AbortError';
     return send(res, aborted ? 504 : 502, { error: aborted ? 'délai PageSpeed dépassé (mesure trop longue pour le timeout de la fonction)' : 'erreur réseau PageSpeed' });

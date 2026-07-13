@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.32.2" };
+const ADMIN_BUILD = { version: "0.33.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.32.2", cur:true, date:"2026-07-14", title:"Performance : mesure de vitesse Google ACTIVÉE et vérifiée en ligne", items:[
+  { v:"v0.33.0", cur:true, date:"2026-07-14", title:"Performance : Google note aussi accessibilité & SEO, reprise auto et historique", items:[
+    {t:"add", x:"Le bloc « Vitesse réelle » affiche maintenant les QUATRE notes de Google (Lighthouse) : Vitesse, Accessibilité, Référencement (SEO) et Bonnes pratiques — l'avis de Google en complément de l'audit local de l'admin (méthodes différentes, chiffres parfois différents, c'est normal)"},
+    {t:"add", x:"Un historique des mesures Google est mémorisé (score de vitesse + accessibilité + SEO, avec l'évolution d'une mesure à l'autre)"},
+    {t:"imp", x:"Reprise automatique : si Google dépasse le délai de l'hébergement de test, la mesure réessaie toute seule (le 1er passage prépare le résultat) — plus besoin de recliquer dans la plupart des cas"}
+  ]},
+  { v:"v0.32.2", date:"2026-07-14", title:"Performance : mesure de vitesse Google ACTIVÉE et vérifiée en ligne", items:[
     {t:"add", x:"La clé Google PageSpeed est en place : le bouton « Mesurer » renvoie désormais de VRAIES mesures Core Web Vitals de votre site, vérifiées en direct sur la préversion (score de vitesse, affichage du contenu, stabilité, réactivité)"},
     {t:"imp", x:"À savoir sur l'hébergement de test (plan gratuit) : une mesure peut afficher « trop longue » car Google prend souvent plus de 10 s — recliquez « Mesurer » et le résultat réel s'affiche (Google le garde en cache un court instant). Ce sera fluide sur l'hébergement final. Les scores PageSpeed varient d'un passage à l'autre, c'est normal"}
   ]},
@@ -1662,7 +1667,7 @@ const PROGRESS=[
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.5.0",recent:["« Terminer » archive et télécharge le compte-rendu","Découverte guidée et simulateur d'offre"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.7.0",recent:["Vraie mesure d'audience sans cookie (cet appareil)","Plage de dates personnalisée fonctionnelle"]},
-  {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.9.2",recent:["Mesure de vitesse Google activée et vérifiée en ligne (clé PageSpeed)","Vraies mesures Core Web Vitals affichées, reprises dans le pilier Rapidité","Audit réel enrichi (référencement, lisibilité, contenu, poids)"]},
+  {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.10.0",recent:["Google note aussi Accessibilité, SEO et Bonnes pratiques (en plus de la vitesse)","Historique des mesures Google + reprise automatique si l'hébergement de test coupe","Vraies mesures Core Web Vitals activées et reprises dans le pilier Rapidité"]},
   {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.5.0",recent:["Précisions du concours affichées","Alerte si stockage plein"]},
   {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.6.2",recent:["Libellé de rôle corrigé"]},
   {view:"progress",name:"Avancement",env:"preprod",stage:"beta",version:"0.4.0",recent:["Vrai pourcentage d'avancement de l'interface"]}
@@ -1839,7 +1844,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:55,auth:25,perf:72,media:30,chatbot:75};
+const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:55,auth:25,perf:76,media:30,chatbot:75};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -1894,7 +1899,7 @@ const TECH_BRIEF={
     steps:["Ajouter un petit outil de mesure sans cookie sur toutes les pages.","Repérer d'où viennent les visiteurs (liens, réseaux, recherche).","Brancher la page Statistiques sur ces vraies données.","Ajouter une ligne dans la politique de confidentialité."],
     src:[{t:"Umami, tarifs",u:"https://umami.is/pricing"},{t:"Plausible, tarifs",u:"https://plausible.io/#pricing"}] },
   perf:{ sum:"Mesurer pour de vrai la vitesse et le référencement du site.",
-    today:"Le référencement, la lisibilité et le contenu sont mesurés pour de vrai dans l'admin (bouton « Relancer l'analyse », sans outil externe). La vitesse fine (Core Web Vitals via Google PageSpeed) est ACTIVÉE et vérifiée en ligne : la clé PageSpeed est en place, le bouton « Mesurer » renvoie de vraies mesures (score, LCP, stabilité, réactivité) par page et par appareil, reprises dans le pilier Rapidité. Limite de l'hébergement de test (plan gratuit, coupure ~10 s) : une mesure peut être « trop longue » et demander un second clic ; fluide sur l'hébergement final. Reste du confort : mesure automatique planifiée et historique des mesures.",
+    today:"Le référencement, la lisibilité et le contenu sont mesurés pour de vrai dans l'admin (bouton « Relancer l'analyse », sans outil externe). La vitesse fine (Core Web Vitals via Google PageSpeed) est ACTIVÉE et vérifiée en ligne : le bouton « Mesurer » renvoie les vraies mesures (score, LCP, stabilité, réactivité) plus les quatre notes Google (Vitesse, Accessibilité, SEO, Bonnes pratiques), par page et par appareil, avec historique et reprise automatique si l'hébergement de test coupe. Limite de l'hébergement de test (plan gratuit, coupure ~10 s) : un 1er passage prépare la mesure, un second clic peut être nécessaire ; fluide sur l'hébergement final. Reste du confort : mesure automatique planifiée à intervalle régulier.",
     goal:"Une vraie mesure de vitesse et de référencement, mise à jour automatiquement.",
     cost:"Gratuit.", note:"",
     steps:["Utiliser l'outil de mesure gratuit de Google.","Mesurer les pages clés automatiquement, à intervalle régulier.","Traduire les scores en langage clair, avec une action par point."],
@@ -2433,6 +2438,19 @@ const CWV_METRICS=[
   {k:"fcp", plain:"Premier affichage", tech:"FCP", hint:"Temps avant le tout premier élément visible."},
   {k:"si", plain:"Vitesse d'affichage globale", tech:"Speed Index", hint:"Rapidité de remplissage visuel de la page."}
 ];
+/* Les 4 domaines notés par Google (Lighthouse) dans le même passage — l'avis de Google,
+   en complément de l'audit local de l'admin (méthodes différentes, chiffres différents). */
+const CWV_CATS=[
+  {k:"performance", plain:"Vitesse"},
+  {k:"accessibility", plain:"Accessibilité"},
+  {k:"seo", plain:"Référencement"},
+  {k:"bestPractices", plain:"Bonnes pratiques"}
+];
+const PERF_CWV_HIST_KEY="chaskis_perf_cwv_hist";
+function cwvHistory(){ try{ var h=JSON.parse(localStorage.getItem(PERF_CWV_HIST_KEY)); return Array.isArray(h)?h:[]; }catch(e){ return []; } }
+function cwvPushHistory(c){ if(!c||c.status!=="ok") return; var cat=c.categories||{};
+  var h=cwvHistory(); h.unshift({at:c.at, page:c.page, label:c.label, strategy:c.strategy, score:(c.score!=null?c.score:null), a11y:(cat.accessibility!=null?cat.accessibility:null), seo:(cat.seo!=null?cat.seo:null)});
+  h=h.slice(0,10); try{ localStorage.setItem(PERF_CWV_HIST_KEY,JSON.stringify(h)); }catch(e){} }
 function cwvStat(k,v){ if(v==null||!isFinite(v)) return "warn"; var t=CWV_TH[k]; if(!t) return "warn"; return v<=t.g?"good":(v<=t.w?"warn":"bad"); }
 function cwvVal(metrics,k){ var m=(metrics&&metrics[k])||{}; var num=(k==="cls")?m.value:m.ms; if(num==null||!isFinite(num)) return {num:null,disp:"–"};
   var disp=m.display; if(!disp){ disp=(k==="cls")?String(Math.round(num*100)/100):(num>=1000?(Math.round(num/100)/10+" s"):(Math.round(num)+" ms")); } return {num:num,disp:disp}; }
@@ -2445,6 +2463,17 @@ function wirePerfCwv(){ if(perfCwvWired) return; perfCwvWired=true;
   if(seg){ seg.querySelectorAll("button[data-s]").forEach(function(b){ b.addEventListener("click",function(){ cwvStrategy=b.dataset.s; seg.querySelectorAll("button").forEach(function(x){ x.classList.toggle("on",x===b); }); }); }); }
   var btn=document.getElementById("perfCwvRun"); if(btn) btn.addEventListener("click",cwvMeasure);
 }
+function cwvDelay(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+async function cwvOneFetch(url,key){
+  var res=await fetch("/api/perf?url="+encodeURIComponent(url)+"&strategy="+encodeURIComponent(cwvStrategy),{ headers:{ "Authorization":"Bearer "+key }, cache:"no-store" });
+  var data=null; try{ data=await res.json(); }catch(e){}
+  if(res.ok&&data&&data.ok) return {status:"ok", score:data.score, categories:data.categories, metrics:data.metrics};
+  if(res.status===501) return {status:"not-activated"};
+  if(res.status===401) return {status:"bad-key"};
+  if(res.status===429) return {status:"quota"};
+  if(res.status===504) return {status:"timeout"};
+  return {status:"error", msg:(data&&data.error)||("échec de la mesure ("+res.status+")")};
+}
 async function cwvMeasure(){
   var btn=document.getElementById("perfCwvRun");
   var key=getStoredPublishKey();
@@ -2452,33 +2481,33 @@ async function cwvMeasure(){
   var lbl=(PERF_PAGES.filter(function(p){ return p.file===page; })[0]||{}).label||page;
   if(!key){ perfCwv={status:"need-key", page:page, label:lbl, strategy:cwvStrategy, at:Date.now()}; persistCwv(); renderPerfCwv(); toast("Clé de publication requise (page Publier) pour mesurer la vitesse."); return; }
   if(btn){ if(btn.dataset.busy==="1") return; btn.dataset.busy="1"; btn.disabled=true; btn.innerHTML='<i data-lucide="loader-2"></i>Mesure en cours…'; refreshIcons(); }
-  perfCwv={status:"measuring", page:page, label:lbl, strategy:cwvStrategy, at:Date.now()}; renderPerfCwv();
-  var url=location.origin+"/"+page, out;
-  try{
-    var res=await fetch("/api/perf?url="+encodeURIComponent(url)+"&strategy="+encodeURIComponent(cwvStrategy),{ headers:{ "Authorization":"Bearer "+key }, cache:"no-store" });
-    var data=null; try{ data=await res.json(); }catch(e){}
-    if(res.ok&&data&&data.ok){ out={status:"ok", score:data.score, metrics:data.metrics}; }
-    else if(res.status===501){ out={status:"not-activated"}; }
-    else if(res.status===401){ out={status:"bad-key"}; }
-    else if(res.status===429){ out={status:"quota"}; }
-    else if(res.status===504){ out={status:"timeout"}; }
-    else{ out={status:"error", msg:(data&&data.error)||("échec de la mesure ("+res.status+")")}; }
-  }catch(e){ out={status:"error", msg:"réseau indisponible"}; }
+  /* Le 1er passage « amorce » souvent le cache Google (délai dépassé sur hébergement de test) ;
+     un 2e/3e essai dans la foulée récupère le résultat en cache. On reprend AUTOMATIQUEMENT
+     sur un délai dépassé pour éviter à l'utilisateur de recliquer. Seul le timeout est réessayé. */
+  var url=location.origin+"/"+page, out=null, maxTries=3;
+  for(var attempt=1; attempt<=maxTries; attempt++){
+    perfCwv={status:"measuring", page:page, label:lbl, strategy:cwvStrategy, at:Date.now(), attempt:attempt, maxTries:maxTries}; renderPerfCwv();
+    try{ out=await cwvOneFetch(url,key); }catch(e){ out={status:"error", msg:"réseau indisponible"}; }
+    if(out.status!=="timeout") break;      // seul un délai dépassé justifie une reprise
+    if(attempt<maxTries) await cwvDelay(1800);
+  }
   out.at=Date.now(); out.page=page; out.label=lbl; out.strategy=cwvStrategy; out.url=url;
   perfCwv=out; persistCwv();
+  if(out.status==="ok") cwvPushHistory(out);
   if(btn){ btn.dataset.busy="0"; btn.disabled=false; btn.innerHTML='<i data-lucide="gauge"></i>Mesurer'; refreshIcons(); }
   renderPerfPillars(); renderPerfCwv();
   if(out.status==="ok") toast("Vitesse mesurée : "+lbl+" ("+(cwvStrategy==="mobile"?"mobile":"ordinateur")+")");
   else if(out.status==="not-activated") toast("Mesure Google non activée (clé PageSpeed manquante) — estimation locale conservée.");
+  else if(out.status==="timeout") toast("Google a dépassé le délai de l'hébergement de test. Recliquez « Mesurer ».");
 }
 function cwvNote(icon,html,tone){ var t=tone||"info"; return '<div class="cwv-msg cwv-'+t+'"><i data-lucide="'+icon+'"></i><div>'+html+'</div></div>'; }
 function renderPerfCwv(){ var w=document.getElementById("perfCwv"); if(!w) return; var c=perfCwv;
   if(!c||!c.status){ w.innerHTML=cwvNote("gauge",'Cliquez <b>« Mesurer »</b> pour obtenir la vitesse réelle d\'une page, mesurée par Google (Core Web Vitals). Nécessite une clé PageSpeed gratuite côté hébergement — sinon l\'estimation locale ci-dessus reste votre référence.'); refreshIcons(); return; }
-  if(c.status==="measuring"){ w.innerHTML=cwvNote("loader-2",'Mesure de <b>'+escHtml(c.label||"")+'</b> en cours… Google analyse la page ('+(c.strategy==="mobile"?"mobile":"ordinateur")+'). Cela peut prendre plusieurs secondes.'); refreshIcons(); return; }
+  if(c.status==="measuring"){ var att=(c.attempt&&c.attempt>1)?(' <b>(nouvelle tentative '+c.attempt+'/'+(c.maxTries||3)+')</b>'):''; w.innerHTML=cwvNote("loader-2",'Mesure de <b>'+escHtml(c.label||"")+'</b> en cours…'+att+' Google analyse la page ('+(c.strategy==="mobile"?"mobile":"ordinateur")+'). Cela peut prendre plusieurs secondes.'); refreshIcons(); return; }
   if(c.status==="need-key"){ w.innerHTML=cwvNote("key-round",'Une <b>clé de publication</b> est nécessaire pour lancer la mesure (elle protège votre quota Google). Renseignez-la depuis le bouton <b>Publier</b>, puis revenez ici.',"warn"); refreshIcons(); return; }
   if(c.status==="bad-key"){ w.innerHTML=cwvNote("key-round",'La clé de publication n\'a pas été acceptée par le serveur. Vérifiez-la depuis le bouton <b>Publier</b>.',"warn"); refreshIcons(); return; }
   if(c.status==="not-activated"){ w.innerHTML=cwvNote("info",'La <b>mesure de vitesse Google</b> n\'est pas encore activée : il manque une clé PageSpeed (gratuite) côté hébergement. Tant qu\'elle n\'est pas là, l\'<b>estimation locale ci-dessus</b> reste votre référence. Une fois la clé ajoutée, cliquez « Mesurer ».'); refreshIcons(); return; }
-  if(c.status==="timeout"){ w.innerHTML=cwvNote("clock",'La mesure a pris trop de temps pour l\'hébergement actuel (le plan de test coupe vite). Réessayez, ou attendez la bascule vers l\'hébergement final où la limite est plus large.',"warn"); refreshIcons(); return; }
+  if(c.status==="timeout"){ w.innerHTML=cwvNote("clock",'Google a pris trop de temps pour l\'hébergement de test (plan gratuit, coupure ~10 s) — <b>plusieurs tentatives automatiques</b> ont déjà été faites. Le 1er passage prépare la mesure : <b>recliquez « Mesurer »</b> et le résultat s\'affiche généralement. Ce sera fluide sur l\'hébergement final.',"warn"); refreshIcons(); return; }
   if(c.status==="quota"){ w.innerHTML=cwvNote("info",'Le quota gratuit Google PageSpeed est momentanément atteint. Réessayez dans quelques minutes.',"warn"); refreshIcons(); return; }
   if(c.status==="error"){ w.innerHTML=cwvNote("triangle-alert",'La mesure n\'a pas abouti ('+escHtml(c.msg||"erreur")+'). L\'estimation locale ci-dessus reste affichée.',"warn"); refreshIcons(); return; }
   /* status ok */
@@ -2491,7 +2520,24 @@ function renderPerfCwv(){ var w=document.getElementById("perfCwv"); if(!w) retur
   var tiles=CWV_METRICS.map(function(mt){ var v=cwvVal(c.metrics,mt.k); var s=pfStat(v.num!=null?cwvStat(mt.k,v.num):"warn"); if(v.num==null) s=PF_C.warn;
     return '<div class="cwv-tile"><div class="cwv-tile-top"><span class="cwv-dot" style="background:'+s.c+'"></span><span class="cwv-tile-k">'+mt.plain+'<span class="cwv-tile-tech"> · '+mt.tech+'</span></span></div>'
       +'<div class="cwv-tile-v" style="color:'+s.c+'">'+escHtml(v.disp)+'</div><div class="cwv-tile-hint">'+mt.hint+'</div></div>'; }).join("");
-  w.innerHTML=head+'<div class="cwv-grid">'+tiles+'</div>'; refreshIcons();
+  w.innerHTML=head+cwvCatsHtml(c.categories)+'<div class="cwv-grid">'+tiles+'</div>'+cwvHistHtml(); refreshIcons();
+}
+/* Bande des 4 notes Google (Lighthouse) — l'avis de Google, distinct de l'audit local de l'admin. */
+function cwvCatsHtml(categories){ if(!categories) return '';
+  var any=CWV_CATS.some(function(cat){ return categories[cat.k]!=null; }); if(!any) return '';
+  var cells=CWV_CATS.map(function(cat){ var sc=categories[cat.k]; var b=pfScore(sc!=null?sc:0);
+    var ring=(sc!=null)?perfRing(sc,42,b.c,4):'<div class="pring" style="width:42px;height:42px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:800">–</div>';
+    return '<div class="cwv-cat">'+ring+'<span class="cwv-cat-k">'+cat.plain+'</span></div>'; }).join("");
+  return '<div class="cwv-cats-wrap"><div class="cwv-cats-h">Notes Google (Lighthouse) · l\'avis de Google, en complément de l\'audit local ci-dessus</div><div class="cwv-cats">'+cells+'</div></div>';
+}
+/* Historique des mesures Google mémorisées (score de vitesse + accessibilité + SEO). */
+function cwvHistHtml(){ var h=cwvHistory(); if(h.length<2) return '';
+  var rows=h.slice(0,6).map(function(e,i){ var prev=h[i+1]; var d=(prev&&e.score!=null&&prev.score!=null)?(e.score-prev.score):0; var darr=d>0?("+"+d):(d<0?String(d):"="); var dc=d>0?"#0E7D48":(d<0?"#B23B3B":"#8a8c89");
+    var dt=""; try{ dt=new Date(e.at).toLocaleString("fr-CH",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}); }catch(x){}
+    return '<div class="cwv-hist-row"><span class="cwv-hist-dt">'+escHtml(dt)+'</span><span class="cwv-hist-pg">'+escHtml(e.label||e.page||"")+' · '+(e.strategy==="mobile"?"mob.":"ord.")+'</span>'
+      +'<span class="cwv-hist-sc">'+(e.score!=null?e.score:"–")+'<small>/100</small></span><span class="cwv-hist-d" style="color:'+dc+'">'+darr+'</span>'
+      +'<span class="cwv-hist-cats">Acc. '+(e.a11y!=null?e.a11y:"–")+' · SEO '+(e.seo!=null?e.seo:"–")+'</span></div>'; }).join("");
+  return '<div class="cwv-hist"><div class="cwv-hist-h"><i data-lucide="history"></i>Historique des mesures Google <span class="hint" style="margin:0">'+h.length+' enregistrée'+(h.length>1?"s":"")+'</span></div>'+rows+'</div>';
 }
 const PF_MARKS=[["Critique",0],["À surveiller",40],["Correct",60],["Bon",80]];
 function renderPerfVerdict(overall){ const w=document.getElementById("perfVerdict"); if(!w) return;

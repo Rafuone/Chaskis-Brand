@@ -18,9 +18,25 @@
 var rag = require('./_lib/rag');
 var llm = require('./_lib/llm');
 var KB = require('./_data/kb.json');
+var fs = require('fs');
+var path = require('path');
 
 var MAX_Q = 500;              // longueur max d'une question (anti-abus, coût LLM borné)
 var MAX_BODY_BYTES = 16 * 1024;
+
+var SC_PATH = path.join(__dirname, '..', 'site-content.json');
+var INDEX = null;            // index RAG (rebâti quand site-content.json change)
+var _scCache = null, _scMtime = -1;
+// Lit site-content.json avec un cache invalidé au CHANGEMENT DE FICHIER (mtime), au lieu de
+// require() qui garde une version en cache à vie. Rend le code host-agnostique : sur un hôte
+// PERSISTANT (Azure App Service), une nouvelle publication est prise en compte SANS redémarrage.
+function siteContent() {
+  try {
+    var st = fs.statSync(SC_PATH);
+    if (st.mtimeMs !== _scMtime) { _scCache = JSON.parse(fs.readFileSync(SC_PATH, 'utf8')); _scMtime = st.mtimeMs; INDEX = null; }
+  } catch (e) { if (_scCache === null) _scCache = {}; }
+  return _scCache || {};
+}
 
 var FALLBACK = {
   fr: "Je n'ai pas la réponse exacte ici. Écrivez-nous à hello@chaskis.ch ou appelez le +41 22 700 01 27, on vous répond vite.",
@@ -53,8 +69,7 @@ function readJson(req) {
 // Silencieux si le fichier ou la grille est absent : le KB statique prend le relais.
 function pricingPassages() {
   var out = [];
-  var sc;
-  try { sc = require('../site-content.json'); } catch (e) { return out; }
+  var sc = siteContent();
   var p = sc && sc.pricing;
   if (!p) return out;
   var parts = [];
@@ -95,11 +110,9 @@ function loadPassages() {
   return sourcePassages().concat(pricingPassages()).concat(base);
 }
 
-// Index construit une fois par instance (module chargé une fois = cache chaud). Sur un
-// redéploiement (nouvelle publication), le module est rechargé, donc l'index se rebâtit
-// avec le contenu à jour.
-var INDEX = null;
-function getIndex() { if (!INDEX) INDEX = rag.buildIndex(loadPassages()); return INDEX; }
+// Index RAG construit à la demande. siteContent() le remet à null si site-content.json a
+// changé (mtime) -> il se rebâtit avec le contenu à jour, même sur un hôte persistant.
+function getIndex() { siteContent(); if (!INDEX) INDEX = rag.buildIndex(loadPassages()); return INDEX; }
 
 // Réglages de l'assistant configurés dans l'admin et PUBLIÉS via site-content.json
 // (sujets interdits, ton, repli, instructions, nom du bot). Silencieux si absent : le
@@ -108,10 +121,8 @@ function getIndex() { if (!INDEX) INDEX = rag.buildIndex(loadPassages()); return
 var TEST_CFG = null; // injection réservée aux tests (tools/chat.test.js) ; jamais utilisée en prod
 function chatbotConfig() {
   if (TEST_CFG) return TEST_CFG;
-  try {
-    var sc = require('../site-content.json');
-    return (sc && sc.chatbot && typeof sc.chatbot === 'object' && !Array.isArray(sc.chatbot)) ? sc.chatbot : {};
-  } catch (e) { return {}; }
+  var sc = siteContent();
+  return (sc && sc.chatbot && typeof sc.chatbot === 'object' && !Array.isArray(sc.chatbot)) ? sc.chatbot : {};
 }
 
 // Un sujet est "interdit" si un de ses mots significatifs (≥4 lettres) apparaît dans la

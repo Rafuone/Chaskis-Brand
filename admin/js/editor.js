@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.31.1" };
+const ADMIN_BUILD = { version: "0.31.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.31.1", cur:true, date:"2026-07-13", title:"Sécurité & fiabilité (revue de code adversariale)", items:[
+  { v:"v0.31.2", cur:true, date:"2026-07-13", title:"Nettoyage technique (suite de la revue)", items:[
+    {t:"imp", x:"Fiabilité serveur : le chatbot prend en compte une nouvelle publication sans redémarrage même sur un hébergement permanent (utile pour la future bascule Azure)"},
+    {t:"imp", x:"Nettoyage : réglage « sujets autorisés » retiré du fichier publié (il n'était pas utilisé en ligne, restait indicatif dans l'admin) ; duplication interne des textes traduits documentée pour vos développeurs"}
+  ]},
+  { v:"v0.31.1", date:"2026-07-13", title:"Sécurité & fiabilité (revue de code adversariale)", items:[
     {t:"fix", x:"Faille corrigée : un nom/société saisi dans une réservation Calendly ne peut plus exécuter de code en s'affichant dans l'admin (échappement renforcé côté affichage + nettoyage côté serveur). C'était le point le plus important"},
     {t:"fix", x:"Le filtre de sujets interdits ne bloque plus une question légitime qui contient juste un mot commun (ex. « clients ») : il faut désormais tous les mots du sujet interdit"},
     {t:"fix", x:"Les vrais rendez-vous synchronisés ne remplacent plus les données de démonstration au rechargement (la démo reste intacte)"},
@@ -3175,12 +3179,19 @@ function buildSiteContent(){
   try{ const pr=getPricing(); if(pr&&typeof pr==="object"){ const P={}; ["days","tiers","zones","flexMonthly","flexIncluded","express","promos"].forEach(function(k){ if(pr[k]!==undefined) P[k]=pr[k]; }); out.pricing=P; } }catch(e){}
   const t=(draft&&draft.text)?draft.text:{}; const i18n={};
   ["fr","en"].forEach(function(lg){ if(t[lg]&&Object.keys(t[lg]).length) i18n[lg]=JSON.parse(JSON.stringify(t[lg])); });
+  // NB (optimisation d'échelle connue) : les clés i18n éditées sont partagées (elles
+  // s'appliquent à toutes les pages), donc on recopie le MÊME dictionnaire dans les 6 pages.
+  // Aujourd'hui le dictionnaire est petit (impact négligeable face au plafond 300 Ko). Si un
+  // jour tout le site est traduit, publier le bloc UNE fois (ex. out.i18n racine) et adapter
+  // le lecteur assets/js/content.js pour le lire là — évite l'inflation ×6.
   if(Object.keys(i18n).length){ out.pages={}; ["accueil","mobilite","recrutement","commander","suivi","dashboard"].forEach(function(pk){ out.pages[pk]={ i18n:JSON.parse(JSON.stringify(i18n)) }; }); }
   // Réglages de l'assistant (chantier chatbot) : uniquement la CONFIG (pas les sources/documents,
   // qui ne doivent pas fuir dans le JSON public). Lu par api/chat.js après publication.
   try{ if(typeof chat==="object"&&chat){ const C={};
     if(Array.isArray(chat.forbidden)&&chat.forbidden.length) C.forbidden=chat.forbidden.map(String);
-    if(Array.isArray(chat.allowed)&&chat.allowed.length) C.allowed=chat.allowed.map(String);
+    // chat.allowed n'est PAS publié : il resterait du code mort côté bot (non imposé comme
+    // filtre dur pour éviter le sur-blocage). Le périmètre en ligne = récupération + sujets
+    // interdits + prompt. La liste « sujets autorisés » de l'admin reste indicative.
     ["tone","length","fallback","botName","address","emojiLevel","defaultLang","uncertain"].forEach(function(k){ if(typeof chat[k]==="string"&&chat[k].trim()) C[k]=chat[k]; });
     if(typeof chat.instr==="string"&&chat.instr.trim()) C.instructions=chat.instr;
     // Base de connaissances : on publie le TEXTE des sources (borné en taille) pour que le bot

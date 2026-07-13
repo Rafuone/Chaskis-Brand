@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.32.0" };
+const ADMIN_BUILD = { version: "0.32.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.32.0", cur:true, date:"2026-07-14", title:"Performance : la vitesse réelle de Google s'affiche dans l'admin", items:[
+  { v:"v0.32.1", cur:true, date:"2026-07-14", title:"Performance : le pilier Rapidité reprend la vraie mesure Google", items:[
+    {t:"imp", x:"Quand vous mesurez la vitesse réelle de l'accueil, le pilier « Rapidité » en haut affiche directement les vraies valeurs de Google (affichage du contenu principal, stabilité, réactivité) au lieu de la mention « mesure à venir » : le pilier et le bloc « Vitesse réelle » disent maintenant la même chose"}
+  ]},
+  { v:"v0.32.0", date:"2026-07-14", title:"Performance : la vitesse réelle de Google s'affiche dans l'admin", items:[
     {t:"add", x:"La page Performance affiche un nouveau bloc « Vitesse réelle, mesurée par Google » (Core Web Vitals : affichage du contenu principal, stabilité de la page, réactivité aux clics). Choisissez une page, « Mobile » ou « Ordinateur », puis cliquez « Mesurer » : les vraies mesures de Google apparaissent, traduites en langage clair et colorées selon les seuils officiels"},
     {t:"imp", x:"Sans clé Google PageSpeed, rien ne casse : le bloc l'indique honnêtement et votre estimation locale (référencement, lisibilité, poids) reste la référence. La dernière mesure est mémorisée d'une visite à l'autre ; une mesure trop longue pour l'hébergement de test est signalée clairement"}
   ]},
@@ -1655,7 +1658,7 @@ const PROGRESS=[
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.5.0",recent:["« Terminer » archive et télécharge le compte-rendu","Découverte guidée et simulateur d'offre"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.7.0",recent:["Vraie mesure d'audience sans cookie (cet appareil)","Plage de dates personnalisée fonctionnelle"]},
-  {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.9.0",recent:["Vitesse réelle mesurée par Google (Core Web Vitals) affichée dans l'admin","Audit réel enrichi (mobile, adresse canonique, partage réseaux)","Historique daté des analyses"]},
+  {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.9.1",recent:["Vitesse réelle mesurée par Google (Core Web Vitals) affichée dans l'admin","Le pilier Rapidité reprend la vraie mesure Google une fois l'accueil analysé","Audit réel enrichi (mobile, adresse canonique, partage réseaux)"]},
   {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.5.0",recent:["Précisions du concours affichées","Alerte si stockage plein"]},
   {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.6.2",recent:["Libellé de rôle corrigé"]},
   {view:"progress",name:"Avancement",env:"preprod",stage:"beta",version:"0.4.0",recent:["Vrai pourcentage d'avancement de l'interface"]}
@@ -2460,7 +2463,7 @@ async function cwvMeasure(){
   out.at=Date.now(); out.page=page; out.label=lbl; out.strategy=cwvStrategy; out.url=url;
   perfCwv=out; persistCwv();
   if(btn){ btn.dataset.busy="0"; btn.disabled=false; btn.innerHTML='<i data-lucide="gauge"></i>Mesurer'; refreshIcons(); }
-  renderPerfCwv();
+  renderPerfPillars(); renderPerfCwv();
   if(out.status==="ok") toast("Vitesse mesurée : "+lbl+" ("+(cwvStrategy==="mobile"?"mobile":"ordinateur")+")");
   else if(out.status==="not-activated") toast("Mesure Google non activée (clé PageSpeed manquante) — estimation locale conservée.");
 }
@@ -2502,14 +2505,34 @@ function renderPerfVerdict(overall){ const w=document.getElementById("perfVerdic
       +scaleDesc.map(function(bd,j){ const on=bd.w===b.w; var dot=''; if(on){ var mx=(j<scaleDesc.length-1?scaleDesc[j+1].min:100); var fr=(mx>bd.min)?(overall-bd.min)/(mx-bd.min):0.5; fr=Math.max(0.1,Math.min(0.9,fr)); dot='<span class="pv-step-dot" style="background:'+bd.c+';left:'+(fr*100).toFixed(1)+'%"></span>'; } return '<div class="pv-step'+(on?" on":" dim")+'" style="background:'+(on?bd.c:bd.bg)+'">'+dot+'</div>'; }).join("")
       +'</div><div class="pv-scale-lbls">'+scaleDesc.map(bd=>'<span'+(bd.w===b.w?' class="on" style="color:'+bd.c+'"':'')+'>'+bd.w+'</span>').join("")+'</div></div></div>';
 }
+/* Quand une mesure Google réelle existe pour l'accueil, elle remplace la ligne
+   « Vitesse ressentie » estimée du pilier Rapidité par les vraies valeurs (LCP / CLS
+   / TBT), pour que le pilier et le bloc « Vitesse réelle » ci-dessous soient cohérents.
+   Clone défensif : ne mute jamais PERF_PILLARS / perfLive. */
+function cwvPatchSpeedDetail(detail){
+  var c=(typeof perfCwv!=="undefined"&&perfCwv&&perfCwv.status==="ok"&&perfCwv.page==="index.html")?perfCwv:null;
+  if(!c) return (detail||[]);
+  /* on retire les lignes de vitesse estimées (démo : LCP/INP/CLS/TTFB ; audit local :
+     « Vitesse ressentie ») pour les remplacer par la vraie mesure Google, sans doublon.
+     On garde les lignes que Google ne couvre pas (poids, nombre d'éléments). */
+  var DROP_TECH={"LCP":1,"INP":1,"CLS":1,"TTFB":1,"LCP / INP / CLS":1};
+  var kept=(detail||[]).filter(function(d){ return d.k!=="Vitesse ressentie" && !DROP_TECH[d.tech]; });
+  var lcp=cwvVal(c.metrics,"lcp"), cls=cwvVal(c.metrics,"cls"), tbt=cwvVal(c.metrics,"tbt");
+  return kept.concat([
+    {k:"Affichage du contenu principal", tech:"LCP · Google", v:lcp.disp, st:cwvStat("lcp",lcp.num)},
+    {k:"Stabilité de la page", tech:"CLS · Google", v:cls.disp, st:cwvStat("cls",cls.num)},
+    {k:"Réactivité (temps de blocage)", tech:"TBT · Google", v:tbt.disp, st:cwvStat("tbt",tbt.num)}
+  ]);
+}
 function renderPerfPillars(){ const w=document.getElementById("perfPillars"); if(!w) return; w.innerHTML="";
   perfPillars().forEach(p=>{ const b=pfScore(p.score); const el=document.createElement("div"); el.className="pcard";
+    const detail=(p.key==="speed")?cwvPatchSpeedDetail(p.detail):p.detail;
     el.innerHTML='<div class="pcard-top"><span class="pcard-ic" style="background:'+b.bg+';color:'+b.c+'"><i data-lucide="'+p.icon+'"></i></span><span class="pcard-t">'+p.title+'</span>'+perfRing(p.score,36,b.c,4)+'</div>'
       +'<div class="pcard-plain">'+p.plain+'</div>'
       +'<span class="pf-pill pcard-pill" style="color:'+b.c+';background:'+b.bg+'">'+b.w+'</span>'
       +'<div class="pcard-benefit">'+p.benefit+'</div>'
       +'<button type="button" class="pcard-toggle">Voir le détail technique <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>'
-      +'<div class="pcard-detail">'+p.detail.map(d=>{ const ds=pfStat(d.st); return '<div class="pdet-row"><span class="pdet-dot" style="background:'+ds.c+'"></span><span class="pd-k">'+d.k+'<span class="pd-tech"> · '+d.tech+'</span></span><span class="pd-v" style="color:'+ds.c+'">'+d.v+'</span></div>'; }).join("")+'</div>';
+      +'<div class="pcard-detail">'+detail.map(d=>{ const ds=pfStat(d.st); return '<div class="pdet-row"><span class="pdet-dot" style="background:'+ds.c+'"></span><span class="pd-k">'+d.k+'<span class="pd-tech"> · '+d.tech+'</span></span><span class="pd-v" style="color:'+ds.c+'">'+d.v+'</span></div>'; }).join("")+'</div>';
     el.querySelector(".pcard-toggle").addEventListener("click",()=>el.classList.toggle("open"));
     w.appendChild(el); }); }
 function renderPerfActions(){ const w=document.getElementById("perfActions"); if(!w) return; const hint=document.getElementById("perfActionsHint");

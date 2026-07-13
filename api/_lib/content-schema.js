@@ -30,9 +30,11 @@ const LANG_KEYS = ['fr', 'en', 'de', 'it'];
 // Cles autorisees dans pricing : miroir de DEFAULT_PRICING (admin/js/editor.js).
 const PRICING_KEYS = ['days', 'tiers', 'zones', 'flexMonthly', 'flexIncluded', 'express', 'promos'];
 
-// Cles autorisees dans chatbot : REGLAGES de l'assistant (chantier chatbot). Pas de
-// sources/documents ici (ils ne doivent pas fuir dans le JSON public) : uniquement la
-// configuration textuelle. `forbidden`/`allowed` sont des tableaux de libelles de sujets.
+// Cles autorisees dans chatbot : REGLAGES de l'assistant + base de connaissances publiee.
+// `forbidden`/`allowed` = tableaux de libelles de sujets. `sources` = base de connaissances
+// que le bot LIT depuis ce fichier PUBLIC (assets/js/content.js et api/chat.js le lisent) :
+// donc le texte des sources EST public. Ne pas y mettre de PII/documents confidentiels ; un
+// stockage prive (Blob) serait requis pour ca. Volontairement borne en taille cote editeur.
 const CHATBOT_KEYS = ['forbidden', 'allowed', 'tone', 'length', 'fallback', 'botName', 'instructions', 'address', 'emojiLevel', 'defaultLang', 'uncertain', 'sources'];
 // Cles autorisees pour un element de chatbot.sources (base de connaissances publiee).
 const CHATBOT_SOURCE_KEYS = ['title', 'tags', 'text'];

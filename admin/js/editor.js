@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.31.0" };
+const ADMIN_BUILD = { version: "0.31.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,14 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.31.0", cur:true, date:"2026-07-13", title:"Chatbot : intelligence artificielle ACTIVÉE et vérifiée en ligne", items:[
+  { v:"v0.31.1", cur:true, date:"2026-07-13", title:"Sécurité & fiabilité (revue de code adversariale)", items:[
+    {t:"fix", x:"Faille corrigée : un nom/société saisi dans une réservation Calendly ne peut plus exécuter de code en s'affichant dans l'admin (échappement renforcé côté affichage + nettoyage côté serveur). C'était le point le plus important"},
+    {t:"fix", x:"Le filtre de sujets interdits ne bloque plus une question légitime qui contient juste un mot commun (ex. « clients ») : il faut désormais tous les mots du sujet interdit"},
+    {t:"fix", x:"Les vrais rendez-vous synchronisés ne remplacent plus les données de démonstration au rechargement (la démo reste intacte)"},
+    {t:"fix", x:"Le message de repli personnalisé est bien utilisé par l'IA quand elle ne peut pas répondre ; le bot ne divulgue plus les codes promo en clair"},
+    {t:"imp", x:"Transparence : avertissement clair dans la page Chatbot indiquant que le texte des sources est publié publiquement (ne pas y mettre de données confidentielles)"}
+  ]},
+  { v:"v0.31.0", date:"2026-07-13", title:"Chatbot : intelligence artificielle ACTIVÉE et vérifiée en ligne", items:[
     {t:"add", x:"L'assistant répond désormais avec une vraie IA (réponses rédigées, naturelles, en français et en anglais), ancrée sur votre contenu — vérifié en direct sur la préversion"},
     {t:"add", x:"Périmètre confirmé à l'usage : les questions hors sujet (culture générale) et les tentatives de détournement sont refusées et redirigées vers le contact — et ne coûtent rien (déviées avant l'IA)"},
     {t:"imp", x:"Coût maîtrisé : palier gratuit, réponses plafonnées, et repli automatique sans coupure si l'IA est indisponible"}
@@ -1277,7 +1284,7 @@ const RELEASE_LOG=[
   ]},
   { v:"v0.29.0", date:"2026-07-13", title:"Chatbot : vos réglages pilotent l'assistant en ligne", items:[
     {t:"add", x:"Les réglages de l'assistant (sujets interdits, message de repli, ton, nom, instructions) définis dans l'admin sont désormais PUBLIÉS avec le contenu du site et appliqués par l'assistant en ligne : une question sur un sujet interdit est déviée vers votre message de repli, et le ton/les consignes guident les réponses rédigées"},
-    {t:"add", x:"Transite par le contrat de publication existant (mêmes garde-fous de sécurité : aucune balise, aucune donnée confidentielle ; les documents sources ne sont jamais exposés dans le fichier public)"}
+    {t:"add", x:"Transite par le contrat de publication existant (mêmes garde-fous anti-injection que le reste du contenu). À noter : le texte des sources est publié avec le contenu du site pour que le bot puisse le lire — n'y mettez donc pas de données confidentielles (un stockage privé serait nécessaire pour cela, prévu plus tard)"}
   ]},
   { v:"v0.28.0", date:"2026-07-13", title:"Rendez-vous : réattribution manuelle à un autre commercial", items:[
     {t:"add", x:"Dans la fiche d'un rendez-vous, un sélecteur « Commercial attribué » permet à l'admin ou au lead commercial de réassigner le rendez-vous à la main, en complément de l'attribution automatique"},
@@ -3180,8 +3187,8 @@ function buildSiteContent(){
     // en ligne les utilise. Pas les binaires/gros documents (taille du JSON limitée).
     if(Array.isArray(chat.sources)&&chat.sources.length){
       const S=chat.sources.slice(0,15).map(function(s){
-        const o={ title:String((s&&(s.n||s.title))||"Source") };
-        if(s&&Array.isArray(s.tags)&&s.tags.length) o.tags=s.tags.map(String).slice(0,8);
+        const o={ title:String((s&&(s.n||s.title))||"Source").slice(0,200) };
+        if(s&&Array.isArray(s.tags)&&s.tags.length) o.tags=s.tags.map(function(t){return String(t).slice(0,60);}).slice(0,8);
         const txt=((s&&(typeof s.prev==="string"?s.prev:(typeof s.text==="string"?s.text:"")))||"").trim();
         if(txt) o.text=txt.slice(0,1500);
         return o;
@@ -3631,6 +3638,7 @@ function renderCbUnPager(total,pages,start,count){
 }
 function renderCbSources(){
   const s=document.getElementById("cbSources"); if(!s) return; s.innerHTML="";
+  s.insertAdjacentHTML("beforeend",'<p class="hint" style="margin:0 2px 12px;padding:8px 10px;background:#FBF0DD;border-radius:8px;color:#7A5410;display:flex;gap:8px;align-items:flex-start"><span style="flex-shrink:0">⚠️</span><span>À la publication, le <b>texte</b> de ces sources est inclus dans le contenu public du site (c\'est là que l\'assistant le lit). N\'y mettez pas de données confidentielles (liste clients, tarifs internes, coordonnées…). Un stockage privé sera prévu pour ces cas.</span></p>');
   const cnt=document.getElementById("cbSrcCount"); if(cnt) cnt.textContent=chat.sources.length+" source"+(chat.sources.length>1?"s":"");
   const q=(document.getElementById("cbSrcSearch")?.value||"").toLowerCase().trim();
   const items=chat.sources.map((src,i)=>({src,i})).filter(o=> !q || (o.src.n||"").toLowerCase().includes(q) || (o.src.tags||[]).some(t=>t.toLowerCase().includes(q)));
@@ -3997,7 +4005,10 @@ let rdvData=[
 ];
 /* Persistance des rendez-vous : les changements de statut / relance survivent au rechargement. */
 try{ const _rs=JSON.parse(localStorage.getItem("chaskis_rdv_v1")); if(Array.isArray(_rs)&&_rs.length) rdvData=_rs.filter(r=>r&&typeof r==="object").map(r=>{ if(!RDV_STC[r.st]) r.st="avenir"; return r; }); }catch(e){}
-function saveRdv(){ try{ localStorage.setItem("chaskis_rdv_v1", JSON.stringify(rdvData)); }catch(e){ toast("Stockage plein : changement non enregistré."); } }
+// rdvLiveOn : vrai quand rdvData vient de Calendly (live). On NE persiste alors PAS (sinon
+// un changement de statut/note écraserait le jeu de démo dans localStorage, perdu au reload).
+var rdvLiveOn=false;
+function saveRdv(){ if(rdvLiveOn) return; try{ localStorage.setItem("chaskis_rdv_v1", JSON.stringify(rdvData)); }catch(e){ toast("Stockage plein : changement non enregistré."); } }
 const RDV_PERIODS={
   "7j":{curR:"23-29 juin",prevR:"16-22 juin",chart:{labels:["lun 23","mar 24","mer 25","jeu 26","ven 27","sam 28","dim 29"],vals:[1,2,1,2,1,0,2]}},
   "30j":{curR:"1-30 juin",prevR:"1-31 mai",chart:{labels:["2-8 juin","9-15 juin","16-22 juin","23-30 juin"],vals:[5,7,6,9]}},
@@ -4247,8 +4258,8 @@ function renderTeam(){
    Additif et à repli SÛR : en cas d'absence de clé, d'endpoint non configuré (501) ou
    d'erreur, on NE touche PAS à rdvData -> les données de démo restent affichées.
    Les données live sont gardées en mémoire (rafraîchies à chaque synchro / ouverture de
-   la vue) ; elles ne remplacent jamais définitivement le jeu de démo dans le code. */
-let rdvLiveOn=false;
+   la vue) ; elles ne remplacent jamais définitivement le jeu de démo dans le code.
+   (rdvLiveOn est déclaré plus haut, près de saveRdv, pour garder le garde-fou de persistance.) */
 /* Réattribution manuelle persistée : l'admin/lead commercial peut réassigner un RDV à un
    autre commercial. Pour les RDV Calendly (identifiés par calendlyUri), le choix est stocké
    à part et RÉ-APPLIQUÉ après chaque synchronisation (sinon la synchro écraserait le choix). */
@@ -4296,13 +4307,13 @@ function renderRdv(){
       let cards='<div class="up-card up-next">'+cal(next.day,next.mon,next.time)+
         '<div class="up-body">'+
         '<div class="up-top"><span class="up-tag">Prochain rendez-vous</span>'+(next.sujet?'<span class="up-badge">'+escHtml(next.sujet)+'</span>':'')+'</div>'+
-        '<div class="up-c" title="'+escHtml(next.client)+'">'+next.client+'</div>'+
-        (next.contact?'<div class="up-ct up-ct2" title="'+escHtml(next.contact)+'">'+next.contact+'</div>':'')+
+        '<div class="up-c" title="'+escHtml(next.client)+'">'+escHtml(next.client)+'</div>'+
+        (next.contact?'<div class="up-ct up-ct2" title="'+escHtml(next.contact)+'">'+escHtml(next.contact)+'</div>':'')+
         '<div class="up-foot">'+who(next)+(callBtn?'<div class="up-cta">'+callBtn+'</div>':'')+'</div>'+
         '</div></div>';
       cards+=others.slice(0,10).map(o=>'<div class="up-card">'+cal(o.day,o.mon,o.time)+
         '<div class="up-body">'+
-        '<div class="up-c" title="'+escHtml(o.client)+'">'+o.client+'</div>'+
+        '<div class="up-c" title="'+escHtml(o.client)+'">'+escHtml(o.client)+'</div>'+
         '<div class="up-mid">'+sub(o)+'</div>'+
         '<div class="up-foot">'+who(o)+'</div>'+
         '</div></div>').join("");

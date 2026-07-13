@@ -149,6 +149,8 @@ async function callChat(body, method) {
   ok(chatMod.isForbidden('Quelles sont vos marges internes ?', ['marges internes']) === true, 'isForbidden : sujet interdit détecté');
   ok(chatMod.isForbidden('Quels sont vos tarifs ?', ['marges internes']) === false, 'isForbidden : sujet autorisé non bloqué');
   ok(chatMod.isForbidden('bonjour', []) === false, 'isForbidden : liste vide -> jamais bloqué');
+  ok(chatMod.isForbidden('Comment mes clients passent-ils commande ?', ['Données clients']) === false, 'isForbidden : question légitime avec « clients » NON bloquée (il faut TOUS les mots du sujet)');
+  ok(chatMod.isForbidden('Quelles sont vos données clients ?', ['Données clients']) === true, 'isForbidden : « données clients » (tous les mots) bien bloqué');
 
   delete process.env.LLM_API_KEY; delete process.env.LLM_PROVIDER; // repli/interdit ne passent pas par le LLM
   chatMod._setTestConfig({ forbidden: ['marges'], fallback: 'Repli personnalisé de test.' });

@@ -67,7 +67,9 @@ function pricingPassages() {
     parts.push('Selon le volume mensuel, le tarif par course baisse : ' + p.tiers.map(function (t) { return t.plan + ' ' + t.rate + ' CHF' + (t.max ? (' jusqu\'à ' + t.max + ' courses') : ' au-delà'); }).join(', ') + '.');
   }
   if (Array.isArray(p.promos) && p.promos.length) {
-    parts.push('Codes promo disponibles : ' + p.promos.map(function (c) { return c.code + ' (-' + c.pct + '%)'; }).join(', ') + '.');
+    // On NE divulgue PAS les codes promo littéraux (ils peuvent être ciblés/partenaires) :
+    // le bot mentionne juste qu'il peut en exister, sans les énumérer.
+    parts.push('Des codes promotionnels peuvent s\'appliquer selon les cas ; le prix exact se calcule dans le simulateur de la page Commander.');
   }
   if (!parts.length) return out;
   var text = 'Grille tarifaire actuellement en ligne. ' + parts.join(' ') + ' Le prix exact d\'une course ponctuelle s\'affiche dans le simulateur de la page Commander.';
@@ -116,10 +118,15 @@ function chatbotConfig() {
 // question. Conservateur : on ne dévie que sur un vrai recouvrement de mot.
 function isForbidden(q, forbidden) {
   if (!Array.isArray(forbidden) || !forbidden.length) return false;
-  var qtok = rag.tokenize(q);
-  if (!qtok.length) return false;
+  var qset = Object.create(null);
+  rag.tokenize(q).forEach(function (t) { qset[t] = true; });
   return forbidden.some(function (f) {
-    return rag.tokenize(f).some(function (ft) { return ft.length >= 4 && qtok.indexOf(ft) >= 0; });
+    // On ne dévie que si TOUS les mots significatifs (>=4 lettres) du sujet interdit sont
+    // présents (recouvrement de l'expression), pour ne pas bloquer une question légitime
+    // qui contiendrait juste un mot commun comme « clients ».
+    var ftoks = rag.tokenize(f).filter(function (t) { return t.length >= 4; });
+    if (!ftoks.length) return false;
+    return ftoks.every(function (t) { return qset[t]; });
   });
 }
 
@@ -162,6 +169,11 @@ module.exports = async function handler(req, res) {
     if (typeof cfg.botName === 'string' && cfg.botName.trim()) system += "\nNom de l'assistant : " + cfg.botName.trim() + '.';
     if (typeof cfg.tone === 'string' && cfg.tone.trim()) system += '\nTon souhaité : ' + cfg.tone.trim() + '.';
     if (typeof cfg.instructions === 'string' && cfg.instructions.trim()) system += '\nConsigne : ' + cfg.instructions.trim();
+    // Repli configuré : si l'IA ne peut pas répondre depuis le contexte, elle doit reproduire
+    // EXACTEMENT ce message (respecte le repli personnalisé de l'admin, pas une adresse en dur).
+    system += (lang === 'en'
+      ? "\nIf the answer is not in the context, reply with EXACTLY this message, nothing else: \""
+      : "\nSi la réponse n'est pas dans le contexte, réponds EXACTEMENT ce message, sans rien ajouter : \"") + fallbackMsg + "\"";
     system += "\n\nContexte :\n" + context;
     var out = await llm.generate({ system: system, user: q, maxTokens: 300, timeoutMs: 8000 });
     if (out.ok && out.text) {

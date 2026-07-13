@@ -59,6 +59,13 @@ function statusOf(ev, ts, nowTs) {
   return (ts && ts < nowTs) ? 'honore' : 'avenir';
 }
 
+// Nettoyage défensif d'un champ texte venant de l'invité (donc NON fiable) : retire les
+// caractères de contrôle et borne la longueur. Le rendu admin échappe déjà (escHtml) ;
+// ceci est une 2e barrière contre un futur point d'insertion oublié.
+function clean(s, max) {
+  return String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max || 300);
+}
+
 // Événement + premier invité -> objet RDV (sans 'who' : l'attribution est faite après).
 function toRdv(ev, invitee, nowTs) {
   ev = ev || {};
@@ -71,13 +78,13 @@ function toRdv(ev, invitee, nowTs) {
   var phone = (invitee && invitee.text_reminder_number) || qa(invitee, ['téléphone', 'telephone', 'phone', 'numéro', 'numero', 'tél']);
   return {
     day: p.day, mon: p.mon, time: p.time, ts: p.ts, endTs: pEnd.ts || 0,
-    client: company || (invitee && invitee.name) || ev.name || 'Rendez-vous',
-    contact: (invitee && invitee.name) || '',
-    tel: phone || '',
-    email: (invitee && invitee.email) || '',
-    secteur: secteur || '',
-    volume: volume || '',
-    sujet: ev.name || '',
+    client: clean(company || (invitee && invitee.name) || ev.name || 'Rendez-vous', 160),
+    contact: clean((invitee && invitee.name) || '', 120),
+    tel: clean(phone || '', 40),
+    email: clean((invitee && invitee.email) || '', 160),
+    secteur: clean(secteur || '', 80),
+    volume: clean(volume || '', 60),
+    sujet: clean(ev.name || '', 160),
     mode: loc.mode,
     link: loc.link,
     st: statusOf(ev, p.ts, nowTs),

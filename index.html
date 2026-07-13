@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- ===== SEO ===== -->
-<title>Chaskis : livraison pour les entreprises en Suisse romande, coursiers salariés</title>
+<title>Chaskis : livraison pour entreprises en Suisse romande</title>
 <meta name="description" content="Livraison pro en Suisse romande. 800 coursiers salariés CDI, tarifs fixes dès CHF 8, zéro commission. Express, Flex, Dédié. Genève · Nyon · Lausanne · Riviera.">
 <meta name="keywords" content="livraison Genève, coursier Lausanne, livraison entreprises Suisse romande, livreur professionnel, coursier salarié, livraison express Suisse, service de livraison entreprise, coursier Nyon, livraison Riviera">
 <meta name="author" content="Chaskis SA">
@@ -393,26 +393,26 @@
           </div>
 
           <div class="sim-dark-field">
-            <label class="sim-label" data-i18n="sim.lbl.vol">Livraisons par jour</label>
+            <label class="sim-label" for="simVol" data-i18n="sim.lbl.vol">Livraisons par jour</label>
             <input type="range" class="sim-range" id="simVol" min="1" max="100" value="20">
             <div class="sim-val" id="simVolVal">20 livraisons/jour</div>
           </div>
 
           <!-- MODE : TARIF FIXE -->
           <div class="sim-dark-field sim-mode-fixed">
-            <label class="sim-label" data-i18n="sim.lbl.cost">Coût moyen actuel par course (CHF)</label>
+            <label class="sim-label" for="simCost" data-i18n="sim.lbl.cost">Coût moyen actuel par course (CHF)</label>
             <input type="range" class="sim-range" id="simCost" min="8" max="40" value="20">
             <div class="sim-val" id="simCostVal">CHF 20</div>
           </div>
 
           <!-- MODE : COMMISSION -->
           <div class="sim-dark-field sim-mode-commission" hidden>
-            <label class="sim-label" data-i18n="sim.lbl.basket">Panier moyen (CHF)</label>
+            <label class="sim-label" for="simBasket" data-i18n="sim.lbl.basket">Panier moyen (CHF)</label>
             <input type="range" class="sim-range" id="simBasket" min="15" max="120" step="1" value="55">
             <div class="sim-val" id="simBasketVal">CHF 55</div>
           </div>
           <div class="sim-dark-field sim-mode-commission" hidden>
-            <label class="sim-label" data-i18n="sim.lbl.comm">Commission actuelle (%)</label>
+            <label class="sim-label" for="simComm" data-i18n="sim.lbl.comm">Commission actuelle (%)</label>
             <input type="range" class="sim-range" id="simComm" min="10" max="35" step="1" value="28">
             <div class="sim-val" id="simCommVal">28 %</div>
           </div>

@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.22.1" };
+const ADMIN_BUILD = { version: "0.22.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1206,7 +1206,10 @@ function toggleVersionPin(id){ const v=versions.find(x=>x.id===id); if(!v) retur
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.22.1", cur:true, date:"2026-07-13", title:"Publication : compatibilité élargie des clés d'accès", items:[
+  { v:"v0.22.2", cur:true, date:"2026-07-13", title:"Publication : clé mémorisée (une seule saisie)", items:[
+    {t:"imp", x:"La clé de publication est désormais mémorisée sur votre appareil : vous ne la saisissez qu'une seule fois, au lieu d'à chaque session. Mesure d'attente : la connexion par compte (à venir) supprimera complètement cette clé"}
+  ]},
+  { v:"v0.22.1", date:"2026-07-13", title:"Publication : compatibilité élargie des clés d'accès", items:[
     {t:"fix", x:"La publication accepte désormais les deux formats de clé d'accès GitHub (classique et fine-grained) et tolère un espace collé par erreur, pour éviter les échecs d'authentification au moment de l'activation"}
   ]},
   { v:"v0.22.0", date:"2026-07-09", title:"Versions : recherche et épinglage de l'historique", items:[
@@ -3129,14 +3132,16 @@ const pubBg=document.getElementById("pubModalBg");
    (le meme que dans Vercel) est saisi une fois et gardé en sessionStorage (effacé
    à la fermeture du navigateur), jamais en dur dans un fichier servi. */
 const PUBKEY_SS="chaskis_publish_key";
-function getStoredPublishKey(){ try{ return sessionStorage.getItem(PUBKEY_SS)||""; }catch(e){ return ""; } }
-function setStoredPublishKey(v){ try{ if(v) sessionStorage.setItem(PUBKEY_SS,v); else sessionStorage.removeItem(PUBKEY_SS); }catch(e){} }
+/* Mesure d'attente avant l'auth Clerk : la clé est mémorisée sur cet appareil (localStorage),
+   à ne saisir qu'une seule fois. Le futur système de connexion (Clerk) la remplacera. */
+function getStoredPublishKey(){ try{ return localStorage.getItem(PUBKEY_SS)||sessionStorage.getItem(PUBKEY_SS)||""; }catch(e){ return ""; } }
+function setStoredPublishKey(v){ try{ if(v) localStorage.setItem(PUBKEY_SS,v); else { localStorage.removeItem(PUBKEY_SS); sessionStorage.removeItem(PUBKEY_SS); } }catch(e){} }
 function publishKeySection(){
   const has=!!getStoredPublishKey();
   let h='<div style="margin-top:16px;padding-top:14px;border-top:1px solid #EEF0EE">';
   h+='<div style="font-weight:600;margin-bottom:6px">Mise en ligne automatique</div>';
-  if(has){ h+='<div style="color:var(--muted,#6b6f6b);font-size:14px">Clé de publication enregistrée pour cette session. <button type="button" id="pubKeyForget" style="background:none;border:0;color:var(--teal,#0E9AA0);cursor:pointer;text-decoration:underline;padding:0;font:inherit">changer</button></div>'; }
-  else{ h+='<div style="color:var(--muted,#6b6f6b);font-size:13px;margin-bottom:8px">Collez votre clé de publication (la même que dans Vercel). Elle reste dans ce navigateur le temps de la session. Sans clé, la version est seulement enregistrée en local.</div>'; h+='<input type="password" id="pubKeyInput" placeholder="Clé de publication" autocomplete="off" style="width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #D8DCD8;border-radius:9px;font:inherit">'; }
+  if(has){ h+='<div style="color:var(--muted,#6b6f6b);font-size:14px">Clé de publication mémorisée sur cet appareil. <button type="button" id="pubKeyForget" style="background:none;border:0;color:var(--teal,#0E9AA0);cursor:pointer;text-decoration:underline;padding:0;font:inherit">changer</button></div>'; }
+  else{ h+='<div style="color:var(--muted,#6b6f6b);font-size:13px;margin-bottom:8px">Collez votre clé de publication (la même que dans Vercel). Elle est mémorisée sur cet appareil : à saisir une seule fois. Sans clé, la version est seulement enregistrée en local.</div>'; h+='<input type="password" id="pubKeyInput" placeholder="Clé de publication" autocomplete="off" style="width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid #D8DCD8;border-radius:9px;font:inherit">'; }
   h+='</div>'; return h;
 }
 function openPublish(){

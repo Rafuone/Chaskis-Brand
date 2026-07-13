@@ -28,6 +28,9 @@ img,svg{display:block;max-width:100%}a{text-decoration:none;color:inherit}button
 }
 .ct{max-width:var(--mw);margin:0 auto;padding:0 var(--gut)}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+/* Lien d'évitement : caché, révélé au focus clavier (accessibilité). !important pour
+   surcharger un éventuel .sr-only prioritaire défini plus loin dans la cascade. */
+.sr-only-focusable:focus{position:fixed !important;top:10px !important;left:10px !important;width:auto !important;height:auto !important;clip:auto !important;overflow:visible !important;padding:10px 16px !important;background:#0F6E56 !important;color:#fff !important;border-radius:8px;z-index:10000;font-weight:600;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.25)}
 
 /* ===== BUTTONS ===== */
 .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:12px;font-weight:500;font-size:.92rem;letter-spacing:-.01em;transition:all .4s var(--ease);position:relative;overflow:hidden}

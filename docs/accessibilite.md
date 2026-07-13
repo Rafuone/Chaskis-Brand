@@ -30,14 +30,22 @@ structure DOM des cartes cohérente, 0 erreur console, aucune régression visuel
 - **Mots rotatifs du H1** (mobilité) : `aria-hidden` géré par le rotateur — seul le mot
   affiché est exposé au lecteur d'écran (`assets/js/pages/mobilite.js`).
 
+### Fait (v0.27.2)
+
+- **Landmark `<main id="content">`** ajouté sur index, mobilité, postuler (contenu principal
+  entre la nav et le footer) + **lien d'évitement** clavier `.sr-only-focusable` (« Aller au
+  contenu ») en 1er élément focusable de chaque page. CSS de révélation au focus dans
+  `assets/css/base.css` (`.sr-only-focusable:focus`, `!important` pour surcharger `.sr-only`).
+  Vérifié : main présent, lien = 1er focusable, 0 régression visuelle, 0 erreur console.
+  (Le rendu visuel du lien au focus se déclenche au vrai focus clavier — non capturable en
+  focus programmatique dans un navigateur automatisé, mais la règle CSS est en place.)
+- Cache-buster des assets unifié à `?v=20260713b` sur toutes les pages.
+
 ### Reste à faire
 
 Priorité décroissante :
 
-1. **Landmark `<main id="content">`** autour du contenu principal (index, mobilité,
-   postuler…) + **lien d'évitement** clavier (`sr-only` focusable) vers `#content`.
-   Structurel : aucun sélecteur CSS `body > …` détecté → risque faible, à vérifier au rendu.
-2. **Accordéons FAQ** (index, mobilité, postuler) : `aria-expanded` (basculé par le JS) +
+1. **Accordéons FAQ** (index, mobilité, postuler) : `aria-expanded` (basculé par le JS) +
    `aria-controls` vers le panneau de réponse. Touche le JS d'ouverture des FAQ.
 3. **Rotateur de signature** (mobilité, `.sig-word`) : même traitement `aria-hidden` que le H1.
 4. **Hiérarchie des titres** : mobilité (`<h4>` suivant un `<h2>` → `<h3>`) et index (noms

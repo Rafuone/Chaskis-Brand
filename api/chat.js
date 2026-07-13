@@ -88,6 +88,30 @@ function loadPassages() {
 var INDEX = null;
 function getIndex() { if (!INDEX) INDEX = rag.buildIndex(loadPassages()); return INDEX; }
 
+// Réglages de l'assistant configurés dans l'admin et PUBLIÉS via site-content.json
+// (sujets interdits, ton, repli, instructions, nom du bot). Silencieux si absent : le
+// bot garde son comportement par défaut. Le contenu est validé au moment de la
+// publication (api/_lib/content-schema.js), donc sûr à lire ici.
+var TEST_CFG = null; // injection réservée aux tests (tools/chat.test.js) ; jamais utilisée en prod
+function chatbotConfig() {
+  if (TEST_CFG) return TEST_CFG;
+  try {
+    var sc = require('../site-content.json');
+    return (sc && sc.chatbot && typeof sc.chatbot === 'object' && !Array.isArray(sc.chatbot)) ? sc.chatbot : {};
+  } catch (e) { return {}; }
+}
+
+// Un sujet est "interdit" si un de ses mots significatifs (≥4 lettres) apparaît dans la
+// question. Conservateur : on ne dévie que sur un vrai recouvrement de mot.
+function isForbidden(q, forbidden) {
+  if (!Array.isArray(forbidden) || !forbidden.length) return false;
+  var qtok = rag.tokenize(q);
+  if (!qtok.length) return false;
+  return forbidden.some(function (f) {
+    return rag.tokenize(f).some(function (ft) { return ft.length >= 4 && qtok.indexOf(ft) >= 0; });
+  });
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'méthode non autorisée' });
 
@@ -99,13 +123,22 @@ module.exports = async function handler(req, res) {
   if (!q) return send(res, 400, { error: 'question manquante' });
   if (q.length > MAX_Q) q = q.slice(0, MAX_Q);
 
+  // Réglages publiés par l'admin (repli personnalisé, sujets interdits, ton, instructions).
+  var cfg = chatbotConfig();
+  var fallbackMsg = (typeof cfg.fallback === 'string' && cfg.fallback.trim()) ? cfg.fallback.trim() : FALLBACK[lang];
+
+  // Sujet interdit -> on dévie tout de suite vers le repli (avant toute récupération).
+  if (isForbidden(q, cfg.forbidden)) {
+    return send(res, 200, { ok: true, mode: 'forbidden', answer: fallbackMsg, sources: [], lang: lang });
+  }
+
   var index = getIndex();
   var hits = rag.retrieve(index, q, { lang: lang, topK: 3 });
   var sources = hits.map(function (h) { return { title: h.passage.title, tag: (h.passage.tags || [])[0] || '' }; });
 
   // Aucun passage pertinent -> repli honnête (jamais d'invention).
   if (!hits.length) {
-    return send(res, 200, { ok: true, mode: 'fallback', answer: FALLBACK[lang], sources: [], lang: lang });
+    return send(res, 200, { ok: true, mode: 'fallback', answer: fallbackMsg, sources: [], lang: lang });
   }
 
   // LLM configuré -> génération ancrée. Échec quelconque -> repli extractif (transparent).
@@ -113,8 +146,12 @@ module.exports = async function handler(req, res) {
     var context = hits.map(function (h, i) { return '[' + (i + 1) + '] ' + h.passage.title + '\n' + h.passage.text; }).join('\n\n');
     var system = (lang === 'en'
       ? "You are the Chaskis assistant (B2B delivery and mobility in French-speaking Switzerland). Answer ONLY from the context below, concisely (2 to 4 sentences), in English. If the answer is not in the context, say you don't have it and invite the user to email hello@chaskis.ch. Never invent prices, figures or commitments."
-      : "Tu es l'assistant Chaskis (livraison et mobilité B2B en Suisse romande). Réponds UNIQUEMENT à partir du contexte ci-dessous, de façon concise (2 à 4 phrases), en français. Si la réponse n'est pas dans le contexte, dis que tu ne l'as pas et invite à écrire à hello@chaskis.ch. N'invente jamais de prix, de chiffres ni d'engagements.")
-      + "\n\nContexte :\n" + context;
+      : "Tu es l'assistant Chaskis (livraison et mobilité B2B en Suisse romande). Réponds UNIQUEMENT à partir du contexte ci-dessous, de façon concise (2 à 4 phrases), en français. Si la réponse n'est pas dans le contexte, dis que tu ne l'as pas et invite à écrire à hello@chaskis.ch. N'invente jamais de prix, de chiffres ni d'engagements.");
+    // Consignes de l'admin (ton, nom du bot, instructions) publiées via site-content.json.
+    if (typeof cfg.botName === 'string' && cfg.botName.trim()) system += "\nNom de l'assistant : " + cfg.botName.trim() + '.';
+    if (typeof cfg.tone === 'string' && cfg.tone.trim()) system += '\nTon souhaité : ' + cfg.tone.trim() + '.';
+    if (typeof cfg.instructions === 'string' && cfg.instructions.trim()) system += '\nConsigne : ' + cfg.instructions.trim();
+    system += "\n\nContexte :\n" + context;
     var out = await llm.generate({ system: system, user: q, maxTokens: 400, timeoutMs: 8000 });
     if (out.ok && out.text) {
       return send(res, 200, { ok: true, mode: 'generative', answer: out.text, sources: sources, lang: lang });
@@ -125,3 +162,7 @@ module.exports = async function handler(req, res) {
   var ans = rag.snippet(hits[0].passage.text, q, 320);
   return send(res, 200, { ok: true, mode: 'extractive', answer: ans, sources: sources, lang: lang });
 };
+
+// Exposé pour les tests uniquement.
+module.exports.isForbidden = isForbidden;
+module.exports._setTestConfig = function (c) { TEST_CFG = c; };

@@ -12,6 +12,7 @@ var path = require('path');
 var ROOT = path.resolve(__dirname, '..');
 var rag = require(path.join(ROOT, 'api/_lib/rag'));
 var llm = require(path.join(ROOT, 'api/_lib/llm'));
+var schema = require(path.join(ROOT, 'api/_lib/content-schema'));
 
 var pass = 0, fail = 0;
 function ok(cond, name) { if (cond) { pass++; console.log('  ✓ ' + name); } else { fail++; console.log('  ✗ ' + name); } }
@@ -134,6 +135,30 @@ async function callChat(body, method) {
   delete process.env.LLM_API_KEY; delete process.env.LLM_PROVIDER; delete process.env.LLM_MODEL;
   if (savedKey !== undefined) process.env.LLM_API_KEY = savedKey;
   if (savedProv !== undefined) process.env.LLM_PROVIDER = savedProv;
+
+  // =========================================================================
+  section('Chatbot Phase 2 — réglages admin publiés (schéma + endpoint)');
+  var b = { schemaVersion: 1 };
+  ok(schema.validateContent(Object.assign({}, b, { chatbot: { forbidden: ['marges', 'salaires'], tone: 'pro', fallback: 'Contactez-nous', instructions: 'Reste factuel', botName: 'Assistant' } })).ok, 'schéma : section chatbot valide acceptée');
+  ok(!schema.validateContent(Object.assign({}, b, { chatbot: { forbidden: 'pas-un-tableau' } })).ok, 'schéma : forbidden non-tableau rejeté');
+  ok(!schema.validateContent(Object.assign({}, b, { chatbot: { cleFolle: 'x' } })).ok, 'schéma : clé chatbot inconnue rejetée');
+  ok(!schema.validateContent(Object.assign({}, b, { chatbot: { fallback: '<script>alert(1)</script>' } })).ok, 'schéma : XSS dans un champ chatbot rejeté');
+  ok(!schema.validateContent(Object.assign({}, b, { chatbot: { forbidden: [42] } })).ok, 'schéma : forbidden avec non-chaîne rejeté');
+
+  var chatMod = require(path.join(ROOT, 'api/chat.js'));
+  ok(chatMod.isForbidden('Quelles sont vos marges internes ?', ['marges internes']) === true, 'isForbidden : sujet interdit détecté');
+  ok(chatMod.isForbidden('Quels sont vos tarifs ?', ['marges internes']) === false, 'isForbidden : sujet autorisé non bloqué');
+  ok(chatMod.isForbidden('bonjour', []) === false, 'isForbidden : liste vide -> jamais bloqué');
+
+  delete process.env.LLM_API_KEY; delete process.env.LLM_PROVIDER; // repli/interdit ne passent pas par le LLM
+  chatMod._setTestConfig({ forbidden: ['marges'], fallback: 'Repli personnalisé de test.' });
+  var rForb = fakeRes(); await chatMod(fakeReq('POST', { question: 'Quelles sont vos marges ?', lang: 'fr' }), rForb);
+  ok(rForb.statusCode === 200 && rForb.json().mode === 'forbidden' && rForb.json().answer === 'Repli personnalisé de test.', 'endpoint : sujet interdit -> mode forbidden + repli personnalisé');
+  var rFb = fakeRes(); await chatMod(fakeReq('POST', { question: 'zzzz xyzzy quux', lang: 'fr' }), rFb);
+  ok(rFb.json().mode === 'fallback' && rFb.json().answer === 'Repli personnalisé de test.', 'endpoint : repli personnalisé utilisé pour une question hors-sujet');
+  var rOk = fakeRes(); await chatMod(fakeReq('POST', { question: 'Quels sont vos tarifs ?', lang: 'fr' }), rOk);
+  ok(rOk.json().mode === 'extractive' && rOk.json().answer.length > 0, 'endpoint : question autorisée répond normalement malgré la config');
+  chatMod._setTestConfig(null);
 
   // =========================================================================
   console.log('\n' + (fail === 0 ? '✅' : '❌') + ' ' + pass + ' réussis, ' + fail + ' échoués');

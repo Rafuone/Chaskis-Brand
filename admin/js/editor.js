@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.28.0" };
+const ADMIN_BUILD = { version: "0.29.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.28.0", cur:true, date:"2026-07-13", title:"Rendez-vous : réattribution manuelle à un autre commercial", items:[
+  { v:"v0.29.0", cur:true, date:"2026-07-13", title:"Chatbot : vos réglages pilotent l'assistant en ligne", items:[
+    {t:"add", x:"Les réglages de l'assistant (sujets interdits, message de repli, ton, nom, instructions) définis dans l'admin sont désormais PUBLIÉS avec le contenu du site et appliqués par l'assistant en ligne : une question sur un sujet interdit est déviée vers votre message de repli, et le ton/les consignes guident les réponses rédigées"},
+    {t:"add", x:"Transite par le contrat de publication existant (mêmes garde-fous de sécurité : aucune balise, aucune donnée confidentielle ; les documents sources ne sont jamais exposés dans le fichier public)"}
+  ]},
+  { v:"v0.28.0", date:"2026-07-13", title:"Rendez-vous : réattribution manuelle à un autre commercial", items:[
     {t:"add", x:"Dans la fiche d'un rendez-vous, un sélecteur « Commercial attribué » permet à l'admin ou au lead commercial de réassigner le rendez-vous à la main, en complément de l'attribution automatique"},
     {t:"add", x:"Ce choix manuel est mémorisé et RÉ-APPLIQUÉ à chaque synchronisation Calendly : une resynchronisation n'écrase jamais une réattribution faite à la main"}
   ]},
@@ -1780,7 +1784,7 @@ const TECH_AUDIT=[
   {n:"Lecteur de fichier : pagination d'un document", fn:()=>fvPaginate("a\n\nb\n\nc").length>=1},
   {n:"Environnement dev/prod cohérent", fn:()=>{ const e=getEnv(); return e==="dev"||e==="prod"; }},
   {n:"Performance : l'analyse réelle est prête", fn:()=>typeof perfAnalyzeReal==="function"&&typeof perfBuildModel==="function"&&typeof perfAuditDoc==="function"},
-  {n:"Publication : le fichier à publier respecte le contrat", fn:()=>{ const c=buildSiteContent(); if(!c||c.schemaVersion!==1) return false; const allow=["schemaVersion","version","updatedAt","updatedBy","pricing","testimonials","logos","pages"]; if(Object.keys(c).some(k=>allow.indexOf(k)<0)) return false; if(c.pricing){ const pk=["days","tiers","zones","flexMonthly","flexIncluded","express","promos"]; if(Object.keys(c.pricing).some(k=>pk.indexOf(k)<0)) return false; } if(c.pages){ const ok=["accueil","mobilite","recrutement","commander","suivi","dashboard"]; if(Object.keys(c.pages).some(k=>ok.indexOf(k)<0)) return false; } return true; }}
+  {n:"Publication : le fichier à publier respecte le contrat", fn:()=>{ const c=buildSiteContent(); if(!c||c.schemaVersion!==1) return false; const allow=["schemaVersion","version","updatedAt","updatedBy","pricing","testimonials","logos","pages","chatbot"]; if(Object.keys(c).some(k=>allow.indexOf(k)<0)) return false; if(c.pricing){ const pk=["days","tiers","zones","flexMonthly","flexIncluded","express","promos"]; if(Object.keys(c.pricing).some(k=>pk.indexOf(k)<0)) return false; } if(c.pages){ const ok=["accueil","mobilite","recrutement","commander","suivi","dashboard"]; if(Object.keys(c.pages).some(k=>ok.indexOf(k)<0)) return false; } return true; }}
 ];
 let techTab="plan";
 function renderTech(){ const tabs=document.getElementById("techTabs"), body=document.getElementById("techBody"); if(!tabs||!body) return;
@@ -1797,7 +1801,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:55,auth:25,perf:56,media:30,chatbot:42};
+const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:55,auth:25,perf:56,media:30,chatbot:52};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -1858,7 +1862,7 @@ const TECH_BRIEF={
     steps:["Utiliser l'outil de mesure gratuit de Google.","Mesurer les pages clés automatiquement, à intervalle régulier.","Traduire les scores en langage clair, avec une action par point."],
     src:[{t:"Google PageSpeed API (gratuite)",u:"https://developers.google.com/speed/docs/insights/v5/get-started"}] },
   chatbot:{ sum:"Rendre le chatbot vraiment intelligent à partir de vos propres documents.",
-    today:"L'assistant retrouve désormais le bon passage dans le contenu réel du site et en donne l'essentiel (offres, zones, délais, recrutement, contact) ; les tarifs suivent la grille publiée. Restent la réponse rédigée par IA (à activer avec une clé, compte de test gratuit ou Azure) et l'indexation de vos propres documents importés.",
+    today:"L'assistant retrouve le bon passage dans le contenu réel du site et en donne l'essentiel (offres, zones, délais, recrutement, contact) ; les tarifs suivent la grille publiée ; et vos réglages (sujets interdits, repli, ton, nom, instructions) publiés depuis l'admin pilotent son comportement en ligne. Restent la réponse rédigée par IA (à activer avec une clé, compte de test gratuit ou Azure) et l'indexation de vos propres documents importés.",
     goal:"Il répond à partir de vos documents, en restant dans le périmètre autorisé.",
     cost:"0 à 15 CHF par mois selon le volume, avec un plafond.",
     note:"C'est le chantier le plus long. Le coût dépend du nombre de messages, il reste borné, et la version simple actuelle reste le filet de sécurité gratuit.",
@@ -3150,6 +3154,15 @@ function buildSiteContent(){
   const t=(draft&&draft.text)?draft.text:{}; const i18n={};
   ["fr","en"].forEach(function(lg){ if(t[lg]&&Object.keys(t[lg]).length) i18n[lg]=JSON.parse(JSON.stringify(t[lg])); });
   if(Object.keys(i18n).length){ out.pages={}; ["accueil","mobilite","recrutement","commander","suivi","dashboard"].forEach(function(pk){ out.pages[pk]={ i18n:JSON.parse(JSON.stringify(i18n)) }; }); }
+  // Réglages de l'assistant (chantier chatbot) : uniquement la CONFIG (pas les sources/documents,
+  // qui ne doivent pas fuir dans le JSON public). Lu par api/chat.js après publication.
+  try{ if(typeof chat==="object"&&chat){ const C={};
+    if(Array.isArray(chat.forbidden)&&chat.forbidden.length) C.forbidden=chat.forbidden.map(String);
+    if(Array.isArray(chat.allowed)&&chat.allowed.length) C.allowed=chat.allowed.map(String);
+    ["tone","length","fallback","botName","address","emojiLevel","defaultLang","uncertain"].forEach(function(k){ if(typeof chat[k]==="string"&&chat[k].trim()) C[k]=chat[k]; });
+    if(typeof chat.instr==="string"&&chat.instr.trim()) C.instructions=chat.instr;
+    if(Object.keys(C).length) out.chatbot=C;
+  } }catch(e){}
   return out;
 }
 function exportDraftBundle(){

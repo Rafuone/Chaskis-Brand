@@ -19,7 +19,7 @@ const SCHEMA_VERSION = 1;
 
 // Allowlist STRICTE des cles racine. Toute autre cle => rejet (barriere anti-fuite :
 // aucune donnee personnelle de RDV/lead ne doit se retrouver dans le JSON public).
-const TOP_LEVEL_KEYS = ['schemaVersion', 'version', 'updatedAt', 'updatedBy', 'pricing', 'testimonials', 'logos', 'pages'];
+const TOP_LEVEL_KEYS = ['schemaVersion', 'version', 'updatedAt', 'updatedBy', 'pricing', 'testimonials', 'logos', 'pages', 'chatbot'];
 
 // Pages editables : miroir EXACT de EDIT_PAGES dans admin/js/editor.js.
 const PAGE_KEYS = ['accueil', 'mobilite', 'recrutement', 'commander', 'suivi', 'dashboard'];
@@ -29,6 +29,11 @@ const LANG_KEYS = ['fr', 'en', 'de', 'it'];
 
 // Cles autorisees dans pricing : miroir de DEFAULT_PRICING (admin/js/editor.js).
 const PRICING_KEYS = ['days', 'tiers', 'zones', 'flexMonthly', 'flexIncluded', 'express', 'promos'];
+
+// Cles autorisees dans chatbot : REGLAGES de l'assistant (chantier chatbot). Pas de
+// sources/documents ici (ils ne doivent pas fuir dans le JSON public) : uniquement la
+// configuration textuelle. `forbidden`/`allowed` sont des tableaux de libelles de sujets.
+const CHATBOT_KEYS = ['forbidden', 'allowed', 'tone', 'length', 'fallback', 'botName', 'instructions', 'address', 'emojiLevel', 'defaultLang', 'uncertain'];
 
 // Bornes de securite.
 const MAX_TOTAL_BYTES = 300 * 1024; // 300 Ko : du contenu texte reste petit ; au-dela = anomalie.
@@ -124,6 +129,22 @@ function validateContent(input) {
     }
   }
 
+  // 5b. chatbot : objet a cles connues ; forbidden/allowed = tableaux de chaines,
+  //     les autres = chaines. (Le balayage securite global couvre le XSS des chaines.)
+  if ('chatbot' in input) {
+    if (!isPlainObject(input.chatbot)) errors.push('chatbot : objet attendu');
+    else for (const k of Object.keys(input.chatbot)) {
+      if (!CHATBOT_KEYS.includes(k)) { errors.push('chatbot.' + k + ' : cle inconnue'); continue; }
+      const cv = input.chatbot[k];
+      if (k === 'forbidden' || k === 'allowed') {
+        if (!Array.isArray(cv)) errors.push('chatbot.' + k + ' : tableau attendu');
+        else cv.forEach((x, i) => { if (typeof x !== 'string') errors.push('chatbot.' + k + '[' + i + '] : chaine attendue'); });
+      } else if (typeof cv !== 'string') {
+        errors.push('chatbot.' + k + ' : chaine attendue');
+      }
+    }
+  }
+
   // 6. testimonials / logos : tableaux.
   if ('testimonials' in input && !Array.isArray(input.testimonials)) errors.push('testimonials : tableau attendu');
   if ('logos' in input && !Array.isArray(input.logos)) errors.push('logos : tableau attendu');
@@ -160,6 +181,7 @@ module.exports = {
   PAGE_KEYS,
   LANG_KEYS,
   PRICING_KEYS,
+  CHATBOT_KEYS,
   MAX_TOTAL_BYTES,
   MAX_DATAURL_LEN,
   validateContent,

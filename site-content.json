@@ -1,7 +1,5 @@
 {
   "schemaVersion": 1,
-  "version": "V0",
-  "updatedAt": "2026-07-08",
-  "updatedBy": "initial",
-  "pages": {}
+  "version": "test-bearer",
+  "updatedBy": "Verification Claude"
 }

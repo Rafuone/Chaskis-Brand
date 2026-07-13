@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.29.0" };
+const ADMIN_BUILD = { version: "0.29.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.29.0", cur:true, date:"2026-07-13", title:"Chatbot : vos réglages pilotent l'assistant en ligne", items:[
+  { v:"v0.29.1", cur:true, date:"2026-07-13", title:"Performance : mesure de vitesse réelle prête (côté serveur)", items:[
+    {t:"add", x:"La partie serveur des Core Web Vitals (vitesse perçue mesurée par Google : LCP, CLS, temps de blocage) est écrite et testée. Reste à fournir une clé Google PageSpeed (gratuite) pour l'activer ; l'audit local (référencement, lisibilité, poids) reste disponible sans compte"}
+  ]},
+  { v:"v0.29.0", date:"2026-07-13", title:"Chatbot : vos réglages pilotent l'assistant en ligne", items:[
     {t:"add", x:"Les réglages de l'assistant (sujets interdits, message de repli, ton, nom, instructions) définis dans l'admin sont désormais PUBLIÉS avec le contenu du site et appliqués par l'assistant en ligne : une question sur un sujet interdit est déviée vers votre message de repli, et le ton/les consignes guident les réponses rédigées"},
     {t:"add", x:"Transite par le contrat de publication existant (mêmes garde-fous de sécurité : aucune balise, aucune donnée confidentielle ; les documents sources ne sont jamais exposés dans le fichier public)"}
   ]},
@@ -1801,7 +1804,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:55,auth:25,perf:56,media:30,chatbot:52};
+const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:55,auth:25,perf:58,media:30,chatbot:52};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -1856,7 +1859,7 @@ const TECH_BRIEF={
     steps:["Ajouter un petit outil de mesure sans cookie sur toutes les pages.","Repérer d'où viennent les visiteurs (liens, réseaux, recherche).","Brancher la page Statistiques sur ces vraies données.","Ajouter une ligne dans la politique de confidentialité."],
     src:[{t:"Umami, tarifs",u:"https://umami.is/pricing"},{t:"Plausible, tarifs",u:"https://plausible.io/#pricing"}] },
   perf:{ sum:"Mesurer pour de vrai la vitesse et le référencement du site.",
-    today:"Le référencement, la lisibilité et le contenu sont désormais mesurés pour de vrai dans l'admin (bouton « Relancer l'analyse », sans outil externe). La vitesse fine (Core Web Vitals) reste estimée : elle sera mesurée automatiquement à l'étape Google PageSpeed / Lighthouse.",
+    today:"Le référencement, la lisibilité et le contenu sont mesurés pour de vrai dans l'admin (bouton « Relancer l'analyse », sans outil externe). La partie serveur de la vitesse fine (Core Web Vitals via Google PageSpeed) est écrite et testée ; il reste à fournir une clé PageSpeed gratuite et à afficher ces mesures à côté de l'audit local.",
     goal:"Une vraie mesure de vitesse et de référencement, mise à jour automatiquement.",
     cost:"Gratuit.", note:"",
     steps:["Utiliser l'outil de mesure gratuit de Google.","Mesurer les pages clés automatiquement, à intervalle régulier.","Traduire les scores en langage clair, avec une action par point."],

@@ -7,6 +7,13 @@
       "runtimeArgs": ["C:\\Users\\rafuo\\Desktop\\Claude\\Chaskis-website\\Chaskis-Brand\\tools\\dev_server.py", "3000"],
       "port": 3000,
       "openPath": "/index.html"
+    },
+    {
+      "name": "chaskis-api",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/api-server.js", "3199"],
+      "port": 3199,
+      "openPath": "/index.html"
     }
   ]
 }

@@ -1,0 +1,127 @@
+// api/chat.js — Vercel Serverless Function, route POST /api/chat.
+//
+// Assistant du site, ancré (RAG) sur la base de connaissances Chaskis :
+//   1. récupération PURE des passages pertinents (api/_lib/rag.js) — sans compte, testable ;
+//   2. SI une clé LLM est configurée (api/_lib/llm.js), le modèle reformule une réponse
+//      en restant STRICTEMENT ancré sur les passages récupérés ;
+//   3. SINON, réponse extractive (le meilleur passage) — le chatbot reste fonctionnel.
+//
+// Ne renvoie jamais d'erreur 500 pour un flux normal : en dernier recours, repli honnête
+// vers les coordonnées humaines. Le widget public (assets/js/chatbot.js) appelle cet
+// endpoint et retombe sur ses réponses pré-enregistrées si l'endpoint est absent (démo
+// statique intacte).
+//
+// Convention projet : CommonJS, réponse Node brute, aucune dépendance npm (fetch natif
+// Node 18+). Host-agnostique (Vercel, Azure App Service, Node nu). Voir docs/chatbot.md.
+'use strict';
+
+var rag = require('./_lib/rag');
+var llm = require('./_lib/llm');
+var KB = require('./_data/kb.json');
+
+var MAX_Q = 500;              // longueur max d'une question (anti-abus, coût LLM borné)
+var MAX_BODY_BYTES = 16 * 1024;
+
+var FALLBACK = {
+  fr: "Je n'ai pas la réponse exacte ici. Écrivez-nous à hello@chaskis.ch ou appelez le +41 22 700 01 27, on vous répond vite.",
+  en: "I don't have the exact answer here. Email hello@chaskis.ch or call +41 22 700 01 27 and we'll get back to you quickly.",
+};
+
+function send(res, status, obj) {
+  res.statusCode = status;
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.end(JSON.stringify(obj));
+}
+
+// Corps JSON : req.body si déjà parsé (Vercel), sinon bufferisé (Node brut). Même motif
+// robuste que api/publish.js (Buffer, pas de concat de string, résolution garantie).
+function readJson(req) {
+  return new Promise(function (resolve) {
+    if (req.body && typeof req.body === 'object') return resolve(req.body);
+    var chunks = [], size = 0, done = false;
+    var finish = function (v) { if (!done) { done = true; resolve(v); } };
+    req.on('data', function (c) { chunks.push(c); size += c.length; if (size > MAX_BODY_BYTES) { finish({ __error: 'question trop longue' }); try { req.destroy(); } catch (e) {} } });
+    req.on('end', function () { if (!chunks.length) return finish(null); try { finish(JSON.parse(Buffer.concat(chunks).toString('utf8'))); } catch (e) { finish({ __error: 'JSON illisible' }); } });
+    req.on('error', function () { finish({ __error: 'lecture interrompue' }); });
+    req.on('close', function () { finish({ __error: 'connexion fermée' }); });
+  });
+}
+
+// Construit un passage tarifaire À PARTIR de la grille RÉELLEMENT publiée dans
+// site-content.json, pour que le bot reflète les prix en ligne (chantier publish).
+// Silencieux si le fichier ou la grille est absent : le KB statique prend le relais.
+function pricingPassages() {
+  var out = [];
+  var sc;
+  try { sc = require('../site-content.json'); } catch (e) { return out; }
+  var p = sc && sc.pricing;
+  if (!p) return out;
+  var parts = [];
+  if (Array.isArray(p.zones) && p.zones.length) {
+    parts.push('Tarif unitaire par zone : ' + p.zones.map(function (z) { return z.name + ' dès ' + z.unit + ' CHF'; }).join(', ') + '.');
+  }
+  if (typeof p.express === 'number') parts.push('Supplément Super Express (moins de 2 h) : +' + p.express + ' CHF.');
+  if (typeof p.flexMonthly === 'number') parts.push('Abonnement Flex : ' + p.flexMonthly + ' CHF par mois' + (typeof p.flexIncluded === 'number' ? (', ' + p.flexIncluded + ' courses incluses') : '') + '.');
+  if (Array.isArray(p.tiers) && p.tiers.length) {
+    parts.push('Selon le volume mensuel, le tarif par course baisse : ' + p.tiers.map(function (t) { return t.plan + ' ' + t.rate + ' CHF' + (t.max ? (' jusqu\'à ' + t.max + ' courses') : ' au-delà'); }).join(', ') + '.');
+  }
+  if (Array.isArray(p.promos) && p.promos.length) {
+    parts.push('Codes promo disponibles : ' + p.promos.map(function (c) { return c.code + ' (-' + c.pct + '%)'; }).join(', ') + '.');
+  }
+  if (!parts.length) return out;
+  var text = 'Grille tarifaire actuellement en ligne. ' + parts.join(' ') + ' Le prix exact d\'une course ponctuelle s\'affiche dans le simulateur de la page Commander.';
+  var textEn = 'Current published pricing. ' + parts.join(' ');
+  out.push({ id: 'pricing-live-fr', lang: 'fr', title: 'Grille tarifaire en ligne', tags: ['Tarifs', 'Prix'], questions: ['Quels sont vos tarifs ?', 'Combien coûte une course ?', 'Vos prix ?'], text: text });
+  out.push({ id: 'pricing-live-en', lang: 'en', title: 'Current pricing', tags: ['Rates', 'Pricing'], questions: ['What are your rates?', 'How much is a delivery?'], text: textEn });
+  return out;
+}
+
+function loadPassages() {
+  var base = (KB && Array.isArray(KB.passages)) ? KB.passages.slice() : [];
+  return pricingPassages().concat(base);
+}
+
+// Index construit une fois par instance (module chargé une fois = cache chaud). Sur un
+// redéploiement (nouvelle publication), le module est rechargé, donc l'index se rebâtit
+// avec le contenu à jour.
+var INDEX = null;
+function getIndex() { if (!INDEX) INDEX = rag.buildIndex(loadPassages()); return INDEX; }
+
+module.exports = async function handler(req, res) {
+  if (req.method !== 'POST') return send(res, 405, { error: 'méthode non autorisée' });
+
+  var body = await readJson(req);
+  if (!body || body.__error) return send(res, 400, { error: (body && body.__error) ? body.__error : 'corps manquant' });
+
+  var q = (typeof body.question === 'string') ? body.question.trim() : '';
+  var lang = (body.lang === 'en') ? 'en' : 'fr';
+  if (!q) return send(res, 400, { error: 'question manquante' });
+  if (q.length > MAX_Q) q = q.slice(0, MAX_Q);
+
+  var index = getIndex();
+  var hits = rag.retrieve(index, q, { lang: lang, topK: 3 });
+  var sources = hits.map(function (h) { return { title: h.passage.title, tag: (h.passage.tags || [])[0] || '' }; });
+
+  // Aucun passage pertinent -> repli honnête (jamais d'invention).
+  if (!hits.length) {
+    return send(res, 200, { ok: true, mode: 'fallback', answer: FALLBACK[lang], sources: [], lang: lang });
+  }
+
+  // LLM configuré -> génération ancrée. Échec quelconque -> repli extractif (transparent).
+  if (llm.isConfigured()) {
+    var context = hits.map(function (h, i) { return '[' + (i + 1) + '] ' + h.passage.title + '\n' + h.passage.text; }).join('\n\n');
+    var system = (lang === 'en'
+      ? "You are the Chaskis assistant (B2B delivery and mobility in French-speaking Switzerland). Answer ONLY from the context below, concisely (2 to 4 sentences), in English. If the answer is not in the context, say you don't have it and invite the user to email hello@chaskis.ch. Never invent prices, figures or commitments."
+      : "Tu es l'assistant Chaskis (livraison et mobilité B2B en Suisse romande). Réponds UNIQUEMENT à partir du contexte ci-dessous, de façon concise (2 à 4 phrases), en français. Si la réponse n'est pas dans le contexte, dis que tu ne l'as pas et invite à écrire à hello@chaskis.ch. N'invente jamais de prix, de chiffres ni d'engagements.")
+      + "\n\nContexte :\n" + context;
+    var out = await llm.generate({ system: system, user: q, maxTokens: 400, timeoutMs: 8000 });
+    if (out.ok && out.text) {
+      return send(res, 200, { ok: true, mode: 'generative', answer: out.text, sources: sources, lang: lang });
+    }
+    // sinon on tombe dans l'extractif ci-dessous
+  }
+
+  var ans = rag.snippet(hits[0].passage.text, q, 320);
+  return send(res, 200, { ok: true, mode: 'extractive', answer: ans, sources: sources, lang: lang });
+};

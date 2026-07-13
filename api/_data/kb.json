@@ -1,0 +1,190 @@
+{
+  "_note": "Base de connaissances de l'assistant Chaskis (chantier chatbot). Faits publics du site, centralisés pour la récupération (RAG). FR + EN. Chaque passage : id, lang, title, tags, questions (exemples), text. Éditable sans toucher au code. Les prix restent volontairement peu détaillés ici : la grille exacte est injectée en direct depuis site-content.json quand elle est publiée.",
+  "passages": [
+    {
+      "id": "livraison-offres-fr",
+      "lang": "fr",
+      "title": "Offres de livraison",
+      "tags": ["Offres", "Services"],
+      "questions": ["Comment ça marche ?", "Quelles offres proposez-vous ?", "Express Flex ou Dédié ?"],
+      "text": "Chaskis propose trois offres de livraison pour les entreprises. Express : courses ponctuelles à la carte, idéal pour les besoins occasionnels. Flex : un abonnement mensuel avec un volume de courses inclus, pour un usage régulier. Dédié : un coursier attitré sur vos horaires, pour un flux quotidien. Le service s'adresse aux professionnels de Suisse romande."
+    },
+    {
+      "id": "livraison-tarifs-fr",
+      "lang": "fr",
+      "title": "Tarifs de livraison",
+      "tags": ["Tarifs", "Prix"],
+      "questions": ["Quels sont vos tarifs ?", "Combien coûte une course ?", "C'est quel prix ?"],
+      "text": "Les tarifs dépendent de la zone, du volume mensuel et du service choisi (Express, Flex ou Dédié). Pour une course ponctuelle, le simulateur de la page Commander affiche le prix exact avant validation. Pour un usage régulier, un devis volumétrique est établi après un échange. Une promotion peut s'appliquer avec un code partenaire."
+    },
+    {
+      "id": "livraison-zones-fr",
+      "lang": "fr",
+      "title": "Zones de livraison",
+      "tags": ["Zones", "Couverture"],
+      "questions": ["Quelles zones couvrez-vous ?", "Livrez-vous à Lausanne ?", "Vous couvrez quelle région ?"],
+      "text": "Chaskis couvre quatre zones en Suisse romande : Genève, Nyon, Lausanne et la Riviera vaudoise. Certains codes postaux ne sont accessibles qu'en livraison, pas en collecte : l'adresse exacte est vérifiée dans le simulateur de la page Commander. La zone Léman regroupe Nyon, Morges et Lausanne."
+    },
+    {
+      "id": "livraison-delais-fr",
+      "lang": "fr",
+      "title": "Délais de livraison",
+      "tags": ["Délais", "Express"],
+      "questions": ["Quels sont vos délais ?", "C'est rapide ?", "Livraison en combien de temps ?"],
+      "text": "En Super Express, la prise en charge est garantie sous 2 heures. En Express classique ou en Flex, vous choisissez le créneau de livraison. Le délai exact est confirmé au moment de la création de la course. Sur la zone Léman, le samedi est couvert de 9h à 17h."
+    },
+    {
+      "id": "livraison-integration-fr",
+      "lang": "fr",
+      "title": "Intégration et API",
+      "tags": ["Intégration", "API", "Technique"],
+      "questions": ["Avez-vous une API ?", "Comment vous intégrer à ma boutique ?", "Intégration Shopify ?"],
+      "text": "Chaskis s'intègre aux outils courants du e-commerce et de la logistique : Shipday, Shopify, et une API REST sur demande. Pour un setup technique, le mieux est de réserver un appel avec l'équipe depuis la page d'accueil."
+    },
+    {
+      "id": "livraison-facturation-fr",
+      "lang": "fr",
+      "title": "Facturation",
+      "tags": ["Facturation", "TVA", "Paiement"],
+      "questions": ["Comment se passe la facturation ?", "Avez-vous une facture avec TVA ?", "Paiement par virement ?"],
+      "text": "La facturation est mensuelle et consolidée au nom de l'entreprise, avec TVA détaillée. Un export CSV compatible SAP, Sage et Bexio est fourni. Le paiement se fait par carte ou par virement bancaire."
+    },
+    {
+      "id": "mobilite-services-fr",
+      "lang": "fr",
+      "title": "Services Mobilité",
+      "tags": ["Mobilité", "Services"],
+      "questions": ["Quels services de mobilité ?", "Vous faites du transport de personnes ?", "C'est quoi la collecte prestige ?"],
+      "text": "Chaskis Mobilité regroupe deux services. Le transport de personnes : transferts aéroport, mise à disposition, événementiel, mobilité réduite, stations de ski. La collecte prestige : horlogerie, joaillerie, haute couture et grands crus, avec un protocole sécurisé."
+    },
+    {
+      "id": "mobilite-chauffeurs-fr",
+      "lang": "fr",
+      "title": "Flotte et chauffeurs Mobilité",
+      "tags": ["Mobilité", "Chauffeurs", "Flotte"],
+      "questions": ["Vos chauffeurs sont salariés ?", "Quels véhicules ?", "Quelle flotte ?"],
+      "text": "Les chauffeurs sont salariés en CDI, formés aux standards des hôtels 5 étoiles. La flotte comprend des berlines classe affaires et des vans VIP, entretenus en atelier partenaire."
+    },
+    {
+      "id": "mobilite-reservation-fr",
+      "lang": "fr",
+      "title": "Réservation et annulation Mobilité",
+      "tags": ["Mobilité", "Réservation", "Annulation"],
+      "questions": ["Quel délai pour réserver ?", "Peut-on annuler ?", "Réservation de dernière minute ?"],
+      "text": "Les demandes classiques sont traitées dès 2 heures d'anticipation. Pour les trajets prestige ou les événements, comptez 24 à 48 heures pour caler les détails. L'annulation est gratuite jusqu'à 4h avant pour le transport de personnes, et 24h avant pour les missions prestige."
+    },
+    {
+      "id": "mobilite-assurance-fr",
+      "lang": "fr",
+      "title": "Assurance objets de valeur",
+      "tags": ["Mobilité", "Assurance", "Prestige"],
+      "questions": ["Les objets de valeur sont assurés ?", "Quelle assurance pour la collecte prestige ?"],
+      "text": "Les missions de collecte prestige sont couvertes par une assurance spécifique pouvant atteindre plusieurs millions de CHF. Une attestation avec numéro de police est fournie au départ de la mission."
+    },
+    {
+      "id": "postuler-permis-fr",
+      "lang": "fr",
+      "title": "Permis requis pour postuler",
+      "tags": ["Recrutement", "Permis"],
+      "questions": ["Quel permis faut-il ?", "Je peux postuler sans permis suisse ?", "Frontalier je peux postuler ?"],
+      "text": "Un permis de travail valable en Suisse est nécessaire (B, C, Ci sans condition ; UE/AELE avec permis valide ; L selon la durée). Les frontaliers sont les bienvenus, aux conditions standard de la CCT suisse. Pour un poste de chauffeur : permis B depuis au moins 2 ans, B121 ou D1 selon la mission, et carte VTC à Genève."
+    },
+    {
+      "id": "postuler-salaire-fr",
+      "lang": "fr",
+      "title": "Rémunération",
+      "tags": ["Recrutement", "Salaire"],
+      "questions": ["Combien on gagne ?", "Quel est le salaire ?", "Les pourboires sont reversés ?"],
+      "text": "La rémunération est un salaire horaire fixe conforme à la CCT, avec des primes de performance. 100% des pourboires sont reversés. La fourchette exacte est communiquée lors de l'entretien."
+    },
+    {
+      "id": "postuler-materiel-horaires-fr",
+      "lang": "fr",
+      "title": "Matériel et horaires",
+      "tags": ["Recrutement", "Matériel", "Horaires"],
+      "questions": ["Faut-il fournir son matériel ?", "Quels horaires ?", "C'est compatible avec des études ?"],
+      "text": "Aucun matériel n'est à fournir. Pour les coursiers : vélo, sac isotherme, veste et téléphone sont fournis dès le premier jour. Pour les chauffeurs : véhicule selon le poste, ou frais remboursés. Le planning est mensuel et construit avec vous, compatible avec des études, des enfants, un complément d'activité ou un temps plein."
+    },
+    {
+      "id": "postuler-comment-fr",
+      "lang": "fr",
+      "title": "Comment postuler",
+      "tags": ["Recrutement", "Candidature"],
+      "questions": ["Comment postuler ?", "Où envoyer ma candidature ?"],
+      "text": "La candidature se fait via l'application Chaskis : téléchargez l'app, postulez en 2 minutes, et l'équipe vous recontacte dans la semaine. Les postes proposés sont en CDI, pour des coursiers et des chauffeurs."
+    },
+    {
+      "id": "contact-fr",
+      "lang": "fr",
+      "title": "Nous contacter",
+      "tags": ["Contact", "Coordonnées"],
+      "questions": ["Comment vous joindre ?", "Quel est votre email ?", "Votre numéro de téléphone ?", "Où êtes-vous ?"],
+      "text": "Pour la livraison : hello@chaskis.ch. Pour la mobilité : mobilite@chaskis.ch. Par téléphone : +41 22 700 01 27, les jours ouvrés. Adresses : Genève, 69 rue des Vollandes, 1207 ; Lausanne, 22 chemin de Pierrefleur, 1004. Pour un échange de 20 minutes sur vos besoins, vous pouvez réserver un appel depuis la page d'accueil."
+    },
+
+    {
+      "id": "livraison-offres-en",
+      "lang": "en",
+      "title": "Delivery plans",
+      "tags": ["Plans", "Services"],
+      "questions": ["How does it work?", "Which plans do you offer?", "Express Flex or Dedicated?"],
+      "text": "Chaskis offers three delivery plans for businesses. Express: one-off deliveries on demand, ideal for occasional needs. Flex: a monthly subscription with a bundle of deliveries included, for regular use. Dedicated: an assigned courier on your hours, for daily flows. The service is for professionals across French-speaking Switzerland."
+    },
+    {
+      "id": "livraison-tarifs-en",
+      "lang": "en",
+      "title": "Delivery rates",
+      "tags": ["Rates", "Pricing"],
+      "questions": ["What are your rates?", "How much is a delivery?", "What's the price?"],
+      "text": "Rates depend on the zone, the monthly volume and the chosen service (Express, Flex or Dedicated). For a one-off delivery, the simulator on the Order page shows the exact price before you confirm. For regular use, a volume quote is set after a call. A partner code may unlock a discount."
+    },
+    {
+      "id": "livraison-zones-en",
+      "lang": "en",
+      "title": "Delivery zones",
+      "tags": ["Zones", "Coverage"],
+      "questions": ["Which zones do you cover?", "Do you deliver to Lausanne?", "What region do you cover?"],
+      "text": "Chaskis covers four zones in French-speaking Switzerland: Geneva, Nyon, Lausanne and the Vaud Riviera. Some postcodes are delivery-only, not pickup: the exact address is checked in the simulator on the Order page. The Léman zone groups Nyon, Morges and Lausanne."
+    },
+    {
+      "id": "livraison-delais-en",
+      "lang": "en",
+      "title": "Delivery times",
+      "tags": ["Times", "Express"],
+      "questions": ["What are your delivery times?", "Is it fast?", "How long does delivery take?"],
+      "text": "In Super Express, pickup is guaranteed within 2 hours. In standard Express or Flex, you pick the delivery slot. The exact timing is confirmed when the delivery is created. On the Léman zone, Saturday is covered from 9am to 5pm."
+    },
+    {
+      "id": "livraison-facturation-en",
+      "lang": "en",
+      "title": "Invoicing",
+      "tags": ["Invoicing", "VAT", "Payment"],
+      "questions": ["How does invoicing work?", "Do you provide a VAT invoice?", "Payment by wire?"],
+      "text": "Invoicing is monthly and consolidated in the company name, with itemised VAT. A CSV export compatible with SAP, Sage and Bexio is provided. Payment is by card or bank transfer."
+    },
+    {
+      "id": "mobilite-services-en",
+      "lang": "en",
+      "title": "Mobility services",
+      "tags": ["Mobility", "Services"],
+      "questions": ["What mobility services?", "Do you do people transport?", "What is prestige pickup?"],
+      "text": "Chaskis Mobility has two services. People transport: airport transfers, on-call availability, events, reduced mobility, ski resorts. Prestige pickup: watchmaking, jewellery, haute couture and fine wines, with a secured protocol. Drivers are salaried on permanent contracts, trained to 5-star hotel standards."
+    },
+    {
+      "id": "postuler-en",
+      "lang": "en",
+      "title": "Joining the team",
+      "tags": ["Jobs", "Hiring"],
+      "questions": ["How do I apply?", "What permit do I need?", "How much do I earn?", "Can cross-border workers apply?"],
+      "text": "A valid Swiss work permit is required (B, C, Ci without conditions; EU/EFTA with a valid permit; L depending on duration). Cross-border workers are welcome under standard Swiss CCT conditions. Pay is a fixed hourly salary compliant with the CCT, with performance bonuses and 100% of tips passed on. No gear to provide: couriers get a bike, insulated bag, jacket and phone on day one. Apply via the Chaskis app in about 2 minutes; the team gets back to you within the week."
+    },
+    {
+      "id": "contact-en",
+      "lang": "en",
+      "title": "Contact us",
+      "tags": ["Contact", "Details"],
+      "questions": ["How can I reach you?", "What is your email?", "Your phone number?", "Where are you located?"],
+      "text": "For delivery: hello@chaskis.ch. For mobility: mobilite@chaskis.ch. By phone: +41 22 700 01 27, business days. Addresses: Geneva, 69 rue des Vollandes, 1207; Lausanne, 22 chemin de Pierrefleur, 1004. You can also book a 20-minute call about your needs from the home page."
+    }
+  ]
+}

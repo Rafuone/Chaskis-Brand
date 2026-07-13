@@ -1,6 +1,10 @@
-// ===== CHASKIS CHATBOT (démo) =====
+// ===== CHASKIS CHATBOT =====
 // Widget flottant bottom-right, compartimenté par sujet (Livraison / Mobilité / Postuler / Contact).
-// Réponses scriptées, volontairement prudentes : pas de chiffres précis, redirection vers simulateur / devis humain.
+// Les catégories/thèmes cliquables restent scriptés (parcours guidé, prudent).
+// Les questions LIBRES sont d'abord envoyées à l'endpoint /api/chat (récupération RAG,
+// réponse générative si une clé LLM est configurée, sinon extractive). Si l'endpoint est
+// absent (démo 100% statique) ou en échec, on retombe SILENCIEUSEMENT sur les réponses
+// scriptées ci-dessous — la démo reste donc riche sans aucun backend. Voir docs/chatbot.md.
 
 (function() {
   if (document.getElementById('chaskisChatbot')) return;
@@ -294,17 +298,47 @@
     return dict.fallback;
   }
 
+  // Rend cliquables les coordonnées connues DANS un texte déjà échappé (sûr : on n'injecte
+  // que des ancres construites à partir de littéraux exacts, jamais du contenu du modèle).
+  function linkifyContacts(safe) {
+    return safe
+      .replace(/hello@chaskis\.ch/g, '<a href="mailto:hello@chaskis.ch">hello@chaskis.ch</a>')
+      .replace(/mobilite@chaskis\.ch/g, '<a href="mailto:mobilite@chaskis.ch">mobilite@chaskis.ch</a>')
+      .replace(/\+41 22 700 01 27/g, '<a href="tel:+41227000127">+41 22 700 01 27</a>');
+  }
+
+  // Interroge /api/chat. Renvoie du HTML sûr (texte échappé) ou null si indisponible.
+  // La réponse du modèle est TOUJOURS échappée avant affichage (pas d'injection possible).
+  async function answerViaApi(text) {
+    try {
+      const ctrl = new AbortController();
+      const to = setTimeout(() => ctrl.abort(), 7000);
+      const lang = window._currentLang === 'en' ? 'en' : 'fr';
+      const r = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: text, lang }),
+        signal: ctrl.signal,
+      });
+      clearTimeout(to);
+      if (!r.ok) return null;
+      const j = await r.json();
+      if (!j || !j.ok || !j.answer) return null;
+      return linkifyContacts(escapeHtml(j.answer)).replace(/\n/g, '<br>');
+    } catch (e) { return null; }
+  }
+
   function handleUser(text) {
     const q = text.trim();
     if (!q) return;
     addMsg(escapeHtml(q), 'user');
     input.value = '';
     const typing = addTyping();
-    const ans = answerFreeText(q);
-    setTimeout(() => {
+    // 1) endpoint réel (RAG + LLM si configuré) ; 2) repli scripté si absent/échec.
+    answerViaApi(q).then(apiHtml => {
       typing.remove();
-      addMsg(ans, 'bot');
-    }, 550 + Math.random() * 400);
+      addMsg(apiHtml || answerFreeText(q), 'bot');
+    });
   }
 
   function open() {

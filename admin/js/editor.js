@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.23.2" };
+const ADMIN_BUILD = { version: "0.24.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,13 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.23.2", cur:true, date:"2026-07-13", title:"Écrans de suivi alignés sur l'état réel", items:[
+  { v:"v0.24.0", cur:true, date:"2026-07-13", title:"Chatbot : réponses tirées du contenu réel du site", items:[
+    {t:"add", x:"L'assistant du site répond désormais aux questions libres à partir des faits réels de Chaskis (offres, zones, délais, recrutement, contact) au lieu de réponses uniquement génériques : il retrouve le bon passage et en donne l'essentiel"},
+    {t:"add", x:"Les tarifs affichés par l'assistant sont tirés en direct de la grille que vous publiez : quand vous changez vos prix, le chatbot suit automatiquement"},
+    {t:"add", x:"Prêt pour une réponse « rédigée » plus naturelle : il suffira d'activer une clé d'intelligence artificielle (compte de test gratuit, ou Azure) — sans rien changer d'autre. Sans clé, l'assistant reste pleinement fonctionnel"},
+    {t:"imp", x:"Sécurité : les réponses de l'assistant sont affichées comme du texte (aucune injection de code possible), et la démo hors-ligne conserve ses réponses guidées"}
+  ]},
+  { v:"v0.23.2", date:"2026-07-13", title:"Écrans de suivi alignés sur l'état réel", items:[
     {t:"imp", x:"Mise à jour des écrans de suivi : la carte « Édition du site » de l'Avancement reflète maintenant la publication réelle en ligne. Version, dates, avancement des pages et pourcentages d'intégration alignés sur l'état réel du projet"}
   ]},
   { v:"v0.23.1", date:"2026-07-13", title:"Renforcement sécurité et fiabilité (revue)", items:[
@@ -1536,7 +1542,7 @@ const RELEASE_LOG=[
 const KNOWN_TODO=[
   {t:"wip", x:"Édition du grand titre d'accueil mot par mot, à rendre plus souple"},
   {t:"todo", x:"Publication réelle vers le site en ligne (aujourd'hui les changements restent dans votre navigateur)"},
-  {t:"todo", x:"Chatbot connecté pour de vrai (indexation des sources et réponses intelligentes)"},
+  {t:"wip", x:"Chatbot : répond déjà à partir du contenu réel du site ; restent la réponse rédigée par IA (activer une clé) et l'indexation de vos propres documents importés"},
   {t:"todo", x:"Rendez-vous : connexion réelle à Calendly"},
   {t:"todo", x:"Statistiques et provenance des visiteurs réelles (sans cookie)"},
   {t:"todo", x:"Page Performance branchée sur une vraie mesure de vitesse et de référencement"},
@@ -1575,7 +1581,7 @@ const PROGRESS=[
   {view:"media",name:"Médiathèque",env:"prod",stage:"stable",version:"1.1.0",recent:["Compression et redimensionnement des images à l'import","Confirmation avant suppression d'un média"]},
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
-  {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.1.0",recent:["Bac à test basé sur les vraies sources","Affichage sécurisé"]},
+  {view:"chatbot",name:"Chatbot",env:"preprod",stage:"beta",version:"1.2.0",recent:["Réponses tirées du contenu réel du site (récupération)","Tarifs synchronisés sur la grille publiée","Prêt pour l'IA générative en activant une clé"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.5.0",recent:["« Terminer » archive et télécharge le compte-rendu","Découverte guidée et simulateur d'offre"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.7.0",recent:["Vraie mesure d'audience sans cookie (cet appareil)","Plage de dates personnalisée fonctionnelle"]},
@@ -1755,7 +1761,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:25,auth:25,perf:52,media:30,chatbot:20};
+const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:25,auth:25,perf:52,media:30,chatbot:42};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -1816,7 +1822,7 @@ const TECH_BRIEF={
     steps:["Utiliser l'outil de mesure gratuit de Google.","Mesurer les pages clés automatiquement, à intervalle régulier.","Traduire les scores en langage clair, avec une action par point."],
     src:[{t:"Google PageSpeed API (gratuite)",u:"https://developers.google.com/speed/docs/insights/v5/get-started"}] },
   chatbot:{ sum:"Rendre le chatbot vraiment intelligent à partir de vos propres documents.",
-    today:"Le chatbot répond avec des réponses écrites d'avance et n'exploite pas encore vos sources.",
+    today:"L'assistant retrouve désormais le bon passage dans le contenu réel du site et en donne l'essentiel (offres, zones, délais, recrutement, contact) ; les tarifs suivent la grille publiée. Restent la réponse rédigée par IA (à activer avec une clé, compte de test gratuit ou Azure) et l'indexation de vos propres documents importés.",
     goal:"Il répond à partir de vos documents, en restant dans le périmètre autorisé.",
     cost:"0 à 15 CHF par mois selon le volume, avec un plafond.",
     note:"C'est le chantier le plus long. Le coût dépend du nombre de messages, il reste borné, et la version simple actuelle reste le filet de sécurité gratuit.",

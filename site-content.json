@@ -1,5 +1,105 @@
 {
   "schemaVersion": 1,
-  "version": "test-bearer",
-  "updatedBy": "Verification Claude"
+  "version": "0.22.1",
+  "updatedAt": "2026-07-13T14:49:55.091Z",
+  "updatedBy": "Alex Moreira",
+  "pricing": {
+    "days": 22,
+    "tiers": [
+      {
+        "max": 10,
+        "rate": 16,
+        "plan": "Express"
+      },
+      {
+        "max": 40,
+        "rate": 12,
+        "plan": "Flex"
+      },
+      {
+        "max": null,
+        "rate": 8,
+        "plan": "Dédié"
+      }
+    ],
+    "zones": [
+      {
+        "key": "geneve",
+        "name": "Genève",
+        "unit": 14
+      },
+      {
+        "key": "leman",
+        "name": "Léman / Vaud",
+        "unit": 22
+      }
+    ],
+    "flexMonthly": 249,
+    "flexIncluded": 30,
+    "express": 9,
+    "promos": [
+      {
+        "code": "CHASKIS10",
+        "pct": 10
+      },
+      {
+        "code": "BIENVENUE",
+        "pct": 15
+      },
+      {
+        "code": "PARTNER20",
+        "pct": 20
+      }
+    ]
+  },
+  "pages": {
+    "accueil": {
+      "i18n": {
+        "fr": {
+          "hero.w2": "gère",
+          "hero.w3": "tes"
+        }
+      }
+    },
+    "mobilite": {
+      "i18n": {
+        "fr": {
+          "hero.w2": "gère",
+          "hero.w3": "tes"
+        }
+      }
+    },
+    "recrutement": {
+      "i18n": {
+        "fr": {
+          "hero.w2": "gère",
+          "hero.w3": "tes"
+        }
+      }
+    },
+    "commander": {
+      "i18n": {
+        "fr": {
+          "hero.w2": "gère",
+          "hero.w3": "tes"
+        }
+      }
+    },
+    "suivi": {
+      "i18n": {
+        "fr": {
+          "hero.w2": "gère",
+          "hero.w3": "tes"
+        }
+      }
+    },
+    "dashboard": {
+      "i18n": {
+        "fr": {
+          "hero.w2": "gère",
+          "hero.w3": "tes"
+        }
+      }
+    }
+  }
 }

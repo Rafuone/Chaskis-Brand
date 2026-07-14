@@ -8,7 +8,7 @@
 //
 // Lancer :   node tools/api-server.js [port]
 // Avec secrets (pour tester la publication) :
-//   PUBLISH_SECRET=xxx GITHUB_TOKEN=xxx GITHUB_REPO=owner/repo GITHUB_BRANCH=main node tools/api-server.js 3100
+//   PUBLISH_SECRET=xxx GITHUB_TOKEN=xxx GITHUB_REPO=owner/repo GITHUB_BRANCH=main node tools/api-server.js 3000
 //
 // Les handlers /api utilisent la signature (req, res) Node brute et global fetch (Node 18+),
 // exactement comme sur Vercel. AUCUNE réécriture nécessaire pour les faire tourner ici.
@@ -19,7 +19,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const PORT = process.env.PORT || process.argv[2] || 3100;
+const PORT = process.env.PORT || process.argv[2] || 3000;
 // En prod (Azure pose NODE_ENV=production), on met en cache les assets statiques (JS/CSS/images
 // versionnés par ?v=) ; en dev on garde no-store pour toujours servir la dernière version éditée.
 const PROD = process.env.NODE_ENV === 'production';

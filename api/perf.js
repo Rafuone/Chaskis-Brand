@@ -71,8 +71,11 @@ module.exports = async function handler(req, res) {
 
   // PageSpeed est LENT (souvent 10-30 s). Le plan Vercel Hobby coupe vers ~10 s : ce endpoint
   // est donc fiable surtout sur un hôte au timeout plus large (Azure App Service, Vercel Pro).
+  // Délai réglable par env (PERF_TIMEOUT_MS) : un hôte au timeout large (Azure) peut laisser
+  // PageSpeed finir ; défaut prudent 9000 ms pour les plans à faible timeout (Vercel Hobby).
+  var TIMEOUT_MS = parseInt(process.env.PERF_TIMEOUT_MS, 10) || 9000;
   var ctrl = new AbortController();
-  var timer = setTimeout(function () { ctrl.abort(); }, 9000);
+  var timer = setTimeout(function () { ctrl.abort(); }, TIMEOUT_MS);
   try {
     var cats = ['performance', 'accessibility', 'seo', 'best-practices'];
     var api = PSI + '?url=' + encodeURIComponent(url) + '&strategy=' + strategy + cats.map(function (c) { return '&category=' + c; }).join('') + '&key=' + encodeURIComponent(key);

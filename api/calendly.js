@@ -30,7 +30,7 @@ var availability = require('./_lib/availability');
 
 var API = 'https://api.calendly.com';
 var DAY = 24 * 60 * 60 * 1000;
-var GLOBAL_BUDGET_MS = 9000;   // marge sous le mur ~10 s des Functions Hobby
+var GLOBAL_BUDGET_MS = parseInt(process.env.CALENDLY_BUDGET_MS, 10) || 9000;   // réglable par env ; défaut sous le mur ~10 s des Functions Hobby
 var PER_REQ_MS = 6000;         // timeout dur par requête, borné aussi par le budget global
 var MAX_PAGES = 10;            // garde-fou anti-boucle de pagination (jusqu'à ~1000 RDV)
 var PAST_WINDOW = 14 * DAY;    // l'admin prépare surtout le futur : passé réduit = moins d'appels

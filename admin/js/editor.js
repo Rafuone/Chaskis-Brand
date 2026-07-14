@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.33.2" };
+const ADMIN_BUILD = { version: "0.33.3" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1244,7 +1244,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.33.2", cur:true, date:"2026-07-14", title:"Sécurité : renforcement de l'échappement des données affichées dans l'admin", items:[
+  { v:"v0.33.3", cur:true, date:"2026-07-14", title:"Statistiques : les vraies visites sont désormais comptées (agrégé, sans cookie)", items:[
+    {t:"add", x:"Le site envoie maintenant ses visites à un outil de mesure d'audience agrégé et sans cookie (Umami) : vous voyez les vraies statistiques multi-visiteurs dans votre tableau de bord Umami. La mesure « sur cet appareil » de la page Statistiques reste disponible en repli, et les prévisualisations de l'éditeur ne sont jamais comptées"}
+  ]},
+  { v:"v0.33.2", date:"2026-07-14", title:"Sécurité : renforcement de l'échappement des données affichées dans l'admin", items:[
     {t:"fix", x:"Durcissement préventif : tous les champs affichés dans l'administration (dont les noms, sociétés et liens issus des réservations Calendly) sont désormais échappés y compris dans les info-bulles et les liens, empêchant toute exécution de code piégé. Aucun changement visible pour vous"}
   ]},
   { v:"v0.33.1", date:"2026-07-14", title:"Performance : image de la bannière FAQ de l'accueil allégée", items:[
@@ -1834,7 +1837,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:80,publish:78,versioning:68,analytics:38,calendly:55,auth:25,perf:76,media:30,chatbot:75};
+const TECH_DONE={host:80,publish:78,versioning:68,analytics:48,calendly:55,auth:25,perf:76,media:30,chatbot:75};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */

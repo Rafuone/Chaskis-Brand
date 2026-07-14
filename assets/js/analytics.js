@@ -12,6 +12,22 @@
 (function () {
   try {
     if (window.top !== window.self) return; // dans l'iframe de l'éditeur : pas une vraie visite
+
+    // --- Umami : agrégation multi-visiteurs, SANS cookie (chantier "analytics", étape 2) ---
+    // Chargé UNIQUEMENT en fenêtre principale (le garde-fou anti-iframe ci-dessus évite de
+    // compter les prévisualisations de l'admin). L'identifiant est PUBLIC (pas un secret) ;
+    // pour changer de compte/fournisseur, il suffit de le remplacer ici (couture unique).
+    // Cible Azure possible plus tard : Application Insights ou un /api/collect maison.
+    try {
+      var UMAMI_ID = 'b94c0a14-a1fb-4127-b7e7-976c74e36127';
+      var UMAMI_SRC = 'https://cloud.umami.is/script.js';
+      if (UMAMI_ID && !document.querySelector('script[data-website-id]')) {
+        var us = document.createElement('script');
+        us.defer = true; us.src = UMAMI_SRC; us.setAttribute('data-website-id', UMAMI_ID);
+        (document.head || document.documentElement).appendChild(us);
+      }
+    } catch (e) { /* fail-silent : Umami ne doit jamais gêner la page */ }
+
     var KEY = 'chaskis_analytics_v1';
     var now = Date.now();
     var store = null;

@@ -121,6 +121,37 @@ function isForbidden(q, forbidden) {
   });
 }
 
+// Historique de conversation (MÉMOIRE) fourni par le client. Serveur SANS état : le widget
+// renvoie les derniers tours, on les borne durement (6 tours max, 600 car. chacun, rôles validés)
+// pour maîtriser le coût LLM et l'abus. Contenu traité comme non fiable (voir buildMessages).
+var MAX_TURNS = 6, MAX_TURN_CHARS = 600;
+function parseHistory(h) {
+  if (!Array.isArray(h)) return [];
+  var out = [];
+  for (var i = Math.max(0, h.length - MAX_TURNS); i < h.length; i++) {
+    var m = h[i];
+    if (m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string') {
+      var c = m.content.trim();
+      if (c) out.push({ role: m.role, content: c.slice(0, MAX_TURN_CHARS) });
+    }
+  }
+  return out;
+}
+
+// --- Réponse en FLUX (SSE) --------------------------------------------------------------------
+// Contrat uniforme : quand le client demande le streaming (body.stream === true), on répond
+// TOUJOURS en text/event-stream, même pour les cas non génératifs (un seul « delta »). Événements :
+//   meta  { sources, lang }    (une fois, au début)
+//   delta { t: "<morceau>" }   (un ou plusieurs)
+//   done  { mode }             (une fois, à la fin)
+function sseHead(res) {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Accel-Buffering', 'no'); // désactive la mise en tampon d'un proxy (Nginx/Azure)
+}
+function sseEvent(res, ev, obj) { res.write('event: ' + ev + '\ndata: ' + JSON.stringify(obj) + '\n\n'); }
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'méthode non autorisée' });
 
@@ -132,13 +163,26 @@ module.exports = async function handler(req, res) {
   if (!q) return send(res, 400, { error: 'question manquante' });
   if (q.length > MAX_Q) q = q.slice(0, MAX_Q);
 
+  var wantStream = body.stream === true;
+  var history = parseHistory(body.history);
+
+  // Livraison uniforme : JSON (défaut, non-cassant) OU SSE d'un bloc si streaming demandé.
+  function deliver(mode, answer, sources) {
+    if (!wantStream) return send(res, 200, { ok: true, mode: mode, answer: answer, sources: sources || [], lang: lang });
+    sseHead(res);
+    sseEvent(res, 'meta', { sources: sources || [], lang: lang });
+    sseEvent(res, 'delta', { t: answer });
+    sseEvent(res, 'done', { mode: mode });
+    return res.end();
+  }
+
   // Réglages publiés par l'admin (repli personnalisé, sujets interdits, ton, instructions).
   var cfg = chatbotConfig();
   var fallbackMsg = (typeof cfg.fallback === 'string' && cfg.fallback.trim()) ? cfg.fallback.trim() : FALLBACK[lang];
 
   // Sujet interdit -> on dévie tout de suite vers le repli (avant toute récupération).
   if (isForbidden(q, cfg.forbidden)) {
-    return send(res, 200, { ok: true, mode: 'forbidden', answer: fallbackMsg, sources: [], lang: lang });
+    return deliver('forbidden', fallbackMsg, []);
   }
 
   var index = getIndex();
@@ -147,7 +191,7 @@ module.exports = async function handler(req, res) {
 
   // Aucun passage pertinent -> repli honnête (jamais d'invention).
   if (!hits.length) {
-    return send(res, 200, { ok: true, mode: 'fallback', answer: fallbackMsg, sources: [], lang: lang });
+    return deliver('fallback', fallbackMsg, []);
   }
 
   // LLM configuré -> génération ancrée. Échec quelconque -> repli extractif (transparent).
@@ -166,15 +210,33 @@ module.exports = async function handler(req, res) {
       ? "\nIf the answer is not in the context, reply with EXACTLY this message, nothing else: \""
       : "\nSi la réponse n'est pas dans le contexte, réponds EXACTEMENT ce message, sans rien ajouter : \"") + fallbackMsg + "\"";
     system += "\n\nContexte :\n" + context;
-    var out = await llm.generate({ system: system, user: q, maxTokens: 300, timeoutMs: 8000 });
+
+    if (wantStream) {
+      // Flux token par token. On amorce l'en-tête SSE + meta, puis on relaie chaque morceau.
+      sseHead(res);
+      sseEvent(res, 'meta', { sources: sources, lang: lang });
+      var acc = '';
+      var sout = await llm.streamGenerate(
+        { system: system, user: q, history: history, maxTokens: 300, timeoutMs: 9000 },
+        function (d) { acc += d; sseEvent(res, 'delta', { t: d }); }
+      );
+      if ((sout.ok && sout.text) || acc) { sseEvent(res, 'done', { mode: 'generative' }); return res.end(); }
+      // Échec TOTAL avant tout morceau -> repli extractif en un bloc (transparent).
+      var extf = rag.snippet(hits[0].passage.text, q, 320);
+      sseEvent(res, 'delta', { t: extf });
+      sseEvent(res, 'done', { mode: 'extractive' });
+      return res.end();
+    }
+
+    var out = await llm.generate({ system: system, user: q, history: history, maxTokens: 300, timeoutMs: 8000 });
     if (out.ok && out.text) {
-      return send(res, 200, { ok: true, mode: 'generative', answer: out.text, sources: sources, lang: lang });
+      return deliver('generative', out.text, sources);
     }
     // sinon on tombe dans l'extractif ci-dessous
   }
 
   var ans = rag.snippet(hits[0].passage.text, q, 320);
-  return send(res, 200, { ok: true, mode: 'extractive', answer: ans, sources: sources, lang: lang });
+  return deliver('extractive', ans, sources);
 };
 
 // Exposé pour les tests uniquement.

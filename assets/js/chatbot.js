@@ -199,6 +199,20 @@
   let hasGreeted = false;
   let currentCategory = null;
 
+  // Mémoire de conversation (envoyée à /api/chat pour que le bot suive le fil). Texte BRUT
+  // (jamais de HTML), borné aux derniers tours côté client comme côté serveur.
+  const convo = [];
+  const MAX_CONVO = 12; // 6 échanges
+  function pushConvo(role, content) {
+    const c = String(content == null ? '' : content).trim();
+    if (!c) return;
+    convo.push({ role: role, content: c.slice(0, 600) });
+    while (convo.length > MAX_CONVO) convo.shift();
+  }
+  function convoForApi() { return convo.slice(-MAX_CONVO); }
+  // Retire les balises d'une réponse scriptée (qui contient du HTML) pour la mémoire = texte pur.
+  function stripHtml(s) { const d = document.createElement('div'); d.innerHTML = String(s || ''); return d.textContent || d.innerText || ''; }
+
   function addMsg(html, from) {
     const row = document.createElement('div');
     row.className = 'chaskis-cb-row is-' + from;
@@ -307,24 +321,60 @@
       .replace(/\+41 22 700 01 27/g, '<a href="tel:+41227000127">+41 22 700 01 27</a>');
   }
 
-  // Interroge /api/chat. Renvoie du HTML sûr (texte échappé) ou null si indisponible.
-  // La réponse du modèle est TOUJOURS échappée avant affichage (pas d'injection possible).
-  async function answerViaApi(text) {
+  // Texte du modèle -> HTML SÛR : toujours échappé avant affichage (aucune injection), puis on
+  // rend cliquables les seules coordonnées connues (littéraux) et les retours à la ligne.
+  function safeHtml(raw) { return linkifyContacts(escapeHtml(raw)).replace(/\n/g, '<br>'); }
+
+  // Interroge /api/chat en FLUX (SSE). Appelle onDelta(texteCumulé) au fil des morceaux.
+  // Gère aussi le cas d'un endpoint SANS streaming (répond en JSON) en une seule passe, et le
+  // cas endpoint absent/échec (renvoie null -> l'appelant retombe sur le repli scripté).
+  // Renvoie { ok, full, mode } (texte BRUT) ou null.
+  async function streamViaApi(text, onDelta) {
     try {
       const ctrl = new AbortController();
-      const to = setTimeout(() => ctrl.abort(), 7000);
+      const to = setTimeout(() => ctrl.abort(), 20000);
       const lang = window._currentLang === 'en' ? 'en' : 'fr';
       const r = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: text, lang }),
+        body: JSON.stringify({ question: text, lang, stream: true, history: convoForApi() }),
         signal: ctrl.signal,
       });
+      if (!r.ok) { clearTimeout(to); return null; }
+      const ct = r.headers.get('content-type') || '';
+      // Endpoint sans streaming (ancien déploiement) : réponse JSON classique, une passe.
+      if (ct.indexOf('text/event-stream') < 0 || !r.body || !r.body.getReader) {
+        clearTimeout(to);
+        const j = await r.json().catch(() => null);
+        if (!j || !j.ok || !j.answer) return null;
+        onDelta(j.answer);
+        return { ok: true, full: j.answer, mode: j.mode || '' };
+      }
+      // Flux SSE : événements séparés par une ligne vide ; lignes « event: » / « data: ».
+      const reader = r.body.getReader();
+      const dec = new TextDecoder();
+      let buf = '', full = '', mode = '', got = false;
+      while (true) {
+        const step = await reader.read();
+        if (step.done) break;
+        buf += dec.decode(step.value, { stream: true });
+        let idx;
+        while ((idx = buf.indexOf('\n\n')) >= 0) {
+          const block = buf.slice(0, idx); buf = buf.slice(idx + 2);
+          let ev = 'message', data = '';
+          block.split('\n').forEach(line => {
+            if (line.indexOf('event:') === 0) ev = line.slice(6).trim();
+            else if (line.indexOf('data:') === 0) data += line.slice(5).trim();
+          });
+          if (!data) continue;
+          let obj; try { obj = JSON.parse(data); } catch (e) { continue; }
+          if (ev === 'delta' && obj.t) { full += obj.t; got = true; onDelta(full); }
+          else if (ev === 'done') { mode = obj.mode || ''; }
+        }
+      }
       clearTimeout(to);
-      if (!r.ok) return null;
-      const j = await r.json();
-      if (!j || !j.ok || !j.answer) return null;
-      return linkifyContacts(escapeHtml(j.answer)).replace(/\n/g, '<br>');
+      if (!got || !full.trim()) return null;
+      return { ok: true, full: full, mode: mode };
     } catch (e) { return null; }
   }
 
@@ -334,10 +384,26 @@
     addMsg(escapeHtml(q), 'user');
     input.value = '';
     const typing = addTyping();
-    // 1) endpoint réel (RAG + LLM si configuré) ; 2) repli scripté si absent/échec.
-    answerViaApi(q).then(apiHtml => {
-      typing.remove();
-      addMsg(apiHtml || answerFreeText(q), 'bot');
+    let botRow = null;
+    // Affiche/actualise la bulle du bot au fil du flux (texte échappé à chaque morceau).
+    const render = (raw) => {
+      if (!botRow) { if (typing.parentNode) typing.remove(); botRow = addMsg('', 'bot'); }
+      const bubble = botRow.querySelector('.chaskis-cb-bubble');
+      bubble.innerHTML = safeHtml(raw);
+      body.scrollTop = body.scrollHeight;
+    };
+    // 1) endpoint réel en FLUX (RAG + LLM si configuré) ; 2) repli scripté si absent/échec.
+    streamViaApi(q, render).then(res => {
+      if (res && res.ok) {
+        pushConvo('user', q);
+        pushConvo('assistant', res.full);
+        return;
+      }
+      if (typing.parentNode) typing.remove();
+      const scripted = answerFreeText(q);
+      if (!botRow) addMsg(scripted, 'bot'); // rien reçu -> bulle scriptée
+      pushConvo('user', q);
+      pushConvo('assistant', stripHtml(scripted));
     });
   }
 

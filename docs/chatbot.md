@@ -27,7 +27,7 @@ pré-enregistrées (`assets/js/chatbot.js`) : la démo client reste riche sans b
 
 ## Pièces
 
-- `api/chat.js` — endpoint `POST /api/chat` (`{ question, lang }` → `{ answer, mode, sources, lang }`).
+- `api/chat.js` — endpoint `POST /api/chat` (`{ question, lang, stream?, history? }` → JSON `{ answer, mode, sources, lang }`, ou flux SSE si `stream:true`).
 - `api/_lib/rag.js` — récupération pure (tokenisation FR, score TF-IDF, extrait). Testable sans clé.
 - `api/_lib/llm.js` — **couture** vers le fournisseur LLM (Groq / OpenAI / Azure OpenAI), swap par variable d'env.
 - `api/_data/kb.json` — la **base de connaissances** (faits FR + EN). Éditable sans toucher au code.
@@ -79,6 +79,24 @@ node tools/api-server.js 3199           # sert le site + /api hors Vercel
 curl -X POST localhost:3199/api/chat -H 'content-type: application/json' \
      -d '{"question":"Quels sont vos tarifs ?","lang":"fr"}'
 ```
+
+## Réponses en flux (streaming) + mémoire
+
+- **Streaming** : quand le widget envoie `stream: true`, `/api/chat` répond en **SSE**
+  (`text/event-stream`) avec trois types d'événements : `meta` (`{ sources, lang }`, une fois),
+  `delta` (`{ t }`, un ou plusieurs morceaux), `done` (`{ mode }`, une fois). En mode génératif,
+  les morceaux sont relayés **au fil de l'eau** depuis le LLM (`llm.streamGenerate`). Les cas non
+  génératifs (repli, interdit, extractif) renvoient le même contrat en **un seul** `delta`.
+  Sans `stream`, la réponse reste du **JSON** classique (non-cassant).
+- **Mémoire** : le serveur est **sans état**. Le widget renvoie `history` = les derniers tours
+  (`[{ role:'user'|'assistant', content }]`), bornés (6 tours, 600 car.). Ils sont insérés dans le
+  prompt LLM (`llm.buildMessages`) entre le système et la question courante. L'historique est
+  traité comme du contenu **non fiable** (le prompt système garde la consigne anti-détournement).
+- **Repli en cascade côté widget** : flux SSE → (si indisponible) réponse JSON → (si absent)
+  réponses de démonstration scriptées. L'assistant répond donc **toujours**, sans coupure.
+- **Hôte** : le streaming utilise `res.write()` (Node brut) — fonctionne sur Vercel Functions et
+  Azure App Service. `X-Accel-Buffering: no` désactive la mise en tampon d'un proxy. Sur un plan à
+  faible timeout (Vercel Hobby ~10 s), le streaming aide : les premiers mots arrivent avant le mur.
 
 ## Migration Azure
 

@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.36.0" };
+const ADMIN_BUILD = { version: "0.37.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1244,7 +1244,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.36.0", cur:true, date:"2026-07-15", title:"Comptes & accès : les droits sont désormais vérifiés côté serveur", items:[
+  { v:"v0.37.0", cur:true, date:"2026-07-15", title:"Chatbot : réponses en direct (au fil de l'eau) + mémoire de conversation", items:[
+    {t:"add", x:"L'assistant écrit maintenant sa réponse EN DIRECT, mot après mot (comme ChatGPT), au lieu d'attendre la réponse complète : c'est plus vivant et on voit tout de suite qu'il répond"},
+    {t:"add", x:"Il SUIT LE FIL de la conversation : posez une question de suivi (« et pour Lausanne ? ») et il comprend de quoi vous parliez, sans tout répéter"},
+    {t:"imp", x:"Sans coupure ni régression : si le direct n'est pas disponible, l'assistant retombe automatiquement sur une réponse d'un bloc, puis sur ses réponses de démonstration — il répond toujours"}
+  ]},
+  { v:"v0.36.0", date:"2026-07-15", title:"Comptes & accès : les droits sont désormais vérifiés côté serveur", items:[
     {t:"add", x:"« Qui peut faire quoi » n'est plus seulement une question d'affichage : le serveur fait RESPECTER les rôles. Un compte sans le droit de publier ne peut pas publier, même en contournant l'interface — la demande est refusée côté serveur (et aucune écriture n'a lieu). Idem pour restaurer une version, voir l'historique, les rendez-vous ou la performance"},
     {t:"imp", x:"Sans casse ni verrouillage : votre compte administrateur garde l'accès complet, l'accès de secours par clé reste possible. L'attribution d'un rôle à un collaborateur se fait par un simple réglage (pas de développement), et chaque service reste derrière une couture fine (changer de compte = changer une variable)"}
   ]},
@@ -1674,7 +1679,7 @@ const PROGRESS=[
   {view:"media",name:"Médiathèque",env:"prod",stage:"stable",version:"1.1.0",recent:["Compression et redimensionnement des images à l'import","Confirmation avant suppression d'un média"]},
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
-  {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.3.0",recent:["IA générative activée (réponses rédigées FR/EN, ancrées sur votre contenu)","Périmètre strict vérifié : hors-sujet et détournements refusés","Vos sources admin alimentent le bot ; coût maîtrisé (repli sans coupure)"]},
+  {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.5.0",recent:["« Terminer » archive et télécharge le compte-rendu","Découverte guidée et simulateur d'offre"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.7.0",recent:["Vraie mesure d'audience sans cookie (cet appareil)","Plage de dates personnalisée fonctionnelle"]},
@@ -1810,6 +1815,7 @@ const TECH_FEATURES=[
   { group:"Chatbot", items:[
     {n:"Builder : sources, périmètre, comportement, bac à test", s:"ok"},
     {n:"Lecteur de fichier des sources", s:"ok"},
+    {n:"Réponses en flux (streaming) + mémoire de conversation", s:"ok"},
     {n:"Moteur RAG réel (indexation + LLM)", s:"todo"} ]},
   { group:"Rendez-vous & Copilote", items:[
     {n:"Vue Rendez-vous (liste, fiche, relance)", s:"ok"},
@@ -1859,7 +1865,7 @@ const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
 // % = « développé & fonctionnel » (avec un compte de TEST branchable). Le passage aux comptes
 // DÉFINITIFS et à l'hébergement final (Azure) est de la CONFIGURATION, suivie à part — pas du dev.
-const TECH_DONE={host:92,publish:88,versioning:85,analytics:62,calendly:68,auth:88,perf:82,media:45,chatbot:82};
+const TECH_DONE={host:92,publish:88,versioning:85,analytics:62,calendly:68,auth:88,perf:82,media:45,chatbot:90};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */

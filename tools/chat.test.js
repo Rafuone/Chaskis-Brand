@@ -171,6 +171,105 @@ async function callChat(body, method) {
   chatMod._setTestConfig(null); chatMod._resetIndex();
 
   // =========================================================================
+  section('LLM — mémoire de conversation (buildMessages)');
+  var bm = llm.buildMessages({ system: 'S', user: 'Q', history: [
+    { role: 'user', content: 'a' }, { role: 'assistant', content: 'b' },
+    { role: 'bogus', content: 'x' }, { role: 'user', content: '   ' },
+  ] });
+  ok(bm[0].role === 'system' && bm[0].content === 'S', 'buildMessages : system en tête');
+  ok(bm[bm.length - 1].role === 'user' && bm[bm.length - 1].content === 'Q', 'buildMessages : question courante en dernier');
+  ok(bm.length === 4 && bm[1].content === 'a' && bm[2].content === 'b', 'buildMessages : historique valide inséré, rôle inconnu et contenu vide ignorés');
+
+  // =========================================================================
+  section('Endpoint /api/chat — FLUX (SSE) + mémoire');
+  // fakeRes capable de capter les res.write() successifs et d'en extraire les événements SSE.
+  function fakeSseRes() {
+    return {
+      statusCode: 0, headers: {}, chunks: [], ended: false,
+      setHeader: function (k, v) { this.headers[k] = v; },
+      write: function (s) { this.chunks.push(String(s)); },
+      end: function (s) { if (s !== undefined) this.chunks.push(String(s)); this.ended = true; },
+      events: function () {
+        return this.chunks.join('').split('\n\n').filter(Boolean).map(function (block) {
+          var ev = 'message', data = '';
+          block.split('\n').forEach(function (line) {
+            if (line.indexOf('event:') === 0) ev = line.slice(6).trim();
+            else if (line.indexOf('data:') === 0) data += line.slice(5).trim();
+          });
+          var obj = null; try { obj = JSON.parse(data); } catch (e) {}
+          return { ev: ev, data: obj };
+        });
+      },
+    };
+  }
+  async function callChatStream(body) {
+    delete require.cache[require.resolve(path.join(ROOT, 'api/chat.js'))];
+    var handler = require(path.join(ROOT, 'api/chat.js'));
+    var res = fakeSseRes();
+    await handler(fakeReq('POST', body), res);
+    return res;
+  }
+  // Corps fetch simulant un flux SSE OpenAI-compatible (getReader().read()).
+  function sseBody(parts) {
+    var enc = new TextEncoder();
+    var q = parts.map(function (p) { return enc.encode(p); }), i = 0;
+    return { getReader: function () { return { read: function () { return Promise.resolve(i < q.length ? { done: false, value: q[i++] } : { done: true }); } }; } };
+  }
+
+  var savedK2 = process.env.LLM_API_KEY, savedP2 = process.env.LLM_PROVIDER, savedM2 = process.env.LLM_MODEL, realFetch2 = global.fetch;
+
+  // (a) Sans clé : le streaming reste fonctionnel (mode extractif, un seul bloc).
+  delete process.env.LLM_API_KEY; delete process.env.LLM_PROVIDER;
+  var rse = await callChatStream({ question: 'Quels sont vos tarifs ?', lang: 'fr', stream: true });
+  var evse = rse.events();
+  ok((rse.headers['Content-Type'] || '').indexOf('text/event-stream') >= 0, 'SSE : en-tête text/event-stream');
+  ok(evse[0].ev === 'meta' && evse.some(function (e) { return e.ev === 'delta' && e.data.t; }) && evse[evse.length - 1].ev === 'done' && evse[evse.length - 1].data.mode === 'extractive', 'SSE sans clé : meta -> delta -> done(extractive)');
+
+  // (b) Avec clé : vrai flux token par token relayé.
+  process.env.LLM_API_KEY = 'k'; process.env.LLM_PROVIDER = 'groq'; process.env.LLM_MODEL = 'llama-3.1-8b-instant';
+  var capStream = null;
+  global.fetch = async function (url, init) {
+    capStream = { url: url, init: init };
+    return { ok: true, status: 200, body: sseBody([
+      'data: {"choices":[{"delta":{"content":"Nos "}}]}\n\n',
+      'data: {"choices":[{"delta":{"content":"délais "}}]}\n\n',
+      'data: {"choices":[{"delta":{"content":"sont courts."}}]}\n\n',
+      'data: [DONE]\n\n',
+    ]) };
+  };
+  var rs = await callChatStream({ question: 'Quels sont vos délais ?', lang: 'fr', stream: true });
+  var evs = rs.events();
+  var deltas = evs.filter(function (e) { return e.ev === 'delta'; }).map(function (e) { return e.data.t; }).join('');
+  ok(evs[0].ev === 'meta', 'SSE génératif : 1er événement = meta');
+  ok(deltas === 'Nos délais sont courts.', 'SSE génératif : deltas concaténés = réponse complète');
+  ok(evs[evs.length - 1].ev === 'done' && evs[evs.length - 1].data.mode === 'generative', 'SSE génératif : done(generative) en fin');
+  ok(capStream && JSON.parse(capStream.init.body).stream === true, 'SSE génératif : appel LLM avec stream:true');
+
+  // (c) Mémoire : l'historique client est injecté dans les messages du LLM.
+  await callChatStream({ question: 'Et pour Lausanne ?', lang: 'fr', stream: true, history: [
+    { role: 'user', content: 'Vous livrez à Genève ?' }, { role: 'assistant', content: 'Oui, Genève est couverte.' },
+  ] });
+  var msgs = JSON.parse(capStream.init.body).messages;
+  ok(msgs.some(function (m) { return m.role === 'user' && /Genève/.test(m.content); }) && msgs.some(function (m) { return m.role === 'assistant' && /couverte/.test(m.content); }), 'mémoire : l\'historique (user+assistant) est injecté dans le prompt LLM');
+  ok(msgs[msgs.length - 1].role === 'user' && /Lausanne/.test(msgs[msgs.length - 1].content), 'mémoire : la question courante reste le dernier message user');
+
+  // (d) Échec LLM total en streaming -> repli extractif en SSE (jamais d'erreur).
+  global.fetch = async function () { return { ok: false, status: 500 }; };
+  var rsf = await callChatStream({ question: 'Quels sont vos tarifs ?', lang: 'fr', stream: true });
+  var evsf = rsf.events();
+  ok(evsf[evsf.length - 1].ev === 'done' && evsf[evsf.length - 1].data.mode === 'extractive', 'SSE : échec LLM total -> repli extractif transparent');
+
+  // (e) Non-cassant : sans stream:true, la réponse reste du JSON classique.
+  delete process.env.LLM_API_KEY; delete process.env.LLM_PROVIDER;
+  var rjson = await callChat({ question: 'Quels sont vos tarifs ?', lang: 'fr' });
+  ok(rjson.json() && rjson.json().mode === 'extractive', 'non-cassant : sans stream -> réponse JSON inchangée');
+
+  global.fetch = realFetch2;
+  if (savedK2 !== undefined) process.env.LLM_API_KEY = savedK2; else delete process.env.LLM_API_KEY;
+  if (savedP2 !== undefined) process.env.LLM_PROVIDER = savedP2; else delete process.env.LLM_PROVIDER;
+  if (savedM2 !== undefined) process.env.LLM_MODEL = savedM2; else delete process.env.LLM_MODEL;
+
+  // =========================================================================
   console.log('\n' + (fail === 0 ? '✅' : '❌') + ' ' + pass + ' réussis, ' + fail + ' échoués');
   process.exit(fail === 0 ? 0 : 1);
 })().catch(function (e) { console.error('ERREUR HARNAIS', e); process.exit(2); });

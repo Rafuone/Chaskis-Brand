@@ -76,16 +76,6 @@ const MONTHS_FULL = ["janvier","février","mars","avril","mai","juin","juillet",
 const MEDIA = { imgTypes:["image/webp","image/png","image/jpeg","image/svg+xml"], imgMax:2*1024*1024,
                 vidTypes:["video/mp4","video/webm"], vidMax:50*1024*1024 };
 const WEEKDAYS = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
-function drawSpark(svg, vals){
-  if(!svg) return;
-  const W=Math.max(80, svg.clientWidth||220), H=30, p=3;
-  svg.setAttribute("viewBox","0 0 "+W+" "+H);
-  const max=Math.max.apply(null,vals), min=Math.min.apply(null,vals), rng=(max-min)||1;
-  const X=i=> p+(W-2*p)*(i/(vals.length-1)), Y=v=> p+(H-2*p)*(1-(v-min)/rng);
-  let line=""; vals.forEach((v,i)=> line+=(i?" L":"M")+X(i).toFixed(1)+" "+Y(v).toFixed(1));
-  const area="M"+X(0).toFixed(1)+" "+(H-p)+" "+vals.map((v,i)=>"L"+X(i).toFixed(1)+" "+Y(v).toFixed(1)).join(" ")+" L"+X(vals.length-1).toFixed(1)+" "+(H-p)+" Z";
-  svg.innerHTML='<defs><linearGradient id="sp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4BB3A4" stop-opacity=".25"/><stop offset="1" stop-color="#4BB3A4" stop-opacity="0"/></linearGradient></defs><path d="'+area+'" fill="url(#sp)"/><path d="'+line+'" fill="none" stroke="#4BB3A4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
-}
 
 /* ============================================================
    Draft + versions state
@@ -506,7 +496,6 @@ function mediaSizeHint(m){ if(!m.w||!m.h||m.kind==="video") return null; const p
   if(px<=80) return {t:"Icône",c:"#8a8c89"}; if(px<=500) return {t:"Petite",c:"#8a8c89"}; if(px<=1200) return {t:"Moyenne",c:"#0F6E56"}; if(px<=2400) return {t:"Grande",c:"#0F6E56"}; return {t:"Très grande",c:"#9A6A15"}; }
 const _mediaEnriching=new Set();
 let _mediaRerenderT=null;
-function scheduleMediaRerender(){ if(_mediaRerenderT) clearTimeout(_mediaRerenderT); _mediaRerenderT=setTimeout(()=>{ const v=document.getElementById("view-media"); if(v&&v.classList.contains("on")) renderMediaPage(); if(mediaDetailIdx!=null) renderMediaDetail(); },140); }
 function enrichMedia(m, cb){
   const tasks=[];
   if((!m.w||!m.h) && m.src){ tasks.push(new Promise(res=>{
@@ -1061,11 +1050,6 @@ function fillDashActivity(){ const da=document.getElementById("dashActivity"); i
   if(!acts.length){ da.innerHTML='<p class="hint" style="margin:0">Aucune publication pour l\'instant. L\'activité apparaîtra ici dès votre première publication.</p>'; return; }
   da.innerHTML=acts.map(a=>'<div class="dash-act"><button type="button" class="dash-act-hd"><span class="avatar xs" style="background:'+((commercialChip(a.who)||{}).color||col)+';color:#fff;margin-right:0">'+initials(a.who)+'</span><div class="dash-act-tx"><div class="dash-act-t"><b>'+escHtml(a.who.split(" ")[0]||a.who)+'</b> '+escHtml(a.t)+'</div><div class="dash-act-w">'+escHtml(a.w)+'</div></div><svg class="dash-act-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="dash-act-detail">'+escHtml(a.detail)+'</div></div>').join("");
   da.querySelectorAll(".dash-act-hd").forEach(hd=>hd.addEventListener("click",()=>hd.parentElement.classList.toggle("open"))); }
-function fillDashChangelog(){ const dl=document.getElementById("dashChangelog"); if(!dl) return; dl.innerHTML="";
-  DASH_CHANGELOG.forEach(c=>{ const row=document.createElement("div"); row.className="perf-row";
-    const tag=c.tag==="Nouveau"?'<span class="pf-pill pf-good">Nouveau</span>':'<span class="pf-pill" style="background:#EEEDFE;color:#534AB7">Amélioré</span>';
-    row.innerHTML='<span class="pr-ic" style="color:var(--muted)"><i data-lucide="'+c.icon+'"></i></span><div class="pr-main"><div class="pr-k">'+c.t+'</div><div class="pr-sub">'+c.d+'</div></div>'+tag; dl.appendChild(row); });
-  const more=document.createElement("button"); more.type="button"; more.className="dash-more"; more.innerHTML='Voir le journal complet <i data-lucide="arrow-right"></i>'; more.addEventListener("click",()=>showView("notes")); dl.appendChild(more); refreshIcons(); }
 function commercialChip(name){ const u=adminUsers.find(x=>x.name===name||x.name.split(" ")[0]===String(name).split(" ")[0]);
   return { color:u?roleColor(u.role):"#0F6E56", ini:u?userInitials(u):initials(name), full:u?u.name:name }; }
 function fillDashRdv(){ const el=document.getElementById("dashRdv"); if(!el) return;
@@ -3377,15 +3361,6 @@ function buildSiteContent(){
   } }catch(e){}
   return out;
 }
-function exportDraftBundle(){
-  const KEYS={ draft:STORE_KEY, versions:VERS_KEY, ui:UI_KEY, pricing:PRICING_KEY, bugs:BUG_KEY,
-    affiliation:AFFIL_KEY, affilCats:AFFIL_CATS_KEY, contests:AFFIL_CONTESTS_KEY, copilot:COP_KEY,
-    copilotHist:"chaskis_copilot_hist", chatbot:CHAT_KEY, users:USERS_KEY, roleAccess:ACCESS_KEY,
-    roleCaps:CAPS_KEY, rdv:"chaskis_rdv_v1", perfLast:"chaskis_perf_last" };
-  const data={};
-  Object.keys(KEYS).forEach(function(k){ try{ const raw=localStorage.getItem(KEYS[k]); data[k]=raw?JSON.parse(raw):null; }catch(e){ data[k]=null; } });
-  return { app:"chaskis-admin", version:(typeof ADMIN_BUILD!=="undefined"?ADMIN_BUILD.version:null), page:PAGE, exportedAt:new Date().toISOString(), data:data };
-}
 
 document.getElementById("navlist").addEventListener("click",(e)=>{
   const b=e.target.closest(".nav-i"); if(!b||b.classList.contains("dis")||!b.dataset.view) return;
@@ -3646,7 +3621,6 @@ const CB_IC={
 };
 function srcIcon(k){ return k==="url"?CB_IC.globe : k==="drive"?CB_IC.drive : CB_IC.file; }
 function cbNf(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g," "); }
-function gotoCbStats(tab){ openCbDrawer(tab); }
 function renderCbCards(id, nav){
   const cw=document.getElementById(id); if(!cw) return; cw.innerHTML="";
   const p=CB_PERIODS[cbKey]||CB_PERIODS["30j"];
@@ -3736,15 +3710,6 @@ function renderCbConvLang(){
   const data=[["fr",48],["en",17],["pt",10],["ar",8],["de",6],["es",5],["it",3],["tr",2],["so",1]]
     .map(x=>['<span class="flag">'+(FLAG[x[0]]||FLAG.ar)+'</span>'+(LANG_LBL[x[0]]||x[0]), x[1]]);
   renderBars("cbConvLangBars", data, "#6B5BCC"); refreshIcons();
-}
-function renderCbStatSummary(){
-  const el=document.getElementById("cbStatSummary"); if(!el) return;
-  const p=CB_PERIODS[cbKey]||CB_PERIODS["30j"]; const ans=p.q-p.un, rate=Math.round(ans/p.q*100);
-  el.innerHTML=[
-    ["Taux de réponse",rate+" %",trendChip(p.dRate," pts")],
-    ["Questions sans réponse",String(p.un),'<span class="cs-sub">'+p.unKnow+' à documenter</span>'],
-    ["Conversations",cbNf(p.conv),trendChip(p.dConv)]
-  ].map(c=>'<div class="cs"><div class="cs-top"><span class="cs-v">'+c[1]+'</span>'+(c[2]||"")+'</div><span class="cs-k">'+c[0]+'</span></div>').join('');
 }
 function renderCbBreakdown(){
   const total=cbUnanswered.length||1;

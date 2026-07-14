@@ -85,7 +85,10 @@ silence** (repli sur les données de démo / `501`), le site ne casse jamais.
 
 | Variable | Chantier | Rôle |
 |----------|----------|------|
-| `PUBLISH_SECRET` | publish/perf/calendly | clé partagée de l'API admin (Bearer). `openssl rand -hex 24`. |
+| `PUBLISH_SECRET` | auth (repli) | clé partagée de l'API admin (Bearer), break-glass de l'auth Clerk. `openssl rand -hex 24`. |
+| `CLERK_PUBLISHABLE_KEY` | auth | clé publique Clerk : charge Clerk côté client + dérive le JWKS pour vérifier les sessions. Seule variable Clerk lue par le code. |
+| `CLERK_SECRET_KEY` | auth | standard Clerk ; **non utilisé** par la vérification manuelle par JWKS (réservé au SDK backend). Jamais exposé au client. |
+| `CLERK_ALLOWED_ORIGINS` | auth | optionnel : origines autorisées pour le claim `azp` (défense CSRF), séparées par des virgules. |
 | `GITHUB_TOKEN` | publish | PAT fine-grained, **Contents: write** sur ce dépôt. |
 | `GITHUB_REPO` | publish | `owner/repo`. |
 | `GITHUB_BRANCH` | publish | branche cible (`main` en prod). |

@@ -56,6 +56,17 @@ function b64urlBuf(b) { return b.toString('base64').replace(/\+/g, '-').replace(
   ok(await S.verifyClerkJwt(jwt({ sub: 'u', iss: 'https://evil.example.com', exp: future })) === null, 'émetteur (iss) étranger rejeté');
   ok(await S.verifyClerkJwt('pas.un.jwt') === null, 'jeton malformé rejeté (pas de crash)');
 
+  section('Durcissement (revue de sécurité)');
+  ok(await S.verifyClerkJwt(jwt({ sub: 'u', iss: 'https://' + API + '.evil.com', exp: future })) === null, 'iss piégé « …clerk.accounts.dev.evil.com » rejeté (égalité stricte, pas « contient »)');
+  ok(await S.verifyClerkJwt(jwt({ sub: 'u', iss: ISS })) === null, 'exp manquant rejeté (exp requis)');
+  ok(await S.verifyClerkJwt(jwt({ iss: ISS, exp: future })) === null, 'sub manquant rejeté');
+  ok(await S.verifyClerkJwt('abc.def.@@@') === null, 'segment non base64url rejeté');
+  process.env.CLERK_ALLOWED_ORIGINS = 'https://admin.chaskis.example';
+  ok(await S.verifyClerkJwt(jwt({ sub: 'u', iss: ISS, exp: future, azp: 'https://pirate.example' })) === null, 'azp hors allow-list rejeté');
+  ok(await S.verifyClerkJwt(jwt({ sub: 'u', iss: ISS, exp: future, azp: 'https://admin.chaskis.example' })) !== null, 'azp dans allow-list accepté');
+  ok(await S.verifyClerkJwt(jwt({ sub: 'u', iss: ISS, exp: future })) !== null, 'azp absent toléré (Bearer déjà immunisé CSRF)');
+  delete process.env.CLERK_ALLOWED_ORIGINS;
+
   section('requireAuth — Clerk OU clé partagée');
   var reqWith = function (b) { return { headers: b ? { authorization: 'Bearer ' + b } : {} }; };
   ok(await S.requireAuth(reqWith(good)) === true, 'jeton Clerk valide -> autorisé');

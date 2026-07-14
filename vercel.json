@@ -1,4 +1,7 @@
 {
+  "crons": [
+    { "path": "/api/perf-cron", "schedule": "0 6 * * *" }
+  ],
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
     { "source": "/app", "destination": "/app.html" },

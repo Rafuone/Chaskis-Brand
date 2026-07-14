@@ -53,6 +53,38 @@ function extract(j) {
   };
 }
 
+// Mesure PURE d'une URL via PageSpeed. Réutilisée par l'endpoint (à la demande) ET par le cron
+// (mesure planifiée). Ne jette pas ; renvoie { ok, status, error?, result? }. Le `result` a la
+// même forme que la réponse de l'endpoint (url, strategy, score, categories, metrics).
+async function measure(url, strategy, opts) {
+  opts = opts || {};
+  var key = (opts.key || process.env.PAGESPEED_KEY || '').trim();
+  if (!key) return { ok: false, status: 501, error: 'PageSpeed non configuré (PAGESPEED_KEY absent)' };
+  // On n'audite que des URLs http(s) publiques (PageSpeed ne voit que le web public).
+  if (!/^https?:\/\//i.test(url || '') || String(url).length > 2048) return { ok: false, status: 400, error: 'paramètre url invalide (http(s) requis)' };
+  strategy = strategy === 'desktop' ? 'desktop' : 'mobile';
+  // PageSpeed est LENT (souvent 10-30 s). Le plan Vercel Hobby coupe vers ~10 s : fiable surtout
+  // sur un hôte au timeout plus large (Azure App Service, Vercel Pro). Délai réglable par env.
+  var TIMEOUT_MS = opts.timeoutMs || parseInt(process.env.PERF_TIMEOUT_MS, 10) || 9000;
+  var ctrl = new AbortController();
+  var timer = setTimeout(function () { ctrl.abort(); }, TIMEOUT_MS);
+  try {
+    var cats = ['performance', 'accessibility', 'seo', 'best-practices'];
+    var api = PSI + '?url=' + encodeURIComponent(url) + '&strategy=' + strategy + cats.map(function (c) { return '&category=' + c; }).join('') + '&key=' + encodeURIComponent(key);
+    var r = await fetch(api, { signal: ctrl.signal });
+    if (r.status === 429) return { ok: false, status: 429, error: 'quota PageSpeed dépassé' };
+    if (!r.ok) return { ok: false, status: 502, error: 'PageSpeed a échoué (' + r.status + ')' };
+    var j = await r.json();
+    var out = extract(j);
+    return { ok: true, status: 200, result: { url: url, strategy: strategy, score: out.score, categories: out.categories, metrics: out.metrics } };
+  } catch (e) {
+    var aborted = e && e.name === 'AbortError';
+    return { ok: false, status: aborted ? 504 : 502, error: aborted ? 'délai PageSpeed dépassé (mesure trop longue pour le timeout de la fonction)' : 'erreur réseau PageSpeed' };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') return send(res, 405, { error: 'méthode non autorisée' });
 
@@ -61,41 +93,18 @@ module.exports = async function handler(req, res) {
   // Capacité requise : voir la performance (perf.view).
   if (!can('perf.view', auth)) return send(res, 403, { error: 'accès refusé', need: 'perf.view' });
 
-  var key = (process.env.PAGESPEED_KEY || '').trim();
-  if (!key) return send(res, 501, { error: 'PageSpeed non configuré (PAGESPEED_KEY absent)' });
-
   var url = '', strategy = 'mobile';
   try {
     var u = new URL(req.url, 'http://localhost');
     url = (u.searchParams.get('url') || '').trim();
     if (u.searchParams.get('strategy') === 'desktop') strategy = 'desktop';
   } catch (e) {}
-  // On n'audite que des URLs http(s) publiques (PageSpeed ne voit que le web public).
-  if (!/^https?:\/\//i.test(url) || url.length > 2048) return send(res, 400, { error: 'paramètre url invalide (http(s) requis)' });
 
-  // PageSpeed est LENT (souvent 10-30 s). Le plan Vercel Hobby coupe vers ~10 s : ce endpoint
-  // est donc fiable surtout sur un hôte au timeout plus large (Azure App Service, Vercel Pro).
-  // Délai réglable par env (PERF_TIMEOUT_MS) : un hôte au timeout large (Azure) peut laisser
-  // PageSpeed finir ; défaut prudent 9000 ms pour les plans à faible timeout (Vercel Hobby).
-  var TIMEOUT_MS = parseInt(process.env.PERF_TIMEOUT_MS, 10) || 9000;
-  var ctrl = new AbortController();
-  var timer = setTimeout(function () { ctrl.abort(); }, TIMEOUT_MS);
-  try {
-    var cats = ['performance', 'accessibility', 'seo', 'best-practices'];
-    var api = PSI + '?url=' + encodeURIComponent(url) + '&strategy=' + strategy + cats.map(function (c) { return '&category=' + c; }).join('') + '&key=' + encodeURIComponent(key);
-    var r = await fetch(api, { signal: ctrl.signal });
-    if (r.status === 429) return send(res, 429, { error: 'quota PageSpeed dépassé' });
-    if (!r.ok) return send(res, 502, { error: 'PageSpeed a échoué (' + r.status + ')' });
-    var j = await r.json();
-    var out = extract(j);
-    return send(res, 200, { ok: true, url: url, strategy: strategy, score: out.score, categories: out.categories, metrics: out.metrics });
-  } catch (e) {
-    var aborted = e && e.name === 'AbortError';
-    return send(res, aborted ? 504 : 502, { error: aborted ? 'délai PageSpeed dépassé (mesure trop longue pour le timeout de la fonction)' : 'erreur réseau PageSpeed' });
-  } finally {
-    clearTimeout(timer);
-  }
+  var m = await measure(url, strategy);
+  if (!m.ok) return send(res, m.status, { error: m.error });
+  return send(res, 200, Object.assign({ ok: true }, m.result));
 };
 
-// Exposé pour les tests.
+// Exposé pour les tests + réutilisé par le cron de mesure planifiée.
 module.exports.extract = extract;
+module.exports.measure = measure;

@@ -54,6 +54,20 @@ async function call(url, headers) { var h = load(); var res = fakeRes(); await h
   ok(j.categories && j.categories.accessibility === 88 && j.categories.seo === 100, '200 : catégories accessibilité/SEO renvoyées');
   ok(j.strategy === 'mobile' && j.url === 'https://chaskis.ch', 'écho url + strategy');
 
+  section('measure() — fonction réutilisée par le cron');
+  var P = load();
+  delete process.env.PAGESPEED_KEY;
+  ok((await P.measure('https://x.ch', 'mobile')).status === 501, 'measure sans clé -> 501');
+  process.env.PAGESPEED_KEY = 'psk';
+  ok((await P.measure('pas-une-url', 'mobile')).status === 400, 'measure url invalide -> 400');
+  global.fetch = async function () { return { ok: true, status: 200, json: async function () { return sample; } }; };
+  var mm = await P.measure('https://chaskis.ch', 'desktop');
+  global.fetch = realFetch;
+  ok(mm.ok && mm.result.score === 92 && mm.result.strategy === 'desktop' && mm.result.categories.seo === 100, 'measure OK -> result normalisé (score/strategy/catégories)');
+  global.fetch = async function () { return { ok: false, status: 429 }; };
+  ok((await P.measure('https://x.ch', 'mobile')).status === 429, 'measure quota -> 429');
+  global.fetch = realFetch;
+
   process.env.PUBLISH_SECRET = saved; if (saved === undefined) delete process.env.PUBLISH_SECRET;
   if (savedK !== undefined) process.env.PAGESPEED_KEY = savedK; else delete process.env.PAGESPEED_KEY;
 

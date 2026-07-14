@@ -14,8 +14,13 @@ function ghConfig() {
   };
 }
 
+// URL de l'API Contents pour un chemin de fichier arbitraire dans le dépôt.
+function contentsUrlFor(repo, filePath) {
+  return 'https://api.github.com/repos/' + repo + '/contents/' + String(filePath).split('/').map(encodeURIComponent).join('/');
+}
+
 function contentsUrl(repo) {
-  return 'https://api.github.com/repos/' + repo + '/contents/' + CONTENT_PATH;
+  return contentsUrlFor(repo, CONTENT_PATH);
 }
 
 // Appel GitHub avec timeout dur (les plans serverless à faible délai coupent vers ~10 s).
@@ -37,4 +42,4 @@ async function gh(url, opts, token, timeoutMs) {
   }
 }
 
-module.exports = { CONTENT_PATH, ghConfig, contentsUrl, gh };
+module.exports = { CONTENT_PATH, ghConfig, contentsUrl, contentsUrlFor, gh };

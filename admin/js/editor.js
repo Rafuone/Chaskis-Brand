@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.37.0" };
+const ADMIN_BUILD = { version: "0.38.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1244,7 +1244,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.37.0", cur:true, date:"2026-07-15", title:"Chatbot : réponses en direct (au fil de l'eau) + mémoire de conversation", items:[
+  { v:"v0.38.0", cur:true, date:"2026-07-15", title:"Performance : mesure automatique planifiée + historique conservé côté serveur", items:[
+    {t:"add", x:"La vitesse Google (Core Web Vitals) est désormais mesurée AUTOMATIQUEMENT, tous les jours, sans clic : plus besoin d'y penser"},
+    {t:"add", x:"L'historique des mesures est conservé côté serveur (partagé entre appareils et collaborateurs), pas seulement sur votre navigateur — visible dans « Mesures automatiques (serveur) » de la page Performance"},
+    {t:"imp", x:"Prévu pour l'hébergement final (la mesure planifiée et le stockage se rebranchent par simple réglage). Sur l'hébergement de test, une mesure par jour ; le stockage durable s'active avec le même service de fichiers que la médiathèque"}
+  ]},
+  { v:"v0.37.0", date:"2026-07-15", title:"Chatbot : réponses en direct (au fil de l'eau) + mémoire de conversation", items:[
     {t:"add", x:"L'assistant écrit maintenant sa réponse EN DIRECT, mot après mot (comme ChatGPT), au lieu d'attendre la réponse complète : c'est plus vivant et on voit tout de suite qu'il répond"},
     {t:"add", x:"Il SUIT LE FIL de la conversation : posez une question de suivi (« et pour Lausanne ? ») et il comprend de quoi vous parliez, sans tout répéter"},
     {t:"imp", x:"Sans coupure ni régression : si le direct n'est pas disponible, l'assistant retombe automatiquement sur une réponse d'un bloc, puis sur ses réponses de démonstration — il répond toujours"}
@@ -1683,7 +1688,7 @@ const PROGRESS=[
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.5.0",recent:["« Terminer » archive et télécharge le compte-rendu","Découverte guidée et simulateur d'offre"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.7.0",recent:["Vraie mesure d'audience sans cookie (cet appareil)","Plage de dates personnalisée fonctionnelle"]},
-  {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.10.0",recent:["Google note aussi Accessibilité, SEO et Bonnes pratiques (en plus de la vitesse)","Historique des mesures Google + reprise automatique si l'hébergement de test coupe","Vraies mesures Core Web Vitals activées et reprises dans le pilier Rapidité"]},
+  {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.11.0",recent:["Mesure automatique planifiée (tous les jours, sans clic) + historique conservé côté serveur","Google note aussi Accessibilité, SEO et Bonnes pratiques (en plus de la vitesse)","Vraies mesures Core Web Vitals, historique et reprise automatique"]},
   {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.5.0",recent:["Précisions du concours affichées","Alerte si stockage plein"]},
   {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.7.0",recent:["Droits vérifiés côté serveur : un rôle sans la capacité voulue est refusé (403), pas seulement masqué","Attribution d'un rôle à un compte par simple réglage (sans développement)","Libellé de rôle corrigé"]},
   {view:"progress",name:"Avancement",env:"preprod",stage:"beta",version:"0.4.0",recent:["Vrai pourcentage d'avancement de l'interface"]}
@@ -1824,7 +1829,8 @@ const TECH_FEATURES=[
   { group:"Statistiques & Performance", items:[
     {n:"Vues Statistiques / Performance (démo)", s:"ok"},
     {n:"Sources de trafic + analytics réels", s:"todo"},
-    {n:"Performance branchée sur PageSpeed / Lighthouse", s:"ok"} ]},
+    {n:"Performance branchée sur PageSpeed / Lighthouse", s:"ok"},
+    {n:"Mesure planifiée automatique + historique serveur", s:"ok"} ]},
   { group:"Comptes & accès", items:[
     {n:"Rôles / capacités (modèle + matrice)", s:"ok"},
     {n:"Authentification réelle (connexion Clerk)", s:"ok"},
@@ -1846,6 +1852,7 @@ const TECH_AUDIT=[
   {n:"Environnement dev/prod cohérent", fn:()=>{ const e=getEnv(); return e==="dev"||e==="prod"; }},
   {n:"Performance : l'analyse réelle est prête", fn:()=>typeof perfAnalyzeReal==="function"&&typeof perfBuildModel==="function"&&typeof perfAuditDoc==="function"},
   {n:"Performance : l'affichage Core Web Vitals est prêt", fn:()=>typeof cwvMeasure==="function"&&typeof renderPerfCwv==="function"&&cwvStat("lcp",1000)==="good"&&cwvStat("lcp",5000)==="bad"},
+  {n:"Performance : historique serveur des mesures planifiées prêt", fn:()=>typeof cwvServerHistHtml==="function"&&typeof cwvLoadServerHist==="function"&&cwvServerHistHtml([{ts:"2026-01-01T06:00:00Z",page:"/",score:80,a11y:90,seo:100}]).indexOf("Mesures automatiques")>=0},
   {n:"Publication : le fichier à publier respecte le contrat", fn:()=>{ const c=buildSiteContent(); if(!c||c.schemaVersion!==1) return false; const allow=["schemaVersion","version","updatedAt","updatedBy","pricing","testimonials","logos","pages","chatbot"]; if(Object.keys(c).some(k=>allow.indexOf(k)<0)) return false; if(c.pricing){ const pk=["days","tiers","zones","flexMonthly","flexIncluded","express","promos"]; if(Object.keys(c.pricing).some(k=>pk.indexOf(k)<0)) return false; } if(c.pages){ const ok=["accueil","mobilite","recrutement","commander","suivi","dashboard"]; if(Object.keys(c.pages).some(k=>ok.indexOf(k)<0)) return false; } return true; }}
 ];
 let techTab="plan";
@@ -1865,7 +1872,7 @@ const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
 // % = « développé & fonctionnel » (avec un compte de TEST branchable). Le passage aux comptes
 // DÉFINITIFS et à l'hébergement final (Azure) est de la CONFIGURATION, suivie à part — pas du dev.
-const TECH_DONE={host:92,publish:88,versioning:85,analytics:62,calendly:68,auth:88,perf:82,media:45,chatbot:90};
+const TECH_DONE={host:92,publish:88,versioning:85,analytics:62,calendly:68,auth:88,perf:90,media:45,chatbot:90};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -2434,7 +2441,7 @@ function renderPerf(){
   const scores=perfPillars().map(p=>p.score), overall=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
   renderPerfVerdict(overall); renderPerfHistory();
   renderPerfPillars(); renderPerfActions(); renderPerfGood(); renderPerfContent();
-  wirePerfCwv(); renderPerfCwv();
+  wirePerfCwv(); renderPerfCwv(); cwvLoadServerHist();
   refreshIcons();
 }
 /* ============================================================
@@ -2559,6 +2566,35 @@ function cwvHistHtml(){ var h=cwvHistory(); if(h.length<2) return '';
       +'<span class="cwv-hist-sc">'+(e.score!=null?e.score:"–")+'<small>/100</small></span><span class="cwv-hist-d" style="color:'+dc+'">'+darr+'</span>'
       +'<span class="cwv-hist-cats">Acc. '+(e.a11y!=null?e.a11y:"–")+' · SEO '+(e.seo!=null?e.seo:"–")+'</span></div>'; }).join("");
   return '<div class="cwv-hist"><div class="cwv-hist-h"><i data-lucide="history"></i>Historique des mesures Google <span class="hint" style="margin:0">'+h.length+' enregistrée'+(h.length>1?"s":"")+'</span></div>'+rows+'</div>';
+}
+/* Historique SERVEUR (mesures planifiées) : partagé entre appareils, alimenté par le cron
+   /api/perf-cron. Repli SILENCIEUX : pas de clé / endpoint absent / vide -> rien affiché (l'historique
+   local ci-dessus reste la référence). Distinct de l'historique local « cet appareil ». */
+let perfServerHist=null, perfServerHistLoading=false;
+function cwvServerHistHtml(entries){
+  if(!Array.isArray(entries)||!entries.length) return '';
+  var recent=entries.slice(-8).reverse();
+  var rows=recent.map(function(e){
+    var dt=""; try{ dt=new Date(e.ts).toLocaleString("fr-CH",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}); }catch(x){}
+    return '<div class="cwv-hist-row"><span class="cwv-hist-dt">'+escHtml(dt)+'</span>'
+      +'<span class="cwv-hist-pg">'+escHtml(e.page||"/")+' · '+(e.strategy==="desktop"?"ord.":"mob.")+'</span>'
+      +'<span class="cwv-hist-sc">'+(e.score!=null?e.score:"–")+'<small>/100</small></span>'
+      +'<span class="cwv-hist-cats">Acc. '+(e.a11y!=null?e.a11y:"–")+' · SEO '+(e.seo!=null?e.seo:"–")+'</span></div>'; }).join("");
+  return '<div class="cwv-hist" style="margin-top:12px"><div class="cwv-hist-h"><i data-lucide="calendar-clock"></i>Mesures automatiques (serveur) <span class="hint" style="margin:0">planifiées · '+entries.length+' enregistrée'+(entries.length>1?"s":"")+'</span></div>'+rows+'</div>';
+}
+async function cwvLoadServerHist(){
+  var w=document.getElementById("perfCwvServer"); if(!w) return;
+  if(perfServerHistLoading) return; perfServerHistLoading=true;
+  try{
+    var key=getStoredPublishKey();
+    if(!key){ w.innerHTML=''; return; }
+    var r=await fetch("/api/perf-history",{headers:{Authorization:"Bearer "+key}});
+    if(!r.ok){ w.innerHTML=''; return; }
+    var j=await r.json();
+    perfServerHist=(j&&Array.isArray(j.entries))?j.entries:[];
+    w.innerHTML=cwvServerHistHtml(perfServerHist); refreshIcons();
+  }catch(e){ /* silencieux : la démo/historique local reste intacte */ }
+  finally{ perfServerHistLoading=false; }
 }
 const PF_MARKS=[["Critique",0],["À surveiller",40],["Correct",60],["Bon",80]];
 function renderPerfVerdict(overall){ const w=document.getElementById("perfVerdict"); if(!w) return;

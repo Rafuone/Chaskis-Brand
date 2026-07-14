@@ -20,6 +20,7 @@
 
 var { send } = require('./_lib/http');
 var { requireAuth } = require('./_lib/session');
+var { can } = require('./_lib/rbac');
 
 var PSI = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed';
 
@@ -55,7 +56,10 @@ function extract(j) {
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') return send(res, 405, { error: 'méthode non autorisée' });
 
-  if (!(await requireAuth(req))) return send(res, 401, { error: 'non autorisé' });
+  var auth = await requireAuth(req);
+  if (!auth) return send(res, 401, { error: 'non autorisé' });
+  // Capacité requise : voir la performance (perf.view).
+  if (!can('perf.view', auth)) return send(res, 403, { error: 'accès refusé', need: 'perf.view' });
 
   var key = (process.env.PAGESPEED_KEY || '').trim();
   if (!key) return send(res, 501, { error: 'PageSpeed non configuré (PAGESPEED_KEY absent)' });

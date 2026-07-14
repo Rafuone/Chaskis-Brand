@@ -71,18 +71,29 @@ function b64urlBuf(b) { return b.toString('base64').replace(/\+/g, '-').replace(
   ok(await S.verifyClerkJwt(jwt({ sub: 'user_intrus', iss: ISS, exp: future })) === null, 'utilisateur (sub) hors allow-list rejeté (verrou serveur)');
   delete process.env.CLERK_ALLOWED_SUBS;
 
-  section('requireAuth — Clerk OU clé partagée');
+  section('requireAuth — renvoie un PRINCIPAL { sub, role, via } (ou null)');
   var reqWith = function (b) { return { headers: b ? { authorization: 'Bearer ' + b } : {} }; };
-  ok(await S.requireAuth(reqWith(good)) === true, 'jeton Clerk valide -> autorisé');
-  ok(await S.requireAuth(reqWith('sek')) === true, 'clé PUBLISH_SECRET (repli) -> autorisé');
-  ok(await S.requireAuth(reqWith('')) === false, 'sans en-tête -> refusé');
-  ok(await S.requireAuth(reqWith('nawak')) === false, 'jeton bidon -> refusé');
+  var pClerk = await S.requireAuth(reqWith(good));
+  ok(pClerk && pClerk.via === 'clerk' && pClerk.sub === 'u', 'jeton Clerk valide -> principal { via:clerk, sub }');
+  ok(pClerk && pClerk.role === 'admin', 'sub non mappé -> rôle par défaut admin (non-cassant)');
+  var pSecret = await S.requireAuth(reqWith('sek'));
+  ok(pSecret && pSecret.via === 'secret' && pSecret.role === 'admin', 'clé PUBLISH_SECRET (repli) -> principal admin');
+  ok(await S.requireAuth(reqWith('')) === null, 'sans en-tête -> null (refusé)');
+  ok(await S.requireAuth(reqWith('nawak')) === null, 'jeton bidon -> null (refusé)');
+
+  section('requireAuth — rôle résolu depuis CHASKIS_ROLES (couture env)');
+  process.env.CHASKIS_ROLES = JSON.stringify({ u: 'editor' });
+  var S3 = load(); S3._resetCache();
+  var pMapped = await S3.requireAuth(reqWith(good));
+  ok(pMapped && pMapped.role === 'editor', 'sub « u » mappé -> rôle editor');
+  delete process.env.CHASKIS_ROLES;
 
   section('Sans Clerk configuré (couture inactive) : repli seul');
   delete process.env.CLERK_PUBLISHABLE_KEY;
   var S2 = load(); S2._resetCache();
-  ok(await S2.requireAuth(reqWith('sek')) === true, 'PUBLISH_SECRET marche toujours sans Clerk');
-  ok(await S2.requireAuth(reqWith(good)) === false, 'un JWT Clerk est ignoré si Clerk non configuré (pas de faux positif)');
+  var pReplib = await S2.requireAuth(reqWith('sek'));
+  ok(pReplib && pReplib.role === 'admin', 'PUBLISH_SECRET marche toujours sans Clerk (admin)');
+  ok(await S2.requireAuth(reqWith(good)) === null, 'un JWT Clerk est ignoré si Clerk non configuré (pas de faux positif)');
 
   process.env.PUBLISH_SECRET = savedSecret; if (savedSecret === undefined) delete process.env.PUBLISH_SECRET;
   process.env.CLERK_PUBLISHABLE_KEY = savedPk; if (savedPk === undefined) delete process.env.CLERK_PUBLISHABLE_KEY;

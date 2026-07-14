@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.35.0" };
+const ADMIN_BUILD = { version: "0.36.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1244,7 +1244,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.35.0", cur:true, date:"2026-07-15", title:"Avancement : recalibrage sur « développé & fonctionnel »", items:[
+  { v:"v0.36.0", cur:true, date:"2026-07-15", title:"Comptes & accès : les droits sont désormais vérifiés côté serveur", items:[
+    {t:"add", x:"« Qui peut faire quoi » n'est plus seulement une question d'affichage : le serveur fait RESPECTER les rôles. Un compte sans le droit de publier ne peut pas publier, même en contournant l'interface — la demande est refusée côté serveur (et aucune écriture n'a lieu). Idem pour restaurer une version, voir l'historique, les rendez-vous ou la performance"},
+    {t:"imp", x:"Sans casse ni verrouillage : votre compte administrateur garde l'accès complet, l'accès de secours par clé reste possible. L'attribution d'un rôle à un collaborateur se fait par un simple réglage (pas de développement), et chaque service reste derrière une couture fine (changer de compte = changer une variable)"}
+  ]},
+  { v:"v0.35.0", date:"2026-07-15", title:"Avancement : recalibrage sur « développé & fonctionnel »", items:[
     {t:"imp", x:"L'avancement mesure désormais ce qui est DÉVELOPPÉ et FONCTIONNE. Brancher les comptes définitifs et basculer vers l'hébergement final restent de la CONFIGURATION (tout est prévu pour, derrière des réglages), pas du développement — c'est suivi à part. Les pourcentages montent donc parce que c'est un changement de définition, pas un avancement soudain"}
   ]},
   { v:"v0.34.2", date:"2026-07-15", title:"Authentification : accès verrouillé aux seuls comptes autorisés", items:[
@@ -1676,7 +1680,7 @@ const PROGRESS=[
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.7.0",recent:["Vraie mesure d'audience sans cookie (cet appareil)","Plage de dates personnalisée fonctionnelle"]},
   {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.10.0",recent:["Google note aussi Accessibilité, SEO et Bonnes pratiques (en plus de la vitesse)","Historique des mesures Google + reprise automatique si l'hébergement de test coupe","Vraies mesures Core Web Vitals activées et reprises dans le pilier Rapidité"]},
   {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.5.0",recent:["Précisions du concours affichées","Alerte si stockage plein"]},
-  {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.6.2",recent:["Libellé de rôle corrigé"]},
+  {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.7.0",recent:["Droits vérifiés côté serveur : un rôle sans la capacité voulue est refusé (403), pas seulement masqué","Attribution d'un rôle à un compte par simple réglage (sans développement)","Libellé de rôle corrigé"]},
   {view:"progress",name:"Avancement",env:"preprod",stage:"beta",version:"0.4.0",recent:["Vrai pourcentage d'avancement de l'interface"]}
 ];
 function progressBadge(view){ const p=PROGRESS.find(x=>x.view===view); if(!p||p.stage==="stable") return null; return p.stage==="alpha"?"A":"B"; }
@@ -1817,7 +1821,8 @@ const TECH_FEATURES=[
     {n:"Performance branchée sur PageSpeed / Lighthouse", s:"ok"} ]},
   { group:"Comptes & accès", items:[
     {n:"Rôles / capacités (modèle + matrice)", s:"ok"},
-    {n:"Authentification réelle + can() vérifié serveur", s:"todo"} ]}
+    {n:"Authentification réelle (connexion Clerk)", s:"ok"},
+    {n:"Droits vérifiés côté serveur (can() par capacité)", s:"ok"} ]}
 ];
 const TECH_AUDIT=[
   {n:"Les 14 vues existent dans le DOM", fn:()=>["dashboard","editor","structure","media","versions","notes","progress","chatbot","rdv","copilot","stats","perf","affiliation","users"].every(v=>!!document.getElementById("view-"+v))},
@@ -1827,6 +1832,7 @@ const TECH_AUDIT=[
   {n:"Bandeaux : au moins un bandeau actif + presets", fn:()=>{ ensureBanners(); return draft.banners.length>=1&&!!activeBanner()&&BANNER_PRESETS.length>=1; }},
   {n:"Médiathèque : lecture des métadonnées (format, poids)", fn:()=>{ return mediaFormat({name:"x.webp"})==="WEBP"&&fmtBytes(238000).indexOf("Ko")>0; }},
   {n:"Droits : un administrateur a bien accès à tout", fn:()=>{ const admin=adminUsers.find(u=>u.role==="admin"); return !!admin&&can("users.manage",admin)&&can("editor.publish",admin); }},
+  {n:"Droits : un éditeur peut modifier mais pas publier (distinction serveur)", fn:()=>{ const ed=adminUsers.find(u=>u.role==="editor"); return !!ed&&can("editor.edit",ed)&&!can("editor.publish",ed); }},
   {n:"Versions : un historique est disponible", fn:()=>Array.isArray(versions)&&versions.length>=1},
   {n:"Tutoriel guidé disponible et générique", fn:()=>typeof startCoach==="function"&&typeof coachTargetRect==="function"},
   {n:"Config pricing sérialisable (prête à publier)", fn:()=>{ JSON.parse(JSON.stringify(getPricing())); return true; }},
@@ -1853,7 +1859,7 @@ const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
 // % = « développé & fonctionnel » (avec un compte de TEST branchable). Le passage aux comptes
 // DÉFINITIFS et à l'hébergement final (Azure) est de la CONFIGURATION, suivie à part — pas du dev.
-const TECH_DONE={host:92,publish:88,versioning:85,analytics:62,calendly:68,auth:80,perf:82,media:45,chatbot:82};
+const TECH_DONE={host:92,publish:88,versioning:85,analytics:62,calendly:68,auth:88,perf:82,media:45,chatbot:82};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */

@@ -13,6 +13,7 @@
 
 const crypto = require('crypto');
 const { requireBearer } = require('./auth');
+const { resolveRole } = require('./rbac');
 
 let _jwks = null, _jwksAt = 0;
 const JWKS_TTL = 30 * 60 * 1000; // 30 min
@@ -97,15 +98,19 @@ async function verifyClerkJwt(token) {
   } catch (e) { return null; }
 }
 
-// Auth admin. true si : (1) Bearer == PUBLISH_SECRET (repli), OU (2) jeton de session Clerk valide.
+// Auth admin. Renvoie un PRINCIPAL { sub, role, via } si autorisé, sinon null.
+//  - (1) Bearer == PUBLISH_SECRET (repli break-glass) -> admin (clé maîtresse).
+//  - (2) jeton de session Clerk valide -> rôle résolu par rbac.resolveRole(sub) (env CHASKIS_ROLES).
+// Renvoie un OBJET (truthy) et non plus un booléen : les appelants historiques `if(!(await
+// requireAuth(req)))` restent corrects (objet truthy / null falsy) — activation non-cassante.
 async function requireAuth(req) {
-  if (requireBearer(req)) return true; // rapide, sans réseau (break-glass / transition)
+  if (requireBearer(req)) return { sub: 'publish-secret', role: 'admin', via: 'secret' };
   const bearer = (((req && req.headers) || {})['authorization'] || '').replace(/^Bearer\s+/i, '');
   if (bearer && bearer.split('.').length === 3 && (process.env.CLERK_PUBLISHABLE_KEY || '').trim()) {
     const payload = await verifyClerkJwt(bearer);
-    if (payload) return true;
+    if (payload) return { sub: payload.sub, role: resolveRole(payload.sub), via: 'clerk' };
   }
-  return false;
+  return null;
 }
 
 function _resetCache() { _jwks = null; _jwksAt = 0; }

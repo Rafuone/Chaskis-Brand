@@ -24,6 +24,7 @@
 
 var { send } = require('./_lib/http');
 var { requireAuth } = require('./_lib/session');
+var { can } = require('./_lib/rbac');
 var map = require('./_lib/calendly-map');
 var assign = require('./_lib/assign');
 var availability = require('./_lib/availability');
@@ -56,7 +57,10 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'GET') return send(res, 405, { error: 'méthode non autorisée' });
 
   // Auth : session Clerk (JWT) OU clé partagée PUBLISH_SECRET (repli).
-  if (!(await requireAuth(req))) return send(res, 401, { error: 'non autorisé' });
+  var auth = await requireAuth(req);
+  if (!auth) return send(res, 401, { error: 'non autorisé' });
+  // Capacité requise : voir les rendez-vous (rdv.view).
+  if (!can('rdv.view', auth)) return send(res, 403, { error: 'accès refusé', need: 'rdv.view' });
 
   // Calendly non configuré -> 501 : l'admin retombe proprement sur les RDV de démo.
   var token = (process.env.CALENDLY_TOKEN || '').trim();

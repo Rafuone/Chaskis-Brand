@@ -78,6 +78,32 @@ var VALID = { schemaVersion: 1, version: 'V1', updatedBy: 'Test' };
   ok(rStream.statusCode === 200, 'corps en 2 chunks coupant un accent -> 200 (parse OK)');
   ok(sent.version === 'café', 'l\'accent « é » est préservé (Buffer.concat, pas de corruption)');
 
+  section('Capacité par rôle (RBAC) — un rôle sans editor.publish est refusé (403)');
+  // JWT Clerk RÉEL (RSA + JWKS mocké), sub mappé à un rôle restreint via CHASKIS_ROLES.
+  var crypto = require('crypto');
+  var kp = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+  var jwk = kp.publicKey.export({ format: 'jwk' }); jwk.kid = 'k1'; jwk.alg = 'RS256'; jwk.use = 'sig';
+  var API = 'test.clerk.accounts.dev';
+  var b64u = function (s) { return Buffer.from(s).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
+  var b64uBuf = function (b) { return b.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
+  var mkJwt = function (sub) {
+    var h = b64u(JSON.stringify({ alg: 'RS256', kid: 'k1', typ: 'JWT' }));
+    var p = b64u(JSON.stringify({ sub: sub, iss: 'https://' + API, exp: Math.floor(Date.now() / 1000) + 3600 }));
+    return h + '.' + p + '.' + b64uBuf(crypto.sign('RSA-SHA256', Buffer.from(h + '.' + p), kp.privateKey));
+  };
+  process.env.CLERK_PUBLISHABLE_KEY = 'pk_test_' + Buffer.from(API + '$').toString('base64');
+  process.env.CHASKIS_ROLES = JSON.stringify({ user_co: 'commercial', user_ed: 'editor' });
+  var ghHit = 0;
+  global.fetch = async function (url) {
+    if (String(url).indexOf('/.well-known/jwks.json') >= 0) return { ok: true, status: 200, json: async function () { return { keys: [jwk] }; } };
+    ghHit++; return { ok: true, status: 200, json: async function () { return {}; } };
+  };
+  var rCo = await call(req(VALID, { authorization: 'Bearer ' + mkJwt('user_co') }));
+  ok(rCo.statusCode === 403 && rCo.json().need === 'editor.publish', 'commercial (JWT valide) -> 403 need editor.publish');
+  ok(ghHit === 0, 'aucun appel GitHub pour la requête refusée (403 avant tout écriture)');
+  ok((await call(req(VALID, { authorization: 'Bearer ' + mkJwt('user_ed') }))).statusCode === 403, 'editor (JWT valide) -> 403 (editor n\'a pas editor.publish)');
+  delete process.env.CLERK_PUBLISHABLE_KEY; delete process.env.CHASKIS_ROLES;
+
   process.env.PUBLISH_SECRET = savedSecret; if (savedSecret === undefined) delete process.env.PUBLISH_SECRET;
   process.env.GITHUB_TOKEN = savedTok; if (savedTok === undefined) delete process.env.GITHUB_TOKEN;
   process.env.GITHUB_REPO = savedRepo; if (savedRepo === undefined) delete process.env.GITHUB_REPO;

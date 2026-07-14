@@ -12,12 +12,16 @@
 
 const { send } = require('./_lib/http');
 const { requireAuth } = require('./_lib/session');
+const { can } = require('./_lib/rbac');
 const { ghConfig, gh } = require('./_lib/github');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') return send(res, 405, { error: 'méthode non autorisée' });
 
-  if (!(await requireAuth(req))) return send(res, 401, { error: 'non autorisé' });
+  const auth = await requireAuth(req);
+  if (!auth) return send(res, 401, { error: 'non autorisé' });
+  // Capacité requise : consulter l'historique des versions (versions.view).
+  if (!can('versions.view', auth)) return send(res, 403, { error: 'accès refusé', need: 'versions.view' });
 
   const { token, repo, branch } = ghConfig();
   if (!token || !repo) return send(res, 500, { error: 'configuration serveur incomplète (GITHUB_TOKEN / GITHUB_REPO)' });

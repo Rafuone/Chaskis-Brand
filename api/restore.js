@@ -11,12 +11,16 @@
 const { validateContent } = require('./_lib/content-schema');
 const { send, readJson } = require('./_lib/http');
 const { requireAuth } = require('./_lib/session');
+const { can } = require('./_lib/rbac');
 const { ghConfig, contentsUrl, gh } = require('./_lib/github');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'méthode non autorisée' });
 
-  if (!(await requireAuth(req))) return send(res, 401, { error: 'non autorisé' });
+  const auth = await requireAuth(req);
+  if (!auth) return send(res, 401, { error: 'non autorisé' });
+  // Capacité requise : restaurer une version publiée (versions.restore).
+  if (!can('versions.restore', auth)) return send(res, 403, { error: 'accès refusé', need: 'versions.restore' });
 
   const body = await readJson(req, 4096);
   const sha = body && body.sha;

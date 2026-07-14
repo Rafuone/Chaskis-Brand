@@ -18,13 +18,17 @@
 const { validateContent, SCHEMA_VERSION } = require('./_lib/content-schema');
 const { send, readJson } = require('./_lib/http');
 const { requireAuth } = require('./_lib/session');
+const { can } = require('./_lib/rbac');
 const { ghConfig, contentsUrl, gh } = require('./_lib/github');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'méthode non autorisée' });
 
   // 1. Auth : session Clerk (JWT) OU clé partagée PUBLISH_SECRET (repli).
-  if (!(await requireAuth(req))) return send(res, 401, { error: 'non autorisé' });
+  const auth = await requireAuth(req);
+  if (!auth) return send(res, 401, { error: 'non autorisé' });
+  // Capacité requise : publier (le rôle doit porter editor.publish — sinon 403).
+  if (!can('editor.publish', auth)) return send(res, 403, { error: 'accès refusé', need: 'editor.publish' });
 
   // 2. Corps.
   const body = await readJson(req);

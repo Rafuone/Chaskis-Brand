@@ -437,7 +437,7 @@
 
 /* FAQ banner + left column */
 .faq-banner{margin-bottom:clamp(36px,4vw,52px);border-radius:var(--rxl);overflow:hidden}
-.faq-banner-img{width:100%;height:clamp(220px,26vw,360px);background-image:url('/assets/img/Geneva.webp');background-size:cover;background-position:center 40%;background-repeat:no-repeat}
+.faq-banner-img{width:100%;height:clamp(220px,26vw,360px);background-image:url('/assets/img/Geneva.webp?v=20260714');background-size:cover;background-position:center 40%;background-repeat:no-repeat}
 .faq-contact{display:flex;flex-direction:column;gap:10px;margin-top:28px}
 .faq-ci{display:flex;align-items:center;gap:14px;font-size:.92rem;line-height:1.5;color:var(--ink);padding:14px 18px;background:var(--white);border:1px solid var(--sand);border-radius:12px;transition:background .25s ease,border-color .25s ease}
 .faq-ci:hover{background:var(--teal-bg);border-color:rgba(75,179,164,.3)}

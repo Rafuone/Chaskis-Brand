@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.33.0" };
+const ADMIN_BUILD = { version: "0.33.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.33.0", cur:true, date:"2026-07-14", title:"Performance : Google note aussi accessibilité & SEO, reprise auto et historique", items:[
+  { v:"v0.33.1", cur:true, date:"2026-07-14", title:"Performance : image de la bannière FAQ de l'accueil allégée", items:[
+    {t:"imp", x:"L'image de fond de la bannière « Questions fréquentes » de l'accueil a été ré-encodée et redimensionnée : elle passe d'environ 1,1 Mo à environ 250 Ko (près de 77 % de poids en moins), sans changement visible. L'accueil se charge d'autant plus vite, surtout sur mobile et connexions lentes (image purement décorative, elle n'affecte pas l'affichage initial)"}
+  ]},
+  { v:"v0.33.0", date:"2026-07-14", title:"Performance : Google note aussi accessibilité & SEO, reprise auto et historique", items:[
     {t:"add", x:"Le bloc « Vitesse réelle » affiche maintenant les QUATRE notes de Google (Lighthouse) : Vitesse, Accessibilité, Référencement (SEO) et Bonnes pratiques — l'avis de Google en complément de l'audit local de l'admin (méthodes différentes, chiffres parfois différents, c'est normal)"},
     {t:"add", x:"Un historique des mesures Google est mémorisé (score de vitesse + accessibilité + SEO, avec l'évolution d'une mesure à l'autre)"},
     {t:"imp", x:"Reprise automatique : si Google dépasse le délai de l'hébergement de test, la mesure réessaie toute seule (le 1er passage prépare le résultat) — plus besoin de recliquer dans la plupart des cas"}

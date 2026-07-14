@@ -17,14 +17,14 @@
 
 const { validateContent, SCHEMA_VERSION } = require('./_lib/content-schema');
 const { send, readJson } = require('./_lib/http');
-const { requireBearer } = require('./_lib/auth');
+const { requireAuth } = require('./_lib/session');
 const { ghConfig, contentsUrl, gh } = require('./_lib/github');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'méthode non autorisée' });
 
-  // 1. Auth : Authorization: Bearer <PUBLISH_SECRET>, comparé en temps constant.
-  if (!requireBearer(req)) return send(res, 401, { error: 'non autorisé' });
+  // 1. Auth : session Clerk (JWT) OU clé partagée PUBLISH_SECRET (repli).
+  if (!(await requireAuth(req))) return send(res, 401, { error: 'non autorisé' });
 
   // 2. Corps.
   const body = await readJson(req);

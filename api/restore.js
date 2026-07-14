@@ -10,13 +10,13 @@
 
 const { validateContent } = require('./_lib/content-schema');
 const { send, readJson } = require('./_lib/http');
-const { requireBearer } = require('./_lib/auth');
+const { requireAuth } = require('./_lib/session');
 const { ghConfig, contentsUrl, gh } = require('./_lib/github');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'méthode non autorisée' });
 
-  if (!requireBearer(req)) return send(res, 401, { error: 'non autorisé' });
+  if (!(await requireAuth(req))) return send(res, 401, { error: 'non autorisé' });
 
   const body = await readJson(req, 4096);
   const sha = body && body.sha;

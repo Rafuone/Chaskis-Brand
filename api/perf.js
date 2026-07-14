@@ -19,7 +19,7 @@
 'use strict';
 
 var { send } = require('./_lib/http');
-var { requireBearer } = require('./_lib/auth');
+var { requireAuth } = require('./_lib/session');
 
 var PSI = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed';
 
@@ -55,7 +55,7 @@ function extract(j) {
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') return send(res, 405, { error: 'méthode non autorisée' });
 
-  if (!requireBearer(req)) return send(res, 401, { error: 'non autorisé' });
+  if (!(await requireAuth(req))) return send(res, 401, { error: 'non autorisé' });
 
   var key = (process.env.PAGESPEED_KEY || '').trim();
   if (!key) return send(res, 501, { error: 'PageSpeed non configuré (PAGESPEED_KEY absent)' });

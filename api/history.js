@@ -11,13 +11,13 @@
 'use strict';
 
 const { send } = require('./_lib/http');
-const { requireBearer } = require('./_lib/auth');
+const { requireAuth } = require('./_lib/session');
 const { ghConfig, gh } = require('./_lib/github');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') return send(res, 405, { error: 'méthode non autorisée' });
 
-  if (!requireBearer(req)) return send(res, 401, { error: 'non autorisé' });
+  if (!(await requireAuth(req))) return send(res, 401, { error: 'non autorisé' });
 
   const { token, repo, branch } = ghConfig();
   if (!token || !repo) return send(res, 500, { error: 'configuration serveur incomplète (GITHUB_TOKEN / GITHUB_REPO)' });

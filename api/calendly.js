@@ -23,7 +23,7 @@
 'use strict';
 
 var { send } = require('./_lib/http');
-var { requireBearer } = require('./_lib/auth');
+var { requireAuth } = require('./_lib/session');
 var map = require('./_lib/calendly-map');
 var assign = require('./_lib/assign');
 var availability = require('./_lib/availability');
@@ -55,8 +55,8 @@ function owners() {
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') return send(res, 405, { error: 'méthode non autorisée' });
 
-  // Auth Bearer PUBLISH_SECRET.
-  if (!requireBearer(req)) return send(res, 401, { error: 'non autorisé' });
+  // Auth : session Clerk (JWT) OU clé partagée PUBLISH_SECRET (repli).
+  if (!(await requireAuth(req))) return send(res, 401, { error: 'non autorisé' });
 
   // Calendly non configuré -> 501 : l'admin retombe proprement sur les RDV de démo.
   var token = (process.env.CALENDLY_TOKEN || '').trim();

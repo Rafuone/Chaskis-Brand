@@ -18,22 +18,10 @@
 //   PAGESPEED_KEY  : clé API Google PageSpeed Insights (gratuite).
 'use strict';
 
-var crypto = require('crypto');
+var { send } = require('./_lib/http');
+var { requireBearer } = require('./_lib/auth');
 
 var PSI = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed';
-
-function send(res, status, obj) {
-  res.statusCode = status;
-  res.setHeader('Cache-Control', 'no-store');
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.end(JSON.stringify(obj));
-}
-
-function safeEqual(a, b) {
-  var ha = crypto.createHash('sha256').update(String(a || ''), 'utf8').digest();
-  var hb = crypto.createHash('sha256').update(String(b || ''), 'utf8').digest();
-  try { return crypto.timingSafeEqual(ha, hb); } catch (e) { return false; }
-}
 
 // Extrait les métriques utiles du résultat Lighthouse renvoyé par PageSpeed.
 function extract(j) {
@@ -67,9 +55,7 @@ function extract(j) {
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') return send(res, 405, { error: 'méthode non autorisée' });
 
-  var secret = (process.env.PUBLISH_SECRET || '').trim();
-  var bearer = (req.headers['authorization'] || '').replace(/^Bearer\s+/i, '');
-  if (!secret || !safeEqual(bearer, secret)) return send(res, 401, { error: 'non autorisé' });
+  if (!requireBearer(req)) return send(res, 401, { error: 'non autorisé' });
 
   var key = (process.env.PAGESPEED_KEY || '').trim();
   if (!key) return send(res, 501, { error: 'PageSpeed non configuré (PAGESPEED_KEY absent)' });

@@ -5,78 +5,33 @@
 // jamais de réécriture d'historique). Ainsi « revenir en arrière » reste tracé et réversible.
 //
 // Auth Bearer PUBLISH_SECRET. Body : { sha:"<commit>" }. Convention : CommonJS, réponse
-// Node brute, aucune dépendance (fetch + crypto natifs). Voir aussi api/publish.js, api/history.js.
+// Node brute, aucune dépendance. Helpers partagés dans api/_lib/. Voir publish.js, history.js.
 'use strict';
 
-const crypto = require('crypto');
 const { validateContent } = require('./_lib/content-schema');
-
-const CONTENT_PATH = 'site-content.json';
-
-function send(res, status, obj) {
-  res.statusCode = status;
-  res.setHeader('Cache-Control', 'no-store');
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.end(JSON.stringify(obj));
-}
-
-function safeEqual(a, b) {
-  const ba = Buffer.from(String(a || ''), 'utf8');
-  const bb = Buffer.from(String(b || ''), 'utf8');
-  if (ba.length !== bb.length || ba.length === 0) return false;
-  try { return crypto.timingSafeEqual(ba, bb); } catch (e) { return false; }
-}
-
-function readJson(req) {
-  return new Promise((resolve) => {
-    if (req.body && typeof req.body === 'object') return resolve(req.body);
-    const chunks = []; let size = 0, done = false;
-    const finish = (v) => { if (!done) { done = true; resolve(v); } };
-    req.on('data', (c) => { chunks.push(c); size += c.length; if (size > 4096) { finish({ __error: 'trop volumineux' }); try { req.destroy(); } catch (e) {} } });
-    req.on('end', () => { const raw = Buffer.concat(chunks).toString('utf8'); if (!raw) return finish(null); try { finish(JSON.parse(raw)); } catch (e) { finish({ __error: 'JSON illisible' }); } });
-    req.on('error', () => finish({ __error: 'lecture interrompue' }));
-    req.on('close', () => finish({ __error: 'connexion fermée' }));
-  });
-}
-
-async function gh(url, opts, token) {
-  opts = opts || {};
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), 8000);
-  const headers = Object.assign({
-    'Authorization': 'Bearer ' + token,
-    'Accept': 'application/vnd.github+json',
-    'User-Agent': 'chaskis-restore',
-  }, opts.headers || {});
-  try {
-    return await fetch(url, { method: opts.method || 'GET', headers: headers, body: opts.body, signal: ctrl.signal });
-  } finally {
-    clearTimeout(t);
-  }
-}
+const { send, readJson } = require('./_lib/http');
+const { requireBearer } = require('./_lib/auth');
+const { ghConfig, contentsUrl, gh } = require('./_lib/github');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'méthode non autorisée' });
 
-  const secret = (process.env.PUBLISH_SECRET || '').trim();
-  const bearer = (req.headers['authorization'] || '').replace(/^Bearer\s+/i, '');
-  if (!secret || !safeEqual(bearer, secret)) return send(res, 401, { error: 'non autorisé' });
+  if (!requireBearer(req)) return send(res, 401, { error: 'non autorisé' });
 
-  const body = await readJson(req);
+  const body = await readJson(req, 4096);
   const sha = body && body.sha;
   if (!sha || !/^[0-9a-f]{7,40}$/i.test(sha)) return send(res, 400, { error: 'identifiant de version (sha) manquant ou invalide' });
 
-  const token = (process.env.GITHUB_TOKEN || '').trim();
-  const repo = (process.env.GITHUB_REPO || '').trim();
-  const branch = (process.env.GITHUB_BRANCH || 'main').trim();
+  const { token, repo, branch } = ghConfig();
   if (!token || !repo) return send(res, 500, { error: 'configuration serveur incomplète (GITHUB_TOKEN / GITHUB_REPO)' });
 
-  const apiUrl = 'https://api.github.com/repos/' + repo + '/contents/' + CONTENT_PATH;
+  const apiUrl = contentsUrl(repo);
 
   try {
     // 1. Contenu de site-content.json AU commit choisi.
     const atRes = await gh(apiUrl + '?ref=' + encodeURIComponent(sha), { method: 'GET' }, token);
-    if (atRes.status !== 200) return send(res, 502, { error: 'version introuvable (' + atRes.status + ')' });
+    if (atRes.status === 404) return send(res, 404, { error: 'version introuvable' });
+    if (atRes.status !== 200) return send(res, 502, { error: 'lecture de la version échouée (' + atRes.status + ')' });
     const atJson = await atRes.json();
     const decoded = Buffer.from(atJson.content || '', 'base64').toString('utf8');
 

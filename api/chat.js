@@ -15,6 +15,7 @@
 // Node 18+). Host-agnostique (Vercel, Azure App Service, Node nu). Voir docs/chatbot.md.
 'use strict';
 
+var { send, readJson } = require('./_lib/http');
 var rag = require('./_lib/rag');
 var llm = require('./_lib/llm');
 var KB = require('./_data/kb.json');
@@ -42,27 +43,6 @@ var FALLBACK = {
   fr: "Je n'ai pas la réponse exacte ici. Écrivez-nous à hello@chaskis.ch ou appelez le +41 22 700 01 27, on vous répond vite.",
   en: "I don't have the exact answer here. Email hello@chaskis.ch or call +41 22 700 01 27 and we'll get back to you quickly.",
 };
-
-function send(res, status, obj) {
-  res.statusCode = status;
-  res.setHeader('Cache-Control', 'no-store');
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.end(JSON.stringify(obj));
-}
-
-// Corps JSON : req.body si déjà parsé (Vercel), sinon bufferisé (Node brut). Même motif
-// robuste que api/publish.js (Buffer, pas de concat de string, résolution garantie).
-function readJson(req) {
-  return new Promise(function (resolve) {
-    if (req.body && typeof req.body === 'object') return resolve(req.body);
-    var chunks = [], size = 0, done = false;
-    var finish = function (v) { if (!done) { done = true; resolve(v); } };
-    req.on('data', function (c) { chunks.push(c); size += c.length; if (size > MAX_BODY_BYTES) { finish({ __error: 'question trop longue' }); try { req.destroy(); } catch (e) {} } });
-    req.on('end', function () { if (!chunks.length) return finish(null); try { finish(JSON.parse(Buffer.concat(chunks).toString('utf8'))); } catch (e) { finish({ __error: 'JSON illisible' }); } });
-    req.on('error', function () { finish({ __error: 'lecture interrompue' }); });
-    req.on('close', function () { finish({ __error: 'connexion fermée' }); });
-  });
-}
 
 // Construit un passage tarifaire À PARTIR de la grille RÉELLEMENT publiée dans
 // site-content.json, pour que le bot reflète les prix en ligne (chantier publish).
@@ -144,7 +124,7 @@ function isForbidden(q, forbidden) {
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return send(res, 405, { error: 'méthode non autorisée' });
 
-  var body = await readJson(req);
+  var body = await readJson(req, MAX_BODY_BYTES, 'question trop longue');
   if (!body || body.__error) return send(res, 400, { error: (body && body.__error) ? body.__error : 'corps manquant' });
 
   var q = (typeof body.question === 'string') ? body.question.trim() : '';

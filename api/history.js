@@ -7,57 +7,24 @@
 // Lecture seule. Auth par Bearer PUBLISH_SECRET (comme /api/publish) : on n'expose
 // pas l'historique sans la clé. Le jeton GitHub reste côté serveur uniquement.
 //
-// Convention projet : CommonJS, réponse Node brute, aucune dépendance (fetch + crypto natifs).
+// Convention projet : CommonJS, réponse Node brute, aucune dépendance. Helpers dans api/_lib/.
 'use strict';
 
-const crypto = require('crypto');
-
-function send(res, status, obj) {
-  res.statusCode = status;
-  res.setHeader('Cache-Control', 'no-store');
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.end(JSON.stringify(obj));
-}
-
-function safeEqual(a, b) {
-  const ba = Buffer.from(String(a || ''), 'utf8');
-  const bb = Buffer.from(String(b || ''), 'utf8');
-  if (ba.length !== bb.length || ba.length === 0) return false;
-  try { return crypto.timingSafeEqual(ba, bb); } catch (e) { return false; }
-}
-
-async function gh(url, token) {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), 8000);
-  try {
-    return await fetch(url, {
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Accept': 'application/vnd.github+json',
-        'User-Agent': 'chaskis-history',
-      },
-      signal: ctrl.signal,
-    });
-  } finally {
-    clearTimeout(t);
-  }
-}
+const { send } = require('./_lib/http');
+const { requireBearer } = require('./_lib/auth');
+const { ghConfig, gh } = require('./_lib/github');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') return send(res, 405, { error: 'méthode non autorisée' });
 
-  const secret = (process.env.PUBLISH_SECRET || '').trim();
-  const bearer = (req.headers['authorization'] || '').replace(/^Bearer\s+/i, '');
-  if (!secret || !safeEqual(bearer, secret)) return send(res, 401, { error: 'non autorisé' });
+  if (!requireBearer(req)) return send(res, 401, { error: 'non autorisé' });
 
-  const token = (process.env.GITHUB_TOKEN || '').trim();
-  const repo = (process.env.GITHUB_REPO || '').trim();
-  const branch = (process.env.GITHUB_BRANCH || 'main').trim();
+  const { token, repo, branch } = ghConfig();
   if (!token || !repo) return send(res, 500, { error: 'configuration serveur incomplète (GITHUB_TOKEN / GITHUB_REPO)' });
 
   try {
     const url = 'https://api.github.com/repos/' + repo + '/commits?sha=' + encodeURIComponent(branch) + '&path=site-content.json&per_page=30';
-    const r = await gh(url, token);
+    const r = await gh(url, { method: 'GET' }, token);
     if (r.status !== 200) return send(res, 502, { error: 'lecture de l\'historique échouée (' + r.status + ')' });
     const arr = await r.json();
     const versions = (Array.isArray(arr) ? arr : []).map(function (c) {

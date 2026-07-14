@@ -22,7 +22,8 @@
 //   CALENDLY_OWNERS : (optionnel) commerciaux, séparés par des virgules. Défaut : démo.
 'use strict';
 
-var crypto = require('crypto');
+var { send } = require('./_lib/http');
+var { requireBearer } = require('./_lib/auth');
 var map = require('./_lib/calendly-map');
 var assign = require('./_lib/assign');
 var availability = require('./_lib/availability');
@@ -34,21 +35,6 @@ var PER_REQ_MS = 6000;         // timeout dur par requête, borné aussi par le 
 var MAX_PAGES = 10;            // garde-fou anti-boucle de pagination (jusqu'à ~1000 RDV)
 var PAST_WINDOW = 14 * DAY;    // l'admin prépare surtout le futur : passé réduit = moins d'appels
 var FUTURE_WINDOW = 90 * DAY;
-
-function send(res, status, obj) {
-  res.statusCode = status;
-  res.setHeader('Cache-Control', 'no-store');
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.end(JSON.stringify(obj));
-}
-
-// Comparaison en temps constant SANS fuite de longueur : on hache les deux côtés en
-// 32 octets fixes avant de comparer (pas de retour anticipé sur longueur du secret).
-function safeEqual(a, b) {
-  var ha = crypto.createHash('sha256').update(String(a || ''), 'utf8').digest();
-  var hb = crypto.createHash('sha256').update(String(b || ''), 'utf8').digest();
-  try { return crypto.timingSafeEqual(ha, hb); } catch (e) { return false; }
-}
 
 // Appel Calendly avec timeout dur = min(PER_REQ_MS, temps restant du budget global).
 async function cal(url, token, deadline) {
@@ -70,9 +56,7 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'GET') return send(res, 405, { error: 'méthode non autorisée' });
 
   // Auth Bearer PUBLISH_SECRET.
-  var secret = (process.env.PUBLISH_SECRET || '').trim();
-  var bearer = (req.headers['authorization'] || '').replace(/^Bearer\s+/i, '');
-  if (!secret || !safeEqual(bearer, secret)) return send(res, 401, { error: 'non autorisé' });
+  if (!requireBearer(req)) return send(res, 401, { error: 'non autorisé' });
 
   // Calendly non configuré -> 501 : l'admin retombe proprement sur les RDV de démo.
   var token = (process.env.CALENDLY_TOKEN || '').trim();

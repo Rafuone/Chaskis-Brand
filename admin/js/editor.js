@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.34.1" };
+const ADMIN_BUILD = { version: "0.34.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1244,7 +1244,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.34.1", cur:true, date:"2026-07-14", title:"Authentification : connexion validée en ligne (édition + publication)", items:[
+  { v:"v0.34.2", cur:true, date:"2026-07-15", title:"Authentification : accès verrouillé aux seuls comptes autorisés", items:[
+    {t:"imp", x:"La sécurité est désormais irréprochable : le serveur n'accepte QUE les comptes autorisés (liste blanche). Même si quelqu'un parvenait à s'inscrire, il serait refusé. L'accès de secours par clé reste disponible en cas de pépin"}
+  ]},
+  { v:"v0.34.1", date:"2026-07-14", title:"Authentification : connexion validée en ligne (édition + publication)", items:[
     {t:"add", x:"La connexion par compte est vérifiée de bout en bout : on se connecte, l'éditeur s'ouvre, et la publication fonctionne via un jeton de session sécurisé (plus la clé collée). Redirection après connexion corrigée (retour direct à l'éditeur)"},
     {t:"imp", x:"Dernière étape sécurité en cours : verrouiller l'accès aux seuls comptes autorisés (fermeture des inscriptions publiques + liste blanche serveur)"}
   ]},
@@ -1845,7 +1848,7 @@ const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Art
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
 const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
-const TECH_DONE={host:80,publish:78,versioning:68,analytics:48,calendly:55,auth:60,perf:76,media:30,chatbot:75};
+const TECH_DONE={host:80,publish:78,versioning:68,analytics:48,calendly:55,auth:70,perf:76,media:30,chatbot:75};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */

@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.33.1" };
+const ADMIN_BUILD = { version: "0.33.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1260,7 +1260,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.33.1", cur:true, date:"2026-07-14", title:"Performance : image de la bannière FAQ de l'accueil allégée", items:[
+  { v:"v0.33.2", cur:true, date:"2026-07-14", title:"Sécurité : renforcement de l'échappement des données affichées dans l'admin", items:[
+    {t:"fix", x:"Durcissement préventif : tous les champs affichés dans l'administration (dont les noms, sociétés et liens issus des réservations Calendly) sont désormais échappés y compris dans les info-bulles et les liens, empêchant toute exécution de code piégé. Aucun changement visible pour vous"}
+  ]},
+  { v:"v0.33.1", date:"2026-07-14", title:"Performance : image de la bannière FAQ de l'accueil allégée", items:[
     {t:"imp", x:"L'image de fond de la bannière « Questions fréquentes » de l'accueil a été ré-encodée et redimensionnée : elle passe d'environ 1,1 Mo à environ 250 Ko (près de 77 % de poids en moins), sans changement visible. L'accueil se charge d'autant plus vite, surtout sur mobile et connexions lentes (image purement décorative, elle n'affecte pas l'affichage initial)"}
   ]},
   { v:"v0.33.0", date:"2026-07-14", title:"Performance : Google note aussi accessibilité & SEO, reprise auto et historique", items:[
@@ -4198,7 +4201,10 @@ let rdvWho="all";        // filtre "voir" : toute l'équipe ou une personne
 let rdvOpenRow=-1;   // index de la ligne dépliée (fiche rendez-vous), -1 si aucune
 let rdvSel=new Set();                     // sélection pour relance en masse
 let rdvPage=1; const RDV_PER_PAGE=8;      // pagination de la liste
-function escHtml(s){ const d=document.createElement("div"); d.textContent=s||""; return d.innerHTML; }
+// Échappe pour insertion HTML SÛRE en nœud texte ET en valeur d'attribut (les guillemets " et '
+// sont échappés en plus de < > & : indispensable car escHtml alimente aussi des title="..."/href="..."
+// avec des données externes, ex. Calendly). Visuellement identique en texte (&quot; s'affiche « " »).
+function escHtml(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
 
 /* ---- calendriers connectés + workflow de connexion ---- */
 let rdvCalendars=[
@@ -4206,7 +4212,7 @@ let rdvCalendars=[
   {name:"Marc Dupont",handle:"calendly.com/chaskis-marc",topic:"Devis et suivi"}
 ];
 let calFlow={open:false,step:1,name:"",link:""};
-function initials(n){ return (n||"?").split(/\s+/).slice(0,2).map(w=>w[0]||"").join("").toUpperCase(); }
+function initials(n){ return escHtml((n||"?").split(/\s+/).slice(0,2).map(w=>w[0]||"").join("").toUpperCase()); }
 function renderAccount(){
   const a=document.getElementById("rdvAccount"); if(!a) return;
   if(rdvCalendars.length){ const f=rdvCalendars[0], extra=rdvCalendars.length>1?" +"+(rdvCalendars.length-1):"";
@@ -4471,8 +4477,8 @@ function renderRdv(){
     if(next){
       const telC=(next.tel||"").replace(/[^+0-9]/g,"");
       let callBtn='';
-      if(next.mode==="visio" && next.link){ callBtn='<a class="btn primary sm" id="rdvHeroCall" href="https://'+next.link+'" target="_blank" rel="noopener" title="'+next.link+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>Rejoindre</a>'; }
-      else if(telC){ callBtn='<a class="btn primary sm" id="rdvHeroCall" href="tel:'+telC+'" title="'+next.tel+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.7 2.34a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.74.34 1.53.57 2.34.7A2 2 0 0 1 22 16.92z"/></svg>Appeler</a>'; }
+      if(next.mode==="visio" && next.link){ callBtn='<a class="btn primary sm" id="rdvHeroCall" href="https://'+escHtml(next.link)+'" target="_blank" rel="noopener" title="'+escHtml(next.link)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>Rejoindre</a>'; }
+      else if(telC){ callBtn='<a class="btn primary sm" id="rdvHeroCall" href="tel:'+telC+'" title="'+escHtml(next.tel)+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.7 2.34a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.74.34 1.53.57 2.34.7A2 2 0 0 1 22 16.92z"/></svg>Appeler</a>'; }
       const cal=(d,m,t)=>'<div class="up-cal"><div class="up-cal-h"><span class="up-dn">'+d+'</span><span class="up-dm">'+m+'</span></div><span class="up-tt">'+t+'</span></div>';
       // sujet et interlocuteur sur DEUX lignes distinctes (tenaient mal sur une seule)
       const sub=o=>'<div class="up-ct" title="'+escHtml(o.sujet)+'">'+escHtml(o.sujet)+'</div>'+

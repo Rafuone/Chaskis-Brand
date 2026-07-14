@@ -44,6 +44,10 @@ const server = http.createServer(async function (req, res) {
   let pathname = '/';
   try { pathname = new URL(req.url, 'http://localhost').pathname; } catch (e) {}
 
+  // En-têtes de sécurité globaux (parité avec vercel.json / staticwebapp.config.json).
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+
   // --- /api/* : on appelle le handler du fichier api/<nom>.js, tel quel ---
   if (pathname === '/api' || pathname.startsWith('/api/')) {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow'); // les endpoints ne doivent jamais être indexés

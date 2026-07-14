@@ -44,33 +44,52 @@ function can(cap, principal) {
 
 // --- Attribution rôle←utilisateur, pilotée par l'ENV (couture, pas de valeurs en dur) ----------
 
+// Rôle-sentinelle « aucune capacité » : sert de VERROU fail-closed quand une attribution
+// explicite est mal orthographiée. capsForRole('none') = [] -> can() renvoie toujours faux.
+var LOCKED = 'none';
+
 var _mapRaw = null, _map = {};
-// Carte { sub -> role } depuis CHASKIS_ROLES (JSON). Défensive : ne jette jamais, ignore les
-// entrées mal formées. Cache invalidé quand la variable d'env change (utile pour les tests).
+// Carte { sub -> role } depuis CHASKIS_ROLES (JSON). Défensive : ne jette jamais.
+// SÉCURITÉ (revue) : un `sub` EXPLICITEMENT mappé mais à un rôle INVALIDE (faute de frappe,
+// rôle inconnu) est VERROUILLÉ ('none'), PAS retombé sur le défaut admin — sinon une coquille
+// dans la config escaladerait silencieusement un compte restreint vers admin. La casse est
+// normalisée ("Editor" -> "editor") pour éviter les faux verrous. Cache invalidé au changement
+// d'env (tests / redéploiement).
 function roleMap() {
   var raw = process.env.CHASKIS_ROLES || '';
   if (raw === _mapRaw) return _map;
   _mapRaw = raw; _map = {};
   try {
     var o = JSON.parse(raw || '{}');
-    if (o && typeof o === 'object') {
-      Object.keys(o).forEach(function (k) { if (typeof o[k] === 'string' && isRole(o[k])) _map[k] = o[k]; });
+    if (o && typeof o === 'object' && !Array.isArray(o)) {
+      Object.keys(o).forEach(function (k) {
+        if (typeof o[k] !== 'string') return;               // valeur non-texte : entrée ignorée
+        var rv = o[k].trim().toLowerCase();
+        _map[k] = isRole(rv) ? rv : LOCKED;                 // rôle inconnu -> VERROU (jamais admin)
+      });
     }
   } catch (e) { _map = {}; }
   return _map;
 }
 
-// Rôle par défaut d'un utilisateur authentifié non mappé (env, validé, « admin » sinon).
+// Rôle par défaut d'un utilisateur authentifié NON mappé.
+//  - CHASKIS_DEFAULT_ROLE absent  -> 'admin' (préserve le comportement actuel : NON-CASSANT).
+//  - CHASKIS_DEFAULT_ROLE valide   -> ce rôle (posture prod recommandée : un rôle restreint).
+//  - CHASKIS_DEFAULT_ROLE renseigné mais INVALIDE -> VERROU ('none'), pas admin (fail-closed :
+//    une coquille sur un réglage volontaire ne doit pas ouvrir l'accès total).
 function defaultRole() {
-  var d = (process.env.CHASKIS_DEFAULT_ROLE || '').trim();
-  return isRole(d) ? d : 'admin';
+  var raw = process.env.CHASKIS_DEFAULT_ROLE;
+  if (raw == null || String(raw).trim() === '') return 'admin';
+  var d = String(raw).trim().toLowerCase();
+  return isRole(d) ? d : LOCKED;
 }
 
-// Résout le rôle d'un `sub` (identifiant Clerk) : mappé si présent et valide, sinon défaut.
+// Résout le rôle d'un `sub` (identifiant Clerk) : s'il est EXPLICITEMENT mappé, ce rôle gagne
+// (y compris le verrou 'none' d'une coquille) ; sinon le rôle par défaut.
 function resolveRole(sub) {
   var m = roleMap();
-  var r = sub && m[sub];
-  return (r && isRole(r)) ? r : defaultRole();
+  if (sub && Object.prototype.hasOwnProperty.call(m, sub)) return m[sub];
+  return defaultRole();
 }
 
-module.exports = { ROLE_ORDER: ROLE_ORDER, ROLE_CAPS: ROLE_CAPS, isRole: isRole, capsForRole: capsForRole, can: can, resolveRole: resolveRole, defaultRole: defaultRole };
+module.exports = { ROLE_ORDER: ROLE_ORDER, ROLE_CAPS: ROLE_CAPS, LOCKED: LOCKED, isRole: isRole, capsForRole: capsForRole, can: can, resolveRole: resolveRole, defaultRole: defaultRole };

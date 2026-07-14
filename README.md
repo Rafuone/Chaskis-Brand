@@ -90,6 +90,8 @@ silence** (repli sur les données de démo / `501`), le site ne casse jamais.
 | `CLERK_SECRET_KEY` | auth | standard Clerk ; **non utilisé** par la vérification manuelle par JWKS (réservé au SDK backend). Jamais exposé au client. |
 | `CLERK_ALLOWED_ORIGINS` | auth | optionnel : origines autorisées pour le claim `azp` (défense CSRF), séparées par des virgules. |
 | `CLERK_ALLOWED_SUBS` | auth | optionnel (recommandé) : identifiants utilisateurs Clerk (`sub`) autorisés, séparés par des virgules. Vide = toute session valide (restreindre alors les inscriptions côté Clerk). |
+| `CHASKIS_ROLES` | auth (rôles) | attribution rôle←utilisateur, JSON `{"user_xxx":"editor","user_yyy":"commercial"}`. Rôles : `admin`, `commercial`, `leadcommercial`, `editor`. Un `sub` mappé à un rôle inconnu est **verrouillé** (aucun droit), jamais admin. Voir [docs/auth-roles.md](docs/auth-roles.md). |
+| `CHASKIS_DEFAULT_ROLE` | auth (rôles) | rôle d'un utilisateur authentifié **non** listé dans `CHASKIS_ROLES`. Absent → `admin` (non-cassant). **Posture prod recommandée : le mettre à un rôle restreint** (ex. `commercial`) et lister les admins explicitement. Valeur invalide → verrouillé (fail-closed). |
 | `GITHUB_TOKEN` | publish | PAT fine-grained, **Contents: write** sur ce dépôt. |
 | `GITHUB_REPO` | publish | `owner/repo`. |
 | `GITHUB_BRANCH` | publish | branche cible (`main` en prod). |

@@ -60,17 +60,25 @@ ok(R.resolveRole('user_alex') === 'admin', 'sub non mappé -> admin (comportemen
 ok(R.defaultRole() === 'admin', 'defaultRole() = admin sans CHASKIS_DEFAULT_ROLE');
 
 section('resolveRole — mapping par ENV (CHASKIS_ROLES)');
-process.env.CHASKIS_ROLES = JSON.stringify({ user_ed: 'editor', user_co: 'commercial', user_bad: 'sorcier' });
+process.env.CHASKIS_ROLES = JSON.stringify({ user_ed: 'editor', user_co: 'commercial', user_bad: 'sorcier', user_maj: 'Editor' });
 ok(R.resolveRole('user_ed') === 'editor', 'user_ed -> editor');
 ok(R.resolveRole('user_co') === 'commercial', 'user_co -> commercial');
-ok(R.resolveRole('user_bad') === 'admin', 'rôle invalide dans la carte -> défaut admin (ignoré)');
-ok(R.resolveRole('user_absent') === 'admin', 'absent de la carte -> défaut admin');
+ok(R.resolveRole('user_maj') === 'editor', 'casse normalisée : "Editor" -> editor (pas de faux verrou)');
+ok(R.resolveRole('user_absent') === 'admin', 'absent de la carte -> défaut admin (non-cassant)');
+
+section('resolveRole — FAIL-CLOSED sur mapping explicite invalide (revue sécurité)');
+ok(R.resolveRole('user_bad') === 'none', 'sub mappé à un rôle invalide -> VERROU "none" (JAMAIS admin)');
+ok(!R.can('rdv.view', P('none')), 'rôle verrou "none" -> aucune capacité');
+ok(!R.can('editor.publish', P('none')), 'rôle verrou "none" -> ne peut pas publier');
+ok(R.capsForRole('none').length === 0, 'capsForRole("none") = aucune');
 
 section('resolveRole — défaut configurable + robustesse');
 process.env.CHASKIS_DEFAULT_ROLE = 'editor';
-ok(R.resolveRole('user_absent') === 'editor', 'CHASKIS_DEFAULT_ROLE=editor change le défaut');
+ok(R.resolveRole('user_absent') === 'editor', 'CHASKIS_DEFAULT_ROLE=editor change le défaut (posture prod recommandée)');
+process.env.CHASKIS_DEFAULT_ROLE = 'Commercial';
+ok(R.resolveRole('user_absent') === 'commercial', 'CHASKIS_DEFAULT_ROLE casse normalisée');
 process.env.CHASKIS_DEFAULT_ROLE = 'nawak';
-ok(R.resolveRole('user_absent') === 'admin', 'CHASKIS_DEFAULT_ROLE invalide -> admin');
+ok(R.resolveRole('user_absent') === 'none', 'CHASKIS_DEFAULT_ROLE renseigné mais invalide -> VERROU (fail-closed, pas admin)');
 delete process.env.CHASKIS_DEFAULT_ROLE;
 process.env.CHASKIS_ROLES = '{ ceci n est pas du json';
 ok(R.resolveRole('user_ed') === 'admin', 'JSON illisible -> ne jette pas, défaut admin');

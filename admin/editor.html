@@ -860,7 +860,12 @@
       reveal('clerk');
     } else {
       msg('Connectez-vous pour accéder à l\'administration.');
-      try { Clerk.mountSignIn(document.getElementById('clerkSignIn'), { signInForceRedirectUrl: location.href }); }
+      var adminUrl = location.origin + '/admin/editor.html';
+      try { Clerk.mountSignIn(document.getElementById('clerkSignIn'), {
+        signInForceRedirectUrl: adminUrl,   // après connexion -> retour à l'admin (pas l'accueil)
+        signUpForceRedirectUrl: adminUrl,   // idem après une éventuelle inscription
+        fallbackRedirectUrl: adminUrl
+      }); }
       catch (e) { fallback(); }
     }
   }

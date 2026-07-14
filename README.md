@@ -89,6 +89,7 @@ silence** (repli sur les données de démo / `501`), le site ne casse jamais.
 | `CLERK_PUBLISHABLE_KEY` | auth | clé publique Clerk : charge Clerk côté client + dérive le JWKS pour vérifier les sessions. Seule variable Clerk lue par le code. |
 | `CLERK_SECRET_KEY` | auth | standard Clerk ; **non utilisé** par la vérification manuelle par JWKS (réservé au SDK backend). Jamais exposé au client. |
 | `CLERK_ALLOWED_ORIGINS` | auth | optionnel : origines autorisées pour le claim `azp` (défense CSRF), séparées par des virgules. |
+| `CLERK_ALLOWED_SUBS` | auth | optionnel (recommandé) : identifiants utilisateurs Clerk (`sub`) autorisés, séparés par des virgules. Vide = toute session valide (restreindre alors les inscriptions côté Clerk). |
 | `GITHUB_TOKEN` | publish | PAT fine-grained, **Contents: write** sur ce dépôt. |
 | `GITHUB_REPO` | publish | `owner/repo`. |
 | `GITHUB_BRANCH` | publish | branche cible (`main` en prod). |

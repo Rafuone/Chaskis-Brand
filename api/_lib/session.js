@@ -83,6 +83,12 @@ async function verifyClerkJwt(token) {
     if (payload.iss !== 'https://' + api) return null;                             // ÉGALITÉ STRICTE
     if (!payload.sub) return null;                                                 // identifiant requis
 
+    // Allow-list d'utilisateurs Clerk autorisés (id `sub`), configurable par env. Si vide, on
+    // accepte toute session valide (la restriction s'appuie alors sur la config d'inscription
+    // de l'instance Clerk). Si renseignée, SEULS ces utilisateurs passent — verrou serveur.
+    const subs = (process.env.CLERK_ALLOWED_SUBS || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+    if (subs.length && subs.indexOf(payload.sub) < 0) return null;
+
     // azp : si présent ET une allow-list est configurée, il doit en faire partie.
     const azpOk = allowedOrigins();
     if (payload.azp && azpOk.length && azpOk.indexOf(payload.azp) < 0) return null;

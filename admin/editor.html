@@ -24,6 +24,16 @@
 <link rel="stylesheet" href="/admin/css/editor.css?v=20260714c">
 </head>
 <body>
+<!-- Écran de connexion (auth Clerk). Recouvre l'admin tant que la connexion n'est pas établie.
+     Défensif : si Clerk n'est pas configuré ou ne charge pas -> retiré (accès par clé, comportement actuel).
+     Escape anti-verrouillage garanti : /admin/editor.html?fallback=1 -> accès direct par clé. -->
+<div id="authGate" role="dialog" aria-label="Connexion à l'administration" style="position:fixed;inset:0;z-index:100000;background:#f7f8f7;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#2C2052">
+  <div style="text-align:center;max-width:440px;padding:24px;width:100%">
+    <div style="font-weight:800;font-size:20px;letter-spacing:-.02em;margin-bottom:6px">Chaskis · Administration</div>
+    <div id="authGateMsg" style="color:#8a8c89;font-size:14px">Connexion sécurisée…</div>
+    <div id="clerkSignIn" style="margin-top:18px"></div>
+  </div>
+</div>
 <div class="app" id="app">
 
   <!-- ===== Sidebar ===== -->
@@ -792,6 +802,69 @@
 </div>
 
 <script src="/admin/data/tech-plan.js?v=20260714c"></script>
-<script src="/admin/js/editor.js?v=20260714e"></script>
+<script src="/admin/js/editor.js?v=20260714f"></script>
+<!-- Auth Clerk (front). editor.js reste inchangé : getStoredPublishKey() renvoie window.__clerkToken
+     quand on est connecté via Clerk, sinon la clé stockée (repli). Zéro appel /api modifié. -->
+<script>
+(function () {
+  var GATE = document.getElementById('authGate');
+  var MSG = document.getElementById('authGateMsg');
+  var settled = false;
+  function msg(t){ if(MSG) MSG.textContent = t; }
+  function reveal(mode){ if(settled && mode!=='clerk') return; settled = true; window.__CHASKIS_AUTH_MODE = mode; if (GATE) GATE.remove(); }
+  function fallback(){ if (settled) return; settled = true; window.__CHASKIS_AUTH_MODE = 'fallback'; if (GATE) GATE.remove(); }
+
+  // Escape total anti-verrouillage : ?fallback=1 -> accès direct (clé), Clerk ignoré.
+  try { if (new URLSearchParams(location.search).get('fallback') === '1') { fallback(); return; } } catch (e) {}
+
+  // Filet : si Clerk ne se manifeste jamais, on ne bloque pas l'admin.
+  var giveUp = setTimeout(function(){ if(!settled){ fallback(); } }, 9000);
+
+  async function refreshToken(){ try { if (window.Clerk && Clerk.session) { window.__clerkToken = (await Clerk.session.getToken()) || ''; } } catch (e) {} }
+
+  fetch('/api/config', { cache: 'no-store' })
+    .then(function(r){ return r.json(); })
+    .then(function(cfg){
+      var pk = cfg && cfg.clerkPublishableKey;
+      if (!pk) { clearTimeout(giveUp); fallback(); return; }   // Clerk non configuré -> comportement actuel
+      var api = '';
+      try { api = atob(pk.replace(/^pk_(test|live)_/, '')).replace(/\$+$/, ''); } catch (e) {}
+      if (!api) { return; }                                     // giveUp gérera
+      var s = document.createElement('script');
+      s.async = true; s.crossOrigin = 'anonymous';
+      s.setAttribute('data-clerk-publishable-key', pk);
+      s.src = 'https://' + api + '/npm/@clerk/clerk-js@5/dist/clerk.browser.js';
+      s.onerror = function(){ if(!settled) fallback(); };
+      s.onload = startClerk;
+      document.head.appendChild(s);
+    })
+    .catch(function(){ /* giveUp gérera -> repli */ });
+
+  async function startClerk(){
+    try {
+      if (typeof Clerk === 'undefined' || !Clerk.load) { if(!settled) fallback(); return; }
+      await Promise.race([
+        Clerk.load(),
+        new Promise(function(_, rej){ setTimeout(function(){ rej(new Error('load-timeout')); }, 8000); })
+      ]);
+      clearTimeout(giveUp);                 // Clerk a chargé : on est dans son flux, plus de repli auto
+      Clerk.addListener(function(e){ if (e && e.user && window.__CHASKIS_AUTH_MODE !== 'clerk') { gate(); } });
+      gate();
+    } catch (e) { if(!settled) fallback(); }
+  }
+
+  async function gate(){
+    if (window.Clerk && Clerk.user) {
+      await refreshToken();
+      setInterval(refreshToken, 40000);     // jetons de session courts (~60 s) : on rafraîchit d'avance
+      reveal('clerk');
+    } else {
+      msg('Connectez-vous pour accéder à l\'administration.');
+      try { Clerk.mountSignIn(document.getElementById('clerkSignIn'), { signInForceRedirectUrl: location.href }); }
+      catch (e) { fallback(); }
+    }
+  }
+})();
+</script>
 </body>
 </html>

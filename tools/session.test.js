@@ -66,6 +66,10 @@ function b64urlBuf(b) { return b.toString('base64').replace(/\+/g, '-').replace(
   ok(await S.verifyClerkJwt(jwt({ sub: 'u', iss: ISS, exp: future, azp: 'https://admin.chaskis.example' })) !== null, 'azp dans allow-list accepté');
   ok(await S.verifyClerkJwt(jwt({ sub: 'u', iss: ISS, exp: future })) !== null, 'azp absent toléré (Bearer déjà immunisé CSRF)');
   delete process.env.CLERK_ALLOWED_ORIGINS;
+  process.env.CLERK_ALLOWED_SUBS = 'user_autorise';
+  ok(await S.verifyClerkJwt(jwt({ sub: 'user_autorise', iss: ISS, exp: future })) !== null, 'utilisateur (sub) autorisé accepté');
+  ok(await S.verifyClerkJwt(jwt({ sub: 'user_intrus', iss: ISS, exp: future })) === null, 'utilisateur (sub) hors allow-list rejeté (verrou serveur)');
+  delete process.env.CLERK_ALLOWED_SUBS;
 
   section('requireAuth — Clerk OU clé partagée');
   var reqWith = function (b) { return { headers: b ? { authorization: 'Bearer ' + b } : {} }; };

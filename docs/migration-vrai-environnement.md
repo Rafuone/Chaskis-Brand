@@ -70,10 +70,15 @@ health 200 / auth 401 / validation 400).
 `request` → `(req, res)`) suffit, **sans toucher à la logique** des handlers. L'Option A évite
 même cet adaptateur.
 
-**Le seul vrai « Vercel-isme » = routage + en-têtes.** `vercel.json` (URLs propres + en-têtes
-`no-store` / `X-Robots-Tag` sur `/admin` et `/api`) se retranscrit en `staticwebapp.config.json`
-(Azure Static Web Apps) ou `web.config` / règles URL Rewrite (App Service/IIS) — ou est déjà
-géré par `tools/api-server.js`. C'est de la **configuration, pas du code**.
+**Le seul vrai « Vercel-isme » = routage + en-têtes.** Deux cas, tous deux couverts sans
+réécrire de code :
+- **Azure Static Web Apps** : `staticwebapp.config.json` (à la racine) retranscrit rewrites +
+  en-têtes (`X-Robots-Tag: noindex` sur `/admin` et `/api`, `no-store` HTML, `nosniff`). Sur ce
+  modèle, les `/api` (handlers Node bruts) demandent un mince adaptateur Azure Functions.
+- **Azure App Service (Node), recommandé** : `tools/api-server.js` sert le statique ET les `/api`
+  et applique lui-même ces en-têtes — aucun fichier de config d'hébergeur à écrire.
+
+C'est de la **configuration, pas du code**.
 
 **Variables d'environnement Azure** (App Service « Configuration » / Functions « Application
 settings ») : `PUBLISH_SECRET`, `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` — exactement les

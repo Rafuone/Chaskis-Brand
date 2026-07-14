@@ -20,6 +20,9 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const PORT = process.env.PORT || process.argv[2] || 3100;
+// En prod (Azure pose NODE_ENV=production), on met en cache les assets statiques (JS/CSS/images
+// versionnés par ?v=) ; en dev on garde no-store pour toujours servir la dernière version éditée.
+const PROD = process.env.NODE_ENV === 'production';
 
 // Miroir des rewrites de vercel.json (URLs propres). À retranscrire côté hôte final
 // (routes Express, staticwebapp.config.json, ou web.config) — c'est de la config, pas du code.
@@ -43,6 +46,7 @@ const server = http.createServer(async function (req, res) {
 
   // --- /api/* : on appelle le handler du fichier api/<nom>.js, tel quel ---
   if (pathname === '/api' || pathname.startsWith('/api/')) {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow'); // les endpoints ne doivent jamais être indexés
     const name = pathname.replace(/^\/api\/?/, '').replace(/[^a-zA-Z0-9_-]/g, '');
     const file = path.join(ROOT, 'api', name + '.js');
     if (!name || !fs.existsSync(file)) {
@@ -81,8 +85,14 @@ const server = http.createServer(async function (req, res) {
     if (err || !st.isFile()) {
       res.statusCode = 404; res.setHeader('Content-Type', 'text/plain; charset=utf-8'); res.end('404 Not Found'); return;
     }
-    res.setHeader('Content-Type', MIME[path.extname(filePath).toLowerCase()] || 'application/octet-stream');
-    res.setHeader('Cache-Control', 'no-store');
+    const ext = path.extname(filePath).toLowerCase(), base = path.basename(filePath);
+    res.setHeader('Content-Type', MIME[ext] || 'application/octet-stream');
+    // L'éditeur admin ne doit jamais être indexé (miroir de vercel.json / staticwebapp.config.json).
+    if (pathname === '/admin' || pathname.indexOf('/admin/') === 0) res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    // HTML + service worker + manifest = jamais en cache ; autres assets = cachables en prod.
+    if (ext === '.html' || base === 'sw.js' || base === 'manifest.json') res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    else res.setHeader('Cache-Control', PROD ? 'public, max-age=3600' : 'no-store');
+    if (base === 'sw.js') res.setHeader('Service-Worker-Allowed', '/');
     fs.createReadStream(filePath).pipe(res);
   });
 });

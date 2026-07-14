@@ -33,7 +33,7 @@ l'ouverture de la vue — suffisant pour éprouver la solution à 0 CHF.
 - `api/_lib/assign.js` — attribution pure (commercial dispo le moins chargé).
 - `api/_lib/availability.js` — **couture** disponibilité : `none` par défaut (aucun compte),
   `google` en Phase 2 (freebusy), Microsoft 365 en cible Azure — même contrat.
-- `tools/calendly.test.js` — 26 tests (`node tools/calendly.test.js`), sans réseau ni clé.
+- `tools/calendly.test.js` — 35 tests (`node tools/calendly.test.js`), sans réseau ni clé.
 
 ## Activer (compte gratuit, pour tester)
 
@@ -65,7 +65,7 @@ Rien d'autre à changer : l'attribution consomme déjà le résultat de la coutu
 ## Tester en local
 
 ```
-node tools/calendly.test.js                       # 26 tests, sans réseau
+node tools/calendly.test.js                       # 35 tests, sans réseau
 PUBLISH_SECRET=x node tools/api-server.js 3199     # sert le site + /api hors Vercel
 curl -H 'Authorization: Bearer x' localhost:3199/api/calendly   # 501 tant que CALENDLY_TOKEN absent
 ```

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/staticwebapp.config.json",
+  "routes": [
+    { "route": "/app", "rewrite": "/app.html" },
+    { "route": "/commander", "rewrite": "/commander.html" },
+    { "route": "/dashboard", "rewrite": "/dashboard.html" },
+    { "route": "/postuler", "rewrite": "/postuler.html" },
+    { "route": "/mobilite", "rewrite": "/mobilite.html" },
+    { "route": "/suivi/*", "rewrite": "/app.html" },
+    { "route": "/confidentialite", "rewrite": "/confidentialite.html" },
+    { "route": "/mentions-legales", "rewrite": "/mentions-legales.html" },
+    { "route": "/cgv", "rewrite": "/cgv.html" },
+    { "route": "/admin", "rewrite": "/admin/editor.html", "headers": { "X-Robots-Tag": "noindex, nofollow", "Cache-Control": "no-store" } },
+    { "route": "/admin/*", "headers": { "X-Robots-Tag": "noindex, nofollow", "Cache-Control": "no-store" } },
+    { "route": "/api/*", "headers": { "X-Robots-Tag": "noindex, nofollow", "Cache-Control": "no-store" } },
+    { "route": "/*.{html}", "headers": { "Cache-Control": "no-store, no-cache, must-revalidate" } },
+    { "route": "/sw.js", "headers": { "Cache-Control": "no-store", "Service-Worker-Allowed": "/" } },
+    { "route": "/manifest.json", "headers": { "Cache-Control": "no-store" } }
+  ],
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin"
+  },
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "/api/*", "/admin/*", "/*.{html,json,xml,txt,webp,png,jpg,svg,mp4,webm,woff2,ico}"]
+  },
+  "mimeTypes": {
+    ".webp": "image/webp",
+    ".webm": "video/webm"
+  }
+}

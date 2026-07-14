@@ -1,8 +1,8 @@
 # Contrat `site-content.json` (schema v1)
 
-Fichier de reference du contenu editorial publie depuis l'admin. C'est le **contrat central** entre l'editeur (`admin/`), la Function de publication (`api/publish.js`, chantier a venir) et les pages publiques. Il n'appartient a aucun chantier : tout chantier qui ecrit ou lit ce fichier passe par le validateur unique `api/_lib/content-schema.js`.
+Fichier de reference du contenu editorial publie depuis l'admin. C'est le **contrat central** entre l'editeur (`admin/`), la Function de publication (`api/publish.js`) et les pages publiques. Il n'appartient a aucun chantier : tout chantier qui ecrit ou lit ce fichier passe par le validateur unique `api/_lib/content-schema.js`.
 
-> Etat actuel : le fichier `site-content.json` n'existe pas encore a la racine. Il sera cree par le chantier **publish** (une V0 generee depuis `DEFAULT_PRICING` + `T_BASE`). Ce document et le validateur posent le contrat AVANT, pour que publish/media/chatbot/analytics/perf ne l'inventent pas chacun de leur cote.
+> Etat actuel : le fichier `site-content.json` EXISTE a la racine et la publication est fonctionnelle de bout en bout (voir `docs/publish.md`). Ce document et le validateur posent le contrat pour que publish/media/chatbot/analytics/perf ne l'inventent pas chacun de leur cote. Le lecteur public `assets/js/content.js` l'applique en fail-silent.
 
 ## Convention des Serverless Functions (`/api`)
 
@@ -48,6 +48,28 @@ Fichier de reference du contenu editorial publie depuis l'admin. C'est le **cont
 
 Les cles i18n (`hero.overline`, `promo.badge`, ...) sont celles portees par les attributs `data-i18n` du markup. On ne les fige pas dans une allowlist (elles sont nombreuses et evoluent), mais **chaque valeur chaine est controlee** contre le XSS et les dataURL.
 
+### Cle `chatbot` (reglages de l'assistant + base de connaissances publiee)
+
+Section optionnelle, allowlistee (cles hors liste = rejet). Elle porte le « quoi » de
+l'assistant, applique en ligne par `api/chat.js` apres publication.
+
+```jsonc
+"chatbot": {
+  "botName": "...", "tone": "...", "length": "...", "defaultLang": "fr",
+  "emojiLevel": "...", "instructions": "...",
+  "fallback": "...", "uncertain": "...", "address": "...",
+  "forbidden": ["sujet interdit", "..."],   // tableaux de chaines
+  "allowed":   ["..."],                       // indicatif (non applique en ligne)
+  "sources": [ { "title": "...", "tags": ["..."], "text": "..." } ]  // base de connaissances (PUBLIQUE)
+}
+```
+
+Cles autorisees (`CHATBOT_KEYS`) : `forbidden, allowed, tone, length, fallback, botName,
+instructions, address, emojiLevel, defaultLang, uncertain, sources`. Un element de `sources`
+n'accepte que `title, tags, text` (`CHATBOT_SOURCE_KEYS`). **Le texte des sources est PUBLIC**
+(present dans `site-content.json`) : n'y mettre aucune donnee confidentielle. Meme controle
+anti-XSS que le reste du contenu.
+
 ## Regles imposees par le validateur (`validateContent`)
 
 | Regle | Comportement |
@@ -69,9 +91,9 @@ Les valeurs i18n sont du **texte** : toute balise HTML y est refusee. Un `<` sui
 
 `validateContent(obj)` renvoie `{ ok, errors }`. **Fail-closed** : au moindre doute, on rejette cote publication. Le rendu cote public, lui, doit **degrader en silence** (si le JSON est absent/illisible, la page garde ses valeurs par defaut, jamais de page blanche).
 
-### Defense en profondeur cote rendu (a respecter par le futur `content.js`)
+### Defense en profondeur cote rendu (respectee par `assets/js/content.js`)
 
-La validation n'est PAS l'unique barriere. Le code qui lit `site-content.json` doit :
+La validation n'est PAS l'unique barriere. Le code qui lit `site-content.json` (`content.js`) doit :
 - injecter les valeurs via **`textContent`**, jamais via `innerHTML` (le seul cas `innerHTML` legitime, `[data-i18n-html]`, doit rester alimente par du markup interne du dev, pas par une valeur publiee) ;
 - construire le DOM en **iterant les elements** porteurs de `data-i18n` (lookup `dict[cle]`), jamais en iterant les cles du dictionnaire publie ;
 - si un jour un merge de dictionnaires est fait, utiliser `Object.create(null)` ou ignorer les cles `__proto__`.

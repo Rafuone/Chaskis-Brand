@@ -74,7 +74,7 @@ le client change ses prix. Voir `pricingPassages()` dans `api/chat.js`.
 ## Tester en local
 
 ```
-node tools/chat.test.js                 # 26 tests, sans réseau
+node tools/chat.test.js                 # 41 tests, sans réseau
 node tools/api-server.js 3199           # sert le site + /api hors Vercel
 curl -X POST localhost:3199/api/chat -H 'content-type: application/json' \
      -d '{"question":"Quels sont vos tarifs ?","lang":"fr"}'

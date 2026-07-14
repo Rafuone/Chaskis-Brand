@@ -1,44 +1,67 @@
-# Chantier « Publication » — état et activation (passation dev)
+# Chantier « Publication » — état et exploitation (passation dev)
 
 Objectif : le contenu édité dans `admin/editor.html` atteint le site public via un fichier
-`site-content.json` versionné dans Git (le push redéploie). Aucun secret côté navigateur.
+`site-content.json` versionné dans Git (chaque publication = 1 commit, le push redéploie).
+Aucun secret côté navigateur en dur.
 
-## Ce qui est fait (branche `feat/foundation-vercel`)
+## État : FONCTIONNEL de bout en bout (branche `feat/foundation-vercel`)
 
-1. **Contrat** — `api/_lib/content-schema.js` : `validateContent()` (allowlist stricte,
-   rejet des balises HTML / `javascript:` / dataURL > 2 Ko / clés `__proto__` / NaN, taille
-   max 300 Ko). Doc du schéma : `docs/schema/site-content.md`.
+La publication a été vérifiée en ligne sur la préversion (un clic « Publier » dans l'éditeur
+écrit un vrai commit de `site-content.json` sur la branche via l'API GitHub, et le site se
+redéploie).
+
+1. **Contrat** — `api/_lib/content-schema.js` : `validateContent()` (allowlist stricte ;
+   rejet de toute balise HTML, `javascript:`, `data:text/html`, dataURL > 2 Ko, clés
+   `__proto__`/`prototype`/`constructor`, `NaN`/`Infinity` ; taille max ~300 Ko ; sections
+   allowlistées : `pricing`, `testimonials`, `logos`, `pages`, `chatbot`). Doc : `docs/schema/site-content.md`.
 2. **Lecteur public** — `assets/js/content.js` : au chargement, `fetch('/site-content.json')`
    (no-store), fusionne les i18n dans `window.T` + `window.CHASKIS_PRICING`, puis rappelle
    `applyI18n`. **Strictement fail-silent** : fichier absent/illisible → la page garde ses
    valeurs par défaut. Câblé sur les 5 pages publiques standard (pas `app.html`).
 3. **Écriture serveur** — `api/publish.js` (POST `/api/publish`) : auth `Bearer PUBLISH_SECRET`
-   en temps constant, `validateContent`, GET du SHA + PUT base64 via l'API GitHub Contents,
-   `409` si édition concurrente, timeout 8 s. Testé par harness (fetch mocké) : 405/401/400/
-   create/update/409/504/500.
-4. **Payload** — `exportDraftBundle()` dans `admin/js/editor.js` agrège tout l'état de l'admin.
-5. **`site-content.json`** — V0 vide committé à la racine (aucun contenu publié pour l'instant).
-
-## Ce qu'il reste à faire (nécessite Alexandre / les devs)
-
-1. **Variables d'environnement Vercel** (Production + Preview) :
-   - `PUBLISH_SECRET` (généré `openssl rand -hex 24`)
-   - `GITHUB_TOKEN` (PAT fine-grained, **Contents: write** sur CE dépôt uniquement, expiration 90 j)
-   - `GITHUB_REPO` (`owner/repo`), `GITHUB_BRANCH` (`main`)
-2. **Câbler le bouton Publier** (`openPublish`/`publishVersion` dans `admin/js/editor.js`) :
-   après le versioning local, construire le payload (base `exportDraftBundle()`, forme du
-   schéma) et `await fetch('/api/publish', {method:'POST', headers:{Authorization:'Bearer '+SECRET,
-   'Content-Type':'application/json'}, body:...})`. États loading/succès/erreur ; le brouillon
+   en temps constant, `validateContent`, GET du SHA courant + PUT base64 via l'API GitHub
+   Contents, `409` si édition concurrente, timeout borné. GitHub authentifié en **Bearer**
+   (indispensable pour les PAT fine-grained).
+4. **Payload + bouton** — `buildSiteContent()` (admin/js/editor.js) produit le JSON conforme
+   au contrat ; `publishNow()` l'envoie en `POST /api/publish` avec la clé stockée, gère
+   loading/succès/erreur (401 efface la clé, 409 conflit, 501 aperçu local). Le brouillon
    localStorage reste intact tant que la publication n'a pas réussi.
-3. **Où mettre `PUBLISH_SECRET` côté admin** (décision) : mesure d'attente (champ + sessionStorage)
-   OU mini `api/session.js` posant un cookie httpOnly après mot de passe. Ne JAMAIS hardcoder
-   le secret dans un fichier servi au navigateur. Solution finale = l'auth Clerk (chantier `auth`).
-4. **Tester en local** : `vercel dev` (pas `tools/dev_server.py`, qui ne sert pas `/api`).
-5. **Réconcilier le modèle de brouillon** : `PAGE` est figé à `"index"` (`STORE_KEY`) alors que
-   l'éditeur gère 6 pages (`EDIT_PAGES`) ; à aligner pour publier réellement par page.
+5. **Historique / restauration** — `api/history.js` (liste les commits de `site-content.json`)
+   et `api/restore.js` (revert propre : relit le contenu au commit choisi, revalide, réécrit
+   en nouveau commit — jamais de réécriture d'historique). Voir la vue « Versions » de l'admin.
+6. **`site-content.json`** — présent à la racine (contenu publié par l'éditeur).
+
+## Variables d'environnement (voir aussi `README.md` et `.env.example`)
+
+| Variable | Rôle |
+|----------|------|
+| `PUBLISH_SECRET` | clé partagée de l'API admin (générée `openssl rand -hex 24`) |
+| `GITHUB_TOKEN` | PAT fine-grained, **Contents: write** sur CE dépôt uniquement |
+| `GITHUB_REPO` | `owner/repo` |
+| `GITHUB_BRANCH` | branche cible (`main` en prod ; `feat/foundation-vercel` en test) |
+
+Sur Vercel, un changement de variable ne prend effet qu'au **prochain déploiement**.
+
+## Tests
+
+`tools/publish.test.js` couvre le chemin d'écriture avec l'API GitHub **mockée** (aucun
+réseau) : méthode refusée, auth manquante/erronée, JSON invalide, schéma refusé, création
+(pas de SHA) vs mise à jour (SHA), conflit `409`, timeout. `tools/schema.test.js` couvre le
+validateur (cas passant + rejets : balise HTML, `javascript:`, clé hors allowlist, pollution
+de prototype). Lancer l'ensemble : `node tools/test.js`.
+
+## Où stocker la clé côté admin
+
+Interim assumé : la clé de publication vit dans le `localStorage` du navigateur admin (saisie
+une seule fois). Ne JAMAIS la coder en dur dans un fichier servi au navigateur. **Évolution
+finale = l'authentification (chantier `auth`, cible Entra ID / Azure AD B2C)**, qui supprimera
+ce stockage. Avant mise en service réelle, fermer aussi l'XSS d'attribut de l'admin (voir la
+revue de sécurité) : la clé en localStorage n'est exfiltrable que par ce biais.
 
 ## Sécurité
 
 Les valeurs publiées passent par `validateContent` (côté serveur) avant écriture. Côté rendu,
 `content.js` applique via `applyI18n` (textContent pour `data-i18n`, innerHTML pour
-`data-i18n-html` — d'où l'importance du filtre anti-balises du validateur).
+`data-i18n-html` — d'où l'importance du filtre anti-balises du validateur). Le texte des
+sources chatbot publiées est PUBLIC (lisible dans `site-content.json`) : n'y mettre aucune
+donnée confidentielle.

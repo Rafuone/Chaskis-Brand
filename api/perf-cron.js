@@ -25,14 +25,20 @@ function pages() {
   return raw.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
 }
 
-// Origine du site à auditer : PERF_SITE_URL (recommandé) sinon dérivée des en-têtes de la requête.
-function baseUrl(req) {
+// Origine du site à auditer. SÉCURITÉ (revue) : un en-tête (x-forwarded-host) est contrôlable par
+// l'appelant ; le truster laisserait un détenteur de CRON_SECRET faire auditer un hôte ARBITRAIRE
+// (abus de quota PageSpeed + commits dans le dépôt). On n'accepte donc une origine que si elle est
+// EXPLICITEMENT configurée : PERF_SITE_URL (recommandé, chemin prod) OU un hôte dérivé présent dans
+// l'allow-list PERF_ALLOWED_HOSTS. Sinon `trusted:false` -> refus (403). { base, trusted }.
+function resolveBase(req) {
   var env = (process.env.PERF_SITE_URL || '').trim();
-  if (env) return env.replace(/\/+$/, '');
+  if (env) return { base: env.replace(/\/+$/, ''), trusted: true };
   var h = (req && req.headers) || {};
   var host = h['x-forwarded-host'] || h.host || '';
   var proto = h['x-forwarded-proto'] || 'https';
-  return host ? (proto + '://' + host) : '';
+  if (!host) return { base: '', trusted: false };
+  var allow = (process.env.PERF_ALLOWED_HOSTS || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+  return { base: proto + '://' + host, trusted: allow.indexOf(host) >= 0 };
 }
 
 async function authorized(req) {
@@ -62,8 +68,10 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'GET' && req.method !== 'POST') return send(res, 405, { error: 'méthode non autorisée' });
   if (!(await authorized(req))) return send(res, 401, { error: 'non autorisé' });
 
-  var base = baseUrl(req);
-  if (!base) return send(res, 400, { error: 'origine du site introuvable (définir PERF_SITE_URL)' });
+  var rb = resolveBase(req);
+  if (!rb.base) return send(res, 400, { error: 'origine du site introuvable (définir PERF_SITE_URL)' });
+  if (!rb.trusted) return send(res, 403, { error: 'origine non fiable : définir PERF_SITE_URL (ou ajouter l\'hôte à PERF_ALLOWED_HOSTS)' });
+  var base = rb.base;
 
   var strategy = 'mobile';
   try { var u = new URL(req.url, 'http://localhost'); if (u.searchParams.get('strategy') === 'desktop') strategy = 'desktop'; } catch (e) {}

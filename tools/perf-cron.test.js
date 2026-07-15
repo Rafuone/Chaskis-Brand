@@ -61,6 +61,27 @@ var SAMPLE = { lighthouseResult: { categories: { performance: { score: 0.7 }, ac
   ok(back.length === 1 && back[0].score === 88 && back[0].seo === 100, 'relecture GitHub : entrée persistée');
   var res2 = await gstore.appendMeasurements([{ ts: 'g2', page: '/', score: 91 }]);
   ok(res2.ok && (await gstore.readHistory()).length === 2, 'append incrémental (relit le sha, ajoute)');
+  // Retry sur conflit de sha : 1er PUT -> 409, on relit et on réessaie -> 200.
+  var putCount = 0;
+  global.fetch = async function (url, opts) {
+    var method = (opts && opts.method) || 'GET';
+    if (method === 'GET') return { ok: false, status: 404, json: async function () { return {}; } };
+    putCount++;
+    if (putCount === 1) return { ok: false, status: 409, json: async function () { return {}; } };
+    return { ok: true, status: 200, json: async function () { return {}; } };
+  };
+  var retryRes = await gstore.appendMeasurements([{ ts: 'r1', page: '/', score: 77 }]);
+  ok(retryRes.ok && putCount === 2, 'conflit d\'écriture (409) -> relit le sha et réessaie une fois -> ok');
+  // Fichier présent mais JSON illisible : ne PAS écraser (lecture [], écriture {ok:false}).
+  var putAttempted = 0;
+  global.fetch = async function (url, opts) {
+    var method = (opts && opts.method) || 'GET';
+    if (method === 'GET') return { ok: true, status: 200, json: async function () { return { content: Buffer.from('{ pas du json valide', 'utf8').toString('base64'), sha: 'shabad' }; } };
+    putAttempted++; return { ok: true, status: 200, json: async function () { return {}; } };
+  };
+  ok((await gstore.readHistory()).length === 0, 'JSON corrompu -> lecture [] (fail-soft)');
+  var corruptWrite = await gstore.appendMeasurements([{ ts: 'x', page: '/', score: 50 }]);
+  ok(!corruptWrite.ok && putAttempted === 0, 'JSON corrompu -> écriture refusée {ok:false}, AUCUN PUT (n\'écrase pas l\'historique)');
   global.fetch = async function () { throw new Error('réseau coupé'); };
   ok((await gstore.readHistory()).length === 0, 'lecture en échec -> [] (fail-soft, l\'admin garde son local)');
   global.fetch = realFetch;
@@ -103,10 +124,22 @@ var SAMPLE = { lighthouseResult: { categories: { performance: { score: 0.7 }, ac
   ok(rNoKey.statusCode === 200 && jNoKey.measured === 0 && jNoKey.errors.length >= 1 && jNoKey.errors[0].status === 501, 'sans PAGESPEED_KEY -> 200, 0 mesurée, erreur 501 signalée');
 
   // Sans origine déterminable -> 400.
-  delete process.env.PERF_SITE_URL;
+  delete process.env.PERF_SITE_URL; delete process.env.PERF_ALLOWED_HOSTS;
   var cron4 = loadCron();
   var rNoBase = fakeRes(); await cron4({ method: 'GET', url: '/api/perf-cron', headers: { authorization: 'Bearer sek' } }, rNoBase);
   ok(rNoBase.statusCode === 400, 'origine introuvable (ni PERF_SITE_URL ni host) -> 400');
+  // SÉCURITÉ : origine dérivée d'un en-tête NON allowlistée -> 403 (anti-abus quota/commits).
+  var rUntrust = fakeRes(); await cron4({ method: 'GET', url: '/api/perf-cron', headers: { authorization: 'Bearer sek', 'x-forwarded-host': 'attacker.example' } }, rUntrust);
+  ok(rUntrust.statusCode === 403, 'hôte dérivé d\'un en-tête, hors allow-list -> 403 (x-forwarded-host non fiable)');
+  // Même hôte mais présent dans PERF_ALLOWED_HOSTS -> passe (mesure via PageSpeed mockée).
+  process.env.PERF_ALLOWED_HOSTS = 'trusted.example'; process.env.PAGESPEED_KEY = 'psk';
+  cstore._resetMemory();
+  global.fetch = async function () { return { ok: true, status: 200, json: async function () { return SAMPLE; } }; };
+  var cron5 = loadCron();
+  var rAllow = fakeRes(); await cron5({ method: 'GET', url: '/api/perf-cron', headers: { authorization: 'Bearer sek', 'x-forwarded-host': 'trusted.example' } }, rAllow);
+  ok(rAllow.statusCode === 200 && rAllow.json().measured === 1, 'hôte allowlisté -> 200, mesure effectuée');
+  global.fetch = realFetch;
+  delete process.env.PERF_ALLOWED_HOSTS;
   process.env.PERF_SITE_URL = 'https://site.test';
 
   // ============================ perf-history (lecture) ============================

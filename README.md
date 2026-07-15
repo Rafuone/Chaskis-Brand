@@ -97,7 +97,8 @@ silence** (repli sur les données de démo / `501`), le site ne casse jamais.
 | `GITHUB_BRANCH` | publish | branche cible (`main` en prod). |
 | `PAGESPEED_KEY` | perf | clé Google PageSpeed Insights (gratuite) → Core Web Vitals réels. |
 | `CRON_SECRET` | perf (planifié) | secret Bearer envoyé par la tâche planifiée à `/api/perf-cron` (Vercel Cron l'envoie s'il est défini). Sans lui, la mesure planifiée n'est pas déclenchable (le déclenchement manuel par clé admin reste possible). |
-| `PERF_SITE_URL` | perf (planifié) | origine du site à auditer par le cron (ex. `https://chaskis.ch`). Sinon dérivée des en-têtes de la requête. |
+| `PERF_SITE_URL` | perf (planifié) | origine du site à auditer par le cron (ex. `https://chaskis.ch`). **Seule origine fiable** ; sans elle, une origine dérivée d'un en-tête est refusée (403) sauf allow-list. |
+| `PERF_ALLOWED_HOSTS` | perf (planifié) | hôtes autorisés (virgules) si `PERF_SITE_URL` absent — anti-abus (un détenteur de `CRON_SECRET` ne peut pas faire auditer un hôte arbitraire). |
 | `PERF_CRON_PAGES` | perf (planifié) | pages auditées par passage, séparées par des virgules (défaut `/`). Élargir sur un hôte au timeout large (Azure). |
 | `PERF_STORE` | perf (historique) | stockage de l'historique serveur : `github` (défaut si GITHUB_TOKEN présent, écrit `data/perf-history.json`), `memory` (éphémère), `off`. Cible Azure : Blob/Table. |
 | `LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL` | chatbot | fournisseur OpenAI-compatible (Groq / OpenAI / **Azure OpenAI**). Sans clé → mode extractif. |

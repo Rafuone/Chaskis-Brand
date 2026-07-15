@@ -60,6 +60,11 @@ curl -H 'Authorization: Bearer x' 'localhost:3199/api/perf-history'             
 - **Planification** : `vercel.json` → `"crons": [{ "path": "/api/perf-cron", "schedule": "0 6 * * *" }]`
   (tous les jours 6 h UTC ; Hobby = 1/jour). Azure : timer trigger d'Azure Functions ou Logic App
   appelant la même route avec l'en-tête `CRON_SECRET`.
+- **Origine auditée** : **définir `PERF_SITE_URL`** (ex. `https://chaskis.ch`). C'est la seule
+  origine considérée fiable. Sans elle, une origine dérivée d'un en-tête de requête
+  (`x-forwarded-host`, contrôlable par l'appelant) est **refusée (403)** sauf si son hôte figure
+  dans `PERF_ALLOWED_HOSTS` — pour qu'un détenteur de `CRON_SECRET` ne puisse pas faire auditer
+  (ni committer) un hôte arbitraire.
 - **Historique serveur** (`api/_lib/perf-store.js`) — couture de stockage `PERF_STORE` :
   `github` (défaut si `GITHUB_TOKEN` : écrit `data/perf-history.json` dans le dépôt, durable et
   partagé, fenêtre glissante 90 entrées) · `memory` (éphémère) · `off`. Cible Azure : Blob/Table.

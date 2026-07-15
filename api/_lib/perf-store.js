@@ -36,7 +36,11 @@ async function ghRead() {
   if (!r.ok) throw new Error('lecture GitHub ' + r.status);
   var j = await r.json();
   var content = (j && j.content) ? Buffer.from(j.content, 'base64').toString('utf8') : '';
-  var parsed = null; try { parsed = JSON.parse(content); } catch (e) {}
+  var parsed = null;
+  // Contenu NON vide illisible = fichier corrompu : on JETTE plutôt que renvoyer []+sha (qui ferait
+  // ÉCRASER l'historique par la mesure suivante = perte de données). L'appelant fail-soft : lecture
+  // -> [] (repli local), écriture -> { ok:false } sans clobberer. Un vrai fichier vide reste ok.
+  if (content && content.trim()) { try { parsed = JSON.parse(content); } catch (e) { throw new Error('historique perf corrompu (JSON illisible)'); } }
   return { entries: (parsed && Array.isArray(parsed.entries)) ? parsed.entries : [], sha: (j && j.sha) || null };
 }
 
@@ -69,11 +73,21 @@ async function appendMeasurements(entries) {
   try {
     if (provider() === 'off') return { ok: false, error: 'stockage désactivé (PERF_STORE=off)' };
     if (provider() === 'github') {
-      var g = await ghRead();
-      var all = g.entries.concat(entries);
-      if (all.length > MAX_ENTRIES) all = all.slice(all.length - MAX_ENTRIES);
-      await ghWrite(all, g.sha);
-      return { ok: true, appended: entries.length, total: all.length };
+      // Retry UNIQUE sur conflit de sha (409/422) : deux écritures concurrentes (cron + déclenchement
+      // manuel) — on relit le sha à jour et on ré-append (les entrées de l'autre écrivain sont
+      // relues, donc préservées, sans doublon des nôtres). Anti-perte de données.
+      for (var attempt = 0; attempt < 2; attempt++) {
+        try {
+          var g = await ghRead();
+          var all = g.entries.concat(entries);
+          if (all.length > MAX_ENTRIES) all = all.slice(all.length - MAX_ENTRIES);
+          await ghWrite(all, g.sha);
+          return { ok: true, appended: entries.length, total: all.length };
+        } catch (e) {
+          if (attempt === 0 && /\b(409|422)\b/.test(String((e && e.message) || ''))) continue; // conflit -> relire + réessayer
+          throw e;
+        }
+      }
     }
     _mem = _mem.concat(entries);
     if (_mem.length > MAX_ENTRIES) _mem = _mem.slice(_mem.length - MAX_ENTRIES);

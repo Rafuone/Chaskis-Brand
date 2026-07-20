@@ -456,6 +456,7 @@ function importMediaFile(file){
     if(mediaTarget){ applyMedia(src); document.getElementById("mediaModalBg").classList.remove("show"); toast(meta.optimized?"Image importée et optimisée":"Image importée"); }
     else { save(); toast(meta.optimized?"Image ajoutée et optimisée":"Image ajoutée à la médiathèque"); }
     renderAllMedia(); updateDashboard();
+    uploadMediaToBlobAsync(entry, src); /* stockage réel : dataURL -> URL Blob persistante (repli local si indispo) */
     if(!entry.w||!entry.h){ const im=new Image(); im.onload=()=>{ entry.w=im.naturalWidth; entry.h=im.naturalHeight; save(); renderAllMedia();
       if(fromPage){ const mv=document.getElementById("view-media"); if(mv&&mv.classList.contains("on")) openMediaDetail(draft.media.indexOf(entry)); } }; im.src=src; }
     else if(fromPage){ const mv=document.getElementById("view-media"); if(mv&&mv.classList.contains("on")) openMediaDetail(draft.media.indexOf(entry)); }
@@ -469,6 +470,41 @@ function importMediaFile(file){
     if(file.size > MEDIA.imgMax){ toast(opt ? "Image trop lourde même après optimisation (max 2 Mo)" : "Image trop lourde (max 2 Mo)"); return; }
     const rd=new FileReader(); rd.onload=()=>storeImg(rd.result, { size:file.size, type:file.type, optimized:false }); rd.readAsDataURL(file);
   });
+}
+/* ---- Stockage réel des médias (chantier media) ----
+   Un import produit d'abord un dataURL (aperçu instantané), puis on l'envoie au store via
+   /api/media-upload et on remplace PARTOUT le dataURL par l'URL persistante (médiathèque, images
+   appliquées, fonds). Repli NON-CASSANT : sans connexion/clé ou si l'API échoue, on garde le
+   dataURL (comportement historique) et entry.stored="local" — la démo hors-ligne reste intacte. */
+function dataUrlParts(src){
+  var m=/^data:([^;,]+);base64,/.exec(src||""); if(!m) return null; // on n'envoie QUE des dataURL base64
+  return { contentType:(m[1]||"application/octet-stream"), dataBase64:src.slice(m[0].length) };
+}
+function replaceMediaSrc(oldSrc, newSrc){
+  if(!oldSrc || !newSrc || oldSrc===newSrc) return;
+  (draft.media||[]).forEach(function(m){ if(m && m.src===oldSrc) m.src=newSrc; });
+  Object.keys(draft.images||{}).forEach(function(k){ if(draft.images[k]===oldSrc) draft.images[k]=newSrc; });
+  Object.keys(draft.bgImages||{}).forEach(function(k){ if(draft.bgImages[k]===oldSrc) draft.bgImages[k]=newSrc; });
+  if(DOC){
+    DOC.querySelectorAll("[data-ckimg]").forEach(function(el){ if(el.getAttribute("src")===oldSrc) el.setAttribute("src", newSrc); });
+    BG_DEFS.forEach(function(b){ var el=DOC.querySelector(b.sel); if(el && bgUrl(el)===oldSrc) el.style.backgroundImage='url("'+newSrc+'")'; });
+  }
+}
+function uploadMediaToBlobAsync(entry, dataUrl){
+  try{
+    if(!entry || entry.kind!=="image") return; // vidéos : envoi différé (gros fichiers) — non concerné ici
+    var parts=dataUrlParts(dataUrl); if(!parts) return; // déjà une URL (média du site) : rien à envoyer
+    var key=getStoredPublishKey(); if(!key){ entry.stored="local"; return; } // pas connecté : repli local (démo)
+    entry.stored="uploading";
+    fetch("/api/media-upload", { method:"POST", headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+key },
+      body:JSON.stringify({ filename:entry.name||"media", contentType:parts.contentType, dataBase64:parts.dataBase64 }) })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){
+        if(j && j.ok && j.url){ replaceMediaSrc(dataUrl, j.url); entry.src=j.url; entry.stored="blob"; entry.blobPath=j.pathname; save(); renderAllMedia(); }
+        else { entry.stored="local"; } // échec (401/limite/indispo) : on garde le dataURL, aucune régression
+      })
+      .catch(function(){ entry.stored="local"; });
+  }catch(e){ if(entry) entry.stored="local"; }
 }
 function makeMediaInput(){
   const inp=document.createElement("input"); inp.type="file";

@@ -130,4 +130,4 @@ silence** (repli sur les données de démo / `501`), le site ne casse jamais.
 `docs/` — un fichier par chantier : `deploiement-host`, `migration-vrai-environnement`,
 `publish`, `schema/site-content` (contrat de contenu), `auth-roles` (rôles & capacités serveur),
 `chatbot`, `rdv-calendly`, `perf`, `media` (stockage Blob), `analytics` (collecteur maison),
-`accessibilite`.
+`workflow-commercial` (cohérence Clients/Copilote/RDV — direction en cours), `accessibilite`.

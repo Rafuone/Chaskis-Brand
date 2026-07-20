@@ -34,7 +34,7 @@ la réponse est **403** (`{ error, need }`) et **aucune action n'a lieu**.
 | `GET /api/history` | `versions.view` |
 | `GET /api/perf` | `perf.view` |
 | `GET /api/perf-history` | `perf.view` |
-| `POST /api/perf-cron` | *(Bearer `CRON_SECRET` OU clé admin — mesure planifiée)* |
+| `GET /api/perf-history?run=1` | *(Bearer `CRON_SECRET` OU clé admin — mesure planifiée)* |
 | `GET /api/calendly` | `rdv.view` |
 | `POST /api/media-upload` · `GET` (diagnostic) | `media.import` |
 | `GET /api/collect` (stats) | `stats.view` |

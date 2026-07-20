@@ -46,20 +46,20 @@ hôte au timeout plus large :
 
 ```
 node tools/perf.test.js                                   # endpoint + measure(), sans réseau
-node tools/perf-cron.test.js                              # cron + store + history, sans réseau
+node tools/perf-server.test.js                            # mesure planifiée + store + historique, sans réseau
 PUBLISH_SECRET=x node tools/api-server.js 3199
 curl -H 'Authorization: Bearer x' 'localhost:3199/api/perf?url=https://chaskis.ch'   # 501 tant que PAGESPEED_KEY absent
-curl -H 'Authorization: Bearer x' 'localhost:3199/api/perf-cron'                     # mesure planifiée (manuel)
+curl -H 'Authorization: Bearer x' 'localhost:3199/api/perf-history?run=1'                     # mesure planifiée (manuel)
 curl -H 'Authorization: Bearer x' 'localhost:3199/api/perf-history'                  # historique serveur
 ```
 
 ## Mesure planifiée + historique serveur
 
-- **`GET /api/perf-cron`** — mesure PLANIFIÉE. Auth : `Authorization: Bearer <CRON_SECRET>`
+- **`GET /api/perf-history?run=1`** — mesure PLANIFIÉE. Auth : `Authorization: Bearer <CRON_SECRET>`
   (Vercel Cron l'envoie si `CRON_SECRET` est défini) OU la clé admin `PUBLISH_SECRET`
   (déclenchement manuel). Mesure `PERF_CRON_PAGES` (défaut `/`) sur `PERF_SITE_URL` et **append**
   à l'historique serveur. Réutilise `perf.measure()` (même code que l'endpoint à la demande).
-- **Planification** : `vercel.json` → `"crons": [{ "path": "/api/perf-cron", "schedule": "0 6 * * *" }]`
+- **Planification** : `vercel.json` → `"crons": [{ "path": "/api/perf-history?run=1", "schedule": "0 6 * * *" }]`
   (tous les jours 6 h UTC ; Hobby = 1/jour). Azure : timer trigger d'Azure Functions ou Logic App
   appelant la même route avec l'en-tête `CRON_SECRET`.
 - **Origine auditée** : **définir `PERF_SITE_URL`** (ex. `https://chaskis.ch`). C'est la seule
@@ -80,5 +80,5 @@ curl -H 'Authorization: Bearer x' 'localhost:3199/api/perf-history'             
 `api/perf.js` = Node brut CommonJS `(req,res)`, sans dépendance : tourne tel quel sur Azure
 App Service. PageSpeed est une API Google appelée serveur → identique partout ; la clé reste
 en variable d'environnement. La mesure planifiée = un timer Azure Functions/Logic App appelant
-`/api/perf-cron` (en-tête `CRON_SECRET`) ; l'historique passe de GitHub à Azure Blob/Table via
+`/api/perf-history?run=1` (en-tête `CRON_SECRET`) ; l'historique passe de GitHub à Azure Blob/Table via
 `PERF_STORE` (même interface `perf-store.js`). Voir `docs/migration-vrai-environnement.md`.

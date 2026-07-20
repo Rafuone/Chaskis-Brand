@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.44.1" };
+const ADMIN_BUILD = { version: "0.44.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1366,7 +1366,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.44.1", cur:true, date:"2026-07-21", title:"Copilote RDV : fiabilité (revue)", items:[
+  { v:"v0.44.2", cur:true, date:"2026-07-21", title:"Optimisation technique interne", items:[
+    {t:"imp", x:"Regroupement technique de fonctions serveur (préparation des prochaines évolutions), sans changement visible ni perte de fonctionnalité"}
+  ]},
+  { v:"v0.44.1", date:"2026-07-21", title:"Copilote RDV : fiabilité (revue)", items:[
     {t:"fix", x:"Préparer un rendez-vous demande confirmation si un copilote est déjà en cours (plus de perte de saisie) ; un champ email éditable a été ajouté"},
     {t:"fix", x:"« Terminer » réinitialise le copilote et ne crée plus de doublon si on reclique ; le compte-rendu d'un rendez-vous synchronisé est correctement conservé après actualisation"}
   ]},
@@ -2745,7 +2748,7 @@ function cwvHistHtml(){ var h=cwvHistory(); if(h.length<2) return '';
   return '<div class="cwv-hist"><div class="cwv-hist-h"><i data-lucide="history"></i>Historique des mesures Google <span class="hint" style="margin:0">'+h.length+' enregistrée'+(h.length>1?"s":"")+'</span></div>'+rows+'</div>';
 }
 /* Historique SERVEUR (mesures planifiées) : partagé entre appareils, alimenté par le cron
-   /api/perf-cron. Repli SILENCIEUX : pas de clé / endpoint absent / vide -> rien affiché (l'historique
+   /api/perf-history?run=1. Repli SILENCIEUX : pas de clé / endpoint absent / vide -> rien affiché (l'historique
    local ci-dessus reste la référence). Distinct de l'historique local « cet appareil ». */
 let perfServerHist=null, perfServerHistLoading=false;
 function cwvServerHistHtml(entries){

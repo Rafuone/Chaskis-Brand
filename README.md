@@ -52,7 +52,7 @@ Back-office admin (SPA vanilla mono-page)
 
 API / serverless host-agnostique (CommonJS (req,res), 0 dépendance, 0 build)
   Cœur     : health (+ ?probe=env) · publish · restore · history
-  Features : perf (PageSpeed) · perf-cron · perf-history · chat (RAG + LLM optionnel) · calendly
+  Features : perf (PageSpeed) · perf-history (lecture + mesure planifiée ?run=1) · chat (RAG + LLM optionnel) · calendly
              · media-upload (Blob) · collect (audience) · config
   api/_lib/: content-schema (contrat central) · storage (couture Blob→Azure) · rag · llm
              · calendly-map · assign · availability · github · http · auth · session · rbac · perf-store
@@ -102,7 +102,7 @@ silence** (repli sur les données de démo / `501`), le site ne casse jamais.
 | `GITHUB_REPO` | publish | `owner/repo`. |
 | `GITHUB_BRANCH` | publish | branche cible (`main` en prod). |
 | `PAGESPEED_KEY` | perf | clé Google PageSpeed Insights (gratuite) → Core Web Vitals réels. |
-| `CRON_SECRET` | perf (planifié) | secret Bearer envoyé par la tâche planifiée à `/api/perf-cron` (Vercel Cron l'envoie s'il est défini). Sans lui, la mesure planifiée n'est pas déclenchable (le déclenchement manuel par clé admin reste possible). |
+| `CRON_SECRET` | perf (planifié) | secret Bearer envoyé par la tâche planifiée à `/api/perf-history?run=1` (Vercel Cron l'envoie s'il est défini). Sans lui, la mesure planifiée n'est pas déclenchable (le déclenchement manuel par clé admin reste possible). |
 | `PERF_SITE_URL` | perf (planifié) | origine du site à auditer par le cron (ex. `https://chaskis.ch`). **Seule origine fiable** ; sans elle, une origine dérivée d'un en-tête est refusée (403) sauf allow-list. |
 | `PERF_ALLOWED_HOSTS` | perf (planifié) | hôtes autorisés (virgules) si `PERF_SITE_URL` absent — anti-abus (un détenteur de `CRON_SECRET` ne peut pas faire auditer un hôte arbitraire). |
 | `PERF_CRON_PAGES` | perf (planifié) | pages auditées par passage, séparées par des virgules (défaut `/`). Élargir sur un hôte au timeout large (Azure). |

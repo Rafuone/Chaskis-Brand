@@ -16,7 +16,9 @@
 ## Endpoint `GET /api/perf`
 
 - Paramètres : `url=<page http(s)>`, `strategy=mobile|desktop` (défaut mobile).
-- Auth : `Authorization: Bearer <PUBLISH_SECRET>` (comme les autres endpoints).
+- Auth : `Authorization: Bearer <jeton>` — **jeton de session Clerk** (vérifié serveur via JWKS)
+  OU `PUBLISH_SECRET` en repli. Le rôle résolu doit porter la capacité `perf.view`, sinon **403**
+  (RBAC serveur — voir `docs/auth-roles.md`). Idem pour tous les endpoints admin.
 - Réponse : `{ ok, url, strategy, score, categories:{ performance, accessibility, seo, bestPractices }, metrics:{ lcp, cls, tbt, fcp, si } }` (`score` = performance, rétrocompat).
 - Sans `PAGESPEED_KEY` → `501` (l'admin garde son estimation). Sans `url` valide → `400`
   (utile comme sonde « clé active ? » sans consommer de quota PageSpeed).

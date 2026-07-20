@@ -28,7 +28,9 @@ l'ouverture de la vue — suffisant pour éprouver la solution à 0 CHF.
 ## Pièces
 
 - `api/calendly.js` — endpoint `GET /api/calendly` : lit le compte central (API v2, GET),
-  normalise, attribue, renvoie `{ ok, source, count, rdv[] }`. Auth Bearer `PUBLISH_SECRET`.
+  normalise, attribue, renvoie `{ ok, source, count, rdv[] }`. Auth Bearer : **jeton de session
+  Clerk** (JWKS) OU `PUBLISH_SECRET` en repli, puis **RBAC** — capacité `rdv.view` exigée (sinon
+  403 ; voir `docs/auth-roles.md`).
 - `api/_lib/calendly-map.js` — cartographie pure événement Calendly → format RDV de l'admin.
 - `api/_lib/assign.js` — attribution pure (commercial dispo le moins chargé).
 - `api/_lib/availability.js` — **couture** disponibilité : `none` par défaut (aucun compte),

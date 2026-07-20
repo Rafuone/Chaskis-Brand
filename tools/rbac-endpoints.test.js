@@ -56,6 +56,10 @@ async function run() {
     { name: 'history', file: 'api/history.js', method: 'GET', sub: 'user_co', role: 'commercial', need: 'versions.view', url: '/api/history' },
     { name: 'perf', file: 'api/perf.js', method: 'GET', sub: 'user_ed', role: 'editor', need: 'perf.view', url: '/api/perf?url=https://x/&strategy=mobile' },
     { name: 'calendly', file: 'api/calendly.js', method: 'GET', sub: 'user_ed', role: 'editor', need: 'rdv.view', url: '/api/calendly' },
+    // media-upload exige media.import : 'commercial' ne l'a pas (editor L'A, donc inutilisable ici).
+    { name: 'media-upload', file: 'api/media-upload.js', method: 'POST', sub: 'user_co', role: 'commercial', need: 'media.import', url: '/api/media-upload', body: { contentType: 'image/png', dataBase64: 'iVBORw0KGgo=', filename: 'x.png' } },
+    // collect (stats) exige stats.view : ni editor ni commercial ne l'ont.
+    { name: 'collect', file: 'api/collect.js', method: 'GET', sub: 'user_ed', role: 'editor', need: 'stats.view', url: '/api/collect?days=30' },
   ];
 
   section('403 par capacité — rôle sans le droit, AVANT tout appel externe');

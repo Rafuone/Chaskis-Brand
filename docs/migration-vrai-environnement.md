@@ -123,5 +123,11 @@ Règle : **ne jamais coupler dur à un SaaS.** Chaque intégration doit être re
   `/api` hors Vercel (testé). C'est la base d'intégration Azure App Service.
 - Auth GitHub en `Bearer` + `.trim()` des variables d'env (compatible PAT classic ET
   fine-grained ; tolère un espace collé par erreur).
-- Non fait (attend un choix / des accès) : la bascule sur Azure, l'auth Clerk (remplace la clé
-  de publication), et les chantiers analytics / perf (PageSpeed) / chatbot / calendly / media.
+- Livrés depuis (branchés + vérifiés en préversion) : **auth Clerk** (JWT vérifié serveur via
+  JWKS, repli clé) et **RBAC serveur** (rôles/capacités, 403 par capacité) ; **analytics**
+  (collecteur maison `/api/collect`, sans cookie) ; **perf** (Core Web Vitals PageSpeed + mesure
+  planifiée) ; **chatbot** (RAG + LLM optionnel, streaming) ; **calendly** (sync RDV) ; **media**
+  (upload/stockage Vercel Blob + publication des images vers le site).
+- Non fait (attend un choix / des accès) : la **bascule sur Azure** (hébergement + Entra ID en
+  remplacement de Clerk), les **comptes définitifs** (aujourd'hui comptes de test), et la
+  **disponibilité agrégée Calendly** (Option A, nécessite un compte de service Google).

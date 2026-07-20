@@ -33,9 +33,15 @@ la réponse est **403** (`{ error, need }`) et **aucune action n'a lieu**.
 | `POST /api/restore` | `versions.restore` |
 | `GET /api/history` | `versions.view` |
 | `GET /api/perf` | `perf.view` |
+| `GET /api/perf-history` | `perf.view` |
+| `POST /api/perf-cron` | *(Bearer `CRON_SECRET` OU clé admin — mesure planifiée)* |
 | `GET /api/calendly` | `rdv.view` |
+| `POST /api/media-upload` · `GET` (diagnostic) | `media.import` |
+| `GET /api/collect` (stats) | `stats.view` |
+| `POST /api/collect` (page vue) | *(public — collecte anonyme, rate-limité)* |
 | `POST /api/chat` | *(public — aucune auth)* |
 | `GET /api/config` | *(public — ne renvoie que la clé publique Clerk)* |
+| `GET /api/health` (+ `?probe=env`) | *(public — sonde, booléens seuls)* |
 
 ## Attribution des rôles (par variables d'environnement)
 
@@ -47,9 +53,13 @@ une variable, pas du code) :
   (`"Editor"` = `"editor"`). Un `sub` mappé à un rôle **inconnu** (faute de frappe) est
   **verrouillé** (aucune capacité) — **jamais** promu admin.
 - **`CHASKIS_DEFAULT_ROLE`** — rôle d'un utilisateur authentifié **non** listé dans `CHASKIS_ROLES` :
-  - **absent** → `admin` (préserve le comportement d'avant v0.36.0 : **non-cassant**) ;
   - **rôle valide** → ce rôle ;
-  - **valeur invalide** → **verrouillé** (fail-closed).
+  - **valeur invalide** → **verrouillé** (fail-closed) ;
+  - **absent** → dépend du verrouillage de l'instance (revue sécurité) :
+    - `CLERK_ALLOWED_SUBS` **renseignée** (instance verrouillée à des comptes de confiance) → `admin` ;
+    - `CLERK_ALLOWED_SUBS` **vide** (inscription potentiellement ouverte côté Clerk) → **`none`**
+      (fail-closed : sinon tout inscrit inconnu deviendrait admin). **En prod : renseigner
+      `CLERK_ALLOWED_SUBS` (recommandé) OU `CHASKIS_DEFAULT_ROLE`.**
 - **`PUBLISH_SECRET`** (repli Bearer / `?fallback=1` / tests) → toujours **admin** (clé maîtresse).
 
 ## Posture de production recommandée (fail-closed)

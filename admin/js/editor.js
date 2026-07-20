@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.42.1" };
+const ADMIN_BUILD = { version: "0.43.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1366,7 +1366,13 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.42.1", cur:true, date:"2026-07-20", title:"Fiabilité & robustesse (revue de code médias + statistiques)", items:[
+  { v:"v0.43.0", cur:true, date:"2026-07-20", title:"Audit qualité complet : sécurité, fiabilité et honnêteté renforcées", items:[
+    {t:"fix", x:"Sécurité : la page de suivi de commande ne peut plus être détournée par un lien piégé (faille XSS fermée) ; l'accès à l'administration est verrouillé côté serveur par défaut"},
+    {t:"fix", x:"Fiabilité : plus de perte de brouillon en manipulant les versions ; le calendrier de démonstration reste affiché même sans connexion ; l'assistant gère proprement une coupure réseau"},
+    {t:"imp", x:"La fenêtre « Publier » distingue clairement ce qui part EN LIGNE de ce qui reste en version locale — fini les fausses promesses ; les textes modifiés s'appliquent aussi sur les adresses de page « propres »"},
+    {t:"imp", x:"Documentation technique intégralement remise à jour pour le hand-off aux développeurs ; couverture de tests élargie (14 suites)"}
+  ]},
+  { v:"v0.42.1", date:"2026-07-20", title:"Fiabilité & robustesse (revue de code médias + statistiques)", items:[
     {t:"fix", x:"Statistiques : les visites vers des adresses de page longues ne sont plus perdues au comptage ; les chiffres restent fiables même sous forte affluence"},
     {t:"fix", x:"Médias : remplacer un logo répété (bandeau de confiance) met à jour toutes ses occurrences dans l'aperçu comme en ligne ; choisir une image déjà présente sur le site ne fige plus une adresse temporaire"},
     {t:"imp", x:"Statistiques : libellé honnête (« visiteurs / jour en moyenne »), protection anti-abus du point de collecte, et affichage plus économe (mise en cache)"}

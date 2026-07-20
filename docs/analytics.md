@@ -63,8 +63,9 @@ renvoie l'agrégat (`provider:blob`, pages vues / visiteurs / top pages / proven
 
 ## Tests
 
-`tools/collect.test.js` (22 cas, 0 réseau) : round-trip clé↔événement, filtre anti-bots,
-déterminisme + rotation quotidienne + troncature du hash visiteur, assainissement `path`/`ref`.
+`tools/collect.test.js` (29 cas, 0 réseau) : round-trip clé↔événement, garde de longueur de clé
+(anti-perte), filtre anti-bots, déterminisme + rotation quotidienne du hash visiteur, priorité IP
+(anti-spoof), validation `ev.t`, assainissement `path`/`ref`.
 
 ## Limites & échelle (honnête)
 
@@ -74,8 +75,8 @@ déterminisme + rotation quotidienne + troncature du hash visiteur, assainisseme
 - **Quotas Vercel Blob (plan gratuit)** : ~10k opérations simples + ~2k opérations avancées (list)
   par mois. 1 visite = 1 écriture ; 1 consultation des stats = quelques `list`. Suffisant pour une
   vitrine à faible trafic ; à surveiller si le trafic grimpe.
-- **Timeout** : l'agrégation ne lit aucun corps (list-only) → sûre sur le timeout 10 s du plan
-  Hobby. Bornée à `MAX_PAGES` (au-delà, réponse `truncated: true`).
+- **Timeout** : l'agrégation ne lit aucun corps (list-only, par jour) → sûre sur le timeout 10 s du
+  plan Hobby. Bornée à `MAX_LIST_CALLS` appels (au-delà, réponse `truncated: true`).
 - **Retention** : pas encore de purge automatique des vieux jours (à ajouter — un cron qui supprime
   `analytics/ev/<jour>` au-delà de N jours). Sur l'hôte final, préférer un vrai magasin analytique.
 - **Cible Azure** : Application Insights (natif) ou Azure Table Storage derrière la même couture

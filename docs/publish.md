@@ -18,10 +18,11 @@ redéploie).
    (no-store), fusionne les i18n dans `window.T` + `window.CHASKIS_PRICING`, puis rappelle
    `applyI18n`. **Strictement fail-silent** : fichier absent/illisible → la page garde ses
    valeurs par défaut. Câblé sur les 5 pages publiques standard (pas `app.html`).
-3. **Écriture serveur** — `api/publish.js` (POST `/api/publish`) : auth `Bearer PUBLISH_SECRET`
-   en temps constant, `validateContent`, GET du SHA courant + PUT base64 via l'API GitHub
-   Contents, `409` si édition concurrente, timeout borné. GitHub authentifié en **Bearer**
-   (indispensable pour les PAT fine-grained).
+3. **Écriture serveur** — `api/publish.js` (POST `/api/publish`) : auth par **jeton de session
+   Clerk** (vérifié serveur via JWKS) OU `PUBLISH_SECRET` en repli (comparaison temps constant),
+   puis **RBAC** — la capacité `editor.publish` est exigée, sinon **403** (voir `docs/auth-roles.md`).
+   Ensuite `validateContent`, GET du SHA courant + PUT base64 via l'API GitHub Contents, `409` si
+   édition concurrente, timeout borné. GitHub authentifié en **Bearer** (PAT fine-grained).
 4. **Payload + bouton** — `buildSiteContent()` (admin/js/editor.js) produit le JSON conforme
    au contrat ; `publishNow()` l'envoie en `POST /api/publish` avec la clé stockée, gère
    loading/succès/erreur (401 efface la clé, 409 conflit, 501 aperçu local). Le brouillon

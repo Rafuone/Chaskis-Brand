@@ -31,8 +31,10 @@ aperçu rapide du site, insuffisant pour l'admin (Publier/Perf/Calendly renverro
 node tools/test.js        # lance toutes les suites tools/*.test.js (0 dépendance, 0 réseau)
 ```
 
-Suites : `perf`, `chat`, `calendly`, `publish`, `schema` (validateur de contenu). Aucune ne
-touche le réseau (fetch/GitHub/PageSpeed sont mockés) ni n'exige de clé.
+**14 suites** dans `tools/*.test.js` : `perf`, `chat`, `calendly`, `publish`, `schema` (validateur
+de contenu), `session`, `rbac`, `rbac-endpoints`, `history`, `restore`, `storage`, `media`,
+`collect`, `test` (lanceur). Aucune ne touche le réseau (fetch/GitHub/PageSpeed/Blob sont mockés)
+ni n'exige de clé.
 
 ## Architecture
 
@@ -105,10 +107,12 @@ silence** (repli sur les données de démo / `501`), le site ne casse jamais.
 | `PERF_ALLOWED_HOSTS` | perf (planifié) | hôtes autorisés (virgules) si `PERF_SITE_URL` absent — anti-abus (un détenteur de `CRON_SECRET` ne peut pas faire auditer un hôte arbitraire). |
 | `PERF_CRON_PAGES` | perf (planifié) | pages auditées par passage, séparées par des virgules (défaut `/`). Élargir sur un hôte au timeout large (Azure). |
 | `PERF_STORE` | perf (historique) | stockage de l'historique serveur : `github` (défaut si GITHUB_TOKEN présent, écrit `data/perf-history.json`), `memory` (éphémère), `off`. Cible Azure : Blob/Table. |
+| `PERF_TIMEOUT_MS` | perf | optionnel : délai max d'un appel PageSpeed (ms). Défaut prudent pour les plans à faible timeout. |
 | `LLM_PROVIDER` / `LLM_API_KEY` / `LLM_MODEL` | chatbot | fournisseur OpenAI-compatible (Groq / OpenAI / **Azure OpenAI**). Sans clé → mode extractif. |
 | `LLM_BASE_URL` / `LLM_API_VERSION` | chatbot | requis pour Azure OpenAI (endpoint + version d'API). |
 | `CALENDLY_TOKEN` | calendly | jeton API Calendly v2 (lecture des RDV). |
-| `CALENDLY_OWNERS` | calendly | correspondance email→commercial pour l'attribution. |
+| `CALENDLY_OWNERS` | calendly | **liste** des noms de commerciaux (séparés par des virgules) pour la répartition, ex. `Sarah,Marc,Jean-Christophe`. Défaut : jeu de démo. |
+| `CALENDLY_BUDGET_MS` | calendly | optionnel : budget de temps global de la synchro (ms). |
 | `AVAILABILITY_PROVIDER` | calendly (Phase 2) | source de disponibilité agrégée (`none` par défaut). |
 | `GOOGLE_CALENDAR_TOKEN` / `GOOGLE_SERVICE_ACCOUNT_JSON` | calendly (Phase 2) | agenda Google agrégé (non activé). |
 | `BLOB_READ_WRITE_TOKEN` | media + analytics | token du stockage d'objets (Vercel Blob, store **public**). Copié depuis l'onglet `.env.local` du store. Sans lui, stockage en repli `memory`. Cible Azure : Blob/Table. Voir [docs/media.md](docs/media.md) / [docs/analytics.md](docs/analytics.md). |
@@ -124,5 +128,6 @@ silence** (repli sur les données de démo / `501`), le site ne casse jamais.
 ## Documentation détaillée
 
 `docs/` — un fichier par chantier : `deploiement-host`, `migration-vrai-environnement`,
-`publish`, `schema/site-content` (contrat de contenu), `chatbot`, `rdv-calendly`, `perf`,
+`publish`, `schema/site-content` (contrat de contenu), `auth-roles` (rôles & capacités serveur),
+`chatbot`, `rdv-calendly`, `perf`, `media` (stockage Blob), `analytics` (collecteur maison),
 `accessibilite`.

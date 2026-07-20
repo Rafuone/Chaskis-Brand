@@ -100,7 +100,17 @@ La validation n'est PAS l'unique barriere. Le code qui lit `site-content.json` (
 
 ### Consequence connue
 
-Les `logos` et `photos` de temoignages sont aujourd'hui des **dataURL** en `localStorage` dans l'editeur. Le validateur les **rejettera** (dataURL > 2 Ko) : c'est voulu. Leur migration vers des fichiers (Vercel Blob ou `assets/img/`) est le chantier **media**. Tant qu'il n'est pas fait, on ne publie que du **texte/config**, pas d'images en base64.
+Les `logos` et `photos` de temoignages sont aujourd'hui des **dataURL** en `localStorage` dans l'editeur. Le validateur les **rejettera** (dataURL > 2 Ko) : c'est voulu — on ne publie jamais d'image en base64.
+
+### Remplacements d'images publiees : `pages.<page>.images` (chantier media, FAIT)
+
+Le chantier **media** est fonctionnel : une image importee est envoyee sur le stockage (Vercel Blob) via `/api/media-upload` et recoit une **URL https** persistante. La publication porte ces remplacements sous :
+
+```
+pages.<page>.images = { "<src d'origine dans le HTML>": "<URL https du media>" }
+```
+
+Regles du validateur (`content-schema.js`) : la valeur **doit** etre une URL `https://` (jamais un dataURL, jamais `http://`), <= 60 entrees/page, cle <= 300 car., URL <= 800 car. Le lecteur public `assets/js/content.js` remplace, hors editeur, chaque `<img>` dont le `src` d'origine figure dans la table (avec repli `onerror` sur l'original). Voir `docs/media.md`.
 
 ## Utilisation
 

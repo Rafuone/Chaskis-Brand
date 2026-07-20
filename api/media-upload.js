@@ -33,12 +33,40 @@ function validateUpload(body) {
   return { ok: true, buffer: buf, contentType: ct, key: key };
 }
 
+// GET = diagnostic du stockage (aller-retour réel put -> lecture -> del). Ne révèle aucun secret
+// (noms de variables présentes uniquement). Utile pour prouver/déboguer le stockage sans le SDK.
+async function diagnostic(res) {
+  var env = {};
+  ['BLOB_READ_WRITE_TOKEN', 'BLOB_STORE_ID', 'BLOB_WEBHOOK_PUBLIC_KEY', 'VERCEL_OIDC_TOKEN', 'STORAGE_PROVIDER', 'BLOB_API_VERSION']
+    .forEach(function (k) { env[k] = !!(process.env[k] && String(process.env[k]).trim()); });
+  var blobVarNames = Object.keys(process.env).filter(function (k) { return /BLOB|VERCEL_OIDC/i.test(k); }).sort();
+  var report = { provider: storage.provider(), env: env, blobVarNames: blobVarNames, steps: {} };
+  try {
+    var key = 'diagnostic/media-check-' + Date.now() + '.txt';
+    var payload = 'chaskis storage check ' + new Date().toISOString();
+    var p = await storage.put(key, payload, { contentType: 'text/plain; charset=utf-8', addRandomSuffix: true });
+    report.steps.put = { ok: p.ok, status: p.status, error: p.error };
+    if (p.ok) {
+      report.steps.put.isPublicUrl = /\.public\.blob\.vercel-storage\.com/.test(p.url || '');
+      var rr = await storage.readUrl(p.url);
+      report.steps.read = { ok: !!(rr.ok && rr.text === payload), status: rr.status };
+      var d = await storage.del(p.url);
+      report.steps.del = { ok: d.ok, status: d.status, error: d.error };
+    }
+    report.ok = !!(report.steps.put && report.steps.put.ok && report.steps.read && report.steps.read.ok && report.steps.del && report.steps.del.ok);
+    if (report.provider !== 'blob') report.warning = "Stockage Blob inactif (BLOB_READ_WRITE_TOKEN absent) — repli mémoire utilisé.";
+  } catch (e) { report.ok = false; report.error = (e && e.message) || String(e); }
+  return send(res, 200, report);
+}
+
 async function handler(req, res) {
-  if (req.method !== 'POST') return send(res, 405, { error: 'méthode non autorisée' });
+  if (req.method !== 'POST' && req.method !== 'GET') return send(res, 405, { error: 'méthode non autorisée' });
 
   var auth = await requireAuth(req);
   if (!auth) return send(res, 401, { error: 'non autorisé' });
   if (!can('media.import', auth)) return send(res, 403, { error: 'accès refusé', need: 'media.import' });
+
+  if (req.method === 'GET') return diagnostic(res);
 
   var body = await readJson(req, 6 * 1024 * 1024, 'média trop volumineux (max ~4 Mo encodé)');
   if (body && body.__error) return send(res, 400, { error: body.__error });

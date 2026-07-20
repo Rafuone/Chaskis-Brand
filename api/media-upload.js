@@ -28,6 +28,15 @@ function validateUpload(body) {
   var buf; try { buf = Buffer.from(b64, 'base64'); } catch (e) { return { ok: false, error: 'décodage base64 impossible' }; }
   if (!buf || !buf.length) return { ok: false, error: 'fichier vide' };
   if (buf.length > MAX_BYTES) return { ok: false, error: 'fichier trop lourd (max 2 Mo)' };
+  // SVG : refus du contenu ACTIF (un SVG servi depuis l'origine Blob peut exécuter du JS si ouvert
+  // en direct = XSS stocké). On rejette script / gestionnaires on* / javascript: / foreignObject
+  // plutôt que d'assainir (fail-closed, l'éditeur corrige et ré-importe un SVG propre).
+  if (ct === 'image/svg+xml') {
+    var svg = buf.toString('utf8');
+    if (/<script[\s>]/i.test(svg) || /\son[a-z]+\s*=/i.test(svg) || /javascript:/i.test(svg) || /<foreignObject[\s>]/i.test(svg)) {
+      return { ok: false, error: 'SVG refusé : contient du contenu actif (script/handlers). Exportez un SVG « aplati » sans script.' };
+    }
+  }
   var base = storage.cleanKey((body.filename || 'media').replace(/\.[^.]+$/, '')).replace(/\//g, '-').slice(0, 80) || 'media';
   var key = 'media/' + base + '.' + (EXT[ct] || 'bin');
   return { ok: true, buffer: buf, contentType: ct, key: key };

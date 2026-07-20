@@ -35,7 +35,15 @@ var pngB64 = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 
   ok(v2.key.slice(-5) === '.webp', 'extension webp d\'après le type');
 
   var v3 = validateUpload({ contentType: 'image/svg+xml', dataBase64: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"></svg>').toString('base64'), filename: 'logo.svg' });
-  ok(v3.ok && v3.key.slice(-4) === '.svg', 'SVG accepté -> .svg');
+  ok(v3.ok && v3.key.slice(-4) === '.svg', 'SVG propre accepté -> .svg');
+
+  section('SVG à contenu actif rejeté (anti-XSS stocké sur l\'origine Blob)');
+  var svgScript = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(document.domain)</script></svg>').toString('base64');
+  ok(!validateUpload({ contentType: 'image/svg+xml', dataBase64: svgScript, filename: 'x.svg' }).ok, 'SVG avec <script> rejeté');
+  var svgOn = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><rect onload="alert(1)" width="1" height="1"/></svg>').toString('base64');
+  ok(!validateUpload({ contentType: 'image/svg+xml', dataBase64: svgOn, filename: 'x.svg' }).ok, 'SVG avec gestionnaire on* rejeté');
+  var svgJs = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><a xlink:href="javascript:alert(1)"><text>x</text></a></svg>').toString('base64');
+  ok(!validateUpload({ contentType: 'image/svg+xml', dataBase64: svgJs, filename: 'x.svg' }).ok, 'SVG avec javascript: rejeté');
 
   console.log('\n' + (fail ? ('❌ ' + fail + ' échec(s), ' + pass + ' ok') : ('✅ ' + pass + ' réussis, 0 échoués')));
   process.exit(fail ? 1 : 0);

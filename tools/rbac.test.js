@@ -13,8 +13,8 @@ function ok(c, n) { if (c) { pass++; console.log('  ✓ ' + n); } else { fail++;
 function section(t) { console.log('\n' + t); }
 function P(role) { return { sub: 'x', role: role, via: 'test' }; }
 
-var saved = process.env.CHASKIS_ROLES, savedD = process.env.CHASKIS_DEFAULT_ROLE;
-delete process.env.CHASKIS_ROLES; delete process.env.CHASKIS_DEFAULT_ROLE;
+var saved = process.env.CHASKIS_ROLES, savedD = process.env.CHASKIS_DEFAULT_ROLE, savedA = process.env.CLERK_ALLOWED_SUBS;
+delete process.env.CHASKIS_ROLES; delete process.env.CHASKIS_DEFAULT_ROLE; delete process.env.CLERK_ALLOWED_SUBS;
 var R = load();
 
 section('capsForRole — presets (miroir du client)');
@@ -55,16 +55,23 @@ section('can — garde-fous');
 ok(!R.can('rdv.view', null), 'principal null -> refusé');
 ok(!R.can('rdv.view', {}), 'principal sans rôle -> refusé');
 
-section('resolveRole — défaut non-cassant (aucun mapping)');
-ok(R.resolveRole('user_alex') === 'admin', 'sub non mappé -> admin (comportement actuel préservé)');
-ok(R.defaultRole() === 'admin', 'defaultRole() = admin sans CHASKIS_DEFAULT_ROLE');
+section('resolveRole — défaut FAIL-CLOSED selon le verrouillage de l\'instance (revue sécurité)');
+// Instance NON verrouillée (CLERK_ALLOWED_SUBS vide) : un sub inconnu NE doit PAS devenir admin.
+delete process.env.CLERK_ALLOWED_SUBS;
+ok(R.resolveRole('user_alex') === 'none', 'instance ouverte + sub non mappé -> VERROU none (pas d\'escalade)');
+ok(R.defaultRole() === 'none', 'defaultRole() = none sans CHASKIS_DEFAULT_ROLE ni CLERK_ALLOWED_SUBS');
+// Instance verrouillée (CLERK_ALLOWED_SUBS renseignée) : les comptes de confiance -> admin.
+process.env.CLERK_ALLOWED_SUBS = 'user_alex';
+ok(R.resolveRole('user_alex') === 'admin', 'instance verrouillée + sub non mappé -> admin (compte de confiance)');
+ok(R.defaultRole() === 'admin', 'defaultRole() = admin quand CLERK_ALLOWED_SUBS renseignée');
+delete process.env.CLERK_ALLOWED_SUBS;
 
 section('resolveRole — mapping par ENV (CHASKIS_ROLES)');
 process.env.CHASKIS_ROLES = JSON.stringify({ user_ed: 'editor', user_co: 'commercial', user_bad: 'sorcier', user_maj: 'Editor' });
 ok(R.resolveRole('user_ed') === 'editor', 'user_ed -> editor');
 ok(R.resolveRole('user_co') === 'commercial', 'user_co -> commercial');
 ok(R.resolveRole('user_maj') === 'editor', 'casse normalisée : "Editor" -> editor (pas de faux verrou)');
-ok(R.resolveRole('user_absent') === 'admin', 'absent de la carte -> défaut admin (non-cassant)');
+ok(R.resolveRole('user_absent') === 'none', 'absent de la carte + instance ouverte -> VERROU none (fail-closed)');
 
 section('resolveRole — FAIL-CLOSED sur mapping explicite invalide (revue sécurité)');
 ok(R.resolveRole('user_bad') === 'none', 'sub mappé à un rôle invalide -> VERROU "none" (JAMAIS admin)');
@@ -81,10 +88,11 @@ process.env.CHASKIS_DEFAULT_ROLE = 'nawak';
 ok(R.resolveRole('user_absent') === 'none', 'CHASKIS_DEFAULT_ROLE renseigné mais invalide -> VERROU (fail-closed, pas admin)');
 delete process.env.CHASKIS_DEFAULT_ROLE;
 process.env.CHASKIS_ROLES = '{ ceci n est pas du json';
-ok(R.resolveRole('user_ed') === 'admin', 'JSON illisible -> ne jette pas, défaut admin');
+ok(R.resolveRole('user_ed') === 'none', 'JSON illisible -> ne jette pas, défaut fail-closed none (instance ouverte)');
 
 process.env.CHASKIS_ROLES = saved; if (saved === undefined) delete process.env.CHASKIS_ROLES;
 process.env.CHASKIS_DEFAULT_ROLE = savedD; if (savedD === undefined) delete process.env.CHASKIS_DEFAULT_ROLE;
+process.env.CLERK_ALLOWED_SUBS = savedA; if (savedA === undefined) delete process.env.CLERK_ALLOWED_SUBS;
 
 console.log('\n' + (fail === 0 ? '✅' : '❌') + ' ' + pass + ' réussis, ' + fail + ' échoués');
 process.exit(fail === 0 ? 0 : 1);

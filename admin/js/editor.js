@@ -557,7 +557,7 @@ function renderMediaInto(grid, pickable){
     const cell=document.createElement("div"); cell.className="media-cell"+(canPick&&m.src===cur?" on":"")+(canPick?"":" nopick");
     const thumb = isVid
       ? '<div class="media-pick" style="display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m10 9 5 3-5 3z"/></svg></div>'
-      : '<button class="media-pick"'+(canPick?' title="Utiliser cette image"':'')+'><img src="'+m.src+'" alt="" loading="lazy"></button>';
+      : '<button class="media-pick"'+(canPick?' title="Utiliser cette image"':'')+'><img src="'+escAttr(m.src)+'" alt="" loading="lazy"></button>';
     const tag = isVid ? "vidéo" : (m.origin==="upload"?"importé":"site");
     cell.innerHTML = thumb +
       '<div class="media-meta"><span class="tag '+(m.origin==="upload"?"up":"")+'">'+tag+'</span>'+
@@ -611,7 +611,7 @@ function renderMediaPage(){ const grid=document.getElementById("mediaPageGrid");
   draft.media.forEach((m,idx)=>{
     const isVid=m.kind==="video";
     const card=document.createElement("div"); card.className="mcard"; card.setAttribute("data-idx",idx);
-    const thumb = isVid ? (m.src?'<video src="'+m.src+'" muted preload="metadata"></video>':'<div class="mcard-vid">'+MD_VIDICON+'</div>') : '<img src="'+m.src+'" alt="" loading="lazy">';
+    const thumb = isVid ? (m.src?'<video src="'+escAttr(m.src)+'" muted preload="metadata"></video>':'<div class="mcard-vid">'+MD_VIDICON+'</div>') : '<img src="'+escAttr(m.src)+'" alt="" loading="lazy">';
     const typeBadge = isVid ? '<span class="mcard-type vid" title="Vidéo"><i data-lucide="video"></i></span>' : '<span class="mcard-type" title="Image"><i data-lucide="image"></i></span>';
     card.innerHTML='<button class="mcard-thumb" title="Voir et modifier les détails">'+typeBadge+thumb+'</button>'
       +'<div class="mcard-body"><div class="mcard-name" title="'+escHtml(m.name||"")+'">'+escHtml(m.name||"sans nom")+'</div>'
@@ -629,7 +629,7 @@ function openMediaDetail(idx){ mediaDetailIdx=idx; renderMediaDetail(); document
 function closeMediaDetail(){ document.getElementById("mediaDetailModal").classList.remove("show"); mediaDetailIdx=null; }
 function renderMediaDetail(){ if(mediaDetailIdx==null) return; const m=draft.media[mediaDetailIdx]; const b=document.getElementById("mdBody"); if(!m||!b){ closeMediaDetail(); return; }
   const isVid=m.kind==="video";
-  const preview = isVid ? (m.src?'<video src="'+m.src+'" controls muted></video>':'<div class="md-vidph">'+MD_VIDICON+'</div>') : '<img src="'+m.src+'" alt="">';
+  const preview = isVid ? (m.src?'<video src="'+escAttr(m.src)+'" controls muted></video>':'<div class="md-vidph">'+MD_VIDICON+'</div>') : '<img src="'+escAttr(m.src)+'" alt="">';
   const sh=mediaSizeHint(m);
   const chips=[["Format",mediaFormat(m)],["Dimensions",mediaDims(m)||"…"],["Poids",m.size!=null?fmtBytes(m.size):"…"]];
   if(isVid) chips.push(["Durée",fmtDur(m.dur)||"…"]);
@@ -1127,7 +1127,7 @@ function fillDashVersions(){ const dv=document.getElementById("dashVersions"); i
     const rb=row.querySelector("[data-restore]"); if(rb) rb.addEventListener("click",()=>restoreVersion(v.id)); dv.appendChild(row); }); }
 function fillDashMedia(){ const dt=document.getElementById("dashMedia"); if(!dt) return;
   const imgs=draft.media.filter(m=>m.kind!=="video"&&m.src), list=imgs.slice(0,4); let h='<div class="dthumbs">';
-  list.forEach(m=>h+='<div class="dthumb"><img src="'+m.src+'" alt=""></div>'); const extra=imgs.length-list.length; if(extra>0) h+='<div class="dthumb">+'+extra+'</div>'; h+='</div>';
+  list.forEach(m=>h+='<div class="dthumb"><img src="'+escAttr(m.src)+'" alt=""></div>'); const extra=imgs.length-list.length; if(extra>0) h+='<div class="dthumb">+'+extra+'</div>'; h+='</div>';
   h+='<p class="hint" style="margin:9px 0 0">'+draft.media.length+' élément'+(draft.media.length>1?"s":"")+' dans la médiathèque</p>'; dt.innerHTML=h; }
 function fillDashActivity(){ const da=document.getElementById("dashActivity"); if(!da) return;
   /* Activite reelle derivee des publications (variable `versions`), plus de flux invente. */

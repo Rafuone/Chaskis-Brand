@@ -72,16 +72,24 @@ function roleMap() {
   return _map;
 }
 
-// Rôle par défaut d'un utilisateur authentifié NON mappé.
-//  - CHASKIS_DEFAULT_ROLE absent  -> 'admin' (préserve le comportement actuel : NON-CASSANT).
-//  - CHASKIS_DEFAULT_ROLE valide   -> ce rôle (posture prod recommandée : un rôle restreint).
-//  - CHASKIS_DEFAULT_ROLE renseigné mais INVALIDE -> VERROU ('none'), pas admin (fail-closed :
-//    une coquille sur un réglage volontaire ne doit pas ouvrir l'accès total).
+// Rôle par défaut d'un utilisateur authentifié NON mappé dans CHASKIS_ROLES.
+//  - CHASKIS_DEFAULT_ROLE valide             -> ce rôle (posture prod recommandée).
+//  - CHASKIS_DEFAULT_ROLE renseigné INVALIDE -> VERROU ('none') : une coquille sur un réglage
+//    volontaire ne doit jamais ouvrir l'accès total (fail-closed).
+//  - CHASKIS_DEFAULT_ROLE ABSENT : dépend du VERROUILLAGE de l'instance (CLERK_ALLOWED_SUBS) —
+//     * instance verrouillée (CLERK_ALLOWED_SUBS renseignée) : les comptes qui passent la porte
+//       sont explicitement de confiance -> 'admin' (comportement historique, NON-CASSANT) ;
+//     * instance NON verrouillée (inscription potentiellement ouverte côté Clerk) : FAIL-CLOSED
+//       -> 'none'. Sinon tout inconnu qui s'inscrit deviendrait admin (escalade de privilège).
+//       => EN PROD : renseigner CLERK_ALLOWED_SUBS (recommandé) OU CHASKIS_DEFAULT_ROLE.
 function defaultRole() {
   var raw = process.env.CHASKIS_DEFAULT_ROLE;
-  if (raw == null || String(raw).trim() === '') return 'admin';
-  var d = String(raw).trim().toLowerCase();
-  return isRole(d) ? d : LOCKED;
+  if (raw != null && String(raw).trim() !== '') {
+    var d = String(raw).trim().toLowerCase();
+    return isRole(d) ? d : LOCKED;
+  }
+  var locked = String(process.env.CLERK_ALLOWED_SUBS || '').trim() !== '';
+  return locked ? 'admin' : LOCKED;
 }
 
 // Résout le rôle d'un `sub` (identifiant Clerk) : s'il est EXPLICITEMENT mappé, ce rôle gagne

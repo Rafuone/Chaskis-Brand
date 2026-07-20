@@ -6,6 +6,12 @@
  * Routing via OpenRouteService (cle ci-dessous), fallback haversine.
  */
 
+// ⚠️ SÉCURITÉ (clé exposée côté client — inévitable pour un appel navigateur direct) :
+//  Ce module est un MOCK provisoire ; le calcul de prix passera côté serveur (vrai /api/pricing),
+//  qui portera la clé de routage en variable d'environnement (jamais servie au navigateur).
+//  D'ici là, RESTREINDRE cette clé OpenRouteService par domaine/referrer dans le compte ORS
+//  (comme une clé Google Maps JS), ou la révoquer : sinon un tiers peut épuiser le quota.
+//  Repli haversine (distance à vol d'oiseau) si l'appel échoue → le simulateur ne casse jamais.
 const ORS_API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjY1NDdjYjVlMzc0ODQ1ZTk4MDg1MzljMTczMzgyZmI2IiwiaCI6Im11cm11cjY0In0=';
 
 const VAT_RATE = 0.081; // TVA CH standard, 8.1% depuis le 01.01.2024

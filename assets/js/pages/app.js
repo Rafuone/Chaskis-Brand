@@ -1,5 +1,14 @@
 /* Chaskis — pages/app.js : logique de la mini-app PWA (ex-inline) */
 const ORDERS_KEY = 'chaskis_orders';
+/* Échappement HTML local (app.html ne charge PAS utils.js/window.CK). Toute donnée issue de
+   l'URL (?code) ou du localStorage (adresses/email saisis dans le formulaire Commander) passe
+   par esc() avant insertion en innerHTML — anti-XSS. */
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+/* Format d'un numéro de suivi valide (identique à submitAddCode). Un code hors format n'est
+   ni stocké ni rendu → neutralise le XSS réfléchi/persistant via ?code. */
+const CODE_RE = /^CH-[A-Z0-9]{6,10}$/;
 const STATUSES = [
   { key:'confirmed', label:'Commande confirmée', hint:'Votre demande a été enregistrée.', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' },
   { key:'pickup',    label:'Retrait en cours',   hint:'Un coursier est en route vers le point de retrait.', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 7L9 18l-5-5"/></svg>' },
@@ -54,7 +63,8 @@ function etaFromStatus(order, status) {
 // State lives in the URL: ?code=CH-XXX opens detail; otherwise list.
 function currentCode() {
   const u = new URL(location.href);
-  return u.searchParams.get('code');
+  const c = (u.searchParams.get('code') || '').trim().toUpperCase();
+  return CODE_RE.test(c) ? c : null; // code hors format ignoré (ni stocké ni rendu)
 }
 function goDetail(code) {
   const u = new URL(location.href);
@@ -148,14 +158,14 @@ function orderCardHtml(order) {
   const routeTo = firstStop ? (firstStop.label || firstStop.addr) : 'Adresse de livraison';
   const extra = order.stops && order.stops.length > 1 ? ` + ${order.stops.length - 1}` : '';
   return `
-    <div class="order-card fade-in" data-code="${order.code}" role="button" tabindex="0">
+    <div class="order-card fade-in" data-code="${esc(order.code)}" role="button" tabindex="0">
       <div class="oc-head">
-        <span class="oc-code">${order.code}</span>
+        <span class="oc-code">${esc(order.code)}</span>
         <span class="oc-badge ${s}">${STATUS_LABEL[s]}</span>
       </div>
       <div class="oc-route">
-        <b>A.</b> ${shortAddr(routeFrom)}<br>
-        <b>B.</b> ${shortAddr(routeTo)}${extra ? `<span style="color:var(--ink-muted)">${extra}</span>` : ''}
+        <b>A.</b> ${esc(shortAddr(routeFrom))}<br>
+        <b>B.</b> ${esc(shortAddr(routeTo))}${extra ? `<span style="color:var(--ink-muted)">${esc(extra)}</span>` : ''}
       </div>
       <div class="oc-meta">
         <span>${formatDate(order.createdAt)}</span>
@@ -175,13 +185,13 @@ function renderDetail(order) {
   const stopsHtml = (order.stops || []).map((stop, i) => `
     <div class="dh-route-row">
       <div class="dh-route-ic ${i === 0 ? 'b' : 'b-extra'}">${i === 0 ? 'B' : (i + 1)}</div>
-      <div class="dh-route-txt">${stop.label || stop.addr || 'Adresse de livraison'}</div>
+      <div class="dh-route-txt">${esc(stop.label || stop.addr || 'Adresse de livraison')}</div>
     </div>`).join('');
 
   const priceMeta = order.pricing && order.pricing.totalTTC != null
     ? `<span><b>Total :</b> CHF ${formatCHF(order.pricing.totalTTC)} TTC</span>` : '';
   const contactMeta = order.contact && order.contact.email
-    ? `<span><b>Alertes :</b> ${order.contact.email}</span>` : '';
+    ? `<span><b>Alertes :</b> ${esc(order.contact.email)}</span>` : '';
 
   const timelineHtml = STATUSES.map((st, i) => {
     const cls = i < currentIdx ? 'done' : (i === currentIdx ? 'active' : '');
@@ -207,14 +217,14 @@ function renderDetail(order) {
       <div class="dh-top">
         <div>
           <div class="dh-code-lbl">Numéro</div>
-          <div class="dh-code">${order.code}</div>
+          <div class="dh-code">${esc(order.code)}</div>
         </div>
         <span class="oc-badge ${s}">${STATUS_LABEL[s]}</span>
       </div>
       <div class="dh-route">
         <div class="dh-route-row">
           <div class="dh-route-ic a">A</div>
-          <div class="dh-route-txt">${order.pickup && (order.pickup.label || order.pickup.addr) || 'Adresse de retrait non renseignée'}</div>
+          <div class="dh-route-txt">${esc(order.pickup && (order.pickup.label || order.pickup.addr) || 'Adresse de retrait non renseignée')}</div>
         </div>
         ${stopsHtml || `<div class="dh-route-row"><div class="dh-route-ic b">B</div><div class="dh-route-txt" style="color:var(--ink-muted)">Adresse de livraison non disponible</div></div>`}
       </div>
@@ -235,7 +245,7 @@ function renderDetail(order) {
         <strong>Partager le suivi</strong>
         <span>Lien direct pour votre destinataire</span>
       </div>
-      <button class="share-card-btn" id="shareBtn" data-link="${trackUrl}">Copier</button>
+      <button class="share-card-btn" id="shareBtn" data-link="${esc(trackUrl)}">Copier</button>
     </div>
   `;
 

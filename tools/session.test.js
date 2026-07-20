@@ -75,7 +75,11 @@ function b64urlBuf(b) { return b.toString('base64').replace(/\+/g, '-').replace(
   var reqWith = function (b) { return { headers: b ? { authorization: 'Bearer ' + b } : {} }; };
   var pClerk = await S.requireAuth(reqWith(good));
   ok(pClerk && pClerk.via === 'clerk' && pClerk.sub === 'u', 'jeton Clerk valide -> principal { via:clerk, sub }');
-  ok(pClerk && pClerk.role === 'admin', 'sub non mappé -> rôle par défaut admin (non-cassant)');
+  ok(pClerk && pClerk.role === 'none', 'sub non mappé + instance ouverte -> rôle none (fail-closed, pas d\'escalade)');
+  process.env.CLERK_ALLOWED_SUBS = 'u';
+  var pLock = await S.requireAuth(reqWith(good));
+  ok(pLock && pLock.role === 'admin', 'sub non mappé + instance verrouillée (CLERK_ALLOWED_SUBS) -> admin (compte de confiance)');
+  delete process.env.CLERK_ALLOWED_SUBS;
   var pSecret = await S.requireAuth(reqWith('sek'));
   ok(pSecret && pSecret.via === 'secret' && pSecret.role === 'admin', 'clé PUBLISH_SECRET (repli) -> principal admin');
   ok(await S.requireAuth(reqWith('')) === null, 'sans en-tête -> null (refusé)');

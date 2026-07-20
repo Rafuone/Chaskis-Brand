@@ -1,4 +1,6 @@
 /* Chaskis — mobilite.js (ex-inline de mobilite.html) */
+// Échappement HTML local (l'autocomplétion insère la réponse de l'API geo.admin en innerHTML).
+function mEsc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 // ===== FORM : type toggle + 3-step stepper =====
 (function() {
   const types = document.querySelectorAll('.mob-form-type');
@@ -177,12 +179,12 @@ function submitMobRequest(e) {
       if (!results.length) { dd.innerHTML = '<div class="mob-ac-empty">Aucun résultat</div>'; dd.hidden = false; return; }
       dd.innerHTML = results.map((r, i) => {
         const parts = splitAddress(r.attrs.label || r.attrs.detail || '');
-        const full = (parts.street + (parts.city ? ', ' + parts.city : '')).replace(/"/g, '&quot;');
+        const full = mEsc(parts.street + (parts.city ? ', ' + parts.city : ''));
         return '<div class="mob-ac-item" data-i="' + i + '" data-v="' + full + '">' +
           PIN_SVG +
           '<div class="mob-ac-text">' +
-            '<span class="mob-ac-street">' + parts.street + '</span>' +
-            (parts.city ? '<span class="mob-ac-city">' + parts.city + '</span>' : '') +
+            '<span class="mob-ac-street">' + mEsc(parts.street) + '</span>' +
+            (parts.city ? '<span class="mob-ac-city">' + mEsc(parts.city) + '</span>' : '') +
           '</div>' +
         '</div>';
       }).join('');

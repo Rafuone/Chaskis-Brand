@@ -18,10 +18,13 @@ module.exports = async function handler(req, res) {
 
   // Présence des variables d'environnement (NOMS seulement, jamais les valeurs).
   var env = {};
-  ['BLOB_READ_WRITE_TOKEN', 'BLOB_STORE_ID', 'BLOB_WEBHOOK_PUBLIC_KEY', 'STORAGE_PROVIDER', 'BLOB_API_VERSION']
+  ['BLOB_READ_WRITE_TOKEN', 'BLOB_STORE_ID', 'BLOB_WEBHOOK_PUBLIC_KEY', 'VERCEL_OIDC_TOKEN', 'STORAGE_PROVIDER', 'BLOB_API_VERSION']
     .forEach(function (k) { env[k] = !!(process.env[k] && String(process.env[k]).trim()); });
+  // NOMS (jamais les valeurs) des variables liées au stockage réellement présentes — utile si le
+  // token a été ajouté sous un préfixe (ex. MEDIA_BLOB_READ_WRITE_TOKEN) ou en OIDC.
+  var blobVarNames = Object.keys(process.env).filter(function (k) { return /BLOB|VERCEL_OIDC/i.test(k); }).sort();
 
-  var report = { provider: storage.provider(), env: env, steps: {} };
+  var report = { provider: storage.provider(), env: env, blobVarNames: blobVarNames, steps: {} };
 
   try {
     var key = 'diagnostic/blob-check-' + Date.now() + '.txt';
@@ -39,8 +42,11 @@ module.exports = async function handler(req, res) {
     report.ok = !!(report.steps.put && report.steps.put.ok &&
       report.steps.read && report.steps.read.ok &&
       report.steps.del && report.steps.del.ok);
-    if (report.steps.put && report.steps.put.ok && report.steps.put.isPublicUrl === false) {
+    if (report.provider === 'blob' && report.steps.put && report.steps.put.ok && report.steps.put.isPublicUrl === false) {
       report.warning = "Le store n'est pas PUBLIC : les médias ne seront pas lisibles dans les <img>. Recréez le store en accès Public.";
+    }
+    if (report.provider !== 'blob') {
+      report.warning = "Le vrai stockage Blob n'est pas actif (BLOB_READ_WRITE_TOKEN absent) — l'aller-retour ci-dessus a utilisé le repli mémoire, PAS Vercel Blob.";
     }
   } catch (e) {
     report.ok = false; report.error = (e && e.message) || String(e);

@@ -581,6 +581,7 @@
               <div class="cop-id-row">
                 <div class="formf" style="margin:0"><label>Entreprise</label><input id="copCompany" placeholder="Nom du prospect"></div>
                 <div class="formf" style="margin:0"><label>Interlocuteur</label><input id="copContact" placeholder="Prénom Nom · rôle"></div>
+                <div class="formf" style="margin:0"><label>Email</label><input id="copEmail" type="email" placeholder="prospect@exemple.ch"></div>
               </div>
             </div>
             <div id="copSections"></div>
@@ -809,7 +810,7 @@
 </div>
 
 <script src="/admin/data/tech-plan.js?v=20260714c"></script>
-<script src="/admin/js/editor.js?v=20260721"></script>
+<script src="/admin/js/editor.js?v=20260721b"></script>
 <!-- Auth Clerk (front). editor.js reste inchangé : getStoredPublishKey() renvoie window.__clerkToken
      quand on est connecté via Clerk, sinon la clé stockée (repli). Zéro appel /api modifié. -->
 <script>

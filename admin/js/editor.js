@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.44.0" };
+const ADMIN_BUILD = { version: "0.44.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1366,7 +1366,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.44.0", cur:true, date:"2026-07-21", title:"Copilote RDV : le cycle complet, du rendez-vous au compte-rendu", items:[
+  { v:"v0.44.1", cur:true, date:"2026-07-21", title:"Copilote RDV : fiabilité (revue)", items:[
+    {t:"fix", x:"Préparer un rendez-vous demande confirmation si un copilote est déjà en cours (plus de perte de saisie) ; un champ email éditable a été ajouté"},
+    {t:"fix", x:"« Terminer » réinitialise le copilote et ne crée plus de doublon si on reclique ; le compte-rendu d'un rendez-vous synchronisé est correctement conservé après actualisation"}
+  ]},
+  { v:"v0.44.0", date:"2026-07-21", title:"Copilote RDV : le cycle complet, du rendez-vous au compte-rendu", items:[
     {t:"add", x:"Depuis la fiche d'un rendez-vous, le bouton « Préparer / piloter avec le copilote » ouvre le copilote pré-rempli (client, contact, secteur, volume) et le relie à ce rendez-vous"},
     {t:"add", x:"En cliquant « Terminer », le compte-rendu est rattaché au rendez-vous (visible dans sa fiche) et vous pouvez le marquer « honoré » ; un panneau « Comptes-rendus récents » permet de les relire et re-télécharger"},
     {t:"imp", x:"Les actions « Envoyer la plaquette / l'offre chiffrée » ouvrent maintenant un vrai email pré-rempli adressé au prospect, au lieu d'un simple message de confirmation"}
@@ -3406,6 +3410,7 @@ function copRecapText(){ const c=copSimCalc(); const L=["Compte-rendu RDV — "+
 function renderCopilot(){
   const cc=document.getElementById("copCompany"); if(cc) cc.value=copState.company||"";
   const ct=document.getElementById("copContact"); if(ct) ct.value=copState.contact||"";
+  const ce=document.getElementById("copEmail"); if(ce) ce.value=copState.email||"";
   const nt=document.getElementById("copNotes"); if(nt) nt.value=copState.notes||"";
   renderCopSections(); renderCopSim(); renderCopActions(); renderCopRecap(); renderCopProgress();
   renderCopRdvLink(); renderCopHistory(); refreshIcons();
@@ -3442,11 +3447,13 @@ function copShowRecap(h){
     +'<div style="white-space:pre-wrap;font-size:13px;line-height:1.55;background:#F7F6FB;border:1px solid #E7E3F5;border-radius:8px;padding:12px 14px;max-height:50vh;overflow:auto">'+escHtml(h.recap||"")+'</div>'
     +'<div class="thm-acts" style="margin-top:12px"><button type="button" class="btn primary sm" id="crDl"><i data-lucide="download"></i>Télécharger</button><button type="button" class="btn ghost sm" id="crClose">Fermer</button></div></div>';
   document.body.appendChild(ov);
-  var close=function(){ ov.remove(); };
+  var onKey=function(e){ if(e.key==="Escape") close(); };
+  var close=function(){ ov.remove(); document.removeEventListener("keydown",onKey); };
   ov.addEventListener("click",function(e){ if(e.target===ov) close(); });
   ov.querySelector(".thm-x").addEventListener("click",close);
   ov.querySelector("#crClose").addEventListener("click",close);
   ov.querySelector("#crDl").addEventListener("click",function(){ downloadRecapText(h.recap||"", h.company); });
+  document.addEventListener("keydown",onKey);
   refreshIcons();
 }
 
@@ -4394,10 +4401,12 @@ function cbAsk(q){
   // Copilote RDV
   const copC=document.getElementById("copCompany"); if(copC) copC.addEventListener("input",e=>{ copState.company=e.target.value; copSave(); renderCopRecap(); renderCopProgress(); });
   const copCt=document.getElementById("copContact"); if(copCt) copCt.addEventListener("input",e=>{ copState.contact=e.target.value; copSave(); renderCopRecap(); });
+  const copEm=document.getElementById("copEmail"); if(copEm) copEm.addEventListener("input",e=>{ copState.email=e.target.value.trim(); copSave(); });
   const copN=document.getElementById("copNotes"); if(copN) copN.addEventListener("input",e=>{ copState.notes=e.target.value; copSave(); renderCopRecap(); });
   const copRz=document.getElementById("copReset"); if(copRz) copRz.addEventListener("click",()=>{ if(!confirm("Démarrer un nouveau RDV ? Les infos en cours seront effacées.")) return; copState=copBlank(); copSave(); renderCopilot(); toast("Nouveau RDV"); });
   const copCp=document.getElementById("copCopy"); if(copCp) copCp.addEventListener("click",()=>{ const t=copRecapText(); if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(()=>toast("Compte-rendu copié"),()=>toast("Copie indisponible")); } else toast("Copie indisponible"); });
   const copF=document.getElementById("copFinish"); if(copF) copF.addEventListener("click",()=>{
+    if(!copHasWork()){ toast("Rien à enregistrer : renseignez d'abord le rendez-vous."); return; } /* anti-doublon / clic à vide */
     copSave();
     const txt=copRecapText();
     let hist=[]; try{ hist=JSON.parse(localStorage.getItem("chaskis_copilot_hist"))||[]; }catch(e){}
@@ -4405,23 +4414,26 @@ function cbAsk(q){
     try{ localStorage.setItem("chaskis_copilot_hist", JSON.stringify(hist.slice(0,50))); }catch(e){}
     downloadRecapText(txt, copState.company);
     // SORTIE du workflow : si le copilote est lié à un RDV, on y RATTACHE le compte-rendu (visible
-    // dans le tiroir du RDV) et on propose de le marquer « honoré ». Puis on délie (le prochain
-    // prospect ne réutilise pas ce lien).
+    // dans le tiroir du RDV) et on propose de le marquer « honoré ».
     let attached=false;
     if(copState.rdvKey && typeof rdvData!=="undefined" && Array.isArray(rdvData)){
       const idx=rdvData.findIndex(r=>rdvStableKey(r)===copState.rdvKey);
       if(idx>=0){
         const now=new Date().toISOString();
-        rdvData[idx].compteRendu=txt; rdvData[idx].compteRenduAt=now;
-        if(confirm("Marquer ce rendez-vous comme « honoré » ?")) rdvData[idx].st="honore";
-        // persistance : override (RDV live) sinon jeu local (démo) — même logique que la réattribution
-        if(rdvData[idx].calendlyUri) saveRdvOverride(rdvData[idx].calendlyUri,{compteRendu:rdvData[idx].compteRendu,compteRenduAt:now,st:rdvData[idx].st});
+        const patch={ compteRendu:txt, compteRenduAt:now };
+        if(confirm("Marquer ce rendez-vous comme « honoré » ?")) patch.st="honore";
+        Object.assign(rdvData[idx], patch);
+        // persistance selon le VRAI mode (rdvLiveOn), pas la présence de calendlyUri : sinon un RDV
+        // live sans uri passerait par saveRdv() (no-op en live) -> compte-rendu perdu à la re-synchro.
+        if(rdvLiveOn) saveRdvOverride(rdvData[idx].calendlyUri||rdvStableKey(rdvData[idx]), patch);
         else saveRdv();
         attached=true;
         if(typeof updateDashboard==="function") updateDashboard();
       }
-      copState.rdvKey=""; copState.rdvLabel=""; copSave();
     }
+    // Réinitialise le copilote (comme « Nouveau RDV ») : évite les doublons au re-clic et prépare
+    // le prochain prospect. Le compte-rendu reste consultable (historique + fiche RDV + .txt).
+    copState=copBlank(); copSave();
     renderCopilot();
     toast(attached?"RDV terminé : compte-rendu rattaché au rendez-vous, téléchargé et archivé.":"RDV terminé : compte-rendu téléchargé et archivé.");
   });
@@ -4709,7 +4721,7 @@ function openRdvDrawer(i){
   const send=d.querySelector("#dRelSend"); if(send) send.onclick=()=>{ rdvData[i].relance={sent:true,date:RDV_TODAY}; saveRdv(); toast("Relance envoyée à "+rdvData[i].client+" (simulé)"); openRdvDrawer(i); };
   const cl=d.querySelector("#dClose"); if(cl) cl.onclick=closeRdvDrawer;
   const prep=d.querySelector("#dPrepare"); if(prep) prep.onclick=()=>prepareRdvCopilot(i);
-  const wsel=d.querySelector("#dWho"); if(wsel) wsel.onchange=()=>{ const v=wsel.value; if(!v||v===rdvData[i].who) return; rdvData[i].who=v; rdvData[i].assignedBy="manuel"; if(rdvData[i].calendlyUri) saveRdvOverride(rdvData[i].calendlyUri,{who:v}); else saveRdv(); toast("Rendez-vous réattribué à "+v); renderRdv(); openRdvDrawer(i); };
+  const wsel=d.querySelector("#dWho"); if(wsel) wsel.onchange=()=>{ const v=wsel.value; if(!v||v===rdvData[i].who) return; rdvData[i].who=v; rdvData[i].assignedBy="manuel"; if(rdvLiveOn) saveRdvOverride(rdvData[i].calendlyUri||rdvStableKey(rdvData[i]),{who:v,assignedBy:"manuel"}); else saveRdv(); toast("Rendez-vous réattribué à "+v); renderRdv(); openRdvDrawer(i); };
   renderRdvTable();
 }
 function closeRdvDrawer(){ rdvOpenRow=-1; renderRdvTable(); }
@@ -4717,11 +4729,15 @@ function closeRdvDrawer(){ rdvOpenRow=-1; renderRdvTable(); }
    dérivée du client + date (démo). */
 function rdvStableKey(r){ if(!r) return ""; return r.calendlyUri ? r.calendlyUri : ((r.client||"")+"|"+(r.day||"")+(r.mon||"")+"|"+(r.time||"")); }
 var RDV_SECTEUR_TO_COP={ "Restauration":"Restauration","Médical / Pharma":"Santé / pharma","E-commerce / Retail":"E-commerce","Juridique / Notarial":"Autre","Luxe / Bijouterie":"Retail" };
-function rdvVolumeToNum(v){ v=String(v||""); if(/moins de 10/i.test(v)) return 8; if(/10 à 30/i.test(v)) return 20; if(/30 à 100/i.test(v)) return 60; if(/plus de 100/i.test(v)) return 120; var m=v.match(/\d+/); return m?+m[0]:40; }
+function rdvVolumeToNum(v){ v=String(v||""); var n=40; if(/moins de 10/i.test(v)) n=8; else if(/10 à 30/i.test(v)) n=20; else if(/30 à 100/i.test(v)) n=60; else if(/plus de 100/i.test(v)) n=120; else { var m=v.match(/\d+/); if(m) n=+m[0]; } return Math.max(1, Math.min(200, n)); } /* borné aux limites du slider */
+/* Vrai si le copilote contient un travail en cours (à ne pas écraser sans confirmation). */
+function copHasWork(){ try{ return !!((copState.ans&&Object.keys(copState.ans).length)||(copState.notes||"").trim()||copState.company||copState.rdvKey); }catch(e){ return false; } }
 /* ENTRÉE du workflow copilote : depuis un RDV, ouvre le copilote PRÉ-REMPLI et le LIE au RDV
    (le compte-rendu y sera rattaché au « Terminer »). */
 function prepareRdvCopilot(i){
   var r=rdvData[i]; if(!r) return;
+  // Ne pas écraser un copilote en cours sans confirmation (comme « Nouveau RDV »).
+  if(copHasWork() && !confirm("Un copilote est en cours. Le remplacer par la préparation de « "+(r.client||"ce rendez-vous")+" » ? Les infos non « Terminées » seront perdues.")) return;
   copState=copBlank();
   copState.company=r.client||""; copState.contact=r.contact||""; copState.email=r.email||"";
   copState.rdvKey=rdvStableKey(r); copState.rdvLabel=(r.client||"")+" · "+(r.day||"")+" "+(r.mon||"")+(r.time?" "+r.time:"");
@@ -4781,7 +4797,7 @@ function renderTeam(){
 const RDV_OVR_KEY="chaskis_rdv_overrides";
 function loadRdvOverrides(){ try{ return JSON.parse(localStorage.getItem(RDV_OVR_KEY))||{}; }catch(e){ return {}; } }
 function saveRdvOverride(uri, patch){ if(!uri) return; try{ const m=loadRdvOverrides(); m[uri]=Object.assign(m[uri]||{}, patch); localStorage.setItem(RDV_OVR_KEY, JSON.stringify(m)); }catch(e){} }
-function applyRdvOverrides(){ const m=loadRdvOverrides(); rdvData.forEach(r=>{ if(r&&r.calendlyUri&&m[r.calendlyUri]) Object.assign(r, m[r.calendlyUri]); }); }
+function applyRdvOverrides(){ const m=loadRdvOverrides(); rdvData.forEach(r=>{ if(!r) return; const k=(r.calendlyUri&&m[r.calendlyUri])?r.calendlyUri:(m[rdvStableKey(r)]?rdvStableKey(r):null); if(k) Object.assign(r, m[k]); }); } /* clé = calendlyUri sinon clé de repli (RDV live sans uri) */
 function rdvOwnersList(){ const s=new Set(["Sarah","Marc","Jean-Christophe"]); rdvData.forEach(r=>{ if(r&&r.who) s.add(r.who); }); return Array.from(s); }
 function syncCalendlyRdv(silent){
   const key=getStoredPublishKey();

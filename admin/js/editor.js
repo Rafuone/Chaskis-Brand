@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.40.0" };
+const ADMIN_BUILD = { version: "0.41.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -85,7 +85,7 @@ const WEEKDAYS = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","same
    à toutes les pages). Sert à buildSiteContent() pour publier des blocs i18n PAR PAGE au
    lieu de recopier le même dictionnaire dans les 6 pages. Absent des vieux brouillons →
    repli non-cassant (toutes les clés → toutes les pages, comportement historique). */
-function blankDraft(){ return { text:{fr:{},en:{}}, html:{fr:{},en:{}}, dom:{}, order:null, hidden:[], promoHidden:false, images:{}, bgImages:{}, media:[], lists:{}, keyPage:{} }; }
+function blankDraft(){ return { text:{fr:{},en:{}}, html:{fr:{},en:{}}, dom:{}, order:null, hidden:[], promoHidden:false, images:{}, bgImages:{}, media:[], lists:{}, keyPage:{}, imgPub:{} }; }
 /* historique d'exemple (démo) : montre plusieurs versions avec leurs points clés tant qu'on n'a pas publié pour de vrai */
 const SEED_VERSIONS=[
   { id:"v4", date:"2026-07-02T09:05:00", author:"Alex Moreira", changes:["Bandeau promo « -15 % sur Flex & Dédié » activé","Grille tarifaire mise à jour (Flex à 12 CHF / livraison)","FAQ enrichie : 2 nouvelles questions"], snapshot:{} },
@@ -334,6 +334,11 @@ function markImages(){
     root.querySelectorAll("img").forEach(img=>{
       if(img.closest("nav")) return;
       img.setAttribute("data-ckimg","img"+(n++));
+      /* src d'ORIGINE (authored) = clé stable pour publier le remplacement vers le site public.
+         content.js pose data-ck-orig-src quand il applique un remplacement HORS éditeur ; ici (dans
+         l'iframe) content.js n'applique PAS les images, donc getAttribute("src") EST l'original. */
+      var _orig=img.getAttribute("data-ck-orig-src")||img.getAttribute("src")||"";
+      if(_orig) img.setAttribute("data-ckimg-orig",_orig);
       img.addEventListener("mouseenter",()=>showRepTag(img));
       img.addEventListener("mouseleave",hideRepTag);
       img.addEventListener("click",(e)=>{ e.preventDefault(); e.stopPropagation(); openMedia(img,"img"); });
@@ -373,9 +378,19 @@ function seedMedia(){
 function openMedia(el,kind,key){ mediaTarget={el,kind,key}; renderMediaInto(document.getElementById("mediaGrid"),true); document.getElementById("mediaModalBg").classList.add("show"); }
 function currentSrc(){ if(!mediaTarget) return null; return mediaTarget.kind==="img" ? mediaTarget.el.getAttribute("src") : bgUrl(mediaTarget.el); }
 function applyMedia(src){
-  if(mediaTarget.kind==="img"){ mediaTarget.el.src=src; draft.images[mediaTarget.el.getAttribute("data-ckimg")]=src; }
+  if(mediaTarget.kind==="img"){ mediaTarget.el.src=src; draft.images[mediaTarget.el.getAttribute("data-ckimg")]=src; recordImgPub(mediaTarget.el.getAttribute("data-ckimg-orig"), src); }
   else { mediaTarget.el.style.backgroundImage='url("'+src+'")'; draft.bgImages[mediaTarget.key]=src; }
   markDirty();
+}
+/* Remplacement d'image à publier vers le site public : { <page> : { <src d'origine> : <URL> } }.
+   On mémorise même un dataURL (état courant) ; buildSiteContent ne publie QUE les URL https. Si
+   l'image revient à son src d'origine, on retire l'entrée (retour à l'image par défaut du site). */
+function recordImgPub(orig, url){
+  if(!orig) return;
+  if(!draft.imgPub) draft.imgPub={};
+  var pg=draft.imgPub[editPage]||(draft.imgPub[editPage]={});
+  if(!url || url===orig){ delete pg[orig]; if(!Object.keys(pg).length) delete draft.imgPub[editPage]; }
+  else pg[orig]=url;
 }
 function pickMedia(src){ if(!mediaTarget){ return; } applyMedia(src); document.getElementById("mediaModalBg").classList.remove("show"); toast("Image mise à jour"); }
 function deleteMediaAt(i){ const m=draft.media[i]; if(m && !confirm("Supprimer « "+(m.name||"ce média")+" » de la médiathèque ? Action définitive.")) return; draft.media.splice(i,1); save(); renderAllMedia(); updateDashboard(); }
@@ -485,6 +500,8 @@ function replaceMediaSrc(oldSrc, newSrc){
   (draft.media||[]).forEach(function(m){ if(m && m.src===oldSrc) m.src=newSrc; });
   Object.keys(draft.images||{}).forEach(function(k){ if(draft.images[k]===oldSrc) draft.images[k]=newSrc; });
   Object.keys(draft.bgImages||{}).forEach(function(k){ if(draft.bgImages[k]===oldSrc) draft.bgImages[k]=newSrc; });
+  // imgPub : quand un dataURL devient une URL Blob, l'entrée à publier suit (elle devient https -> publiable)
+  Object.keys(draft.imgPub||{}).forEach(function(pk){ var m=draft.imgPub[pk]; Object.keys(m).forEach(function(o){ if(m[o]===oldSrc) m[o]=newSrc; }); });
   if(DOC){
     DOC.querySelectorAll("[data-ckimg]").forEach(function(el){ if(el.getAttribute("src")===oldSrc) el.setAttribute("src", newSrc); });
     BG_DEFS.forEach(function(b){ var el=DOC.querySelector(b.sel); if(el && bgUrl(el)===oldSrc) el.style.backgroundImage='url("'+newSrc+'")'; });
@@ -1299,7 +1316,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.40.0", cur:true, date:"2026-07-20", title:"Médiathèque : stockage réel des fichiers (fini les images « lourdes » en mémoire)", items:[
+  { v:"v0.41.0", cur:true, date:"2026-07-20", title:"Les images modifiées apparaissent sur le site en ligne après publication", items:[
+    {t:"add", x:"Quand vous remplacez une image dans l'éditeur et que vous publiez, la nouvelle image s'affiche sur le site en ligne (elle est servie depuis le stockage de fichiers, pas « en dur » dans la page)"},
+    {t:"imp", x:"Ne s'applique qu'aux vraies images stockées en ligne : une image encore en cours d'envoi reste locale tant qu'elle n'a pas d'adresse permanente (aucun risque d'image cassée)"},
+    {t:"imp", x:"Revenir à l'image d'origine est pris en compte : le site réaffiche l'image par défaut"}
+  ]},
+  { v:"v0.40.0", date:"2026-07-20", title:"Médiathèque : stockage réel des fichiers (fini les images « lourdes » en mémoire)", items:[
     {t:"add", x:"Les images importées sont désormais envoyées sur un vrai stockage de fichiers en ligne et remplacées par une adresse (URL) permanente, au lieu d'être gardées « en dur » dans le navigateur"},
     {t:"imp", x:"Plus de saturation du navigateur : la médiathèque peut accueillir beaucoup plus d'images, partagées entre appareils et collaborateurs"},
     {t:"imp", x:"Sans coupure : si la connexion au stockage n'est pas disponible, l'image reste utilisable localement comme avant (aucune perte, démo intacte)"}
@@ -1744,7 +1766,7 @@ const APP_ENV={dev:{lbl:"Développement",c:"#6B4CC4"},preprod:{lbl:"Pré-product
 const APP_STAGE={stable:{lbl:"Stable",c:"#0E7D48"},beta:{lbl:"Bêta",c:"#C7891B"},alpha:{lbl:"Alpha",c:"#B4632A"}};
 const PROGRESS=[
   {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.16.0",recent:["Activité récente tirée des vraies publications","Tuile Rendez-vous à venir réelle"]},
-  {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.13.0",recent:["Publication organisée par page (chaque page ne reçoit que ses propres textes ; le commun s'applique partout)","Publication réelle en ligne depuis le bouton Publier","Édition multi-pages"]},
+  {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.14.0",recent:["Les images remplacées apparaissent sur le site en ligne après publication","Publication organisée par page (chaque page ne reçoit que ses propres textes ; le commun s'applique partout)","Publication réelle en ligne depuis le bouton Publier"]},
   {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.1",recent:["Badge « actuellement masquée » sur les sections de l'accueil","Rôle de chaque page et section"]},
   {view:"media",name:"Médiathèque",env:"preprod",stage:"beta",version:"1.2.0",recent:["Stockage réel des fichiers en ligne (URL permanente au lieu du navigateur)","Compression et redimensionnement des images à l'import","Confirmation avant suppression d'un média"]},
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
@@ -1947,7 +1969,7 @@ const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
 // % = « développé & fonctionnel » (avec un compte de TEST branchable). Le passage aux comptes
 // DÉFINITIFS et à l'hébergement final (Azure) est de la CONFIGURATION, suivie à part — pas du dev.
-const TECH_DONE={host:92,publish:95,versioning:85,analytics:62,calendly:68,auth:88,perf:90,media:65,chatbot:90};
+const TECH_DONE={host:92,publish:95,versioning:85,analytics:62,calendly:68,auth:88,perf:90,media:90,chatbot:90};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -3493,6 +3515,12 @@ function buildSiteContent(){
   try{ const pr=getPricing(); if(pr&&typeof pr==="object"){ const P={}; ["days","tiers","zones","flexMonthly","flexIncluded","express","promos"].forEach(function(k){ if(pr[k]!==undefined) P[k]=pr[k]; }); out.pricing=P; } }catch(e){}
   // Textes i18n publiés PAR PAGE (réconciliation du brouillon multi-pages), via bucketI18n().
   var pagesOut=bucketI18n((draft&&draft.text)?draft.text:{}, (draft&&draft.keyPage)?draft.keyPage:{});
+  // Remplacements d'images publiés PAR PAGE : uniquement les URL https (jamais un dataURL).
+  if(draft&&draft.imgPub){ Object.keys(draft.imgPub).forEach(function(pk){
+    var m=draft.imgPub[pk]||{}, imgs={};
+    Object.keys(m).forEach(function(orig){ var u=m[orig]; if(typeof u==="string"&&/^https:\/\//i.test(u)) imgs[orig]=u; });
+    if(Object.keys(imgs).length){ (pagesOut[pk]||(pagesOut[pk]={})).images=imgs; }
+  }); }
   if(Object.keys(pagesOut).length) out.pages=pagesOut;
   // Réglages de l'assistant (chantier chatbot) : uniquement la CONFIG (pas les sources/documents,
   // qui ne doivent pas fuir dans le JSON public). Lu par api/chat.js après publication.

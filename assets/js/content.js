@@ -48,6 +48,21 @@
         });
         if (typeof window.applyI18n === 'function') window.applyI18n(currentLang());
       }
+      // Images publiees : remplace la source des <img> par l'URL du media (Blob). On matche par
+      // le src d'ORIGINE (tel qu'ecrit dans le HTML, toujours present car publier ne reecrit pas
+      // le HTML). Uniquement des URL https. JAMAIS dans l'editeur (iframe) : l'admin gere son
+      // propre apercu ; on evite ainsi que l'editeur capture une URL Blob comme "src d'origine".
+      var inIframe = false; try { inIframe = (window.top !== window.self); } catch (e) { inIframe = true; }
+      if (!inIframe && pg && isObj(pg.images)) {
+        try {
+          var imgs = document.querySelectorAll('img');
+          for (var i = 0; i < imgs.length; i++) {
+            var s = imgs[i].getAttribute('src'); if (!s) continue;
+            var url = pg.images[s];
+            if (typeof url === 'string' && /^https:\/\//i.test(url)) { imgs[i].setAttribute('data-ck-orig-src', s); imgs[i].src = url; }
+          }
+        } catch (e) { /* fail-silent */ }
+      }
     } catch (e) { /* fail-silent */ }
   }
 

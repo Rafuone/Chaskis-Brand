@@ -44,6 +44,15 @@ var rejects = function (o) { return validateContent(o).ok === false; };
   ok(rejects({ schemaVersion: 1, pricing: { days: Infinity } }), 'nombre Infinity (non sérialisable proprement)');
   ok(rejects({ schemaVersion: 1, version: 'x'.repeat(400 * 1024) }), 'document > 300 Ko');
 
+  section('Images publiées (pages.<page>.images)');
+  ok(accepts({ schemaVersion: 1, pages: { accueil: { images: { 'assets/img/hero.webp': 'https://x.public.blob.vercel-storage.com/media/hero-abc.webp' } } } }), 'remplacement d\'image par URL https accepté');
+  ok(accepts({ schemaVersion: 1, pages: { accueil: { i18n: { fr: { 'hero.h1': 'X' } }, images: { 'a.png': 'https://x.public.blob.vercel-storage.com/media/a.png' } } } }), 'i18n + images ensemble sur une page');
+  ok(rejects({ schemaVersion: 1, pages: { accueil: { images: { 'a.png': 'data:image/png;base64,AAAA' } } } }), 'valeur dataURL rejetée (doit passer par le stockage)');
+  ok(rejects({ schemaVersion: 1, pages: { accueil: { images: { 'a.png': 'http://x/insecure.png' } } } }), 'URL http (non https) rejetée');
+  ok(rejects({ schemaVersion: 1, pages: { accueil: { images: 'pas-un-objet' } } }), 'images doit être un objet');
+  ok(rejects({ schemaVersion: 1, pages: { accueil: { images: { 'a.png': 123 } } } }), 'valeur non-chaîne rejetée');
+  ok(rejects({ schemaVersion: 1, pages: { accueil: { autre: {} } } }), 'clé de page hors {i18n, images} rejetée');
+
   console.log('\n' + (fail === 0 ? '✅' : '❌') + ' ' + pass + ' réussis, ' + fail + ' échoués');
   process.exit(fail === 0 ? 0 : 1);
 })();

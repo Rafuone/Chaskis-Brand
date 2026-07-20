@@ -171,13 +171,30 @@ function validateContent(input) {
       const pg = input.pages[pk];
       if (!isPlainObject(pg)) { errors.push('pages.' + pk + ' : objet attendu'); continue; }
       for (const k of Object.keys(pg)) {
-        if (k !== 'i18n') errors.push('pages.' + pk + '.' + k + ' : seule la cle i18n est autorisee');
+        if (k !== 'i18n' && k !== 'images') errors.push('pages.' + pk + '.' + k + ' : cles autorisees i18n / images');
       }
       if ('i18n' in pg) {
         if (!isPlainObject(pg.i18n)) errors.push('pages.' + pk + '.i18n : objet attendu');
         else for (const lang of Object.keys(pg.i18n)) {
           if (!LANG_KEYS.includes(lang)) errors.push('pages.' + pk + '.i18n.' + lang + ' : langue non supportee');
           else if (!isPlainObject(pg.i18n[lang])) errors.push('pages.' + pk + '.i18n.' + lang + ' : dictionnaire (objet) attendu');
+        }
+      }
+      // images : remplacements d'images publies = { <src d'origine> : <URL https> }. La valeur
+      // DOIT etre une URL https (mediatheque/Blob) : jamais un dataURL ni une balise (le balayage
+      // securite couvre le reste). Bornes anti-inflation (nb d'entrees, longueur cle/valeur).
+      if ('images' in pg) {
+        if (!isPlainObject(pg.images)) errors.push('pages.' + pk + '.images : objet attendu');
+        else {
+          const keys = Object.keys(pg.images);
+          if (keys.length > 60) errors.push('pages.' + pk + '.images : trop d\'entrees (' + keys.length + ' > 60)');
+          for (const src of keys) {
+            const url = pg.images[src];
+            if (typeof url !== 'string') { errors.push('pages.' + pk + '.images["' + src + '"] : URL (chaine) attendue'); continue; }
+            if (src.length > 300) errors.push('pages.' + pk + '.images : cle trop longue');
+            if (url.length > 800) errors.push('pages.' + pk + '.images["' + src + '"] : URL trop longue');
+            if (!/^https:\/\//i.test(url)) errors.push('pages.' + pk + '.images["' + src + '"] : seules les URL https sont publiables (les medias passent par le stockage, pas un dataURL)');
+          }
         }
       }
     }

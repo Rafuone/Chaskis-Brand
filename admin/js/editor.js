@@ -375,7 +375,7 @@ function seedMedia(){
   BG_DEFS.forEach(b=>{ const el=DOC.querySelector(b.sel); if(el) add(bgUrl(el)); });
   save();
 }
-function openMedia(el,kind,key){ mediaTarget={el,kind,key}; renderMediaInto(document.getElementById("mediaGrid"),true); document.getElementById("mediaModalBg").classList.add("show"); }
+function openMedia(el,kind,key){ mediaTarget={el,kind,key,page:editPage}; renderMediaInto(document.getElementById("mediaGrid"),true); document.getElementById("mediaModalBg").classList.add("show"); } /* page capturée ici : un import async + changement de page ne classera pas le remplacement sous la mauvaise page */
 function currentSrc(){ if(!mediaTarget) return null; return mediaTarget.kind==="img" ? mediaTarget.el.getAttribute("src") : bgUrl(mediaTarget.el); }
 function applyMedia(src){
   if(mediaTarget.kind==="img"){
@@ -385,7 +385,7 @@ function applyMedia(src){
        image à TOUTES les <img> de même origine dans l'aperçu (ex. logos répétés du bandeau),
        exactement comme content.js le fera en ligne. Sinon l'aperçu ne changerait qu'une occurrence. */
     if(orig && DOC){ DOC.querySelectorAll("[data-ckimg-orig]").forEach(function(im){ if(im!==mediaTarget.el && im.getAttribute("data-ckimg-orig")===orig){ im.src=src; var id=im.getAttribute("data-ckimg"); if(id) draft.images[id]=src; } }); }
-    recordImgPub(orig, src);
+    recordImgPub(orig, src, mediaTarget.page||editPage);
   }
   else { mediaTarget.el.style.backgroundImage='url("'+src+'")'; draft.bgImages[mediaTarget.key]=src; }
   markDirty();
@@ -402,11 +402,12 @@ function sameImgAsset(orig, url){
 /* Remplacement d'image à publier vers le site public : { <page> : { <src d'origine> : <URL> } }.
    On mémorise même un dataURL (état courant) ; buildSiteContent ne publie QUE les URL https ET
    externes (une image « du site » = même asset -> retrait de l'entrée, retour à l'image par défaut). */
-function recordImgPub(orig, url){
+function recordImgPub(orig, url, page){
   if(!orig) return;
+  page=page||editPage;
   if(!draft.imgPub) draft.imgPub={};
-  var pg=draft.imgPub[editPage]||(draft.imgPub[editPage]={});
-  if(sameImgAsset(orig, url)){ delete pg[orig]; if(!Object.keys(pg).length) delete draft.imgPub[editPage]; }
+  var pg=draft.imgPub[page]||(draft.imgPub[page]={});
+  if(sameImgAsset(orig, url)){ delete pg[orig]; if(!Object.keys(pg).length) delete draft.imgPub[page]; }
   else pg[orig]=url;
 }
 function pickMedia(src){ if(!mediaTarget){ return; } applyMedia(src); document.getElementById("mediaModalBg").classList.remove("show"); toast("Image mise à jour"); }
@@ -1026,6 +1027,38 @@ function humanSummary(dr){
   if(dr.pricing) parts.push("tarifs du simulateur");
   if(dr.lists && Object.keys(dr.lists).length) parts.push("points de listes");
   return parts.length?parts.join(", "):"aucune modification";
+}
+/* Résumé HONNÊTE pour la modale Publier : ce que buildSiteContent envoie RÉELLEMENT en ligne
+   (textes i18n, images en URL https, tarifs, réglages assistant) — à distinguer de ce qui n'est
+   enregistré QUE dans la version locale (structure/logos/témoignages/bandeau/HTML enrichi). */
+function publishedSummary(dr){
+  const parts=[];
+  const t=nkeys(dr.text&&dr.text.fr)+nkeys(dr.text&&dr.text.en);
+  if(t) parts.push(t+" texte"+(t>1?"s":""));
+  let imgN=0; try{ Object.keys(dr.imgPub||{}).forEach(pk=>{ const m=dr.imgPub[pk]||{}; Object.keys(m).forEach(o=>{ if(/^https:\/\//i.test(m[o])) imgN++; }); }); }catch(e){}
+  if(imgN) parts.push(imgN+" image"+(imgN>1?"s":""));
+  if(dr.pricing) parts.push("tarifs du simulateur");
+  try{ if(typeof chat==="object"&&chat&&((chat.forbidden&&chat.forbidden.length)||chat.tone||chat.instr||chat.botName||(chat.sources&&chat.sources.length))) parts.push("réglages de l'assistant"); }catch(e){}
+  return parts.length?parts.join(", "):"aucun changement publiable";
+}
+function localOnlySummary(dr){
+  const parts=[];
+  if(dr.order) parts.push("réorganisation des sections");
+  const hid=(dr.hidden||[]).map(id=>{ const d=SECTION_DEFS.find(s=>s.id===id); return d?d.name:null; }).filter(Boolean);
+  if(hid.length) parts.push("section"+(hid.length>1?"s":"")+" masquée"+(hid.length>1?"s":"")+" ("+hid.join(", ")+")");
+  if(dr.promoHidden || (dr.dom && (dr.dom["promo.text"]||dr.dom["promo.badge"]||dr.dom["promo.cta"]))) parts.push("bandeau promo");
+  if(Array.isArray(dr.logos)) parts.push("logos de confiance");
+  if(Array.isArray(dr.testimonials)) parts.push("témoignages");
+  if(dr.lists && Object.keys(dr.lists).length) parts.push("points de listes");
+  if(nkeys(dr.html&&dr.html.fr)+nkeys(dr.html&&dr.html.en)) parts.push("mise en forme de textes");
+  if(dr.bgImages && Object.keys(dr.bgImages).length) parts.push("image de fond FAQ");
+  return parts;
+}
+/* Nombre de médias en cours d'envoi / non encore stockés en ligne (dataURL local) : bloquent une
+   publication complète des images tant qu'ils n'ont pas d'URL https persistante. */
+function pendingUploadCount(dr){
+  let n=0; try{ (dr.media||[]).forEach(m=>{ if(m&&m.kind==="image"&&(m.stored==="uploading"||m.stored==="local")&&/^data:/.test(m.src||"")) n++; }); }catch(e){}
+  return n;
 }
 function fmtTime(d){ return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); }
 function fmtDate(iso){ const d=new Date(iso); if(isNaN(+d)) return "date inconnue"; return d.getDate()+" "+MONTHS[d.getMonth()]+" "+d.getFullYear()+", "+fmtTime(d); }
@@ -1885,12 +1918,15 @@ const VIEW_ICON={dashboard:"layout-dashboard",editor:"square-pen",structure:"rou
 function decoratePageTitles(){ document.querySelectorAll(".views .view[id^='view-']").forEach(function(v){ const name=v.id.replace("view-",""); const ic=VIEW_ICON[name]; if(!ic) return; const h=v.querySelector(".pg-h"); if(!h||h.dataset.icd) return; h.dataset.icd="1"; const s=document.createElement("span"); s.className="pg-h-ic"; s.innerHTML='<i data-lucide="'+ic+'"></i>'; h.insertBefore(s,h.firstChild); }); try{ refreshIcons(); }catch(e){} }
 (function(){ function _pgInit(){ try{ applyProgressBadges(); }catch(e){} try{ initBugButton(); }catch(e){} try{ decoratePageTitles(); }catch(e){} } if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",_pgInit); else _pgInit(); })();
 function nextVersionId(){ const n=versions.reduce((m,x)=>Math.max(m, parseInt(String(x.id||"v0").replace(/\D/g,""))||0),0)+1; return "v"+n; }
-function restoreVersion(id){ const v=versions.find(x=>x.id===id); if(!v) return;
-  if(!v.snapshot||Object.keys(v.snapshot).length===0){ toast("Version d'exemple : la restauration réelle sera disponible après votre première publication."); return; }
-  if(!confirm("Restaurer "+id+" ("+fmtShort(v.date)+") ? Vos modifications non publiées seront remplacées.")) return;
+function restoreVersion(id){ const v=versions.find(x=>x.id===id); if(!v) return false;
+  if(!v.snapshot||Object.keys(v.snapshot).length===0){ toast("Version d'exemple : la restauration réelle sera disponible après votre première publication."); return false; }
+  if(!confirm("Restaurer "+id+" ("+fmtShort(v.date)+") ? Vos modifications non publiées seront remplacées.")) return false;
+  // Sortie de l'aperçu AVANT de persister : sinon save() est en lecture seule (garde _verPreview)
+  // et l'ANNULATION du confirm laisserait le brouillon réel écrasé. On ne quitte que si confirmé.
+  _verPreview=null; const bb=document.getElementById("verPreviewBar"); if(bb) bb.style.display="none";
   draft=Object.assign(blankDraft(), JSON.parse(JSON.stringify(v.snapshot||{}))); save(true);
   toast(id+" restaurée"); reloadIframe("Restauration de "+id+"…");
-  renderVersions(); updateDashboard(); }
+  renderVersions(); updateDashboard(); return true; }
 function publishVersion(){ const v={ id:nextVersionId(), date:new Date().toISOString(), author:((currentUser()||{}).name||"—"), summary:humanSummary(draft), changes:humanChanges(draft), snapshot:JSON.parse(JSON.stringify(draft)) };
   versions.unshift(v); saveVersions();
   toast("Version "+v.id+" publiée"); renderVersions(); updateDashboard(); }
@@ -1904,7 +1940,7 @@ function showVerPreviewBar(id){ let bar=document.getElementById("verPreviewBar")
   bar.innerHTML='<span class="vpb-l"><i data-lucide="eye"></i>Aperçu de la version <b>'+id+'</b> · lecture seule</span><span class="vpb-r"><button class="btn ghost sm" id="vpbRestore"><i data-lucide="rotate-ccw"></i>Restaurer cette version</button><button class="btn primary sm" id="vpbExit">Quitter l\'aperçu</button></span>';
   bar.style.display="flex";
   document.getElementById("vpbExit").addEventListener("click",()=>exitVerPreview());
-  document.getElementById("vpbRestore").addEventListener("click",()=>{ _verPreview=null; const bb=document.getElementById("verPreviewBar"); if(bb) bb.style.display="none"; restoreVersion(id); });
+  document.getElementById("vpbRestore").addEventListener("click",()=>{ restoreVersion(id); }); /* restoreVersion ne quitte l'aperçu QUE si le confirm est validé (backup préservé sinon) */
   refreshIcons(); }
 function exitVerPreview(){ const bar=document.getElementById("verPreviewBar"); if(bar) bar.style.display="none";
   if(_verPreview){ draft=_verPreview.backup; _verPreview=null; save(true); reloadIframe("Retour au brouillon…"); showView("versions"); } }
@@ -3619,6 +3655,7 @@ promoSwitch.addEventListener("click",()=>{
   draft.promoHidden=!on; setPromoVisible(on); markDirty();
 });
 document.getElementById("resetBtn").addEventListener("click",()=>{
+  if(_verPreview){ toast("Quittez d'abord l'aperçu de version (le brouillon réel est mis de côté)."); return; } /* sinon on effacerait le brouillon réel */
   if(!confirm("Réinitialiser toutes les modifications du brouillon ?")) return;
   draft=blankDraft(); localStorage.removeItem(STORE_KEY); setSaved();
   reloadIframe("Rechargement…"); updateDashboard();
@@ -3668,10 +3705,20 @@ function publishKeySection(){
   h+='</div>'; return h;
 }
 function openPublish(){
-  document.getElementById("pubBody").innerHTML =
-    "Publier crée une version (<b>v"+(versions.length+1)+"</b>).<br><br>"+
-    "<b>Ce qui sera publié :</b><br>"+humanSummary(draft)+
-    publishKeySection();
+  if(_verPreview){ toast("Quittez l'aperçu de version avant de publier."); return; } /* sinon on publierait le snapshot prévisualisé, pas le brouillon */
+  const online=publishedSummary(draft), local=localOnlySummary(draft), pend=pendingUploadCount(draft);
+  let h="Publier crée une version (<b>v"+(versions.length+1)+"</b>).<br><br>";
+  h+='<b>Mis en ligne sur le site :</b><br>'+escHtml(online)+"<br>";
+  if(local.length){
+    h+='<div style="margin-top:12px;padding:10px 12px;background:#FBF7EC;border:1px solid #EBDCB6;border-radius:9px;font-size:13px;color:#7a6320">'
+      +'<b>Enregistré dans la version locale seulement</b> (pas encore poussé en ligne — l\'intégration serveur de ces éléments viendra) :<br>'+escHtml(local.join(", "))+'</div>';
+  }
+  if(pend){
+    h+='<div style="margin-top:10px;padding:10px 12px;background:#FDECEC;border:1px solid #F3C6C6;border-radius:9px;font-size:13px;color:#9a3b3b">'
+      +'⚠️ '+pend+' image'+(pend>1?"s":"")+' encore en cours d\'envoi : publiez à nouveau une fois l\'envoi terminé pour '+(pend>1?"qu\'elles apparaissent":"qu\'elle apparaisse")+' en ligne.</div>';
+  }
+  h+=publishKeySection();
+  document.getElementById("pubBody").innerHTML=h;
   const forget=document.getElementById("pubKeyForget"); if(forget) forget.addEventListener("click",()=>{ setStoredPublishKey(""); openPublish(); });
   pubBg.classList.add("show");
 }
@@ -3690,8 +3737,9 @@ async function publishNow(){
   try{
     const res=await fetch("/api/publish",{method:"POST",headers:{"Authorization":"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify(content)});
     let data={}; try{ data=await res.json(); }catch(e){}
-    if(res.status===200){ publishVersion(); pubBg.classList.remove("show"); toast("Publié en ligne. Le site se met à jour dans une minute environ."); }
+    if(res.status===200){ publishVersion(); _onlineVerLoaded=false; pubBg.classList.remove("show"); toast("Publié en ligne. Le site se met à jour dans une minute environ."); } /* _onlineVerLoaded=false -> le panneau « Versions en ligne » se rechargera */
     else if(res.status===401){ setStoredPublishKey(""); toast("Clé de publication refusée. Vérifiez-la puis recommencez."); openPublish(); }
+    else if(res.status===403){ toast("Votre compte n'a pas le droit de publier (rôle sans la capacité « publier »). Contactez un administrateur."); }
     else if(res.status===400){ toast("Contenu non publiable : "+((data&&data.details&&data.details[0])||(data&&data.error)||"format invalide")); }
     else if(res.status===409){ toast("Quelqu'un vient de publier. Rechargez la page, puis republiez."); }
     else if(res.status===500){ toast("Réglages serveur incomplets (variables à finir dans Vercel)."); }
@@ -5109,7 +5157,11 @@ function openUserMenu(){ closeUserMenu(); const btn=document.getElementById("tbU
   setTimeout(()=>document.addEventListener("mousedown",umOutside,true),0); }
 function umOutside(e){ const m=document.getElementById("sbUserMenu"), btn=document.getElementById("tbUser"); if(m && !m.contains(e.target) && btn && !btn.contains(e.target)) closeUserMenu(); }
 function closeUserMenu(){ const m=document.getElementById("sbUserMenu"); if(m) m.remove(); document.removeEventListener("mousedown",umOutside,true); }
-function logout(){ toast("Déconnexion (démo) · l'authentification réelle arrivera à la mise en ligne."); }
+function logout(){
+  // Déconnexion RÉELLE si Clerk est chargé (auth active) ; sinon message démo (aperçu local/sans Clerk).
+  try{ if(window.Clerk && typeof window.Clerk.signOut==="function"){ toast("Déconnexion…"); window.Clerk.signOut().then(function(){ try{ location.reload(); }catch(e){} }).catch(function(){ toast("Déconnexion impossible pour le moment."); }); return; } }catch(e){}
+  toast("Déconnexion (démo) · connectez-vous via l'écran d'authentification en ligne.");
+}
 
 /* ---- environnement (dev / prod) + version du back-office ---- */
 function getEnv(){ return loadUI().env==="prod" ? "prod" : "dev"; }

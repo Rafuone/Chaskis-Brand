@@ -574,6 +574,7 @@
           <div class="cb-pulse-r"><span class="hint" id="copProg"></span><button class="btn ghost" id="copReset"><i data-lucide="rotate-ccw"></i>Nouveau RDV</button></div>
         </div>
         <div class="ex-note" style="margin-top:16px"><i data-lucide="info"></i><div>Cochez au fil de l'échange. À la fin, tout est déjà saisi : le compte-rendu et l'offre chiffrée sont prêts, zéro ressaisie derrière.</div></div>
+        <div id="copRdvLink" class="ex-note" style="margin-top:12px;display:none;background:#E4F4EC;border-color:#B7E0CB;color:#0F6E56"></div>
         <div class="cop-grid">
           <div class="cop-main">
             <div class="dpan">
@@ -601,6 +602,10 @@
               <div class="pan-head"><h4><span class="hic violet"><i data-lucide="clipboard-check"></i></span> Compte-rendu</h4><button class="btn ghost" id="copCopy" style="padding:5px 10px"><i data-lucide="copy"></i>Copier</button></div>
               <div id="copRecap"></div>
               <button class="btn primary" id="copFinish" style="width:100%;justify-content:center;margin-top:12px"><i data-lucide="check"></i>Terminer et enregistrer</button>
+            </div>
+            <div class="dpan">
+              <div class="pan-head"><h4><span class="hic teal"><i data-lucide="history"></i></span> Comptes-rendus récents</h4></div>
+              <div id="copHistory"></div>
             </div>
           </div>
         </div>
@@ -804,7 +809,7 @@
 </div>
 
 <script src="/admin/data/tech-plan.js?v=20260714c"></script>
-<script src="/admin/js/editor.js?v=20260720b"></script>
+<script src="/admin/js/editor.js?v=20260721"></script>
 <!-- Auth Clerk (front). editor.js reste inchangé : getStoredPublishKey() renvoie window.__clerkToken
      quand on est connecté via Clerk, sinon la clé stockée (repli). Zéro appel /api modifié. -->
 <script>

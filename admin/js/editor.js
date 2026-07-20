@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.43.1" };
+const ADMIN_BUILD = { version: "0.44.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1366,7 +1366,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.43.1", cur:true, date:"2026-07-20", title:"Menu épuré", items:[
+  { v:"v0.44.0", cur:true, date:"2026-07-21", title:"Copilote RDV : le cycle complet, du rendez-vous au compte-rendu", items:[
+    {t:"add", x:"Depuis la fiche d'un rendez-vous, le bouton « Préparer / piloter avec le copilote » ouvre le copilote pré-rempli (client, contact, secteur, volume) et le relie à ce rendez-vous"},
+    {t:"add", x:"En cliquant « Terminer », le compte-rendu est rattaché au rendez-vous (visible dans sa fiche) et vous pouvez le marquer « honoré » ; un panneau « Comptes-rendus récents » permet de les relire et re-télécharger"},
+    {t:"imp", x:"Les actions « Envoyer la plaquette / l'offre chiffrée » ouvrent maintenant un vrai email pré-rempli adressé au prospect, au lieu d'un simple message de confirmation"}
+  ]},
+  { v:"v0.43.1", date:"2026-07-20", title:"Menu épuré", items:[
     {t:"imp", x:"Retrait des pastilles « bêta/alpha » qui s'affichaient sur chaque entrée du menu (bruit visuel) ; le menu est plus net. L'état d'avancement de chaque page reste consultable dans la page « Avancement ». Le compteur de rendez-vous à venir est conservé."}
   ]},
   { v:"v0.43.0", date:"2026-07-20", title:"Audit qualité complet : sécurité, fiabilité et honnêteté renforcées", items:[
@@ -1842,7 +1847,7 @@ const PROGRESS=[
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
-  {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.5.0",recent:["« Terminer » archive et télécharge le compte-rendu","Découverte guidée et simulateur d'offre"]},
+  {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"beta",version:"0.8.0",recent:["Cycle complet : préparer depuis un RDV → piloter → compte-rendu rattaché au rendez-vous","Comptes-rendus récents consultables (relire / re-télécharger)","Actions plaquette/offre = email pré-rempli au prospect"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audience réelle agrégée de tous les visiteurs (collecteur maison, sans cookie)","Visiteurs uniques anonymisés + filtrage des robots","Vraie mesure sans cookie (cet appareil) en repli"]},
   {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.11.0",recent:["Mesure automatique planifiée (tous les jours, sans clic) + historique conservé côté serveur","Google note aussi Accessibilité, SEO et Bonnes pratiques (en plus de la vitesse)","Vraies mesures Core Web Vitals, historique et reprise automatique"]},
   {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.5.0",recent:["Précisions du concours affichées","Alerte si stockage plein"]},
@@ -2032,7 +2037,7 @@ function renderTech(){ const tabs=document.getElementById("techTabs"), body=docu
   refreshIcons();
 }
 function techEsc(s){ return escHtml(String(s==null?"":s)); }
-const TECH_UPDATED="20 juillet 2026";
+const TECH_UPDATED="21 juillet 2026";
 const TECH_EFF_LBL={S:"Rapide",M:"Moyen",L:"Long"};
 const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Arthur",calendly:"Paul",auth:"Youcef",perf:"Arthur",media:"Arthur",chatbot:"Youcef"};
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
@@ -3275,7 +3280,7 @@ const COP_DISCOVERY=[
       {k:"next", label:"Prochaine étape", multi:false, opts:["Offre par mail","Mois test","Nouveau RDV","Réflexion"]}
     ]}
 ];
-function copBlank(){ return { company:"", contact:"", open:{contexte:true}, ans:{}, notes:"", sim:{volume:40, zone:"geneve", express:10}, promo:"" }; }
+function copBlank(){ return { company:"", contact:"", email:"", open:{contexte:true}, ans:{}, notes:"", sim:{volume:40, zone:"geneve", express:10}, promo:"", rdvKey:"", rdvLabel:"" }; }
 let copState=copLoad();
 function copLoad(){ try{ const s=JSON.parse(localStorage.getItem(COP_KEY)); if(s) return Object.assign(copBlank(), s); }catch(e){} return copBlank(); }
 function copSave(){ try{ localStorage.setItem(COP_KEY, JSON.stringify(copState)); }catch(e){} }
@@ -3346,15 +3351,25 @@ function copApplyPromo(){ const code=(document.getElementById("copPromo").value|
   copComputeSim(); renderCopRecap(); refreshIcons();
 }
 const COP_ARR='<svg class="cop-act-arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
+function copFirstName(){ var c=(copState.contact||"").trim(); return c?c.split(/[ ·]/)[0]:""; }
+function copMailto(subject, body){ var to=encodeURIComponent(copState.email||""); return "mailto:"+to+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body); }
 function renderCopActions(){ const w=document.getElementById("copActions"); if(!w) return;
+  // Actions HONNÊTES : ouvrent un email pré-rempli (rien n'est « envoyé » en douce). Le suivi ouvre les RDV.
   const acts=[
-    {k:"plaquette", ic:"file-text", t:"Envoyer la plaquette", s:"Présentation Chaskis, par email"},
-    {k:"offre", ic:"mail", t:"Envoyer l'offre chiffrée", s:"Offre + bon d'achat au prospect"},
+    {k:"plaquette", ic:"file-text", t:"Envoyer la plaquette", s:"Email pré-rempli (joindre le PDF)"},
+    {k:"offre", ic:"mail", t:"Envoyer l'offre chiffrée", s:"Email pré-rempli avec le chiffrage"},
     {k:"suivi", ic:"calendar-plus", t:"Planifier un suivi", s:"Ouvre les rendez-vous"}
   ];
   w.innerHTML=acts.map(a=>'<button type="button" class="cop-act" data-act="'+a.k+'"><span class="cop-act-ic"><i data-lucide="'+a.ic+'"></i></span><span class="cop-act-tx"><span class="cop-act-t">'+a.t+'</span><span class="cop-act-s">'+a.s+'</span></span>'+COP_ARR+'</button>').join("");
-  w.querySelector('[data-act="plaquette"]').addEventListener("click",()=>toast("Plaquette envoyée à "+(copState.contact||copState.company||"le prospect")));
-  w.querySelector('[data-act="offre"]').addEventListener("click",()=>toast("Offre + bon d'achat envoyés · "+copSimCalc().final+" CHF/mois"));
+  const hi=function(){ var f=copFirstName(); return "Bonjour"+(f?" "+f:"")+","; };
+  w.querySelector('[data-act="plaquette"]').addEventListener("click",()=>{
+    var body=hi()+"\n\nComme convenu à l'instant, je vous joins la présentation de Chaskis.\n\n[Pensez à joindre la plaquette PDF avant d'envoyer.]\n\nBien à vous,";
+    try{ window.location.href=copMailto("Chaskis — présentation", body); }catch(e){ toast("Impossible d'ouvrir l'email."); }
+  });
+  w.querySelector('[data-act="offre"]').addEventListener("click",()=>{
+    var body=hi()+"\n\nSuite à notre échange, voici votre offre :\n\n"+copRecapText()+"\n\nJe reste à votre disposition.\nBien à vous,";
+    try{ window.location.href=copMailto("Votre offre Chaskis", body); }catch(e){ toast("Impossible d'ouvrir l'email."); }
+  });
   w.querySelector('[data-act="suivi"]').addEventListener("click",()=>showView("rdv"));
   refreshIcons();
 }
@@ -3392,7 +3407,47 @@ function renderCopilot(){
   const cc=document.getElementById("copCompany"); if(cc) cc.value=copState.company||"";
   const ct=document.getElementById("copContact"); if(ct) ct.value=copState.contact||"";
   const nt=document.getElementById("copNotes"); if(nt) nt.value=copState.notes||"";
-  renderCopSections(); renderCopSim(); renderCopActions(); renderCopRecap(); renderCopProgress(); refreshIcons();
+  renderCopSections(); renderCopSim(); renderCopActions(); renderCopRecap(); renderCopProgress();
+  renderCopRdvLink(); renderCopHistory(); refreshIcons();
+}
+/* Bandeau « vous préparez CE rendez-vous » quand le copilote a été ouvert depuis un RDV. */
+function renderCopRdvLink(){
+  var w=document.getElementById("copRdvLink"); if(!w) return;
+  if(copState.rdvKey && copState.rdvLabel){ w.style.display=""; w.innerHTML='<i data-lucide="link-2"></i><div>Vous préparez le rendez-vous : <b>'+escHtml(copState.rdvLabel)+'</b>. En cliquant « Terminer », le compte-rendu sera <b>rattaché à ce rendez-vous</b>.</div>'; }
+  else { w.style.display="none"; w.innerHTML=""; }
+}
+/* Télécharge un compte-rendu en .txt (réutilisé par « Terminer » et par la relecture d'historique). */
+function downloadRecapText(text, company){
+  try{ var blob=new Blob([text],{type:"text/plain;charset=utf-8"}); var url=URL.createObjectURL(blob); var a=document.createElement("a"); a.href=url; a.download="compte-rendu-"+(String(company||"rdv").replace(/[^a-z0-9]+/gi,"-").toLowerCase()||"rdv")+".txt"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ try{ URL.revokeObjectURL(url); }catch(e){} },1000); }catch(e){}
+}
+/* Historique des comptes-rendus (chaskis_copilot_hist) — DÉSORMAIS relu et affiché (avant : écrit
+   mais jamais montré). Relecture dans une petite fenêtre + re-téléchargement. */
+function copHistList(){ try{ var h=JSON.parse(localStorage.getItem("chaskis_copilot_hist")); return Array.isArray(h)?h:[]; }catch(e){ return []; } }
+function renderCopHistory(){
+  var w=document.getElementById("copHistory"); if(!w) return;
+  var hist=copHistList();
+  if(!hist.length){ w.innerHTML='<p class="hint" style="margin:0">Aucun compte-rendu enregistré pour l\'instant. Ils apparaîtront ici après « Terminer ».</p>'; return; }
+  w.innerHTML=hist.slice(0,8).map(function(h,idx){
+    return '<div style="display:flex;gap:8px;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)">'
+      +'<div style="min-width:0"><div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+escHtml(h.company||"Prospect")+'</div><div class="hint" style="margin:0">'+escHtml(fmtShort(h.date))+'</div></div>'
+      +'<div style="display:flex;gap:6px;flex-shrink:0"><button class="btn ghost sm" data-cophist-view="'+idx+'">Relire</button><button class="btn ghost sm" data-cophist-dl="'+idx+'" title="Télécharger">↓</button></div></div>';
+  }).join("");
+  w.querySelectorAll("[data-cophist-view]").forEach(function(b){ b.addEventListener("click",function(){ var h=hist[+b.dataset.cophistView]; if(h) copShowRecap(h); }); });
+  w.querySelectorAll("[data-cophist-dl]").forEach(function(b){ b.addEventListener("click",function(){ var h=hist[+b.dataset.cophistDl]; if(h) downloadRecapText(h.recap||"", h.company); }); });
+}
+function copShowRecap(h){
+  var ov=document.createElement("div"); ov.className="thm-ov";
+  ov.innerHTML='<div class="thm-card" style="max-width:560px"><button class="thm-x" title="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'
+    +'<h3 style="margin:0 0 4px">Compte-rendu · '+escHtml(h.company||"Prospect")+'</h3><p class="hint" style="margin:0 0 12px">'+escHtml(fmtShort(h.date))+'</p>'
+    +'<div style="white-space:pre-wrap;font-size:13px;line-height:1.55;background:#F7F6FB;border:1px solid #E7E3F5;border-radius:8px;padding:12px 14px;max-height:50vh;overflow:auto">'+escHtml(h.recap||"")+'</div>'
+    +'<div class="thm-acts" style="margin-top:12px"><button type="button" class="btn primary sm" id="crDl"><i data-lucide="download"></i>Télécharger</button><button type="button" class="btn ghost sm" id="crClose">Fermer</button></div></div>';
+  document.body.appendChild(ov);
+  var close=function(){ ov.remove(); };
+  ov.addEventListener("click",function(e){ if(e.target===ov) close(); });
+  ov.querySelector(".thm-x").addEventListener("click",close);
+  ov.querySelector("#crClose").addEventListener("click",close);
+  ov.querySelector("#crDl").addEventListener("click",function(){ downloadRecapText(h.recap||"", h.company); });
+  refreshIcons();
 }
 
 /* ============================================================
@@ -4346,10 +4401,29 @@ function cbAsk(q){
     copSave();
     const txt=copRecapText();
     let hist=[]; try{ hist=JSON.parse(localStorage.getItem("chaskis_copilot_hist"))||[]; }catch(e){}
-    hist.unshift({ date:new Date().toISOString(), company:(copState.company||""), recap:txt });
+    hist.unshift({ date:new Date().toISOString(), company:(copState.company||""), recap:txt, rdvKey:copState.rdvKey||"" });
     try{ localStorage.setItem("chaskis_copilot_hist", JSON.stringify(hist.slice(0,50))); }catch(e){}
-    try{ const blob=new Blob([txt],{type:"text/plain;charset=utf-8"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="compte-rendu-"+((copState.company||"rdv").replace(/[^a-z0-9]+/gi,"-").toLowerCase()||"rdv")+".txt"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ try{ URL.revokeObjectURL(url); }catch(e){} },1000); }catch(e){}
-    toast("RDV terminé : compte-rendu téléchargé et archivé");
+    downloadRecapText(txt, copState.company);
+    // SORTIE du workflow : si le copilote est lié à un RDV, on y RATTACHE le compte-rendu (visible
+    // dans le tiroir du RDV) et on propose de le marquer « honoré ». Puis on délie (le prochain
+    // prospect ne réutilise pas ce lien).
+    let attached=false;
+    if(copState.rdvKey && typeof rdvData!=="undefined" && Array.isArray(rdvData)){
+      const idx=rdvData.findIndex(r=>rdvStableKey(r)===copState.rdvKey);
+      if(idx>=0){
+        const now=new Date().toISOString();
+        rdvData[idx].compteRendu=txt; rdvData[idx].compteRenduAt=now;
+        if(confirm("Marquer ce rendez-vous comme « honoré » ?")) rdvData[idx].st="honore";
+        // persistance : override (RDV live) sinon jeu local (démo) — même logique que la réattribution
+        if(rdvData[idx].calendlyUri) saveRdvOverride(rdvData[idx].calendlyUri,{compteRendu:rdvData[idx].compteRendu,compteRenduAt:now,st:rdvData[idx].st});
+        else saveRdv();
+        attached=true;
+        if(typeof updateDashboard==="function") updateDashboard();
+      }
+      copState.rdvKey=""; copState.rdvLabel=""; copSave();
+    }
+    renderCopilot();
+    toast(attached?"RDV terminé : compte-rendu rattaché au rendez-vous, téléchargé et archivé.":"RDV terminé : compte-rendu téléchargé et archivé.");
   });
   // Utilisateurs & accès
   const uAdd=document.getElementById("usrAdd"); if(uAdd) uAdd.addEventListener("click",()=>openUsrModal(null));
@@ -4609,10 +4683,15 @@ function rdvFicheInner(i){
   const infoItems=[["Interlocuteur",r.contact],["Secteur",r.secteur],["Volume estimé",r.volume?r.volume+" / jour":""]].filter(x=>x[1]);
   const info=infoItems.length?'<div class="fiche-info">'+infoItems.map(x=>'<div class="fiche-ir"><span class="k">'+x[0]+'</span><span class="v" title="'+escHtml(x[1])+'">'+escHtml(x[1])+'</span></div>').join('')+'</div>':'';
 
+  // Entrée copilote + compte-rendu rattaché (s'il existe).
+  const cr=r.compteRendu||"";
+  const prep='<button class="btn" id="dPrepare" style="width:100%;justify-content:center;margin-bottom:10px"><i data-lucide="compass"></i>Préparer / piloter avec le copilote</button>'+
+    (cr?'<div style="margin-bottom:10px"><div class="fiche-lbl" style="margin:0 0 4px">Compte-rendu du copilote'+(r.compteRenduAt?' · '+escHtml(fmtShort(r.compteRenduAt)):'')+'</div><div style="white-space:pre-wrap;font-size:12px;line-height:1.5;background:#F7F6FB;border:1px solid #E7E3F5;border-radius:8px;padding:9px 11px;max-height:140px;overflow:auto">'+escHtml(cr)+'</div></div>':'');
+
   // 2 colonnes cohérentes : gauche = le prospect (qui + comment le joindre), droite = votre suivi
   const cols='<div class="fiche-cols">'+
     '<div class="fiche-col"><div class="fiche-lbl">Le prospect</div>'+info+'<div class="fiche-acts">'+acts+'</div></div>'+
-    '<div class="fiche-col"><div class="fiche-lbl">Votre suivi</div>'+
+    '<div class="fiche-col"><div class="fiche-lbl">Votre suivi</div>'+prep+
       '<div class="fiche-reassign" style="margin-bottom:10px"><label for="dWho" style="display:block;font-size:12px;color:#6b7280;margin:0 0 4px;font-weight:600">Commercial attribué</label><select id="dWho" class="rangesel" style="width:100%">'+rdvOwnersList().map(function(o){return '<option'+(o===r.who?' selected':'')+'>'+escHtml(o)+'</option>';}).join('')+'</select></div>'+
       '<textarea class="dArea" id="dNote" rows="5" placeholder="Compte-rendu de l\'échange, prochaines étapes, devis envoyé…">'+escHtml(r.note||"")+'</textarea>'+
       '<div class="note-foot"><button class="btn" id="dNoteSave">Enregistrer la note</button>'+relInline+'</div>'+
@@ -4629,10 +4708,28 @@ function openRdvDrawer(i){
   const ns=d.querySelector("#dNoteSave"); if(ns) ns.onclick=()=>{ rdvData[i].note=d.querySelector("#dNote").value.trim(); saveRdv(); toast("Note enregistrée"); openRdvDrawer(i); };
   const send=d.querySelector("#dRelSend"); if(send) send.onclick=()=>{ rdvData[i].relance={sent:true,date:RDV_TODAY}; saveRdv(); toast("Relance envoyée à "+rdvData[i].client+" (simulé)"); openRdvDrawer(i); };
   const cl=d.querySelector("#dClose"); if(cl) cl.onclick=closeRdvDrawer;
+  const prep=d.querySelector("#dPrepare"); if(prep) prep.onclick=()=>prepareRdvCopilot(i);
   const wsel=d.querySelector("#dWho"); if(wsel) wsel.onchange=()=>{ const v=wsel.value; if(!v||v===rdvData[i].who) return; rdvData[i].who=v; rdvData[i].assignedBy="manuel"; if(rdvData[i].calendlyUri) saveRdvOverride(rdvData[i].calendlyUri,{who:v}); else saveRdv(); toast("Rendez-vous réattribué à "+v); renderRdv(); openRdvDrawer(i); };
   renderRdvTable();
 }
 function closeRdvDrawer(){ rdvOpenRow=-1; renderRdvTable(); }
+/* Clé stable d'un RDV pour rattacher le compte-rendu du copilote : calendlyUri (live) sinon
+   dérivée du client + date (démo). */
+function rdvStableKey(r){ if(!r) return ""; return r.calendlyUri ? r.calendlyUri : ((r.client||"")+"|"+(r.day||"")+(r.mon||"")+"|"+(r.time||"")); }
+var RDV_SECTEUR_TO_COP={ "Restauration":"Restauration","Médical / Pharma":"Santé / pharma","E-commerce / Retail":"E-commerce","Juridique / Notarial":"Autre","Luxe / Bijouterie":"Retail" };
+function rdvVolumeToNum(v){ v=String(v||""); if(/moins de 10/i.test(v)) return 8; if(/10 à 30/i.test(v)) return 20; if(/30 à 100/i.test(v)) return 60; if(/plus de 100/i.test(v)) return 120; var m=v.match(/\d+/); return m?+m[0]:40; }
+/* ENTRÉE du workflow copilote : depuis un RDV, ouvre le copilote PRÉ-REMPLI et le LIE au RDV
+   (le compte-rendu y sera rattaché au « Terminer »). */
+function prepareRdvCopilot(i){
+  var r=rdvData[i]; if(!r) return;
+  copState=copBlank();
+  copState.company=r.client||""; copState.contact=r.contact||""; copState.email=r.email||"";
+  copState.rdvKey=rdvStableKey(r); copState.rdvLabel=(r.client||"")+" · "+(r.day||"")+" "+(r.mon||"")+(r.time?" "+r.time:"");
+  var sec=RDV_SECTEUR_TO_COP[r.secteur]; if(sec) copState.ans.secteur=sec;
+  if(r.volume) copState.sim.volume=rdvVolumeToNum(r.volume);
+  copSave(); closeRdvDrawer(); showView("copilot"); renderCopilot();
+  toast("Copilote préparé pour "+(r.client||"ce rendez-vous"));
+}
 function renderRdvStatus(){
   const bar=document.getElementById("rdvStatusBar"), leg=document.getElementById("rdvStatusLeg"); if(!bar||!leg) return;
   const a=teamAgg(rdvWho);

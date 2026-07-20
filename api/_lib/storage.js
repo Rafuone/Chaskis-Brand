@@ -87,15 +87,15 @@ async function readUrl(url) {
 }
 
 // Liste les objets (option prefix/limit). Retour : { ok, blobs:[{pathname,url,size,uploadedAt}], cursor, hasMore }.
-async function list(prefix, limit) {
+async function list(prefix, limit, cursor) {
   if (provider() === 'memory') {
     var ks = Object.keys(_mem).filter(function (k) { return !prefix || k.indexOf(prefix) === 0; });
-    return { ok: true, blobs: ks.map(function (k) { return { pathname: k, url: _mem[k].url, size: (_mem[k].body ? _mem[k].body.length : 0), uploadedAt: _mem[k].uploadedAt }; }) };
+    return { ok: true, blobs: ks.map(function (k) { return { pathname: k, url: _mem[k].url, size: (_mem[k].body ? _mem[k].body.length : 0), uploadedAt: _mem[k].uploadedAt }; }), cursor: null, hasMore: false };
   }
   if (provider() === 'off') return { ok: false, error: 'stockage désactivé' };
   if (!token()) return { ok: false, error: 'BLOB_READ_WRITE_TOKEN absent' };
   try {
-    var q = []; if (prefix) q.push('prefix=' + encodeURIComponent(prefix)); if (limit) q.push('limit=' + encodeURIComponent(limit));
+    var q = []; if (prefix) q.push('prefix=' + encodeURIComponent(prefix)); if (limit) q.push('limit=' + encodeURIComponent(limit)); if (cursor) q.push('cursor=' + encodeURIComponent(cursor));
     var r = await blobFetch(BLOB_HOST + '/' + (q.length ? ('?' + q.join('&')) : ''), { method: 'GET' });
     var txt = await r.text(); var j = null; try { j = JSON.parse(txt); } catch (e) {}
     if (!r.ok) return { ok: false, status: r.status, error: txt.slice(0, 300) || ('HTTP ' + r.status) };

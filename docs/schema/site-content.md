@@ -11,7 +11,7 @@ Fichier de reference du contenu editorial publie depuis l'admin. C'est le **cont
 - `fetch` natif de **Node 18+** pour les appels externes (pas de `node-fetch`).
 - Chaque Function pose **son propre `Cache-Control`** (rien n'est herite) : `no-store` sur les ecritures et reponses uniques, `s-maxage` sur les lectures cachables.
 - Dossier `api/_lib/` : prefixe `_` => **exclu du routage Vercel**, reserve aux librairies partagees (comme ce validateur). Ce n'est pas un endpoint.
-- Un secret ne quitte **jamais** le serveur : il vit dans `process.env` cote Function. Cote client on n'expose qu'un booleen (`api/env-check.js`) ou de la donnee publique.
+- Un secret ne quitte **jamais** le serveur : il vit dans `process.env` cote Function. Cote client on n'expose qu'un booleen (`/api/health?probe=env`) ou de la donnee publique.
 
 > Note : le plan technique mentionnait `export default` (ESM) pour `host` et `module.exports` (CJS) pour `publish`. On tranche pour **CJS partout**, seul choix qui fonctionne sans `package.json` ni `.mjs`, passe `node --check`, se teste via `require()` et reste portable.
 

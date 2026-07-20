@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.41.0" };
+const ADMIN_BUILD = { version: "0.42.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1316,7 +1316,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.41.0", cur:true, date:"2026-07-20", title:"Les images modifiées apparaissent sur le site en ligne après publication", items:[
+  { v:"v0.42.0", cur:true, date:"2026-07-20", title:"Vraies statistiques d'audience (tous les visiteurs) dans l'admin, sans cookie", items:[
+    {t:"add", x:"La page Statistiques affiche désormais l'audience RÉELLE de tous les visiteurs du site en ligne (pages vues, visiteurs, pages les plus vues, provenance), mesurée par notre propre serveur — sans cookie ni outil tiers payant"},
+    {t:"imp", x:"Visiteurs uniques anonymisés (aucun suivi d'un jour à l'autre) et robots automatiquement écartés, pour des chiffres fiables"},
+    {t:"imp", x:"On maîtrise la durée de conservation (aucun plafond imposé) ; le panneau « cet appareil » reste en repli et les chiffres de démonstration restent affichés pour vos présentations"}
+  ]},
+  { v:"v0.41.0", date:"2026-07-20", title:"Les images modifiées apparaissent sur le site en ligne après publication", items:[
     {t:"add", x:"Quand vous remplacez une image dans l'éditeur et que vous publiez, la nouvelle image s'affiche sur le site en ligne (elle est servie depuis le stockage de fichiers, pas « en dur » dans la page)"},
     {t:"imp", x:"Ne s'applique qu'aux vraies images stockées en ligne : une image encore en cours d'envoi reste locale tant qu'elle n'a pas d'adresse permanente (aucun risque d'image cassée)"},
     {t:"imp", x:"Revenir à l'image d'origine est pris en compte : le site réaffiche l'image par défaut"}
@@ -1774,7 +1779,7 @@ const PROGRESS=[
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"alpha",version:"0.5.0",recent:["« Terminer » archive et télécharge le compte-rendu","Découverte guidée et simulateur d'offre"]},
-  {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.7.0",recent:["Vraie mesure d'audience sans cookie (cet appareil)","Plage de dates personnalisée fonctionnelle"]},
+  {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audience réelle agrégée de tous les visiteurs (collecteur maison, sans cookie)","Visiteurs uniques anonymisés + filtrage des robots","Vraie mesure sans cookie (cet appareil) en repli"]},
   {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.11.0",recent:["Mesure automatique planifiée (tous les jours, sans clic) + historique conservé côté serveur","Google note aussi Accessibilité, SEO et Bonnes pratiques (en plus de la vitesse)","Vraies mesures Core Web Vitals, historique et reprise automatique"]},
   {view:"affiliation",name:"Affiliation",env:"preprod",stage:"beta",version:"0.5.0",recent:["Précisions du concours affichées","Alerte si stockage plein"]},
   {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.7.0",recent:["Droits vérifiés côté serveur : un rôle sans la capacité voulue est refusé (403), pas seulement masqué","Attribution d'un rôle à un compte par simple réglage (sans développement)","Libellé de rôle corrigé"]},
@@ -1969,7 +1974,7 @@ const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
 // % = « développé & fonctionnel » (avec un compte de TEST branchable). Le passage aux comptes
 // DÉFINITIFS et à l'hébergement final (Azure) est de la CONFIGURATION, suivie à part — pas du dev.
-const TECH_DONE={host:92,publish:95,versioning:85,analytics:62,calendly:68,auth:88,perf:90,media:90,chatbot:90};
+const TECH_DONE={host:92,publish:95,versioning:85,analytics:88,calendly:68,auth:88,perf:90,media:90,chatbot:90};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -4877,6 +4882,41 @@ function renderStats(){
       c._tip='<div class="tt-h">'+hr+'h - '+((hr+1)%24)+'h</div><div class="tt-row"><span>Visites</span><b>'+nfr(vis)+'</b></div><div class="tt-sub">'+share+' % du trafic du jour</div>'+(hr===peak?'<div class="tt-peak">Heure de pointe</div>':'');
       h.appendChild(c); }); }
   renderStatsReal();
+  renderStatsServer();
+}
+/* Panneau « audience réelle (tous les visiteurs) » : agrégat du collecteur maison /api/collect
+   (sans cookie, stocké sur Blob). Auth via la clé/jeton admin ; repli SILENCIEUX (panneau masqué)
+   si pas connecté / endpoint absent / stockage inactif -> on garde le panneau « cet appareil ».
+   Les chiffres de démo au-dessus restent la vitrine. */
+function statsDaysFromKey(){ try{ var m=/(\d+)\s*j/.exec(statKey||""); if(m) return Math.min(365,Math.max(1,+m[1])); }catch(e){} return 30; }
+function renderStatsServer(){
+  var w=document.getElementById("statServerPan"); if(!w) return;
+  var key=(typeof getStoredPublishKey==="function")?getStoredPublishKey():"";
+  if(!key){ w.style.display="none"; w.innerHTML=""; return; }
+  var PLBL={ "/":"Accueil","/index.html":"Accueil","/mobilite":"Mobilité","/mobilite.html":"Mobilité","/postuler":"Postuler","/postuler.html":"Postuler","/commander":"Commander","/commander.html":"Commander","/dashboard":"Tableau de bord","/dashboard.html":"Tableau de bord","/app.html":"Suivi de commande" };
+  var pl=function(p){ return PLBL[p]||p; };
+  fetch("/api/collect?days="+statsDaysFromKey(),{ headers:{ Authorization:"Bearer "+key } })
+    .then(function(r){ return r.ok?r.json():null; })
+    .then(function(d){
+      if(!d||!d.ok||d.provider!=="blob"){ w.style.display="none"; w.innerHTML=""; return; }
+      var t=d.totals||{pageviews:0,visitors:0};
+      var pagesRows=(d.topPages||[]).slice(0,8).map(function(x){ return '<tr><td>'+escHtml(pl(x.p))+'</td><td style="text-align:right;font-weight:600">'+x.n+'</td></tr>'; }).join("")||'<tr><td class="hint">Pas encore de données</td><td></td></tr>';
+      var refRows=(d.topRefs||[]).slice(0,8).map(function(x){ return '<tr><td>'+escHtml(x.r||"Accès direct")+'</td><td style="text-align:right;font-weight:600">'+x.n+'</td></tr>'; }).join("")||'<tr><td class="hint">Accès direct</td><td></td></tr>';
+      w.style.display="";
+      w.innerHTML='<div class="pan-head"><h4><span class="hic teal"><i data-lucide="bar-chart-3"></i></span> Audience réelle (tous les visiteurs)</h4><span class="hint" style="margin:0">sans cookie · '+(d.rangeDays||30)+' j</span></div>'
+        +'<p class="hint" style="margin:2px 0 12px">Mesure agrégée de <b>tous les visiteurs</b> du site en ligne, collectée par notre propre serveur (sans cookie, sans outil tiers, visiteurs uniques anonymisés). Les chiffres tout en haut restent des exemples de démonstration.</p>'
+        +'<div style="display:flex;gap:26px;flex-wrap:wrap;margin-bottom:14px">'
+          +'<div><div style="font-size:26px;font-weight:700;color:var(--ink,#1a1a1a)">'+nfr(t.pageviews||0)+'</div><div class="hint" style="margin:0">pages vues</div></div>'
+          +'<div><div style="font-size:26px;font-weight:700;color:var(--ink,#1a1a1a)">'+nfr(t.visitors||0)+'</div><div class="hint" style="margin:0">visiteurs</div></div>'
+        +'</div>'
+        +'<div style="display:flex;gap:24px;flex-wrap:wrap">'
+          +'<div style="flex:1;min-width:220px"><div style="font-weight:600;margin-bottom:6px">Pages les plus vues</div><table class="tbl"><tbody>'+pagesRows+'</tbody></table></div>'
+          +'<div style="flex:1;min-width:220px"><div style="font-weight:600;margin-bottom:6px">Provenance</div><table class="tbl"><tbody>'+refRows+'</tbody></table></div>'
+        +'</div>'
+        +(d.truncated?'<p class="hint" style="margin-top:10px">Beaucoup de données : affichage partiel (les plus récentes).</p>':'');
+      if(typeof refreshIcons==="function") refreshIcons();
+    })
+    .catch(function(){ w.style.display="none"; w.innerHTML=""; });
 }
 /* Panneau « vraie mesure sur cet appareil » : lit chaskis_analytics_v1 (écrit sans cookie par
    assets/js/analytics.js sur les vraies visites). Additif : les données de démo au-dessus

@@ -51,8 +51,15 @@
     store.lastAt = now;
     try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {}
 
-    // Étape suivante (quand /api/collect existera) : envoi non bloquant, sans cookie.
-    //   try { navigator.sendBeacon('/api/collect', JSON.stringify({ p: location.pathname, r: refHost })); } catch (e) {}
-    // Laissé en commentaire tant que l'endpoint n'existe pas (aucun appel réseau aujourd'hui).
+    // Envoi non bloquant au collecteur maison (/api/collect), sans cookie. Agrégation
+    // multi-visiteurs côté serveur (api/collect.js : filtre bots + visiteurs uniques anonymes
+    // par hash du jour). Fail-silent, ne bloque jamais la page ; ignoré dans l'aperçu éditeur
+    // (garde-fou anti-iframe en tête d'IIFE).
+    try {
+      var beacon = JSON.stringify({ p: location.pathname || '/', r: refHost, l: lang });
+      var sent = false;
+      if (navigator && typeof navigator.sendBeacon === 'function') { try { sent = navigator.sendBeacon('/api/collect', beacon); } catch (e) {} }
+      if (!sent && typeof fetch === 'function') { fetch('/api/collect', { method: 'POST', body: beacon, keepalive: true, headers: { 'Content-Type': 'application/json' } }).catch(function () {}); }
+    } catch (e) { /* fail-silent */ }
   } catch (e) { /* fail-silent */ }
 })();

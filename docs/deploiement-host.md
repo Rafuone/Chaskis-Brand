@@ -4,8 +4,7 @@ Le code est en place sur la branche `feat/foundation-vercel`. Il ne peut devenir
 
 ## Ce qui est déjà fait (code, vérifié en local)
 
-- `api/health.js` — sonde de santé, route `/api/health`.
-- `api/env-check.js` — prouve qu'un secret serveur est lu, sans exposer sa valeur.
+- `api/health.js` — sonde de santé, route `/api/health` ; `/api/health?probe=env` prouve qu'un secret serveur est lu, sans exposer sa valeur (fusion de l'ex-`env-check` pour rester sous la limite de fonctions Vercel Hobby).
 - `api/_lib/content-schema.js` — validateur partagé du contenu publié (contrat central).
 - `vercel.json` — rewrite `/admin` + en-têtes `X-Robots-Tag: noindex, nofollow` sur `/admin`, `/admin/(.*)`, `/api/(.*)`.
 - `robots.txt` — `Disallow: /admin`.
@@ -43,7 +42,7 @@ vercel dev                     # sert le statique + /api + les rewrites, port 30
 
 Puis vérifier :
 - http://localhost:3000/api/health → `{ "ok": true, "service": "chaskis", "ts": "..." }`
-- http://localhost:3000/api/env-check → `{ "present": true }`
+- http://localhost:3000/api/health?probe=env → `{ "present": true }`
 - http://localhost:3000/admin → l'éditeur (rewrite `/admin` actif)
 
 ## Étape 4 — Déployer d'abord sur une Preview (jamais direct en prod)
@@ -56,7 +55,7 @@ Sur l'URL de preview `*.vercel.app` fournie par Vercel :
 
 ```bash
 curl -s   https://<preview>.vercel.app/api/health       # 200 + JSON ok
-curl -s   https://<preview>.vercel.app/api/env-check     # {"present":true}
+curl -s   https://<preview>.vercel.app/api/health?probe=env  # {"present":true}
 curl -sI  https://<preview>.vercel.app/admin             | grep -i x-robots-tag   # noindex, nofollow
 curl -sI  https://<preview>.vercel.app/admin/editor.html | grep -i x-robots-tag   # noindex, nofollow (les DEUX URLs)
 curl -sI  https://<preview>.vercel.app/index.html        | grep -i cache-control  # no-store toujours là (pas de régression)
@@ -73,7 +72,7 @@ Merger `feat/foundation-vercel` dans `main` (Vercel redéploie la prod automatiq
 ## Critères de « fait » (definition of done du plan)
 
 - [ ] `/api/health` répond 200 avec le JSON attendu en prod.
-- [ ] `/api/env-check` renvoie `{present:true}` avec le secret, `{present:false}` sans (preuve de lecture serveur).
+- [ ] `/api/health?probe=env` renvoie `{present:true}` avec le secret, `{present:false}` sans (preuve de lecture serveur).
 - [ ] La valeur de `PING_TOKEN` n'apparaît dans aucune réponse ni aucun asset client.
 - [ ] `curl -I /admin` ET `/admin/editor.html` renvoient `X-Robots-Tag: noindex, nofollow`.
 - [ ] `robots.txt` en prod contient `Disallow: /admin`.

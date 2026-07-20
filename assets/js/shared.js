@@ -261,9 +261,12 @@ const counterObs = new IntersectionObserver(entries => {
 document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
 
 // FAQ accordion
-document.querySelectorAll('.faq-q').forEach(q => {
+document.querySelectorAll('.faq-q').forEach((q, qi) => {
   // a11y : état ouvert/fermé annoncé aux lecteurs d'écran
   if (!q.hasAttribute('aria-expanded')) q.setAttribute('aria-expanded', q.parentElement.classList.contains('open') ? 'true' : 'false');
+  // a11y : relier la question à son panneau réponse (aria-controls) — id généré si absent
+  const ans = q.parentElement.querySelector('.faq-a');
+  if (ans) { if (!ans.id) ans.id = 'faq-a-' + (qi + 1); q.setAttribute('aria-controls', ans.id); }
   q.addEventListener('click', () => {
     const item = q.parentElement;
     const answer = item.querySelector('.faq-a');

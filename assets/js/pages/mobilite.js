@@ -306,9 +306,12 @@ function submitMobRequest(e) {
 })();
 
 // ===== FAQ ACCORDION =====
-document.querySelectorAll('.mob-faq-q').forEach(q => {
+document.querySelectorAll('.mob-faq-q').forEach((q, qi) => {
   // a11y : état ouvert/fermé annoncé aux lecteurs d'écran
   if (!q.hasAttribute('aria-expanded')) q.setAttribute('aria-expanded', q.parentElement.classList.contains('open') ? 'true' : 'false');
+  // a11y : relier la question à son panneau réponse (aria-controls) — id généré si absent
+  const ans = q.parentElement.querySelector('.mob-faq-a');
+  if (ans) { if (!ans.id) ans.id = 'mob-faq-a-' + (qi + 1); q.setAttribute('aria-controls', ans.id); }
   q.addEventListener('click', () => {
     const item = q.parentElement;
     const answer = item.querySelector('.mob-faq-a');
@@ -366,6 +369,8 @@ window.__mobSigFallback = function() {
   const words = rotator.querySelectorAll('.sig-word');
   const imgs = bg ? bg.querySelectorAll('.mob-signature-bg-img') : [];
   if (words.length < 2) return;
+  // A11y : n'exposer que le mot actif de la signature au lecteur d'écran (comme le rotateur H1)
+  words.forEach(w => w.setAttribute('aria-hidden', w.classList.contains('is-active') ? 'false' : 'true'));
   let i = 0;
   rotator.dataset.driven = 'timer';
   setInterval(() => {
@@ -375,8 +380,10 @@ window.__mobSigFallback = function() {
     const next = words[i];
     current.classList.remove('is-active');
     current.classList.add('is-leaving');
+    current.setAttribute('aria-hidden', 'true');
     next.classList.remove('is-leaving');
     next.classList.add('is-active');
+    next.setAttribute('aria-hidden', 'false');
     if (imgs.length) imgs.forEach(img => img.classList.toggle('is-active', img.dataset.word === next.dataset.word));
     setTimeout(() => current.classList.remove('is-leaving'), 900);
   }, 2600);
@@ -551,6 +558,8 @@ window.addEventListener('load', () => {
     prestige.classList.remove('scene-ready', 'scene-active');
     prestige.classList.add('scene-pinned');
     presRotator.dataset.driven = 'scroll';
+    // A11y : n'exposer que le mot actif de la signature au lecteur d'écran
+    presWords.forEach(w => w.setAttribute('aria-hidden', w.classList.contains('is-active') ? 'false' : 'true'));
 
     const revItems = [
       prestige.querySelector('.mob-prestige-badge'),
@@ -572,8 +581,10 @@ window.addEventListener('load', () => {
       const next = presWords[idx];
       prev.classList.remove('is-active');
       prev.classList.add('is-leaving');
+      prev.setAttribute('aria-hidden', 'true');
       next.classList.remove('is-leaving');
       next.classList.add('is-active');
+      next.setAttribute('aria-hidden', 'false');
       presImgs.forEach(img => img.classList.toggle('is-active', img.dataset.word === next.dataset.word));
       setTimeout(() => prev.classList.remove('is-leaving'), 900);
       sigIdx = idx;

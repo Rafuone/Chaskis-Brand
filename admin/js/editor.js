@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.38.0" };
+const ADMIN_BUILD = { version: "0.39.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -80,7 +80,12 @@ const WEEKDAYS = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","same
 /* ============================================================
    Draft + versions state
    ============================================================ */
-function blankDraft(){ return { text:{fr:{},en:{}}, html:{fr:{},en:{}}, dom:{}, order:null, hidden:[], promoHidden:false, images:{}, bgImages:{}, media:[], lists:{} }; }
+/* keyPage : pour chaque clé de texte éditée, la page où elle a été modifiée ("accueil"…)
+   ou "shared" si la clé appartient au chrome commun (nav/footer = window.T_BASE, appliqué
+   à toutes les pages). Sert à buildSiteContent() pour publier des blocs i18n PAR PAGE au
+   lieu de recopier le même dictionnaire dans les 6 pages. Absent des vieux brouillons →
+   repli non-cassant (toutes les clés → toutes les pages, comportement historique). */
+function blankDraft(){ return { text:{fr:{},en:{}}, html:{fr:{},en:{}}, dom:{}, order:null, hidden:[], promoHidden:false, images:{}, bgImages:{}, media:[], lists:{}, keyPage:{} }; }
 /* historique d'exemple (démo) : montre plusieurs versions avec leurs points clés tant qu'on n'a pas publié pour de vrai */
 const SEED_VERSIONS=[
   { id:"v4", date:"2026-07-02T09:05:00", author:"Alex Moreira", changes:["Bandeau promo « -15 % sur Flex & Dédié » activé","Grille tarifaire mise à jour (Flex à 12 CHF / livraison)","FAQ enrichie : 2 nouvelles questions"], snapshot:{} },
@@ -227,10 +232,24 @@ function attachEditable(el, kind, key){
   el.addEventListener("input",()=>{
     if(el.hasAttribute("data-cklistedit")) return; /* point de liste : géré par draft.lists */
     if(kind==="html") setVal(draft.html,key,el.innerHTML); else setVal(draft.text,key,el.textContent);
-    syncSiblings(el,kind,key); markDirty(); contentHealthDebounced();
+    recordEditPageForKey(key); syncSiblings(el,kind,key); markDirty(); contentHealthDebounced();
   });
 }
 function setVal(bag,key,v){ (bag[currentLang]||(bag[currentLang]={}))[key]=v; }
+/* Note où une clé i18n a été éditée : "shared" si elle vit dans window.T_BASE (nav/footer,
+   commun à tout le site → à publier sur toutes les pages), sinon la page courante. Une clé
+   éditée sur deux pages différentes devient "shared" (jamais perdre une modif). */
+function isSharedKey(key){
+  try{ if(WIN&&WIN.T_BASE){ return ["fr","en","de","it"].some(function(lg){ return WIN.T_BASE[lg] && Object.prototype.hasOwnProperty.call(WIN.T_BASE[lg], key); }); } }catch(e){}
+  return false;
+}
+function recordEditPageForKey(key){
+  if(!draft.keyPage) draft.keyPage={};
+  if(isSharedKey(key)){ draft.keyPage[key]="shared"; return; }
+  var cur=draft.keyPage[key];
+  if(cur===undefined) draft.keyPage[key]=editPage;
+  else if(cur!=="shared" && cur!==editPage) draft.keyPage[key]="shared";
+}
 function syncSiblings(src,kind,key){
   const sel = kind==="html" ? '[data-i18n-html="'+cssEsc(key)+'"]' : '[data-i18n="'+cssEsc(key)+'"]';
   DOC.querySelectorAll(sel).forEach(o=>{ if(o===src) return; if(kind==="html") o.innerHTML=src.innerHTML; else o.textContent=src.textContent; });
@@ -1244,7 +1263,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.38.0", cur:true, date:"2026-07-15", title:"Performance : mesure automatique planifiée + historique conservé côté serveur", items:[
+  { v:"v0.39.0", cur:true, date:"2026-07-20", title:"Publication propre par page + finitions d'accessibilité", items:[
+    {t:"imp", x:"La publication du contenu est maintenant organisée PAR PAGE : chaque page en ligne ne reçoit que ses propres textes, tandis que le commun (menu, pied de page) s'applique partout. Modifier une page n'alourdit plus les autres"},
+    {t:"imp", x:"Accessibilité : sur la FAQ (accueil, mobilité, postuler), chaque question est reliée à sa réponse pour les lecteurs d'écran (aria-controls)"},
+    {t:"imp", x:"Accessibilité : sur la page Mobilité, l'animation de mots (« signature ») n'énonce plus que le mot affiché aux lecteurs d'écran, plus toute la liste"}
+  ]},
+  { v:"v0.38.0", date:"2026-07-15", title:"Performance : mesure automatique planifiée + historique conservé côté serveur", items:[
     {t:"add", x:"La vitesse Google (Core Web Vitals) est désormais mesurée AUTOMATIQUEMENT, tous les jours, sans clic : plus besoin d'y penser"},
     {t:"add", x:"L'historique des mesures est conservé côté serveur (partagé entre appareils et collaborateurs), pas seulement sur votre navigateur — visible dans « Mesures automatiques (serveur) » de la page Performance"},
     {t:"imp", x:"Prévu pour l'hébergement final (la mesure planifiée et le stockage se rebranchent par simple réglage). Sur l'hébergement de test, une mesure par jour ; le stockage durable s'active avec le même service de fichiers que la médiathèque"}
@@ -1679,7 +1703,7 @@ const APP_ENV={dev:{lbl:"Développement",c:"#6B4CC4"},preprod:{lbl:"Pré-product
 const APP_STAGE={stable:{lbl:"Stable",c:"#0E7D48"},beta:{lbl:"Bêta",c:"#C7891B"},alpha:{lbl:"Alpha",c:"#B4632A"}};
 const PROGRESS=[
   {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.16.0",recent:["Activité récente tirée des vraies publications","Tuile Rendez-vous à venir réelle"]},
-  {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.12.0",recent:["Publication réelle en ligne depuis le bouton Publier","Édition multi-pages","Coach de contenu"]},
+  {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.13.0",recent:["Publication organisée par page (chaque page ne reçoit que ses propres textes ; le commun s'applique partout)","Publication réelle en ligne depuis le bouton Publier","Édition multi-pages"]},
   {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.1",recent:["Badge « actuellement masquée » sur les sections de l'accueil","Rôle de chaque page et section"]},
   {view:"media",name:"Médiathèque",env:"prod",stage:"stable",version:"1.1.0",recent:["Compression et redimensionnement des images à l'import","Confirmation avant suppression d'un média"]},
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
@@ -1853,7 +1877,17 @@ const TECH_AUDIT=[
   {n:"Performance : l'analyse réelle est prête", fn:()=>typeof perfAnalyzeReal==="function"&&typeof perfBuildModel==="function"&&typeof perfAuditDoc==="function"},
   {n:"Performance : l'affichage Core Web Vitals est prêt", fn:()=>typeof cwvMeasure==="function"&&typeof renderPerfCwv==="function"&&cwvStat("lcp",1000)==="good"&&cwvStat("lcp",5000)==="bad"},
   {n:"Performance : historique serveur des mesures planifiées prêt", fn:()=>typeof cwvServerHistHtml==="function"&&typeof cwvLoadServerHist==="function"&&cwvServerHistHtml([{ts:"2026-01-01T06:00:00Z",page:"/",score:80,a11y:90,seo:100}]).indexOf("Mesures automatiques")>=0},
-  {n:"Publication : le fichier à publier respecte le contrat", fn:()=>{ const c=buildSiteContent(); if(!c||c.schemaVersion!==1) return false; const allow=["schemaVersion","version","updatedAt","updatedBy","pricing","testimonials","logos","pages","chatbot"]; if(Object.keys(c).some(k=>allow.indexOf(k)<0)) return false; if(c.pricing){ const pk=["days","tiers","zones","flexMonthly","flexIncluded","express","promos"]; if(Object.keys(c.pricing).some(k=>pk.indexOf(k)<0)) return false; } if(c.pages){ const ok=["accueil","mobilite","recrutement","commander","suivi","dashboard"]; if(Object.keys(c.pages).some(k=>ok.indexOf(k)<0)) return false; } return true; }}
+  {n:"Publication : le fichier à publier respecte le contrat", fn:()=>{ const c=buildSiteContent(); if(!c||c.schemaVersion!==1) return false; const allow=["schemaVersion","version","updatedAt","updatedBy","pricing","testimonials","logos","pages","chatbot"]; if(Object.keys(c).some(k=>allow.indexOf(k)<0)) return false; if(c.pricing){ const pk=["days","tiers","zones","flexMonthly","flexIncluded","express","promos"]; if(Object.keys(c.pricing).some(k=>pk.indexOf(k)<0)) return false; } if(c.pages){ const ok=["accueil","mobilite","recrutement","commander","suivi","dashboard"]; if(Object.keys(c.pages).some(k=>ok.indexOf(k)<0)) return false; } return true; }},
+  {n:"Publication : le brouillon multi-pages est réparti par page", fn:()=>{
+    // clé propre à une page → seulement cette page ; clé partagée → toutes les pages ; clé inconnue → toutes (repli)
+    const r=bucketI18n({fr:{"m.hero.h1":"A","hero.h1":"B","foot.tag":"C","x.orphan":"D"}}, {"m.hero.h1":"mobilite","hero.h1":"accueil","foot.tag":"shared"});
+    if(!r.mobilite||r.mobilite.i18n.fr["m.hero.h1"]!=="A"||r.mobilite.i18n.fr["hero.h1"]!==undefined) return false;
+    if(!r.accueil||r.accueil.i18n.fr["hero.h1"]!=="B") return false;
+    if(r.mobilite.i18n.fr["foot.tag"]!=="C"||r.accueil.i18n.fr["foot.tag"]!=="C") return false; // partagée partout
+    if(r.commander.i18n.fr["x.orphan"]!=="D"||r.accueil.i18n.fr["x.orphan"]!=="D") return false; // inconnue → toutes
+    if(r.mobilite.i18n.fr["x.orphan"]!=="D") return false;
+    return true;
+  }}
 ];
 let techTab="plan";
 function renderTech(){ const tabs=document.getElementById("techTabs"), body=document.getElementById("techBody"); if(!tabs||!body) return;
@@ -1864,7 +1898,7 @@ function renderTech(){ const tabs=document.getElementById("techTabs"), body=docu
   refreshIcons();
 }
 function techEsc(s){ return escHtml(String(s==null?"":s)); }
-const TECH_UPDATED="15 juillet 2026";
+const TECH_UPDATED="20 juillet 2026";
 const TECH_EFF_LBL={S:"Rapide",M:"Moyen",L:"Long"};
 const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Arthur",calendly:"Paul",auth:"Youcef",perf:"Arthur",media:"Arthur",chatbot:"Youcef"};
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
@@ -1872,7 +1906,7 @@ const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
 // % = « développé & fonctionnel » (avec un compte de TEST branchable). Le passage aux comptes
 // DÉFINITIFS et à l'hébergement final (Azure) est de la CONFIGURATION, suivie à part — pas du dev.
-const TECH_DONE={host:92,publish:88,versioning:85,analytics:62,calendly:68,auth:88,perf:90,media:45,chatbot:90};
+const TECH_DONE={host:92,publish:95,versioning:85,analytics:62,calendly:68,auth:88,perf:90,media:45,chatbot:90};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */
@@ -3386,23 +3420,39 @@ function loadUI(){ try{ return JSON.parse(localStorage.getItem(UI_KEY))||{}; }ca
    (api/_lib/content-schema.js) : c'est le fichier que la publication ecrira dans le
    depot. TEXTE + tarifs seulement (le schema refuse le HTML : draft.html est donc
    exclu ; les edits de structure/images ne passent pas encore par ce contrat).
-   content.js lit par page et n'applique que les cles presentes sur chaque page, donc
-   publier le meme dictionnaire i18n sous chaque page est correct (les cles partagees
-   comme la nav/le pied s'appliquent partout, les cles propres a une page la ou elles
-   existent). Verifiable hors ligne : node -e "require('./api/_lib/content-schema')
+   content.js lit par page et n'applique que les cles presentes sur chaque page. On publie
+   donc un bloc i18n PROPRE A CHAQUE PAGE (bucketI18n) : les cles partagees (nav/pied =
+   window.T_BASE) sont recopiees dans toutes les pages, les cles propres a une page ne vont
+   que dans cette page. Verifiable hors ligne : node -e "require('./api/_lib/content-schema')
    .validateContent(obj)". */
+/* Fonction PURE (sans DOM) : repartit le dictionnaire i18n edite (t = {fr:{k:v},en:{}}) en
+   blocs par page, selon keyPage (k -> "shared" | page | absent). "shared"/absent => toutes
+   les pages (repli non-cassant), sinon la page indiquee. Retourne { <page>:{i18n:{fr:{},en:{}}} }
+   sans les pages vides. Isolee (pure) pour etre verifiable par l'audit in-app. */
+function bucketI18n(t, km){
+  t=t||{}; km=km||{};
+  var PP=["accueil","mobilite","recrutement","commander","suivi","dashboard"];
+  var buckets={}; PP.forEach(function(pk){ buckets[pk]={}; });
+  var put=function(pk,lg,key,val){ (buckets[pk][lg]||(buckets[pk][lg]={}))[key]=val; };
+  ["fr","en"].forEach(function(lg){
+    var src=t[lg]; if(!src||typeof src!=="object") return;
+    Object.keys(src).forEach(function(key){
+      var where=km[key];
+      if(where&&where!=="shared"&&buckets[where]) put(where,lg,key,src[key]);
+      else PP.forEach(function(pk){ put(pk,lg,key,src[key]); });
+    });
+  });
+  var out={};
+  PP.forEach(function(pk){ var b=buckets[pk]; if(["fr","en"].some(function(lg){ return b[lg]&&Object.keys(b[lg]).length; })) out[pk]={ i18n:b }; });
+  return out;
+}
 function buildSiteContent(){
   const out={ schemaVersion:1, version:(typeof ADMIN_BUILD!=="undefined"?ADMIN_BUILD.version:undefined), updatedAt:new Date().toISOString() };
   try{ const nm=(currentUser()||{}).name; if(nm) out.updatedBy=String(nm); }catch(e){}
   try{ const pr=getPricing(); if(pr&&typeof pr==="object"){ const P={}; ["days","tiers","zones","flexMonthly","flexIncluded","express","promos"].forEach(function(k){ if(pr[k]!==undefined) P[k]=pr[k]; }); out.pricing=P; } }catch(e){}
-  const t=(draft&&draft.text)?draft.text:{}; const i18n={};
-  ["fr","en"].forEach(function(lg){ if(t[lg]&&Object.keys(t[lg]).length) i18n[lg]=JSON.parse(JSON.stringify(t[lg])); });
-  // NB (optimisation d'échelle connue) : les clés i18n éditées sont partagées (elles
-  // s'appliquent à toutes les pages), donc on recopie le MÊME dictionnaire dans les 6 pages.
-  // Aujourd'hui le dictionnaire est petit (impact négligeable face au plafond 300 Ko). Si un
-  // jour tout le site est traduit, publier le bloc UNE fois (ex. out.i18n racine) et adapter
-  // le lecteur assets/js/content.js pour le lire là — évite l'inflation ×6.
-  if(Object.keys(i18n).length){ out.pages={}; ["accueil","mobilite","recrutement","commander","suivi","dashboard"].forEach(function(pk){ out.pages[pk]={ i18n:JSON.parse(JSON.stringify(i18n)) }; }); }
+  // Textes i18n publiés PAR PAGE (réconciliation du brouillon multi-pages), via bucketI18n().
+  var pagesOut=bucketI18n((draft&&draft.text)?draft.text:{}, (draft&&draft.keyPage)?draft.keyPage:{});
+  if(Object.keys(pagesOut).length) out.pages=pagesOut;
   // Réglages de l'assistant (chantier chatbot) : uniquement la CONFIG (pas les sources/documents,
   // qui ne doivent pas fuir dans le JSON public). Lu par api/chat.js après publication.
   try{ if(typeof chat==="object"&&chat){ const C={};

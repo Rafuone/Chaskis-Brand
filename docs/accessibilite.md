@@ -45,15 +45,20 @@ structure DOM des cartes cohérente, 0 erreur console, aucune régression visuel
   fermeture, entièrement en JS (aucun edit HTML). `aria-controls` non ajouté (nécessiterait
   des id sur chaque panneau ; `aria-expanded` est le gain principal). Vérifié index + mobilité.
 
+### Fait (v0.39.0)
+
+- **`aria-controls` sur les FAQ** (index/postuler via `shared.js`, mobilité via `mobilite.js`) :
+  chaque question est reliée à son panneau réponse. Id du panneau généré au runtime s'il est
+  absent (`faq-a-N` / `mob-faq-a-N`) — aucun edit HTML, entièrement en JS. Vérifié : chaque
+  `.faq-q` porte un `aria-controls` pointant vers un `.faq-a` existant et unique (index 7/7,
+  mobilité 5/5), FAQ toujours fonctionnelle (ouverture + `aria-expanded`), 0 erreur console.
+- **Rotateur de signature** (mobilité, `.sig-word`) : `aria-hidden` géré sur les deux pilotes
+  (repli minuté `__mobSigFallback` et scrollytelling `swapSig`) — seul le mot actif est exposé
+  au lecteur d'écran (comme le rotateur H1). Vérifié : 1 seul mot exposé sur 5.
+
 ### Reste à faire
 
-Priorité décroissante :
-
-1. **`aria-controls`** sur les FAQ (id sur chaque panneau réponse) — complément de l'aria-expanded.
-3. **Rotateur de signature** (mobilité, `.sig-word`) : même traitement `aria-hidden` que le H1.
 4. **Hiérarchie des titres** : mobilité (`<h4>` suivant un `<h2>` → `<h3>`) et index (noms
    d'offres en `<span>` → `<h3>`). Nécessite d'adapter le CSS pour garder l'apparence
-   (donc à vérifier au rendu — pas invisible).
-
-Chaque item est additif et sûr ; ils ont été différés pour garder la passe v0.26.1
-strictement sans risque visuel.
+   (donc à vérifier au rendu — pas invisible). Seul item a11y restant : différé car non sans
+   risque visuel (les autres items du backlog étaient additifs/invisibles et sont faits).

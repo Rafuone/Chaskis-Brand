@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.43.0" };
+const ADMIN_BUILD = { version: "0.43.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1366,7 +1366,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.43.0", cur:true, date:"2026-07-20", title:"Audit qualité complet : sécurité, fiabilité et honnêteté renforcées", items:[
+  { v:"v0.43.1", cur:true, date:"2026-07-20", title:"Menu épuré", items:[
+    {t:"imp", x:"Retrait des pastilles « bêta/alpha » qui s'affichaient sur chaque entrée du menu (bruit visuel) ; le menu est plus net. L'état d'avancement de chaque page reste consultable dans la page « Avancement ». Le compteur de rendez-vous à venir est conservé."}
+  ]},
+  { v:"v0.43.0", date:"2026-07-20", title:"Audit qualité complet : sécurité, fiabilité et honnêteté renforcées", items:[
     {t:"fix", x:"Sécurité : la page de suivi de commande ne peut plus être détournée par un lien piégé (faille XSS fermée) ; l'accès à l'administration est verrouillé côté serveur par défaut"},
     {t:"fix", x:"Fiabilité : plus de perte de brouillon en manipulant les versions ; le calendrier de démonstration reste affiché même sans connexion ; l'assistant gère proprement une coupure réseau"},
     {t:"imp", x:"La fenêtre « Publier » distingue clairement ce qui part EN LIGNE de ce qui reste en version locale — fini les fausses promesses ; les textes modifiés s'appliquent aussi sur les adresses de page « propres »"},
@@ -1846,15 +1849,14 @@ const PROGRESS=[
   {view:"users",name:"Utilisateurs & accès",env:"preprod",stage:"beta",version:"0.7.0",recent:["Droits vérifiés côté serveur : un rôle sans la capacité voulue est refusé (403), pas seulement masqué","Attribution d'un rôle à un compte par simple réglage (sans développement)","Libellé de rôle corrigé"]},
   {view:"progress",name:"Avancement",env:"preprod",stage:"beta",version:"0.4.0",recent:["Vrai pourcentage d'avancement de l'interface"]}
 ];
-function progressBadge(view){ const p=PROGRESS.find(x=>x.view===view); if(!p||p.stage==="stable") return null; return p.stage==="alpha"?"A":"B"; }
 function rdvUpcomingCount(){ try{ if(typeof rdvData!=="undefined"&&Array.isArray(rdvData)){ const n=rdvData.filter(r=>{ const s=(r.st||r.status||"").toString().toLowerCase(); return s==="avenir"||s==="à venir"||s==="a venir"; }).length; if(n) return n; } }catch(e){} return 3; }
 function applyProgressBadges(){
-  var _dev=(typeof getEnv==="function"&&getEnv()==="dev");
+  // Plus de pastilles de maturité (A/B) sur CHAQUE élément du menu : c'était du bruit visuel.
+  // L'état par page reste consultable dans la vue « Avancement ». On ne garde dans le menu que le
+  // compteur de rendez-vous à venir (info utile, pas un marqueur de dev).
   document.querySelectorAll("#navlist .nav-i[data-view]").forEach(b=>{
     b.querySelectorAll(".nav-badge,.nav-count").forEach(x=>x.remove());
-    const v=b.dataset.view, bd=progressBadge(v);
-    if(bd&&!_dev){ const el=document.createElement("span"); el.className="nav-badge stg-"+(bd==="A"?"alpha":"beta"); el.textContent=bd; el.title=(bd==="A"?"Alpha":"Bêta")+" : fonctionnalité en test"; b.appendChild(el); }
-    if(v==="rdv"){ const c=document.createElement("span"); c.className="nav-count"; c.textContent=rdvUpcomingCount(); c.title="Rendez-vous à venir"; b.appendChild(c); }
+    if(b.dataset.view==="rdv"){ const c=document.createElement("span"); c.className="nav-count"; c.textContent=rdvUpcomingCount(); c.title="Rendez-vous à venir"; b.appendChild(c); }
   });
 }
 const APP_STAGE_H={stable:{lbl:"Prêt",pct:100,c:"#0E7D48"},beta:{lbl:"En test",pct:60,c:"#C7891B"},alpha:{lbl:"En construction",pct:30,c:"#B4632A"}};

@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.39.0" };
+const ADMIN_BUILD = { version: "0.40.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1299,7 +1299,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.39.0", cur:true, date:"2026-07-20", title:"Publication propre par page + finitions d'accessibilité", items:[
+  { v:"v0.40.0", cur:true, date:"2026-07-20", title:"Médiathèque : stockage réel des fichiers (fini les images « lourdes » en mémoire)", items:[
+    {t:"add", x:"Les images importées sont désormais envoyées sur un vrai stockage de fichiers en ligne et remplacées par une adresse (URL) permanente, au lieu d'être gardées « en dur » dans le navigateur"},
+    {t:"imp", x:"Plus de saturation du navigateur : la médiathèque peut accueillir beaucoup plus d'images, partagées entre appareils et collaborateurs"},
+    {t:"imp", x:"Sans coupure : si la connexion au stockage n'est pas disponible, l'image reste utilisable localement comme avant (aucune perte, démo intacte)"}
+  ]},
+  { v:"v0.39.0", date:"2026-07-20", title:"Publication propre par page + finitions d'accessibilité", items:[
     {t:"imp", x:"La publication du contenu est maintenant organisée PAR PAGE : chaque page en ligne ne reçoit que ses propres textes, tandis que le commun (menu, pied de page) s'applique partout. Modifier une page n'alourdit plus les autres"},
     {t:"imp", x:"Accessibilité : sur la FAQ (accueil, mobilité, postuler), chaque question est reliée à sa réponse pour les lecteurs d'écran (aria-controls)"},
     {t:"imp", x:"Accessibilité : sur la page Mobilité, l'animation de mots (« signature ») n'énonce plus que le mot affiché aux lecteurs d'écran, plus toute la liste"}
@@ -1741,7 +1746,7 @@ const PROGRESS=[
   {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.16.0",recent:["Activité récente tirée des vraies publications","Tuile Rendez-vous à venir réelle"]},
   {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.13.0",recent:["Publication organisée par page (chaque page ne reçoit que ses propres textes ; le commun s'applique partout)","Publication réelle en ligne depuis le bouton Publier","Édition multi-pages"]},
   {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.1",recent:["Badge « actuellement masquée » sur les sections de l'accueil","Rôle de chaque page et section"]},
-  {view:"media",name:"Médiathèque",env:"prod",stage:"stable",version:"1.1.0",recent:["Compression et redimensionnement des images à l'import","Confirmation avant suppression d'un média"]},
+  {view:"media",name:"Médiathèque",env:"preprod",stage:"beta",version:"1.2.0",recent:["Stockage réel des fichiers en ligne (URL permanente au lieu du navigateur)","Compression et redimensionnement des images à l'import","Confirmation avant suppression d'un média"]},
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
@@ -1942,7 +1947,7 @@ const TECH_EFF_DAYS={S:[0.5,1],M:[1.5,2.5],L:[3,4]};
 /* Avancement réaliste par chantier (0 à 100), calé sur l'état décrit dans chaque « Aujourd'hui ». À réviser au fil du développement : le total doit monter. */
 // % = « développé & fonctionnel » (avec un compte de TEST branchable). Le passage aux comptes
 // DÉFINITIFS et à l'hébergement final (Azure) est de la CONFIGURATION, suivie à part — pas du dev.
-const TECH_DONE={host:92,publish:95,versioning:85,analytics:62,calendly:68,auth:88,perf:90,media:45,chatbot:90};
+const TECH_DONE={host:92,publish:95,versioning:85,analytics:62,calendly:68,auth:88,perf:90,media:65,chatbot:90};
 /* Niveaux de priorité de la frise d'ordre de mise en oeuvre (distincts des numéros de carte). */
 const TECH_PRIO_TIERS=[{k:"now",w:"Prioritaire",c:"#0F6E56",bg:"#E4F4EC"},{k:"soon",w:"Important",c:"#6B5BCC",bg:"#EEEBFB"},{k:"later",w:"Plus tard",c:"#8a8c89",bg:"#F0F1F0"}];
 /* Libellés courts pour la frise d'ordre (les titres de carte sont trop longs pour la timeline). */

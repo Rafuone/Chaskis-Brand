@@ -17,13 +17,17 @@
     try { return window._currentLang || localStorage.getItem('chaskisLang') || 'fr'; }
     catch (e) { return 'fr'; }
   }
-  // Associe l'URL courante a une cle de page du contrat site-content.json.
+  // Associe l'URL courante a une cle de page du contrat site-content.json. Gere les DEUX formes :
+  // avec .html (index.html) ET les URLs canoniques propres du sitemap/rewrites (/commander,
+  // /mobilite...). Sans ca, le contenu publie n'etait applique que sur les URLs en .html.
   function pageKey() {
-    var f = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    var path = (location.pathname || '/').toLowerCase();
+    if (/^\/suivi(\/|$)/.test(path)) return 'suivi';
+    var f = (path.split('/').pop() || '').replace(/\.html$/, '');
     var map = {
-      '': 'accueil', 'index.html': 'accueil',
-      'mobilite.html': 'mobilite', 'postuler.html': 'recrutement',
-      'commander.html': 'commander', 'dashboard.html': 'dashboard', 'app.html': 'suivi'
+      '': 'accueil', 'index': 'accueil',
+      'mobilite': 'mobilite', 'postuler': 'recrutement',
+      'commander': 'commander', 'dashboard': 'dashboard', 'app': 'suivi'
     };
     return map[f] || 'accueil';
   }
@@ -59,7 +63,13 @@
           for (var i = 0; i < imgs.length; i++) {
             var s = imgs[i].getAttribute('src'); if (!s) continue;
             var url = pg.images[s];
-            if (typeof url === 'string' && /^https:\/\//i.test(url)) { imgs[i].setAttribute('data-ck-orig-src', s); imgs[i].src = url; }
+            if (typeof url === 'string' && /^https:\/\//i.test(url)) {
+              imgs[i].setAttribute('data-ck-orig-src', s);
+              // Repli : si le media Blob est inaccessible/supprime, on revient a l'image d'origine
+              // (une seule fois, pas de boucle) plutot que d'afficher une image cassee.
+              imgs[i].onerror = function () { var o = this.getAttribute('data-ck-orig-src'); if (o && this.src.indexOf(o) < 0) { this.onerror = null; this.src = o; } };
+              imgs[i].src = url;
+            }
           }
         } catch (e) { /* fail-silent */ }
       }

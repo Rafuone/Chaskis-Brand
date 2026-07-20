@@ -17,18 +17,25 @@
   var host = document.getElementById('bkW');
   if (!host) return;
 
-  // Remplace le faux calendrier par le widget inline Calendly (auto-initialisé par le script).
-  host.innerHTML = '';
+  // IMPORTANT : on NE détruit PAS la démo tout de suite. On prépare le vrai widget Calendly ;
+  // on ne bascule (masquer la démo, montrer le widget) QUE lorsque Calendly a réellement injecté
+  // son iframe. Si le script échoue (hors-ligne, réseau bloqué) ou tarde trop, la démo reste en
+  // place (cas explicitement à préserver : démo cliente hors-ligne). Anti « cadre vide de 660px ».
+  var demoHTML = host.innerHTML;
+  var urg = document.querySelector('#booking .bk-urgency');
+
   var w = document.createElement('div');
   w.className = 'calendly-inline-widget';
   w.setAttribute('data-url', url);
   w.style.minWidth = '320px';
   w.style.height = '660px';
+  host.innerHTML = '';
   host.appendChild(w);
-
-  // Masque le badge « prochain créneau » (date de démo) à côté du vrai widget.
-  var urg = document.querySelector('#booking .bk-urgency');
   if (urg) urg.style.display = 'none';
+
+  var settled = false;
+  function restoreDemo() { if (settled) return; settled = true; host.innerHTML = demoHTML; if (urg) urg.style.display = ''; }
+  function confirmed() { settled = true; } // le widget a rendu : on ne touche plus à rien
 
   // Charge le script + le style Calendly une seule fois (à la demande).
   if (!document.querySelector('script[data-calendly]')) {
@@ -41,6 +48,16 @@
     s.src = 'https://assets.calendly.com/assets/external/widget.js';
     s.async = true;
     s.setAttribute('data-calendly', '1');
+    s.onerror = restoreDemo; // script inaccessible -> on remet la démo
     document.head.appendChild(s);
   }
+
+  // Calendly injecte un <iframe> dans le widget quand il s'initialise. On surveille : présent -> OK ;
+  // absent après ~10 s (hors-ligne / bloqué) -> on restaure le calendrier de démonstration.
+  var tries = 0;
+  var iv = setInterval(function () {
+    if (settled) { clearInterval(iv); return; }
+    if (w.querySelector('iframe')) { confirmed(); clearInterval(iv); return; }
+    if (++tries >= 40) { clearInterval(iv); restoreDemo(); }
+  }, 250);
 })();

@@ -328,8 +328,11 @@
   // Interroge /api/chat en FLUX (SSE). Appelle onDelta(texteCumulé) au fil des morceaux.
   // Gère aussi le cas d'un endpoint SANS streaming (répond en JSON) en une seule passe, et le
   // cas endpoint absent/échec (renvoie null -> l'appelant retombe sur le repli scripté).
-  // Renvoie { ok, full, mode } (texte BRUT) ou null.
+  // Renvoie { ok, full, mode, partial? } (texte BRUT) ou null. En cas de coupure APRÈS réception
+  // partielle, on renvoie ce qui a été reçu (partial:true) plutôt que null : la bulle affichée et
+  // la mémoire de conversation restent COHÉRENTES (pas de texte fantôme, pas de désync).
   async function streamViaApi(text, onDelta) {
+    let full = '', mode = '', got = false;
     try {
       const ctrl = new AbortController();
       const to = setTimeout(() => ctrl.abort(), 20000);
@@ -353,7 +356,7 @@
       // Flux SSE : événements séparés par une ligne vide ; lignes « event: » / « data: ».
       const reader = r.body.getReader();
       const dec = new TextDecoder();
-      let buf = '', full = '', mode = '', got = false;
+      let buf = '';
       while (true) {
         const step = await reader.read();
         if (step.done) break;
@@ -375,7 +378,12 @@
       clearTimeout(to);
       if (!got || !full.trim()) return null;
       return { ok: true, full: full, mode: mode };
-    } catch (e) { return null; }
+    } catch (e) {
+      // Coupure/timeout : si du contenu a déjà été reçu et affiché, on le garde (cohérence
+      // bulle/mémoire) ; sinon on laisse le repli scripté opérer (retour null).
+      if (got && full.trim()) return { ok: true, full: full, mode: mode || '', partial: true };
+      return null;
+    }
   }
 
   function handleUser(text) {
@@ -401,7 +409,10 @@
       }
       if (typing.parentNode) typing.remove();
       const scripted = answerFreeText(q);
-      if (!botRow) addMsg(scripted, 'bot'); // rien reçu -> bulle scriptée
+      // Si une bulle a déjà été ouverte (deltas puis échec sans contenu retenu), on REMPLACE son
+      // contenu par le repli scripté au lieu de laisser un texte tronqué ; sinon nouvelle bulle.
+      if (botRow) { const b = botRow.querySelector('.chaskis-cb-bubble'); if (b) b.innerHTML = safeHtml(scripted); }
+      else addMsg(scripted, 'bot');
       pushConvo('user', q);
       pushConvo('assistant', stripHtml(scripted));
     });

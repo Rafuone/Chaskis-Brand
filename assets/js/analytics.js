@@ -58,7 +58,10 @@
     try {
       var beacon = JSON.stringify({ p: location.pathname || '/', r: refHost, l: lang });
       var sent = false;
-      if (navigator && typeof navigator.sendBeacon === 'function') { try { sent = navigator.sendBeacon('/api/collect', beacon); } catch (e) {} }
+      // Blob typé application/json : sendBeacon pose alors le bon Content-Type (sinon text/plain).
+      if (navigator && typeof navigator.sendBeacon === 'function') {
+        try { sent = navigator.sendBeacon('/api/collect', new Blob([beacon], { type: 'application/json' })); } catch (e) {}
+      }
       if (!sent && typeof fetch === 'function') { fetch('/api/collect', { method: 'POST', body: beacon, keepalive: true, headers: { 'Content-Type': 'application/json' } }).catch(function () {}); }
     } catch (e) { /* fail-silent */ }
   } catch (e) { /* fail-silent */ }

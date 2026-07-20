@@ -49,10 +49,14 @@ Back-office admin (SPA vanilla mono-page)
   admin/css/editor.css  ·  admin/data/tech-plan.js (données du « Suivi technique »)
 
 API / serverless host-agnostique (CommonJS (req,res), 0 dépendance, 0 build)
-  Cœur     : health · env-check · publish · restore · history
-  Features : perf (PageSpeed) · chat (RAG + LLM optionnel) · calendly
-  api/_lib/: content-schema (contrat central) · rag · llm · calendly-map · assign · availability
+  Cœur     : health (+ ?probe=env) · publish · restore · history
+  Features : perf (PageSpeed) · perf-cron · perf-history · chat (RAG + LLM optionnel) · calendly
+             · media-upload (Blob) · collect (audience) · config
+  api/_lib/: content-schema (contrat central) · storage (couture Blob→Azure) · rag · llm
+             · calendly-map · assign · availability · github · http · auth · session · rbac · perf-store
   api/_data/: kb.json (base de connaissances seed du chatbot)
+  NB : plan Vercel Hobby = 12 Serverless Functions max. env-check a été fusionné dans health
+       (?probe=env) pour tenir dans cette limite ; sur Azure (pas de limite), on peut re-séparer.
 
 Preuve de portabilité : tools/api-server.js exécute EXACTEMENT les mêmes handlers /api,
 sans Vercel. C'est aussi la base d'un hébergement Azure App Service (Node).
@@ -107,7 +111,11 @@ silence** (repli sur les données de démo / `501`), le site ne casse jamais.
 | `CALENDLY_OWNERS` | calendly | correspondance email→commercial pour l'attribution. |
 | `AVAILABILITY_PROVIDER` | calendly (Phase 2) | source de disponibilité agrégée (`none` par défaut). |
 | `GOOGLE_CALENDAR_TOKEN` / `GOOGLE_SERVICE_ACCOUNT_JSON` | calendly (Phase 2) | agenda Google agrégé (non activé). |
-| `PING_TOKEN` | health/env-check | jeton de sonde de fondation (optionnel). |
+| `BLOB_READ_WRITE_TOKEN` | media + analytics | token du stockage d'objets (Vercel Blob, store **public**). Copié depuis l'onglet `.env.local` du store. Sans lui, stockage en repli `memory`. Cible Azure : Blob/Table. Voir [docs/media.md](docs/media.md) / [docs/analytics.md](docs/analytics.md). |
+| `STORAGE_PROVIDER` | media + analytics | `blob` (défaut si token présent) \| `memory` (tests/local) \| `off`. |
+| `BLOB_API_VERSION` | media + analytics | version d'API REST Blob (défaut `7`), surchargeable si Vercel la fait évoluer. |
+| `ANALYTICS_SALT` | analytics | sel du hachage des visiteurs uniques (anonyme, rotatif par jour). Optionnel (repli `PING_TOKEN` puis constante). |
+| `PING_TOKEN` | health | jeton de sonde de fondation (optionnel), lu par `/api/health?probe=env` (booléen seul). |
 | `PORT` | local | port du serveur `tools/api-server.js` (défaut 3000/argument). |
 
 `ANTHROPIC_API_KEY` n'est utilisée que par l'outil de traduction hors-ligne `tools/translate.js`

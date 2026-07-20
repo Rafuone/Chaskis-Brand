@@ -75,7 +75,12 @@ async function handler(req, res) {
   if (!v.ok) return send(res, 400, { error: v.error });
 
   var r = await storage.put(v.key, v.buffer, { contentType: v.contentType, addRandomSuffix: true, cacheMaxAge: 31536000 });
-  if (!r.ok) return send(res, r.status && r.status >= 400 && r.status < 500 ? r.status : 502, { error: r.error || 'échec de stockage', provider: storage.provider() });
+  if (!r.ok) {
+    // Message GÉNÉRIQUE côté client (ne pas relayer le corps d'erreur amont du stockage) ; le
+    // détail reste côté serveur pour le diagnostic.
+    try { console.error('media-upload: échec stockage', r.status, r.error); } catch (e) {}
+    return send(res, (r.status && r.status >= 400 && r.status < 500) ? r.status : 502, { error: 'stockage du média indisponible', provider: storage.provider() });
+  }
 
   return send(res, 200, { ok: true, url: r.url, pathname: r.pathname, size: v.buffer.length, contentType: v.contentType });
 }

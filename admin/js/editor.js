@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.42.0" };
+const ADMIN_BUILD = { version: "0.42.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -378,18 +378,35 @@ function seedMedia(){
 function openMedia(el,kind,key){ mediaTarget={el,kind,key}; renderMediaInto(document.getElementById("mediaGrid"),true); document.getElementById("mediaModalBg").classList.add("show"); }
 function currentSrc(){ if(!mediaTarget) return null; return mediaTarget.kind==="img" ? mediaTarget.el.getAttribute("src") : bgUrl(mediaTarget.el); }
 function applyMedia(src){
-  if(mediaTarget.kind==="img"){ mediaTarget.el.src=src; draft.images[mediaTarget.el.getAttribute("data-ckimg")]=src; recordImgPub(mediaTarget.el.getAttribute("data-ckimg-orig"), src); }
+  if(mediaTarget.kind==="img"){
+    var orig=mediaTarget.el.getAttribute("data-ckimg-orig");
+    mediaTarget.el.src=src; draft.images[mediaTarget.el.getAttribute("data-ckimg")]=src;
+    /* Cohérence aperçu/publié : la publication remplace par SRC D'ORIGINE -> on applique la même
+       image à TOUTES les <img> de même origine dans l'aperçu (ex. logos répétés du bandeau),
+       exactement comme content.js le fera en ligne. Sinon l'aperçu ne changerait qu'une occurrence. */
+    if(orig && DOC){ DOC.querySelectorAll("[data-ckimg-orig]").forEach(function(im){ if(im!==mediaTarget.el && im.getAttribute("data-ckimg-orig")===orig){ im.src=src; var id=im.getAttribute("data-ckimg"); if(id) draft.images[id]=src; } }); }
+    recordImgPub(orig, src);
+  }
   else { mediaTarget.el.style.backgroundImage='url("'+src+'")'; draft.bgImages[mediaTarget.key]=src; }
   markDirty();
 }
+/* Vrai si `url` désigne le MÊME fichier que le src d'origine (donc un retour à l'image par défaut) :
+   soit identique, soit sa forme absolue (l'image « du site » que la médiathèque fournit en URL
+   absolue de l'hôte courant). Empêche de publier l'URL de l'hôte d'édition (ex. preview) et rend
+   le « revert » atteignable via l'UI. */
+function sameImgAsset(orig, url){
+  if(!url || url===orig) return true;
+  try{ var u=String(url).split("?")[0]; if(u===orig || u.endsWith("/"+orig) || u.endsWith(orig)) return true; }catch(e){}
+  return false;
+}
 /* Remplacement d'image à publier vers le site public : { <page> : { <src d'origine> : <URL> } }.
-   On mémorise même un dataURL (état courant) ; buildSiteContent ne publie QUE les URL https. Si
-   l'image revient à son src d'origine, on retire l'entrée (retour à l'image par défaut du site). */
+   On mémorise même un dataURL (état courant) ; buildSiteContent ne publie QUE les URL https ET
+   externes (une image « du site » = même asset -> retrait de l'entrée, retour à l'image par défaut). */
 function recordImgPub(orig, url){
   if(!orig) return;
   if(!draft.imgPub) draft.imgPub={};
   var pg=draft.imgPub[editPage]||(draft.imgPub[editPage]={});
-  if(!url || url===orig){ delete pg[orig]; if(!Object.keys(pg).length) delete draft.imgPub[editPage]; }
+  if(sameImgAsset(orig, url)){ delete pg[orig]; if(!Object.keys(pg).length) delete draft.imgPub[editPage]; }
   else pg[orig]=url;
 }
 function pickMedia(src){ if(!mediaTarget){ return; } applyMedia(src); document.getElementById("mediaModalBg").classList.remove("show"); toast("Image mise à jour"); }
@@ -1316,7 +1333,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.42.0", cur:true, date:"2026-07-20", title:"Vraies statistiques d'audience (tous les visiteurs) dans l'admin, sans cookie", items:[
+  { v:"v0.42.1", cur:true, date:"2026-07-20", title:"Fiabilité & robustesse (revue de code médias + statistiques)", items:[
+    {t:"fix", x:"Statistiques : les visites vers des adresses de page longues ne sont plus perdues au comptage ; les chiffres restent fiables même sous forte affluence"},
+    {t:"fix", x:"Médias : remplacer un logo répété (bandeau de confiance) met à jour toutes ses occurrences dans l'aperçu comme en ligne ; choisir une image déjà présente sur le site ne fige plus une adresse temporaire"},
+    {t:"imp", x:"Statistiques : libellé honnête (« visiteurs / jour en moyenne »), protection anti-abus du point de collecte, et affichage plus économe (mise en cache)"}
+  ]},
+  { v:"v0.42.0", date:"2026-07-20", title:"Vraies statistiques d'audience (tous les visiteurs) dans l'admin, sans cookie", items:[
     {t:"add", x:"La page Statistiques affiche désormais l'audience RÉELLE de tous les visiteurs du site en ligne (pages vues, visiteurs, pages les plus vues, provenance), mesurée par notre propre serveur — sans cookie ni outil tiers payant"},
     {t:"imp", x:"Visiteurs uniques anonymisés (aucun suivi d'un jour à l'autre) et robots automatiquement écartés, pour des chiffres fiables"},
     {t:"imp", x:"On maîtrise la durée de conservation (aucun plafond imposé) ; le panneau « cet appareil » reste en repli et les chiffres de démonstration restent affichés pour vos présentations"}
@@ -4888,33 +4910,40 @@ function renderStats(){
    (sans cookie, stocké sur Blob). Auth via la clé/jeton admin ; repli SILENCIEUX (panneau masqué)
    si pas connecté / endpoint absent / stockage inactif -> on garde le panneau « cet appareil ».
    Les chiffres de démo au-dessus restent la vitrine. */
-function statsDaysFromKey(){ try{ var m=/(\d+)\s*j/.exec(statKey||""); if(m) return Math.min(365,Math.max(1,+m[1])); }catch(e){} return 30; }
+function statsDaysFromKey(){ try{ var m=/(\d+)\s*j/.exec(statKey||""); if(m) return Math.min(90,Math.max(1,+m[1])); }catch(e){} return 30; }
+var _srvStats=null; /* cache 60s pour limiter les appels list (le panneau est re-rendu à chaque zoom/plage) */
+function paintStatsServer(w,d){
+  var PLBL={ "/":"Accueil","/index.html":"Accueil","/mobilite":"Mobilité","/mobilite.html":"Mobilité","/postuler":"Postuler","/postuler.html":"Postuler","/commander":"Commander","/commander.html":"Commander","/dashboard":"Tableau de bord","/dashboard.html":"Tableau de bord","/app.html":"Suivi de commande" };
+  var pl=function(p){ return PLBL[p]||p; };
+  var t=d.totals||{pageviews:0};
+  var pagesRows=(d.topPages||[]).slice(0,8).map(function(x){ return '<tr><td>'+escHtml(pl(x.p))+'</td><td style="text-align:right;font-weight:600">'+x.n+'</td></tr>'; }).join("")||'<tr><td class="hint">Pas encore de données</td><td></td></tr>';
+  var refRows=(d.topRefs||[]).slice(0,8).map(function(x){ return '<tr><td>'+escHtml(x.r||"Accès direct")+'</td><td style="text-align:right;font-weight:600">'+x.n+'</td></tr>'; }).join("")||'<tr><td class="hint">Accès direct</td><td></td></tr>';
+  w.style.display="";
+  w.innerHTML='<div class="pan-head"><h4><span class="hic teal"><i data-lucide="bar-chart-3"></i></span> Audience réelle (tous les visiteurs)</h4><span class="hint" style="margin:0">sans cookie · '+(d.rangeDays||30)+' j</span></div>'
+    +'<p class="hint" style="margin:2px 0 12px">Mesure agrégée de <b>tous les visiteurs</b> du site en ligne, collectée par notre propre serveur (sans cookie, sans outil tiers). Les chiffres tout en haut restent des exemples de démonstration.</p>'
+    +'<div style="display:flex;gap:26px;flex-wrap:wrap;margin-bottom:14px">'
+      +'<div><div style="font-size:26px;font-weight:700;color:var(--ink,#1a1a1a)">'+nfr(t.pageviews||0)+'</div><div class="hint" style="margin:0">pages vues</div></div>'
+      +'<div><div style="font-size:26px;font-weight:700;color:var(--ink,#1a1a1a)">'+nfr(d.avgDailyVisitors||0)+'</div><div class="hint" style="margin:0">visiteurs / jour (moy.)</div></div>'
+    +'</div>'
+    +'<div style="display:flex;gap:24px;flex-wrap:wrap">'
+      +'<div style="flex:1;min-width:220px"><div style="font-weight:600;margin-bottom:6px">Pages les plus vues</div><table class="tbl"><tbody>'+pagesRows+'</tbody></table></div>'
+      +'<div style="flex:1;min-width:220px"><div style="font-weight:600;margin-bottom:6px">Provenance</div><table class="tbl"><tbody>'+refRows+'</tbody></table></div>'
+    +'</div>'
+    +(d.truncated?'<p class="hint" style="margin-top:10px">Historique long : jours les plus récents affichés (fenêtre '+(d.rangeDays||30)+' j).</p>':'');
+  if(typeof refreshIcons==="function") refreshIcons();
+}
 function renderStatsServer(){
   var w=document.getElementById("statServerPan"); if(!w) return;
   var key=(typeof getStoredPublishKey==="function")?getStoredPublishKey():"";
   if(!key){ w.style.display="none"; w.innerHTML=""; return; }
-  var PLBL={ "/":"Accueil","/index.html":"Accueil","/mobilite":"Mobilité","/mobilite.html":"Mobilité","/postuler":"Postuler","/postuler.html":"Postuler","/commander":"Commander","/commander.html":"Commander","/dashboard":"Tableau de bord","/dashboard.html":"Tableau de bord","/app.html":"Suivi de commande" };
-  var pl=function(p){ return PLBL[p]||p; };
-  fetch("/api/collect?days="+statsDaysFromKey(),{ headers:{ Authorization:"Bearer "+key } })
+  var days=statsDaysFromKey();
+  if(_srvStats && _srvStats.days===days && (Date.now()-_srvStats.at)<60000){ paintStatsServer(w,_srvStats.data); return; } /* cache 60s */
+  fetch("/api/collect?days="+days,{ headers:{ Authorization:"Bearer "+key } })
     .then(function(r){ return r.ok?r.json():null; })
     .then(function(d){
       if(!d||!d.ok||d.provider!=="blob"){ w.style.display="none"; w.innerHTML=""; return; }
-      var t=d.totals||{pageviews:0,visitors:0};
-      var pagesRows=(d.topPages||[]).slice(0,8).map(function(x){ return '<tr><td>'+escHtml(pl(x.p))+'</td><td style="text-align:right;font-weight:600">'+x.n+'</td></tr>'; }).join("")||'<tr><td class="hint">Pas encore de données</td><td></td></tr>';
-      var refRows=(d.topRefs||[]).slice(0,8).map(function(x){ return '<tr><td>'+escHtml(x.r||"Accès direct")+'</td><td style="text-align:right;font-weight:600">'+x.n+'</td></tr>'; }).join("")||'<tr><td class="hint">Accès direct</td><td></td></tr>';
-      w.style.display="";
-      w.innerHTML='<div class="pan-head"><h4><span class="hic teal"><i data-lucide="bar-chart-3"></i></span> Audience réelle (tous les visiteurs)</h4><span class="hint" style="margin:0">sans cookie · '+(d.rangeDays||30)+' j</span></div>'
-        +'<p class="hint" style="margin:2px 0 12px">Mesure agrégée de <b>tous les visiteurs</b> du site en ligne, collectée par notre propre serveur (sans cookie, sans outil tiers, visiteurs uniques anonymisés). Les chiffres tout en haut restent des exemples de démonstration.</p>'
-        +'<div style="display:flex;gap:26px;flex-wrap:wrap;margin-bottom:14px">'
-          +'<div><div style="font-size:26px;font-weight:700;color:var(--ink,#1a1a1a)">'+nfr(t.pageviews||0)+'</div><div class="hint" style="margin:0">pages vues</div></div>'
-          +'<div><div style="font-size:26px;font-weight:700;color:var(--ink,#1a1a1a)">'+nfr(t.visitors||0)+'</div><div class="hint" style="margin:0">visiteurs</div></div>'
-        +'</div>'
-        +'<div style="display:flex;gap:24px;flex-wrap:wrap">'
-          +'<div style="flex:1;min-width:220px"><div style="font-weight:600;margin-bottom:6px">Pages les plus vues</div><table class="tbl"><tbody>'+pagesRows+'</tbody></table></div>'
-          +'<div style="flex:1;min-width:220px"><div style="font-weight:600;margin-bottom:6px">Provenance</div><table class="tbl"><tbody>'+refRows+'</tbody></table></div>'
-        +'</div>'
-        +(d.truncated?'<p class="hint" style="margin-top:10px">Beaucoup de données : affichage partiel (les plus récentes).</p>':'');
-      if(typeof refreshIcons==="function") refreshIcons();
+      _srvStats={ days:days, at:Date.now(), data:d };
+      paintStatsServer(w,d);
     })
     .catch(function(){ w.style.display="none"; w.innerHTML=""; });
 }

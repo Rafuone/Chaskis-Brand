@@ -42,9 +42,30 @@ function section(t) { console.log('\n' + t); }
   section('sanitizePath / sanitizeRef');
   ok(c.sanitizePath('/mobilite?x=1#top') === '/mobilite', 'path : query et ancre retirées');
   ok(c.sanitizePath('') === '/', 'path vide -> /');
-  ok(c.sanitizePath('/' + 'a'.repeat(300)).length <= 120, 'path borné à 120');
+  ok(c.sanitizePath('/' + 'a'.repeat(300)).length <= 90, 'path borné à 90');
   ok(c.sanitizeRef('Google.COM/search') === 'google.com', 'ref : minuscule + chars sûrs');
   ok(c.sanitizeRef('<script>') === 'script', 'ref : caractères dangereux retirés');
+
+  section('eventKey — jamais tronquée par cleanKey (anti-perte d\'événements)');
+  var storage = require(path.join(ROOT, 'api/_lib/storage'));
+  // Événement au pire cas (chemin + referrer longs) : la clé doit tenir sous MAX_KEY ET rester
+  // décodable APRÈS passage par cleanKey (ce que fait storage.put à l'écriture).
+  var evMax = { t: 1784550000000, p: '/' + 'a'.repeat(200), r: 'x'.repeat(200) + '.com', l: 'fr', v: 'abcdef123456' };
+  var k = c.eventKey(evMax, '2026-07-20');
+  ok(k.length <= c.MAX_KEY, 'clé pire-cas <= MAX_KEY (' + k.length + ')');
+  ok(storage.cleanKey(k) === k, 'clé inchangée par cleanKey (aucune troncature)');
+  var decoded = c.eventFromPathname(storage.cleanKey(k));
+  ok(decoded && typeof decoded.t === 'number' && decoded.v === 'abcdef123456', 'événement pire-cas TOUJOURS décodable (pas de perte silencieuse)');
+  var kShort = c.eventKey({ t: 1784550000000, p: '/mobilite', r: 'google.com', l: 'fr', v: 'abcdef123456' }, '2026-07-20');
+  ok(c.eventFromPathname(kShort).p === '/mobilite', 'clé courte : round-trip conservé intégralement');
+
+  section('eventFromPathname — exige un t numérique fini (anti-500 latent)');
+  var badT = 'analytics/ev/2026-07-20/' + Buffer.from(JSON.stringify({ p: '/x', v: 'z', t: 'pasunnombre' }), 'utf8').toString('base64url') + '.aabbcc';
+  ok(c.eventFromPathname(badT) === null, 't non numérique -> null (rejeté)');
+
+  section('clientIp — priorité aux en-têtes de plateforme (anti-spoof du 1er saut XFF)');
+  ok(c.clientIp({ headers: { 'x-real-ip': '9.9.9.9', 'x-forwarded-for': '1.1.1.1, 2.2.2.2' } }) === '9.9.9.9', 'x-real-ip prioritaire');
+  ok(c.clientIp({ headers: { 'x-forwarded-for': 'spoofed, 2.2.2.2, 3.3.3.3' } }) === '3.3.3.3', 'sans x-real-ip : dernier saut XFF (pas le 1er, spoofable)');
 
   console.log('\n' + (fail ? ('❌ ' + fail + ' échec(s), ' + pass + ' ok') : ('✅ ' + pass + ' réussis, 0 échoués')));
   process.exit(fail ? 1 : 0);

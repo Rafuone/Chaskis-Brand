@@ -258,12 +258,14 @@
   .lead-clic{cursor:pointer}
   .lead-clic:hover .lead-co{color:var(--purple);text-decoration:underline}
   /* Vue Clients (hub commercial) */
-  .cli-filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
-  .cli-fbtn{all:unset;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:5px 13px}
-  .cli-fbtn:hover{border-color:var(--border-2);color:var(--ink)}
-  .cli-fbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  /* Onglets de filtre : soulignés, placés SOUS la barre de recherche (cf. réf. client) */
+  .cli-filters{display:flex;flex-wrap:wrap;gap:2px;margin:0 0 14px;border-bottom:1px solid var(--border)}
+  .cli-fbtn{all:unset;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);padding:8px 12px;border-bottom:2px solid transparent;margin-bottom:-1px;display:inline-flex;align-items:center}
+  .cli-fbtn:hover{color:var(--ink)}
+  .cli-fbtn.on{color:var(--teal-d);border-bottom-color:var(--teal)}
   #cliStats{margin-bottom:16px}
-  .cli-fn{margin-left:7px;font-size:11px;font-weight:700;opacity:.72}
+  .cli-fn{margin-left:7px;font-size:11px;font-weight:700;background:var(--bg);color:var(--muted);border-radius:20px;padding:1px 7px}
+  .cli-fbtn.on .cli-fn{background:#E1F5EE;color:var(--teal-d)}
   .cli-badge{display:inline-block;font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap}
   .cli-detail{max-width:640px;width:100%;max-height:86vh;overflow:auto;padding:24px}
   .cli-d-hd{display:flex;align-items:center;gap:12px;justify-content:space-between;margin:0 34px 4px 0}
@@ -279,7 +281,9 @@
   .cli-suivi #cliSaveSuivi{grid-column:1 / -1;justify-self:start}
   /* Tableau Clients : alignement vertical (corrige le décalage de la colonne Actions), avatars, actions */
   #view-clients .tbl td{vertical-align:middle}
-  .cli-actions{display:flex;gap:4px;justify-content:flex-end;align-items:center}
+  .cli-actions{display:flex;gap:6px;justify-content:flex-end;align-items:center}
+  .cli-actions .iconbtn{width:32px;height:32px;padding:0;gap:0;justify-content:center}
+  .cli-actions .iconbtn svg{width:15px;height:15px}
   .cli-stsel{max-width:180px}
   .cli-crn{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:24px;padding:0 8px;border-radius:20px;background:#EEEDFE;color:var(--purple);font-size:12px;font-weight:700}
   .cli-crn:hover{background:var(--purple);color:#fff}
@@ -288,9 +292,10 @@
   .cli-owners .avatar.xs+.avatar.xs,.cli-owners .cli-owmore{margin-left:-8px}
   .cli-owmore{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:50%;background:var(--bg);border:1px solid var(--border);color:var(--muted);font-size:10.5px;font-weight:700;box-shadow:0 0 0 2px var(--panel)}
   .cli-toolbar{display:flex;align-items:center;gap:10px;margin:0 0 14px}
+  .cli-toolbar>.btn{height:40px;box-sizing:border-box}
   .cli-search-wrap{position:relative;flex:1;max-width:360px}
   .cli-search-wrap i,.cli-search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
-  .cli-search-wrap input{width:100%;box-sizing:border-box;font-family:inherit;font-size:13px;padding:8px 12px 8px 34px;border:1px solid var(--border);border-radius:9px;background:var(--panel);color:var(--ink)}
+  .cli-search-wrap input{width:100%;height:40px;box-sizing:border-box;font-family:inherit;font-size:13px;padding:0 12px 0 34px;border:1px solid var(--border);border-radius:9px;background:var(--panel);color:var(--ink)}
   .cli-search-wrap input:focus{outline:none;border-color:var(--teal)}
   .cli-pp{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);white-space:nowrap}
   .cli-fltn{margin-left:6px;font-size:11px;font-weight:700;background:var(--teal);color:#fff;border-radius:20px;padding:0 6px}
@@ -306,6 +311,24 @@
   .cli-cr{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-bottom:8px}
   .cli-cr-d{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px}
   .cli-cr-t{font-size:12.5px;color:var(--ink-soft);line-height:1.5;white-space:pre-wrap}
+  /* compte-rendu attribué : qui (avatar+nom) · quand · sujet */
+  .cli-cr-hd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+  .cli-cr-hd .avatar.xs{margin-right:0}
+  .cli-cr-au{font-size:12px;font-weight:700;color:var(--ink)}
+  .cli-cr-when{font-size:11px;color:var(--muted)}
+  .cli-cr-su{font-size:11px;color:var(--muted);margin-left:auto}
+  /* RDV = fil de suivi cliquable (qui l'a fait, quand) qui déplie son compte-rendu */
+  .cli-rdv-item{border-bottom:1px solid var(--border)}
+  .cli-rdv-item:last-child{border-bottom:none}
+  .cli-rdv-item .cli-rdv-row{border-bottom:none;cursor:pointer}
+  .cli-rdv-item .cli-rdv-row:hover{background:var(--bg)}
+  .cli-rdv-who{display:inline-flex;align-items:center;min-width:130px;color:var(--ink);font-weight:600}
+  .cli-rdv-who .avatar.xs{margin-right:7px}
+  .cli-rdv-caret{margin-left:auto;color:var(--muted);display:inline-flex;transition:transform .15s}
+  .cli-rdv-item.open .cli-rdv-caret{transform:rotate(180deg)}
+  .cli-rdv-detail{padding:2px 0 12px}
+  .cli-rdv-cr{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:10px 12px}
+  .cli-rdv-cr-h{font-size:11px;font-weight:700;color:var(--ink-soft);margin-bottom:5px}
   .cli-lead{font-size:12.5px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--border)}
   .cli-lead:last-child{border-bottom:none}
   .drr-meta{display:inline-flex;align-items:center;gap:7px}
@@ -2064,7 +2087,7 @@
   .up-more{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:50px;border:1px dashed var(--border-2);border-radius:11px;color:var(--muted);font-weight:600;font-size:12px}
   /* sélection / relance en masse */
   td.chk,th.chk{width:20px;text-align:center;padding-left:10px;padding-right:2px}
-  td.chk .rsel,th.chk input{margin:0;vertical-align:middle}
+  td.chk .rsel,th.chk input{margin:0;vertical-align:middle;width:16px;height:16px;accent-color:var(--ink);cursor:pointer}
   input[type=checkbox]{accent-color:var(--teal);width:15px;height:15px;cursor:pointer}
   /* relance automatique (activable) */
   .autorel{display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:10px;padding:9px 13px;margin-bottom:12px;background:var(--panel);transition:border-color .15s,background .15s}

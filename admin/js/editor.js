@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.50.0" };
+const ADMIN_BUILD = { version: "0.51.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1396,7 +1396,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.50.0", cur:true, date:"2026-07-21", title:"Clients : refonte du tableau", items:[
+  { v:"v0.51.0", cur:true, date:"2026-07-21", title:"Clients : sélection multiple + suivi qui/quand", items:[
+    {t:"add", x:"Sélection multiple dans le tableau (cases à cocher + « tout sélectionner ») avec barre d'actions groupées : relancer la sélection en un e-mail (destinataires en copie cachée) ou changer le statut de plusieurs clients d'un coup"},
+    {t:"imp", x:"En-tête revu : recherche et bouton « Filtres » (même hauteur) au-dessus, onglets de filtre soulignés en dessous ; pagination toujours visible ; cases à cocher remplies en bleu foncé ; boutons d'action carrés"},
+    {t:"imp", x:"Fiche client = vrai suivi : chaque rendez-vous indique QUI l'a mené et QUAND, et se déplie sur son compte-rendu ; chaque compte-rendu est attribué à son commercial et daté"}
+  ]},
+  { v:"v0.50.0", date:"2026-07-21", title:"Clients : refonte du tableau", items:[
     {t:"imp", x:"Recherche déplacée à gauche au-dessus du tableau ; bouton « Filtres » ouvrant une fenêtre (commercial, secteur, offre) ; choix du nombre de lignes par page (10 / 25 / 50 / 100)"},
     {t:"add", x:"Nouvelle colonne « Commercial » : les avatars du ou des commerciaux ayant vu le client"},
     {t:"imp", x:"Tags de statut sans préfixe « Auto » et colonne Actions alignée ; actions carrées avec info-bulle (lancer un rendez-vous, relancer par e-mail, ouvrir la fiche) ; le nombre de comptes-rendus est cliquable"}
@@ -1922,7 +1927,7 @@ const PROGRESS=[
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
-  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.6.0",recent:["Tableau retravaillé : recherche à gauche, filtres en fenêtre, colonne commercial, choix du nombre par page","Statuts colorés éditables (comme Rendez-vous) + actions alignées (rendez-vous, relance, fiche)","Jeu de démonstration riche et stable ; navigation reliée RDV → client → copilote"]},
+  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.7.0",recent:["Sélection multiple + actions groupées : relancer plusieurs clients ou changer leur statut en une fois","Fiche client = vrai suivi : chaque rendez-vous montre qui l'a mené et quand, et se déplie sur son compte-rendu (attribué + daté)","En-tête revu (recherche + filtres soulignés), pagination visible, cases à cocher bleu foncé, actions carrées"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"beta",version:"0.8.0",recent:["Cycle complet : préparer depuis un RDV → piloter → compte-rendu rattaché au rendez-vous","Comptes-rendus récents consultables (relire / re-télécharger)","Actions plaquette/offre = email pré-rempli au prospect"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audience réelle agrégée de tous les visiteurs (collecteur maison, sans cookie)","Visiteurs uniques anonymisés + filtrage des robots","Vraie mesure sans cookie (cet appareil) en repli"]},
@@ -4548,6 +4553,8 @@ function cbAsk(q){
    demandes chargées, les clients proviennent des RDV -> démo intacte. */
 var cliLeads=[], cliQuery="", cliFilter="all", cliLeadsLoaded=false, cliCurrentList=[], cliPage=1, cliEnrich={};
 var CLI_PER_PAGE=25;
+var cliSel=new Set();       // sélection multiple (par c.key stable) pour actions groupées — cf. rdvSel
+var cliCurrentShown=[];     // clients affichés (filtrés, toutes pages) au dernier rendu — pour « tout sélectionner »
 var cliFilterAdv={who:"",secteur:"",offer:""}; // filtres avancés (modale)
 // Statut manuel (enrichissement partagé) : override le statut dérivé. {k,lbl,c} comme cliStatus().
 // Table des statuts Clients — MÊME modèle que RDV_STC (couleur texte + FOND CLAIR net + point) pour
@@ -4660,15 +4667,16 @@ function renderClients(){
   if(sr){ sr.style.gridTemplateColumns="repeat(4,1fr)"; sr.innerHTML=[["Clients & prospects",total,"contact-round","teal"],["Nouveaux leads",nLead,"inbox","amber"],["RDV planifiés",nRdv,"calendar","blue"],["Comptes-rendus",nCr,"file-text","purple"]].map(function(t){ var bc=DASH_ICOL[t[3]]||DASH_ICOL.teal; return '<div class="statc"><div class="top"><div class="ic-badge" style="background:'+bc[0]+';color:'+bc[1]+';border-radius:9px"><i data-lucide="'+t[2]+'"></i></div></div><div class="k">'+t[0]+'</div><div class="v">'+t[1]+'</div></div>'; }).join(""); }
   var fw=document.getElementById("cliFilters");
   if(fw){ fw.innerHTML=CLI_FILTERS.map(function(f){ var n=f[0]==="all"?total:list.filter(function(c){return c.status.k===f[0];}).length; return '<button type="button" class="cli-fbtn'+(cliFilter===f[0]?" on":"")+'" data-f="'+f[0]+'">'+f[1]+'<span class="cli-fn">'+n+'</span></button>'; }).join("");
-    fw.querySelectorAll("[data-f]").forEach(function(b){ b.addEventListener("click",function(){ cliFilter=b.dataset.f; cliPage=1; renderClients(); }); }); }
+    fw.querySelectorAll("[data-f]").forEach(function(b){ b.addEventListener("click",function(){ cliFilter=b.dataset.f; cliPage=1; cliSel.clear(); renderClients(); }); }); }
   var shown=list.filter(function(c){ return cliMatch(c,cliQuery) && (cliFilter==="all"||c.status.k===cliFilter)
     && (!cliFilterAdv.who || (c.owners||[]).indexOf(cliFilterAdv.who)>=0)
     && (!cliFilterAdv.secteur || c.secteur===cliFilterAdv.secteur)
     && (!cliFilterAdv.offer || c.offer===cliFilterAdv.offer); });
+  cliCurrentShown=shown;
   var b=document.getElementById("cliBody"); if(!b) return; b.innerHTML="";
   var pages=Math.max(1,Math.ceil(shown.length/CLI_PER_PAGE)); if(cliPage>pages) cliPage=pages; if(cliPage<1) cliPage=1;
   var start=(cliPage-1)*CLI_PER_PAGE, pageItems=shown.slice(start,start+CLI_PER_PAGE);
-  if(!shown.length){ var tre=document.createElement("tr"); tre.innerHTML='<td colspan="8" style="color:var(--muted);padding:16px">'+(list.length?"Aucun client ne correspond à cette recherche.":"Aucun client pour l'instant. Ils apparaîtront depuis les rendez-vous et les demandes reçues.")+'</td>'; b.appendChild(tre); }
+  if(!shown.length){ var tre=document.createElement("tr"); tre.innerHTML='<td colspan="9" style="color:var(--muted);padding:16px">'+(list.length?"Aucun client ne correspond à cette recherche.":"Aucun client pour l'instant. Ils apparaîtront depuis les rendez-vous et les demandes reçues.")+'</td>'; b.appendChild(tre); }
   pageItems.forEach(function(c){
     var tr=document.createElement("tr"); tr.className="rdv-row";
     var last=c.lastTs?new Date(c.lastTs).toLocaleDateString("fr-CH",{day:"2-digit",month:"short",year:"numeric"}):"—";
@@ -4679,7 +4687,8 @@ function renderClients(){
     var owners=c.owners||[];
     var comHtml=owners.length ? '<div class="cli-owners">'+owners.slice(0,3).map(function(w){ var cc=commercialChip(w); return '<span class="avatar xs" style="background:'+cc.color+';color:#fff" title="'+escAttr(cc.full)+'">'+cc.ini+'</span>'; }).join("")+(owners.length>3?'<span class="cli-owmore">+'+(owners.length-3)+'</span>':'')+'</div>' : '<span style="color:var(--muted)">—</span>';
     var hasCr=c.recaps.length>0;
-    tr.innerHTML='<td><div class="cl-co" title="'+escAttr(c.name)+'">'+escHtml(c.name)+'</div>'+(c.contacts[0]?'<div class="cl-ct">'+escHtml(c.contacts[0])+'</div>':'')+'</td>'
+    tr.innerHTML='<td class="chk"><input type="checkbox" class="rsel"'+(cliSel.has(c.key)?" checked":"")+'></td>'
+      +'<td><div class="cl-co" title="'+escAttr(c.name)+'">'+escHtml(c.name)+'</div>'+(c.contacts[0]?'<div class="cl-ct">'+escHtml(c.contacts[0])+'</div>':'')+'</td>'
       +'<td>'+escHtml(c.secteur||"—")+'</td>'
       +'<td><select class="statusel cli-stsel" data-k="'+escAttr(c.key)+'" data-stc-bg="'+c.status.bg+'" data-stc-color="'+c.status.c+'">'+stOpts+'</select></td>'
       +'<td>'+comHtml+'</td>'
@@ -4693,20 +4702,23 @@ function renderClients(){
       +'</div></td>';
     tr.addEventListener("click",function(){ openClientCard(c.key); });
     var sel=tr.querySelector(".cli-stsel"); if(sel){ sel.addEventListener("click",function(e){e.stopPropagation();}); sel.addEventListener("change",function(e){ e.stopPropagation(); saveClientStatusInline(c.key, sel.value); }); if(typeof enhanceSelect==="function") enhanceSelect(sel); }
+    var cb=tr.querySelector(".rsel"); if(cb){ cb.addEventListener("click",function(e){ e.stopPropagation(); }); cb.addEventListener("change",function(e){ if(e.target.checked) cliSel.add(c.key); else cliSel.delete(c.key); cliSyncSelUI(); }); }
     tr.querySelectorAll("[data-act]").forEach(function(bt){ bt.addEventListener("click",function(e){ e.stopPropagation(); var a=bt.dataset.act; if(a==="cop") prepareCopilotForClient(c.key); else if(a==="relance") cliRelance(c.key); else openClientCard(c.key); }); });
     b.appendChild(tr);
   });
   cliRenderPager(shown.length,pages,start,pageItems.length);
-  var s=document.getElementById("cliSearch"); if(s && !s.dataset.wired){ s.dataset.wired="1"; s.addEventListener("input",function(){ cliQuery=s.value||""; cliPage=1; renderClients(); }); }
+  var s=document.getElementById("cliSearch"); if(s && !s.dataset.wired){ s.dataset.wired="1"; s.addEventListener("input",function(){ cliQuery=s.value||""; cliPage=1; cliSel.clear(); renderClients(); }); }
   var pp=document.getElementById("cliPerPage"); if(pp && !pp.dataset.wired){ pp.dataset.wired="1"; pp.addEventListener("change",function(){ CLI_PER_PAGE=parseInt(pp.value,10)||25; cliPage=1; renderClients(); }); if(typeof enhanceSelect==="function") enhanceSelect(pp); }
   var fb=document.getElementById("cliFilterBtn"); if(fb && !fb.dataset.wired){ fb.dataset.wired="1"; fb.addEventListener("click",openCliFilters); }
+  var sa=document.getElementById("cliSelAll"); if(sa && !sa.dataset.wired){ sa.dataset.wired="1"; sa.addEventListener("change",function(){ if(sa.checked) cliCurrentShown.forEach(function(c){ cliSel.add(c.key); }); else cliCurrentShown.forEach(function(c){ cliSel.delete(c.key); }); renderClients(); }); }
+  cliSyncSelUI();
   syncCliFilterBtn();
   refreshIcons();
   if(!cliLeadsLoaded) loadClientLeads();
 }
 function cliRenderPager(total,pages,start,count){
   var el=document.getElementById("cliPager"); if(!el) return;
-  if(pages<=1){ el.innerHTML=""; return; }
+  if(!total){ el.innerHTML=""; return; }   // pagination visible dès qu'il y a des clients (même sur une seule page)
   var chevL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>';
   var chevR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
   var mk=function(n,lbl,cls,dis){ return '<button class="pg-btn'+(cls?" "+cls:"")+'" data-pg="'+n+'"'+(dis?" disabled":"")+'>'+lbl+'</button>'; };
@@ -4714,6 +4726,63 @@ function cliRenderPager(total,pages,start,count){
   var nums="",lastN=0; win.forEach(function(k){ if(k-lastN>1) nums+='<span class="pg-ell">…</span>'; nums+=mk(k,String(k),k===cliPage?"on":""); lastN=k; });
   el.innerHTML='<span class="pg-info">'+(start+1)+'–'+(start+count)+' sur '+total+' client'+(total>1?"s":"")+'</span><span class="pg-ctrl">'+mk(cliPage-1,chevL,"",cliPage<=1)+nums+mk(cliPage+1,chevR,"",cliPage>=pages)+'</span>';
   el.querySelectorAll(".pg-btn[data-pg]").forEach(function(bt){ if(bt.disabled) return; bt.addEventListener("click",function(){ var k=+bt.dataset.pg; if(k>=1&&k<=pages&&k!==cliPage){ cliPage=k; renderClients(); } }); });
+}
+/* ---- sélection multiple : barre d'actions groupées (réutilise .bulk-bar / .chk / .rsel de Rendez-vous) ---- */
+// Met à jour la barre groupée + l'état de la case « tout sélectionner », SANS re-render complet (cf. renderRdvBulk).
+function cliSyncSelUI(){
+  renderCliBulk();
+  var sa=document.getElementById("cliSelAll"); if(!sa) return;
+  var sh=cliCurrentShown||[];
+  var allSel=sh.length>0 && sh.every(function(c){ return cliSel.has(c.key); });
+  sa.checked=allSel;
+  sa.indeterminate=!allSel && sh.some(function(c){ return cliSel.has(c.key); });
+}
+function renderCliBulk(){
+  var el=document.getElementById("cliBulk"); if(!el) return;
+  var n=cliSel.size;
+  if(!n){ el.style.display="none"; el.innerHTML=""; return; }
+  el.style.display="";
+  var stOpts='<option value="__" disabled selected>Changer le statut…</option>'
+    +Object.keys(CLI_STATUS_MANUAL).map(function(k){ return '<option value="'+k+'">'+escHtml(CLI_STC[k].l)+'</option>'; }).join("")
+    +'<option value="">Automatique (déduit)</option>';
+  el.innerHTML='<span class="lbl"><b>'+n+'</b> client'+(n>1?"s":"")+' sélectionné'+(n>1?"s":"")+'</span><span class="sp"></span>'
+    +'<select class="rangesel cli-bulk-st" id="cliBulkStatus" aria-label="Changer le statut de la sélection">'+stOpts+'</select>'
+    +'<button class="btn ghost" id="cliBulkClear">Tout désélectionner</button>'
+    +'<button class="btn primary" id="cliBulkRel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Relancer la sélection</button>';
+  el.querySelector("#cliBulkStatus").addEventListener("change",function(e){ var v=e.target.value; if(v==="__") return; cliBulkStatus(v); });
+  el.querySelector("#cliBulkClear").onclick=function(){ cliSel.clear(); renderClients(); };
+  el.querySelector("#cliBulkRel").onclick=cliBulkRelance;
+}
+// Statut en lot : même mécanique que saveClientStatusInline (optimiste local + POST /api/crm?kind=client par client).
+// La sélection est CONSERVÉE (on peut enchaîner une autre action) ; « Tout désélectionner » reste explicite.
+async function cliBulkStatus(status){
+  var keys=Array.from(cliSel); if(!keys.length) return;
+  keys.forEach(function(key){ var en=cliEnrich[key]||{}; cliEnrich[key]=Object.assign({}, en, { key:key, status:status }); });
+  renderClients();                                    // visible tout de suite (même sur la démo)
+  var label=(status && CLI_STC[status]) ? CLI_STC[status].l : "automatique";
+  var pubkey=getStoredPublishKey();
+  if(!pubkey){ toast(keys.length+" statut"+(keys.length>1?"s":"")+" modifié"+(keys.length>1?"s":"")+" (local) → "+label+" — connectez-vous pour partager."); return; }
+  var ok=0;
+  await Promise.all(keys.map(function(key){
+    var en=cliEnrich[key]||{};
+    return fetch("/api/crm?kind=client",{method:"POST",headers:{Authorization:"Bearer "+pubkey,"Content-Type":"application/json"},body:JSON.stringify({ key:key, status:status, offer:en.offer||"", nextStep:en.nextStep||"" })})
+      .then(function(r){ if(r.ok){ ok++; return r.json().then(function(j){ if(j&&j.client) cliEnrich[key]=j.client; }).catch(function(){}); } })
+      .catch(function(){});
+  }));
+  toast(ok+"/"+keys.length+" statut"+(keys.length>1?"s":"")+" enregistré"+(keys.length>1?"s":"")+" (partagé) → "+label);
+}
+// Relance en lot : ouvre UN brouillon e-mail avec tous les destinataires en copie cachée (Cci) —
+// respecte la vie privée (les prospects ne se voient pas entre eux) et reste une action réelle (comme cliRelance mono).
+function cliBulkRelance(){
+  var keys=Array.from(cliSel); var emails=[], noMail=0;
+  keys.forEach(function(key){ var c=(cliCurrentList||[]).find(function(x){ return x.key===key; }); if(!c) return; var em=c.emails&&c.emails[0]; if(!em){ noMail++; return; } if(emails.indexOf(em)<0) emails.push(em); });
+  if(!emails.length){ toast("Aucun e-mail parmi la sélection pour envoyer une relance."); return; }
+  var subj=encodeURIComponent("Chaskis — suite à notre échange");
+  var body=encodeURIComponent("Bonjour,\n\nJe me permets de revenir vers vous concernant votre projet de livraison avec Chaskis.\n\nBien à vous,");
+  try{ window.location.href="mailto:?bcc="+encodeURIComponent(emails.join(","))+"&subject="+subj+"&body="+body; }catch(e){}
+  var msg=emails.length+" destinataire"+(emails.length>1?"s":"")+" en copie cachée";
+  if(noMail) msg+=" · "+noMail+" sans e-mail ignoré"+(noMail>1?"s":"");
+  toast("Brouillon de relance ouvert ("+msg+")");
 }
 async function loadClientLeads(){
   cliLeadsLoaded=true;
@@ -4796,8 +4865,8 @@ function openCliFilters(){
   ov.querySelector(".thm-x").addEventListener("click",close);
   ov.addEventListener("mousedown",function(e){ if(e.target===ov) close(); });
   document.addEventListener("keydown",esc);
-  ov.querySelector("#fltApply").addEventListener("click",function(){ cliFilterAdv={ who:(ov.querySelector("#fltWho").value||""), secteur:(ov.querySelector("#fltSec").value||""), offer:(ov.querySelector("#fltOff").value||"") }; cliPage=1; close(); renderClients(); });
-  ov.querySelector("#fltReset").addEventListener("click",function(){ cliFilterAdv={who:"",secteur:"",offer:""}; cliPage=1; close(); renderClients(); });
+  ov.querySelector("#fltApply").addEventListener("click",function(){ cliFilterAdv={ who:(ov.querySelector("#fltWho").value||""), secteur:(ov.querySelector("#fltSec").value||""), offer:(ov.querySelector("#fltOff").value||"") }; cliPage=1; cliSel.clear(); close(); renderClients(); });
+  ov.querySelector("#fltReset").addEventListener("click",function(){ cliFilterAdv={who:"",secteur:"",offer:""}; cliPage=1; cliSel.clear(); close(); renderClients(); });
   ["#fltWho","#fltSec","#fltOff"].forEach(function(s){ var el=ov.querySelector(s); if(el && typeof enhanceSelect==="function") enhanceSelect(el); });
   refreshIcons();
 }
@@ -4807,9 +4876,32 @@ function openClientCard(key){
   if(!c) return;
   var mailBtns=c.emails.map(function(e){return '<a class="lead-lnk" href="mailto:'+escAttr(e)+'"><i data-lucide="mail"></i>'+escHtml(e)+'</a>';}).join("");
   var telBtns=c.phones.map(function(p){return '<a class="lead-lnk" href="tel:'+escAttr(String(p).replace(/\s+/g,""))+'"><i data-lucide="phone"></i>'+escHtml(p)+'</a>';}).join("");
-  var rdvRows=c.rdvs.length? c.rdvs.map(function(r){ var stc=(typeof RDV_STC!=="undefined"&&RDV_STC[r.st])||{l:r.st||"—",c:"#8a8c89",bg:"#eee"}; return '<div class="cli-rdv-row"><span class="cli-rdv-d">'+escHtml((r.day||"")+" "+(r.mon||"")+" · "+(r.time||""))+'</span><span class="cli-rdv-s" style="color:'+stc.c+';background:'+stc.bg+'">'+escHtml(stc.l)+'</span><span class="cli-rdv-w">'+escHtml(r.who||"")+'</span><span class="cli-rdv-su">'+escHtml(r.sujet||"")+'</span></div>'; }).join("") : '<p class="hint" style="margin:0">Aucun rendez-vous pour ce client.</p>';
+  // RDV triés du + récent au + ancien = fil de suivi ; chaque ligne montre QUI (avatar+nom) et QUAND, et
+  // se déplie au clic pour révéler le compte-rendu attribué (répond à « où est le compte-rendu de ce RDV »).
+  var rdvSorted=c.rdvs.slice().sort(function(a,b){ return (b.ts||0)-(a.ts||0); });
+  var rdvRows=rdvSorted.length? rdvSorted.map(function(r){
+      var stc=(typeof RDV_STC!=="undefined"&&RDV_STC[r.st])||{l:r.st||"—",c:"#8a8c89",bg:"#eee"};
+      var cc=commercialChip(r.who);
+      var when=escHtml((r.day||"")+" "+(r.mon||"")+(r.time?" · "+r.time:""));
+      var detail;
+      if(r.compteRendu){ var crd=""; try{ crd=r.compteRenduAt?new Date(r.compteRenduAt).toLocaleString("fr-CH",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}):""; }catch(e){}
+        detail='<div class="cli-rdv-cr"><div class="cli-rdv-cr-h">Compte-rendu · '+escHtml(cc.full)+(crd?" · "+escHtml(crd):"")+'</div><div class="cli-cr-t">'+escHtml(r.compteRendu)+'</div></div>'; }
+      else if(r.note){ detail='<div class="cli-rdv-cr"><div class="cli-cr-t">'+escHtml(r.note)+'</div></div>'; }
+      else { detail='<div class="cli-rdv-cr"><div class="hint" style="margin:0">Pas encore de compte-rendu pour ce rendez-vous.</div></div>'; }
+      return '<div class="cli-rdv-item"><div class="cli-rdv-row" data-rdvtoggle role="button" tabindex="0">'
+        +'<span class="cli-rdv-who"><span class="avatar xs" style="background:'+cc.color+';color:#fff">'+cc.ini+'</span>'+escHtml(r.who||"—")+'</span>'
+        +'<span class="cli-rdv-d">'+when+'</span>'
+        +'<span class="cli-rdv-s" style="color:'+stc.c+';background:'+stc.bg+'">'+escHtml(stc.l)+'</span>'
+        +'<span class="cli-rdv-su">'+escHtml(r.sujet||"")+'</span>'
+        +'<span class="cli-rdv-caret"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>'
+        +'</div><div class="cli-rdv-detail" hidden>'+detail+'</div></div>';
+    }).join("") : '<p class="hint" style="margin:0">Aucun rendez-vous pour ce client.</p>';
   var recaps=c.recaps.slice().sort(function(a,b){return String(b.at||"").localeCompare(String(a.at||""));});
-  var crHtml=recaps.length? recaps.map(function(cr){ var d=""; try{ d=cr.at?new Date(cr.at).toLocaleString("fr-CH",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}):""; }catch(e){} return '<div class="cli-cr">'+(d?'<div class="cli-cr-d">'+escHtml(d)+'</div>':'')+'<div class="cli-cr-t">'+escHtml(cr.text)+'</div></div>'; }).join("") : '<p class="hint" style="margin:0">Aucun compte-rendu. Utilisez le copilote pendant un rendez-vous pour en générer un.</p>';
+  // Compte-rendu ATTRIBUÉ : avatar + nom du commercial (via son RDV) · date · sujet du RDV.
+  var crHtml=recaps.length? recaps.map(function(cr){ var d=""; try{ d=cr.at?new Date(cr.at).toLocaleString("fr-CH",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}):""; }catch(e){}
+      var who=(cr.rdv&&cr.rdv.who)||""; var cc=who?commercialChip(who):null;
+      var hd='<div class="cli-cr-hd">'+(cc?'<span class="avatar xs" style="background:'+cc.color+';color:#fff">'+cc.ini+'</span>':'')+(who?'<span class="cli-cr-au">'+escHtml(who)+'</span>':'')+(d?'<span class="cli-cr-when">'+escHtml(d)+'</span>':'')+((cr.rdv&&cr.rdv.sujet)?'<span class="cli-cr-su">'+escHtml(cr.rdv.sujet)+'</span>':'')+'</div>';
+      return '<div class="cli-cr">'+hd+'<div class="cli-cr-t">'+escHtml(cr.text)+'</div></div>'; }).join("") : '<p class="hint" style="margin:0">Aucun compte-rendu. Utilisez le copilote pendant un rendez-vous pour en générer un.</p>';
   var leadHtml=c.leads.length? '<div class="cli-sec-h">Demandes reçues ('+c.leads.length+')</div>'+c.leads.map(function(l){ var d=""; try{ d=l.receivedAt?new Date(l.receivedAt).toLocaleDateString("fr-CH"):""; }catch(e){} return '<div class="cli-lead">'+escHtml((l.summary||"Demande")+(d?" · "+d:""))+'</div>'; }).join("") : "";
   var ov=document.createElement("div"); ov.className="thm-ov"; ov.id="cliCardOv";
   ov.innerHTML='<div class="thm-card cli-detail" role="dialog" aria-modal="true"><button class="thm-x" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'
@@ -4830,6 +4922,7 @@ function openClientCard(key){
   var stSel=ov.querySelector("#cliStatusSel"); if(stSel && typeof enhanceSelect==="function") enhanceSelect(stSel);
   var ofSel=ov.querySelector("#cliOfferSel"); if(ofSel && typeof enhanceSelect==="function") enhanceSelect(ofSel);
   var sv=ov.querySelector("#cliSaveSuivi"); if(sv) sv.addEventListener("click",function(){ saveClientSuivi(key, ov); });
+  ov.querySelectorAll("[data-rdvtoggle]").forEach(function(row){ function tog(){ var it=row.parentNode; var d=it.querySelector(".cli-rdv-detail"); if(!d) return; if(d.hasAttribute("hidden")){ d.removeAttribute("hidden"); it.classList.add("open"); } else { d.setAttribute("hidden",""); it.classList.remove("open"); } } row.addEventListener("click",tog); row.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); tog(); } }); });
   ov.addEventListener("mousedown",function(e){ if(e.target===ov) close(); });
   document.addEventListener("keydown",esc); refreshIcons();
 }

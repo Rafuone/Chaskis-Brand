@@ -1,13 +1,12 @@
 # Workflow commercial — état & reprise (note de passation)
 
-> **Point de reprise au 2026-07-21.** Branche `feat/foundation-vercel`, HEAD `dbb9b96`, admin **v0.55.0**,
+> **Point de reprise au 2026-07-21.** Branche `feat/foundation-vercel`, HEAD `b8e082d`, admin **v0.56.0**,
 > **15 suites de tests vertes**, **11/12 fonctions Vercel Hobby**. `main` (prod) et `demo` intacts.
 >
-> ⏳ **EN ATTENTE d'Alexandre** : choix du système de FILTRES parmi 3 propositions (page artifact,
-> lien dans le fil de conversation). Il doit répondre « 1 » (barre à jetons — reco), « 2 » (panneau
-> à facettes) ou « 3 » (constructeur de règles). Implémenter le choisi ensuite dans l'admin Chaskis
-> (plage de dates du/au + listes recherchables pour tenir à l'échelle). Les filtres actuels
-> (`openCliFilters` à puces) restent en place tant que le choix n'est pas fait.
+> ⚠️ **LEÇON (2026-07-21)** : sur les filtres, j'ai d'abord changé le MÉCANISME (barre/panneau/règles,
+> page de propositions) alors qu'Alexandre voulait garder la FENÊTRE et changer son CONTENU. Corrigé
+> en v0.56.0 : même fenêtre `openCliFilters`, contenu scalable (listes recherchables + plage du/au).
+> Ne pas reconfondre « contenant » et « contenu » d'un composant qu'il a déjà validé.
 > Contexte de départ (constat, décision produit, options CRM) : voir la section « Historique » en bas.
 
 ## Ce qui est FAIT
@@ -43,6 +42,11 @@
 - **Fiche client = fil de suivi (v0.51.0)** : chaque RDV affiche **qui** (avatar+nom via `commercialChip`)
   et **quand**, **cliquable** → déplie son **compte-rendu attribué** (`cli-rdv-item`/`cli-rdv-detail`) ;
   chaque compte-rendu de la section est **attribué** (commercial + date + sujet, `cr.rdv.who`).
+- **Filtres — contenu de la fenêtre revu & scalable (v0.56.0)** : MÊME fenêtre `openCliFilters` ; dedans,
+  Commercial + Secteur = listes à cocher RECHERCHABLES (`.cli-checklist`/`.cli-msearch` — tiennent à
+  10+/15+), « Dernière activité » = plage du/au (`input type=date`) + raccourcis non bloquants, Statut
+  (multi) + Offre (multi) en chips, raccourcis métier (à relancer / RDV à venir / sans commercial / avec
+  compte-rendu). `cliFilterAdv` = arrays multi + dateFrom/dateTo ; `cliFilterCount`/`cliFilterEmpty`.
 - **Compte-rendu après coup (v0.55.0)** : rédiger/modifier le compte-rendu d'un RDV depuis sa fiche
   (`rdvFicheInner`/`openRdvDrawer` : `rdvCrBlock` lecture+Modifier / bouton Rédiger, `rdvCrEditor`,
   `saveRdvCr` → `r.compteRendu`/`compteRenduAt`, persiste via saveRdvOverride/saveRdv, remonte dans la

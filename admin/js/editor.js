@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.46.1" };
+const ADMIN_BUILD = { version: "0.47.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1393,7 +1393,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.46.1", cur:true, date:"2026-07-21", title:"Clients : vue en tableau", items:[
+  { v:"v0.47.0", cur:true, date:"2026-07-21", title:"Tout est relié : Rendez-vous, Clients et Copilote", items:[
+    {t:"add", x:"Depuis un rendez-vous, le bouton « Voir la fiche client » ouvre la vue d'ensemble du client (ses rendez-vous, ses comptes-rendus, ses coordonnées)"},
+    {t:"add", x:"Depuis une fiche client, le bouton « Piloter avec le copilote » démarre le copilote pré-rempli (relié au prochain rendez-vous s'il y en a un)"}
+  ]},
+  { v:"v0.46.1", date:"2026-07-21", title:"Clients : vue en tableau", items:[
     {t:"imp", x:"La page Clients passe en tableau (comme le bas de la page Rendez-vous) : lisible même avec beaucoup de clients, avec recherche, filtres comptés et pagination ; un clic sur une ligne ouvre la fiche détaillée"}
   ]},
   { v:"v0.46.0", date:"2026-07-21", title:"Nouvelle page « Clients » : le commercial relié", items:[
@@ -1892,7 +1896,7 @@ const PROGRESS=[
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
-  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.2.0",recent:["Vue en tableau (recherche, filtres comptés, pagination) adaptée à un grand nombre de clients","Tous les clients et prospects regroupés depuis les RDV et les demandes","Fiche client reliant coordonnées, rendez-vous et comptes-rendus"]},
+  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.3.0",recent:["Navigation reliée : depuis un rendez-vous → fiche client, depuis un client → copilote","Vue en tableau (recherche, filtres comptés, pagination) adaptée à un grand nombre de clients","Fiche client reliant coordonnées, rendez-vous et comptes-rendus"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"beta",version:"0.8.0",recent:["Cycle complet : préparer depuis un RDV → piloter → compte-rendu rattaché au rendez-vous","Comptes-rendus récents consultables (relire / re-télécharger)","Actions plaquette/offre = email pré-rempli au prospect"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audience réelle agrégée de tous les visiteurs (collecteur maison, sans cookie)","Visiteurs uniques anonymisés + filtrage des robots","Vraie mesure sans cookie (cet appareil) en repli"]},
@@ -4613,7 +4617,9 @@ async function loadClientLeads(){
   }catch(e){ /* silencieux : la liste dérivée des RDV reste affichée */ }
 }
 function openClientCard(key){
-  var c=cliCurrentList.find(function(x){return x.key===key;}); if(!c) return;
+  var c=cliCurrentList.find(function(x){return x.key===key;});
+  if(!c){ cliCurrentList=cliBuildIndex(); c=cliCurrentList.find(function(x){return x.key===key;}); } // robuste : ouvrable depuis une autre page (fiche RDV)
+  if(!c) return;
   var mailBtns=c.emails.map(function(e){return '<a class="lead-lnk" href="mailto:'+escAttr(e)+'"><i data-lucide="mail"></i>'+escHtml(e)+'</a>';}).join("");
   var telBtns=c.phones.map(function(p){return '<a class="lead-lnk" href="tel:'+escAttr(String(p).replace(/\s+/g,""))+'"><i data-lucide="phone"></i>'+escHtml(p)+'</a>';}).join("");
   var rdvRows=c.rdvs.length? c.rdvs.map(function(r){ var stc=(typeof RDV_STC!=="undefined"&&RDV_STC[r.st])||{l:r.st||"—",c:"#8a8c89",bg:"#eee"}; return '<div class="cli-rdv-row"><span class="cli-rdv-d">'+escHtml((r.day||"")+" "+(r.mon||"")+" · "+(r.time||""))+'</span><span class="cli-rdv-s" style="color:'+stc.c+';background:'+stc.bg+'">'+escHtml(stc.l)+'</span><span class="cli-rdv-w">'+escHtml(r.who||"")+'</span><span class="cli-rdv-su">'+escHtml(r.sujet||"")+'</span></div>'; }).join("") : '<p class="hint" style="margin:0">Aucun rendez-vous pour ce client.</p>';
@@ -4625,6 +4631,7 @@ function openClientCard(key){
     +'<div class="cli-d-hd"><div class="cli-d-name">'+escHtml(c.name)+'</div><span class="cli-badge" style="color:'+c.status.c+';background:'+c.status.c+'18">'+c.status.lbl+'</span></div>'
     +(c.secteur?'<div class="cli-d-sec">'+escHtml(c.secteur)+'</div>':'')
     +((mailBtns||telBtns)?'<div class="cli-d-contact">'+mailBtns+telBtns+'</div>':'')
+    +'<div class="cli-d-actions"><button class="btn primary sm" data-cli-cop><i data-lucide="compass"></i>Piloter avec le copilote</button></div>'
     +'<div class="cli-sec-h">Rendez-vous ('+c.rdvs.length+')</div><div class="cli-rdv-list">'+rdvRows+'</div>'
     +'<div class="cli-sec-h">Comptes-rendus ('+c.recaps.length+')</div><div class="cli-cr-list">'+crHtml+'</div>'
     +leadHtml
@@ -4633,8 +4640,20 @@ function openClientCard(key){
   function close(){ ov.remove(); document.removeEventListener("keydown",esc); }
   function esc(e){ if(e.key==="Escape") close(); }
   ov.querySelector(".thm-x").addEventListener("click",close);
+  var cop=ov.querySelector("[data-cli-cop]"); if(cop) cop.addEventListener("click",function(){ close(); prepareCopilotForClient(key); });
   ov.addEventListener("mousedown",function(e){ if(e.target===ov) close(); });
   document.addEventListener("keydown",esc); refreshIcons();
+}
+// Depuis une fiche client : lance le copilote pré-rempli. Si le client a un RDV, on réutilise le lien
+// RDV<->copilote (prepareRdvCopilot) ; sinon prospect libre (pré-remplissage direct).
+function prepareCopilotForClient(key){
+  var c=(cliCurrentList||[]).find(function(x){return x.key===key;}); if(!c) return;
+  var rdv=c.rdvs.filter(function(r){return r.st==="avenir";})[0]||c.rdvs[0];
+  if(rdv){ var i=rdvData.indexOf(rdv); if(i>=0){ prepareRdvCopilot(i); return; } }
+  if(typeof copHasWork==="function" && copHasWork() && !confirm("Un copilote est déjà en cours. Le remplacer par ce client ?")) return;
+  copState=copBlank(); copState.company=c.name||""; copState.contact=c.contacts[0]||""; copState.email=c.emails[0]||"";
+  if(c.secteur && RDV_SECTEUR_TO_COP[c.secteur]) copState.ans.secteur=RDV_SECTEUR_TO_COP[c.secteur];
+  copSave(); showView("copilot"); renderCopilot(); toast("Copilote préparé pour "+(c.name||"ce client"));
 }
 
 /* ============================================================
@@ -4870,6 +4889,7 @@ function rdvFicheInner(i){
   // Entrée copilote + compte-rendu rattaché (s'il existe).
   const cr=r.compteRendu||"";
   const prep='<button class="btn" id="dPrepare" style="width:100%;justify-content:center;margin-bottom:10px"><i data-lucide="compass"></i>Préparer / piloter avec le copilote</button>'+
+    '<button class="btn sec-b" id="dClient" style="width:100%;justify-content:center;margin-bottom:10px"><i data-lucide="contact-round"></i>Voir la fiche client</button>'+
     (cr?'<div style="margin-bottom:10px"><div class="fiche-lbl" style="margin:0 0 4px">Compte-rendu du copilote'+(r.compteRenduAt?' · '+escHtml(fmtShort(r.compteRenduAt)):'')+'</div><div style="white-space:pre-wrap;font-size:12px;line-height:1.5;background:#F7F6FB;border:1px solid #E7E3F5;border-radius:8px;padding:9px 11px;max-height:140px;overflow:auto">'+escHtml(cr)+'</div></div>':'');
 
   // 2 colonnes cohérentes : gauche = le prospect (qui + comment le joindre), droite = votre suivi
@@ -4893,6 +4913,7 @@ function openRdvDrawer(i){
   const send=d.querySelector("#dRelSend"); if(send) send.onclick=()=>{ rdvData[i].relance={sent:true,date:RDV_TODAY}; saveRdv(); toast("Relance envoyée à "+rdvData[i].client+" (simulé)"); openRdvDrawer(i); };
   const cl=d.querySelector("#dClose"); if(cl) cl.onclick=closeRdvDrawer;
   const prep=d.querySelector("#dPrepare"); if(prep) prep.onclick=()=>prepareRdvCopilot(i);
+  const dcli=d.querySelector("#dClient"); if(dcli) dcli.onclick=()=>{ closeRdvDrawer(); openClientCard(cliKeyFor(rdvData[i])); };
   const wsel=d.querySelector("#dWho"); if(wsel) wsel.onchange=()=>{ const v=wsel.value; if(!v||v===rdvData[i].who) return; rdvData[i].who=v; rdvData[i].assignedBy="manuel"; if(rdvLiveOn) saveRdvOverride(rdvData[i].calendlyUri||rdvStableKey(rdvData[i]),{who:v,assignedBy:"manuel"}); else saveRdv(); toast("Rendez-vous réattribué à "+v); renderRdv(); openRdvDrawer(i); };
   renderRdvTable();
 }

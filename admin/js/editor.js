@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.49.0" };
+const ADMIN_BUILD = { version: "0.49.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1091,7 +1091,7 @@ const HERO_IC={
 const DASH_ARROW='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
 function renderDashHero(role){ const w=document.getElementById("dashHero"); if(!w) return;
   const h = role==="commercial"
-    ? {ic:HERO_IC.copilot, title:"Démarrer un rendez-vous", sub:"Votre copilote : les bonnes questions, le chiffrage et le compte-rendu.", cta:"Ouvrir le copilote", goto:"copilot", grad:"linear-gradient(100deg,#12795f,#0b4a3b)"}
+    ? {ic:HERO_IC.copilot, title:"Piloter un rendez-vous", sub:"Choisissez un client, puis lancez le copilote : découverte, chiffrage et compte-rendu.", cta:"Voir mes clients", goto:"clients", grad:"linear-gradient(100deg,#12795f,#0b4a3b)"}
     : {ic:HERO_IC.editor, title:"Modifier le site", sub:"Textes, images, sections, bandeau promo.", cta:"Ouvrir l'éditeur", goto:"editor", grad:"linear-gradient(100deg,#3a2c6e,var(--ink))"};
   w.innerHTML='<div class="cta-card" style="background:'+h.grad+'"><div class="ic">'+h.ic+'</div><div><h3>'+h.title+'</h3><p>'+h.sub+'</p></div><button class="go" data-goto="'+h.goto+'">'+h.cta+' '+DASH_ARROW+'</button></div>';
   const b=w.querySelector("[data-goto]"); if(b) b.addEventListener("click",()=>showView(h.goto)); }
@@ -1396,7 +1396,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.49.0", cur:true, date:"2026-07-21", title:"Clients : statut en 1 clic + actions par ligne", items:[
+  { v:"v0.49.1", cur:true, date:"2026-07-21", title:"Clients : tags colorés + menu cohérent", items:[
+    {t:"fix", x:"Les statuts de la page Clients reprennent enfin les couleurs de la page Rendez-vous (fond clair net au lieu de blanc)"},
+    {t:"imp", x:"« Copilote RDV » retiré du menu latéral : il se lance depuis un client (bouton « Piloter avec le copilote ») ; il n'était pas logique de le garder comme entrée de menu"}
+  ]},
+  { v:"v0.49.0", date:"2026-07-21", title:"Clients : statut en 1 clic + actions par ligne", items:[
     {t:"add", x:"Dans le tableau Clients, le statut se change directement en un clic (même présentation que la page Rendez-vous) ; compteurs et filtres se mettent à jour aussitôt"},
     {t:"add", x:"Chaque ligne a des actions rapides : lancer le rendez-vous (copilote), voir le compte-rendu, ouvrir la fiche"}
   ]},
@@ -4540,7 +4544,24 @@ function cbAsk(q){
 var cliLeads=[], cliQuery="", cliFilter="all", cliLeadsLoaded=false, cliCurrentList=[], cliPage=1, cliEnrich={};
 var CLI_PER_PAGE=12;
 // Statut manuel (enrichissement partagé) : override le statut dérivé. {k,lbl,c} comme cliStatus().
-var CLI_STATUS_MANUAL={ lead:{k:"lead",lbl:"Nouveau lead",c:"#9A6A15"}, discussion:{k:"discussion",lbl:"En discussion",c:"#2F6FE0"}, devis:{k:"devis",lbl:"Devis envoyé",c:"#7A5AF0"}, active:{k:"active",lbl:"Client actif",c:"#0F6E56"}, lost:{k:"lost",lbl:"Sans suite",c:"#8a8c89"} };
+// Table des statuts Clients — MÊME modèle que RDV_STC (couleur texte + FOND CLAIR net + point) pour
+// des tags colorés identiques à la page Rendez-vous (fini le blanc).
+var CLI_STC={
+  lead:{l:"Nouveau lead",c:"#9A6A15",bg:"#FBF0DD",solid:"#C7891B"},
+  rdv:{l:"RDV planifié",c:"#185FA5",bg:"#E6F1FB",solid:"#378ADD"},
+  seen:{l:"Rencontré",c:"#0F6E56",bg:"#E1F5EE",solid:"#1D9E75"},
+  discussion:{l:"En discussion",c:"#2F6FE0",bg:"#E9F0FC",solid:"#2F6FE0"},
+  devis:{l:"Devis envoyé",c:"#534AB7",bg:"#EEEDFE",solid:"#6B5BCC"},
+  active:{l:"Client actif",c:"#0F6E56",bg:"#E1F5EE",solid:"#1D9E75"},
+  lost:{l:"Sans suite",c:"#6B6E6A",bg:"#EEEFEE",solid:"#9A9C98"},
+  other:{l:"À traiter",c:"#6B6E6A",bg:"#EEEFEE",solid:"#9A9C98"}
+};
+// enhanceSelect consulte RDV_STC puis CLI_STC AU MOMENT DU CLIC (runtime) : couleur commune RDV+Clients
+// sans dépendre de l'ordre de déclaration (pas de fusion au chargement -> pas de zone morte temporelle).
+function stcOf(v){ try{ if(RDV_STC && RDV_STC[v]) return RDV_STC[v]; }catch(e){} if(typeof CLI_STC!=="undefined" && CLI_STC[v]) return CLI_STC[v]; return null; }
+function cliStat(k){ var s=CLI_STC[k]||CLI_STC.other; return { k:k, lbl:s.l, c:s.c, bg:s.bg }; }
+// Statuts « manuels » choisissables (le pipeline commercial), dérivés de CLI_STC.
+var CLI_STATUS_MANUAL={}; ["lead","discussion","devis","active","lost"].forEach(function(k){ CLI_STATUS_MANUAL[k]=cliStat(k); });
 var CLI_STATUS_OPTS=[["","(automatique)"],["lead","Nouveau lead"],["discussion","En discussion"],["devis","Devis envoyé"],["active","Client actif"],["lost","Sans suite"]];
 var CLI_OFFER_OPTS=[["","(aucune)"],["flex","Flex"],["express","Express"],["dedie","Dédié"]];
 var GENERIC_MAIL=/^(gmail|hotmail|outlook|yahoo|icloud|live|msn|bluewin|gmx|proton|protonmail|orange|wanadoo|free)\./;
@@ -4557,11 +4578,11 @@ function cliKeyFor(o){
 }
 function cliStatus(c){
   var st=c.rdvs.map(function(r){return r.st;});
-  if(st.indexOf("avenir")>=0) return {k:"rdv",lbl:"RDV planifié",c:"#2F6FE0"};
-  if(st.indexOf("honore")>=0) return {k:"seen",lbl:"Rencontré",c:"#0F6E56"};
-  if(c.sources.lead && !c.rdvs.length) return {k:"lead",lbl:"Nouveau lead",c:"#9A6A15"};
-  if(st.indexOf("refuse")>=0||st.indexOf("noshow")>=0||st.indexOf("annule")>=0) return {k:"lost",lbl:"Sans suite",c:"#8a8c89"};
-  return {k:"other",lbl:"À traiter",c:"#8a8c89"};
+  if(st.indexOf("avenir")>=0) return cliStat("rdv");
+  if(st.indexOf("honore")>=0) return cliStat("seen");
+  if(c.sources.lead && !c.rdvs.length) return cliStat("lead");
+  if(st.indexOf("refuse")>=0||st.indexOf("noshow")>=0||st.indexOf("annule")>=0) return cliStat("lost");
+  return cliStat("other");
 }
 // Jeu de DÉMO stable pour la page Clients (projection commerciale). Découplé de Calendly : il reste
 // affiché tant qu'AUCUNE vraie donnée n'existe (pas de RDV live non vide, pas de vraie demande) et
@@ -4647,7 +4668,7 @@ function renderClients(){
     var hasCr=c.recaps.length>0;
     tr.innerHTML='<td><div class="cl-co" title="'+escAttr(c.name)+'">'+escHtml(c.name)+'</div>'+(c.contacts[0]?'<div class="cl-ct">'+escHtml(c.contacts[0])+'</div>':'')+'</td>'
       +'<td>'+escHtml(c.secteur||"—")+'</td>'
-      +'<td><select class="statusel cli-stsel" data-k="'+escAttr(c.key)+'" style="background-color:'+c.status.c+'1f;color:'+c.status.c+';border-color:transparent;font-weight:600">'+stOpts+'</select></td>'
+      +'<td><select class="statusel cli-stsel" data-k="'+escAttr(c.key)+'" data-stc-bg="'+c.status.bg+'" data-stc-color="'+c.status.c+'">'+stOpts+'</select></td>'
       +'<td style="text-align:center">'+(c.rdvs.length||"—")+'</td>'
       +'<td style="text-align:center">'+(hasCr?'<span class="cli-crn">'+c.recaps.length+'</span>':"—")+'</td>'
       +'<td style="white-space:nowrap;color:var(--ink-soft)">'+escHtml(last)+'</td>'
@@ -4741,7 +4762,7 @@ function openClientCard(key){
   var leadHtml=c.leads.length? '<div class="cli-sec-h">Demandes reçues ('+c.leads.length+')</div>'+c.leads.map(function(l){ var d=""; try{ d=l.receivedAt?new Date(l.receivedAt).toLocaleDateString("fr-CH"):""; }catch(e){} return '<div class="cli-lead">'+escHtml((l.summary||"Demande")+(d?" · "+d:""))+'</div>'; }).join("") : "";
   var ov=document.createElement("div"); ov.className="thm-ov"; ov.id="cliCardOv";
   ov.innerHTML='<div class="thm-card cli-detail" role="dialog" aria-modal="true"><button class="thm-x" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'
-    +'<div class="cli-d-hd"><div class="cli-d-name">'+escHtml(c.name)+'</div><span class="cli-badge" style="color:'+c.status.c+';background:'+c.status.c+'18">'+c.status.lbl+'</span></div>'
+    +'<div class="cli-d-hd"><div class="cli-d-name">'+escHtml(c.name)+'</div><span class="cli-badge" style="color:'+c.status.c+';background:'+c.status.bg+'">'+c.status.lbl+'</span></div>'
     +(c.secteur?'<div class="cli-d-sec">'+escHtml(c.secteur)+'</div>':'')
     +((mailBtns||telBtns)?'<div class="cli-d-contact">'+mailBtns+telBtns+'</div>':'')
     +'<div class="cli-d-actions"><button class="btn primary sm" data-cli-cop><i data-lucide="compass"></i>Piloter avec le copilote</button></div>'
@@ -5227,13 +5248,15 @@ function enhanceSelect(sel){
   btn.insertAdjacentHTML("beforeend",'<svg class="dd-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>');
   const menu=document.createElement("div"); menu.className="dd-menu";
   [...sel.options].forEach((op,i)=>{ const it=document.createElement("div"); it.className="dd-opt";
-    const dot = status && RDV_STC[op.value] ? '<span class="dd-dot" style="background:'+RDV_STC[op.value].solid+'"></span>' : '';
+    var _S = (typeof stcOf==="function") ? stcOf(op.value) : RDV_STC[op.value];
+    const dot = status && _S ? '<span class="dd-dot" style="background:'+_S.solid+'"></span>' : '';
     it.innerHTML=dot+'<span class="dd-t">'+op.text+'</span><svg class="dd-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
     it.addEventListener("click",e=>{ e.stopPropagation(); if(sel.selectedIndex!==i){ sel.selectedIndex=i; sync(); sel.dispatchEvent(new Event("change",{bubbles:true})); } close(); });
     menu.appendChild(it); });
   function sync(){ const op=sel.options[sel.selectedIndex]; lbl.textContent=op?op.text:"";
     menu.querySelectorAll(".dd-opt").forEach((el,i)=> el.classList.toggle("sel", i===sel.selectedIndex));
-    if(status){ const st=RDV_STC[sel.value]; if(st){ btn.style.backgroundColor=st.bg; btn.style.color=st.c; btn.style.borderColor=st.bg; } } }
+    if(status){ var st=((typeof stcOf==="function")?stcOf(sel.value):RDV_STC[sel.value])||(sel.dataset.stcBg?{bg:sel.dataset.stcBg,c:sel.dataset.stcColor}:null);
+      if(st){ btn.style.backgroundColor=st.bg; btn.style.color=st.c; btn.style.borderColor=st.bg; } else { btn.style.backgroundColor=""; btn.style.color=""; btn.style.borderColor=""; } } }
   sel.style.display="none"; sel.parentNode.insertBefore(dd,sel); dd.appendChild(btn); dd.appendChild(sel); sync(); sel._ddSync=sync;
   function place(){ const r=btn.getBoundingClientRect(); menu.style.minWidth=Math.max(r.width,150)+"px";
     const mw=menu.offsetWidth, mh=menu.offsetHeight; let left=r.left, top=r.bottom+6;

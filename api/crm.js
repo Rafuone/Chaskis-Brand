@@ -96,20 +96,22 @@ async function listLeads(req, res) {
   var m = /[?&]days=(\d{1,3})/.exec((req && req.url) || '');
   var days = m ? Math.min(120, Math.max(1, parseInt(m[1], 10))) : 60;
 
-  // 1) Collecte des références (listing PAR JOUR, du plus récent au plus ancien). Aucune lecture de corps.
-  var refs = [], calls = 0, anyOk = false, truncated = false;
-  for (var i = 0; i < days && refs.length < MAX_LEADS; i++) {
+  // 1) Références (listing GLOBAL du préfixe, paginé et borné). On garde celles dans la fenêtre `days`
+  //    (uploadedAt ~ date de réception). Aucune lecture de corps ici. NB : un listing par JOUR
+  //    produirait un faux `truncated` (chaque jour vide consommerait un appel) -> on liste le préfixe.
+  var since = Date.now() - days * 86400000;
+  var refs = [], cursor = null, calls = 0, anyOk = false, truncated = false;
+  do {
     if (calls >= MAX_LIST_CALLS) { truncated = true; break; }
-    var d = dayKey(new Date(Date.now() - i * 86400000));
-    var cursor = null, guard = 0;
-    do {
-      var r = await storage.list(PREFIX + d + '/', 1000, cursor); calls++;
-      if (!r || !r.ok) break;
-      anyOk = true;
-      (r.blobs || []).forEach(function (b) { refs.push({ url: b.url, at: b.uploadedAt || '' }); });
-      cursor = (r.hasMore && r.cursor) ? r.cursor : null; guard++;
-    } while (cursor && calls < MAX_LIST_CALLS && guard < 20);
-  }
+    var r = await storage.list(PREFIX, 1000, cursor); calls++;
+    if (!r || !r.ok) break;
+    anyOk = true;
+    (r.blobs || []).forEach(function (b) {
+      var ts = b.uploadedAt ? Date.parse(b.uploadedAt) : NaN;
+      if (isNaN(ts) || ts >= since) refs.push({ url: b.url, at: b.uploadedAt || '' }); // dans la fenêtre (ou date inconnue)
+    });
+    cursor = (r.hasMore && r.cursor) ? r.cursor : null;
+  } while (cursor);
   if (!anyOk) return send(res, 200, { ok: true, provider: storage.provider(), note: 'stockage indisponible', leads: [] });
 
   // 2) Plus récentes d'abord, plafonnées, puis lecture des corps par petits lots parallèles.

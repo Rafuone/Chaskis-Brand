@@ -351,6 +351,21 @@
   .cli-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
   .cli-chip .avatar.xs{width:18px;height:18px;font-size:8px;margin-right:0}
   .cli-chip svg{width:14px;height:14px}
+  .cli-chip.sm{font-size:11.5px;padding:4px 10px}
+  /* Filtres modale : listes RECHERCHABLES à cocher (scalables) + plage de dates du/au */
+  .cli-msearch{position:relative;margin-bottom:8px}
+  .cli-msearch input{width:100%;box-sizing:border-box;font-family:inherit;font-size:13px;padding:7px 10px 7px 31px;border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--ink)}
+  .cli-msearch input:focus{outline:none;border-color:var(--teal)}
+  .cli-msearch svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--muted);pointer-events:none}
+  .cli-checklist{max-height:148px;overflow:auto;border:1px solid var(--border);border-radius:9px;padding:4px;background:var(--panel)}
+  .cli-mrow{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:7px;font-size:13px;color:var(--ink);cursor:pointer}
+  .cli-mrow:hover{background:var(--bg)}
+  .cli-mrow input{accent-color:var(--ink);width:15px;height:15px;flex-shrink:0;cursor:pointer}
+  .cli-mrow .avatar.xs{margin-right:0}
+  .cli-drow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .cli-drow input[type=date]{font-family:inherit;font-size:12.5px;color:var(--ink);background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:7px 9px}
+  .cli-drow input[type=date]:focus{outline:none;border-color:var(--teal)}
+  .cli-drow>span{font-size:12px;color:var(--muted)}
   /* Relance par e-mail intégrée à la fiche */
   .cli-relance{border:1px solid var(--border);border-radius:12px;padding:16px;margin:12px 0 4px;background:var(--bg)}
   /* objet + select de modèle sur une même ligne (le select à droite pré-remplit objet+corps) */

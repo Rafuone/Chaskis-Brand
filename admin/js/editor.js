@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.55.0" };
+const ADMIN_BUILD = { version: "0.56.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1396,7 +1396,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.55.0", cur:true, date:"2026-07-21", title:"Compte-rendu : rédaction après coup", items:[
+  { v:"v0.56.0", cur:true, date:"2026-07-21", title:"Filtres clients : contenu revu (même fenêtre)", items:[
+    {t:"imp", x:"Dans la fenêtre Filtres : Commercial et Secteur deviennent des listes à cocher RECHERCHABLES (elles tiennent quand l'équipe ou les secteurs se multiplient), au lieu d'une rangée de pastilles"},
+    {t:"add", x:"« Dernière activité » : on choisit une plage de dates précise (du / au), avec des raccourcis facultatifs — plus de dates imposées"},
+    {t:"add", x:"Filtrer par statut (multiple) et par offre, + raccourcis métier : à relancer, RDV à venir, sans commercial attribué, avec compte-rendu"}
+  ]},
+  { v:"v0.55.0", date:"2026-07-21", title:"Compte-rendu : rédaction après coup", items:[
     {t:"add", x:"On peut maintenant rédiger (ou modifier) le compte-rendu d'un rendez-vous directement depuis sa fiche, même sans être passé par le copilote — utile pour un rendez-vous sur place ou noté après coup. Il est daté et rattaché au rendez-vous."}
   ]},
   { v:"v0.54.0", date:"2026-07-21", title:"Fiche client & filtres : refonte design", items:[
@@ -1949,7 +1954,7 @@ const PROGRESS=[
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
-  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.9.0",recent:["Fiche remise au propre : hiérarchie claire, séparateurs, espacement ; menu de statut aligné sur les badges","Relance : modèle choisi via un menu à droite de l'objet (remplit objet + message) ; horodatage de la relance","Filtres métier : « à relancer », « RDV à venir », tranche de dates, + commercial / secteur / offre"]},
+  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.10.0",recent:["Fenêtre Filtres : listes Commercial/Secteur recherchables à cocher (tiennent à l'échelle) + plage de dates du/au précise","Filtrer par statut (multiple), offre, et raccourcis métier (à relancer, RDV à venir, sans commercial, avec compte-rendu)","Fiche : relance intégrée (modèles), résumé, suivi qui/quand ; menu de statut aligné sur les badges"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.3.0",recent:["Rédiger ou modifier le compte-rendu d'un rendez-vous depuis sa fiche, même sans le copilote (RDV sur place / après coup)","Tableau de l'équipe : rendez-vous et présence calculés sur vos vrais rendez-vous dès que Calendly est connecté ; Jean-Christophe inclus","Le taux de conversion est marqué « exemple » (pas calculable sans les abonnements du back-office)"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"beta",version:"0.8.0",recent:["Cycle complet : préparer depuis un RDV → piloter → compte-rendu rattaché au rendez-vous","Comptes-rendus récents consultables (relire / re-télécharger)","Actions plaquette/offre = email pré-rempli au prospect"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audience réelle agrégée de tous les visiteurs (collecteur maison, sans cookie)","Visiteurs uniques anonymisés + filtrage des robots","Vraie mesure sans cookie (cet appareil) en repli"]},
@@ -4578,10 +4583,15 @@ var cliLeads=[], cliQuery="", cliFilter="all", cliLeadsLoaded=false, cliCurrentL
 var CLI_PER_PAGE=25;
 var cliSel=new Set();       // sélection multiple (par c.key stable) pour actions groupées — cf. rdvSel
 var cliCurrentShown=[];     // clients affichés (filtrés, toutes pages) au dernier rendu — pour « tout sélectionner »
-var cliFilterAdv={who:"",secteur:"",offer:"",period:"",aRelancer:false,rdvAVenir:false}; // filtres avancés (modale) : commercial / secteur / offre / période (dernière activité) / vues métier
-// Bornes de période sur la dernière activité (lastTs). "" = tout.
-function cliPeriodCutoff(p){ var d=86400000; if(p==="7j") return Date.now()-7*d; if(p==="30j") return Date.now()-30*d; if(p==="3m") return Date.now()-90*d; if(p==="year"){ var n=new Date(); return new Date(n.getFullYear(),0,1).getTime(); } return 0; }
-var CLI_PERIOD_OPTS=[["","Tout"],["7j","7 derniers jours"],["30j","30 derniers jours"],["3m","3 derniers mois"],["year","Cette année"]];
+// Filtres avancés de la MODALE (le contenu de la fenêtre Filtres). Contrôles scalables : listes
+// MULTI (arrays) recherchables pour commercial/secteur, plage de dates du/au précise, + critères métier.
+var cliFilterAdv={who:[],secteur:[],offer:[],statut:[],dateFrom:"",dateTo:"",aRelancer:false,rdvAVenir:false,sansCommercial:false,avecCr:false};
+function cliFilterEmpty(){ return {who:[],secteur:[],offer:[],statut:[],dateFrom:"",dateTo:"",aRelancer:false,rdvAVenir:false,sansCommercial:false,avecCr:false}; }
+function cliFilterCount(){ var f=cliFilterAdv; return f.who.length+f.secteur.length+f.offer.length+f.statut.length+((f.dateFrom||f.dateTo)?1:0)+(f.aRelancer?1:0)+(f.rdvAVenir?1:0)+(f.sansCommercial?1:0)+(f.avecCr?1:0); }
+// Raccourcis de plage : renvoient une date de DÉBUT (la fin reste ouverte). Non bloquants (on peut aussi saisir du/au).
+function cliISO(dt){ if(!dt) return ""; var m=dt.getMonth()+1,d=dt.getDate(); return dt.getFullYear()+"-"+(m<10?"0"+m:m)+"-"+(d<10?"0"+d:d); }
+function cliDatePresetFrom(p){ var day=86400000; if(p==="30j") return cliISO(new Date(Date.now()-30*day)); if(p==="3m") return cliISO(new Date(Date.now()-90*day)); if(p==="year"){ var n=new Date(); return cliISO(new Date(n.getFullYear(),0,1)); } return ""; }
+var CLI_DATE_PRESETS=[["30j","30 derniers jours"],["3m","3 derniers mois"],["year","Cette année"]];
 // « À relancer » : pas de relance depuis 14 j (ou jamais), hors clients actifs / sans suite.
 function cliNeedsFollowUp(c){ var en=c.enrich||{}; var st=(c.status&&c.status.k)||""; if(st==="active"||st==="lost") return false; var lr=en.lastRelanceAt?Date.parse(en.lastRelanceAt):0; return !lr || (Date.now()-lr)>14*86400000; }
 // Statut manuel (enrichissement partagé) : override le statut dérivé. {k,lbl,c} comme cliStatus().
@@ -4697,12 +4707,16 @@ function renderClients(){
   if(fw){ fw.innerHTML=CLI_FILTERS.map(function(f){ var n=f[0]==="all"?total:list.filter(function(c){return c.status.k===f[0];}).length; return '<button type="button" class="cli-fbtn'+(cliFilter===f[0]?" on":"")+'" data-f="'+f[0]+'">'+f[1]+'<span class="cli-fn">'+n+'</span></button>'; }).join("");
     fw.querySelectorAll("[data-f]").forEach(function(b){ b.addEventListener("click",function(){ cliFilter=b.dataset.f; cliPage=1; cliSel.clear(); renderClients(); }); }); }
   var shown=list.filter(function(c){ return cliMatch(c,cliQuery) && (cliFilter==="all"||c.status.k===cliFilter)
-    && (!cliFilterAdv.who || (c.owners||[]).indexOf(cliFilterAdv.who)>=0)
-    && (!cliFilterAdv.secteur || c.secteur===cliFilterAdv.secteur)
-    && (!cliFilterAdv.offer || c.offer===cliFilterAdv.offer)
-    && (!cliFilterAdv.period || (c.lastTs||0) >= cliPeriodCutoff(cliFilterAdv.period))
+    && (!cliFilterAdv.who.length || (c.owners||[]).some(function(w){return cliFilterAdv.who.indexOf(w)>=0;}))
+    && (!cliFilterAdv.secteur.length || cliFilterAdv.secteur.indexOf(c.secteur)>=0)
+    && (!cliFilterAdv.offer.length || cliFilterAdv.offer.indexOf(c.offer)>=0)
+    && (!cliFilterAdv.statut.length || cliFilterAdv.statut.indexOf((c.status&&c.status.k)||"")>=0)
+    && (!cliFilterAdv.dateFrom || ((c.lastTs||0) >= Date.parse(cliFilterAdv.dateFrom)))
+    && (!cliFilterAdv.dateTo || ((c.lastTs||0) <= Date.parse(cliFilterAdv.dateTo)+86399999))
     && (!cliFilterAdv.aRelancer || cliNeedsFollowUp(c))
-    && (!cliFilterAdv.rdvAVenir || (c.rdvs||[]).some(function(r){return r.st==="avenir";})); });
+    && (!cliFilterAdv.rdvAVenir || (c.rdvs||[]).some(function(r){return r.st==="avenir";}))
+    && (!cliFilterAdv.sansCommercial || !((c.owners||[]).length))
+    && (!cliFilterAdv.avecCr || (c.recaps||[]).length>0); });
   cliCurrentShown=shown;
   var b=document.getElementById("cliBody"); if(!b) return; b.innerHTML="";
   var pages=Math.max(1,Math.ceil(shown.length/CLI_PER_PAGE)); if(cliPage>pages) cliPage=pages; if(cliPage<1) cliPage=1;
@@ -4870,26 +4884,34 @@ async function saveClientStatusInline(key, status){
 // Relance depuis le tableau : on ouvre la FICHE sur le panneau de relance (édition + modèles dans l'interface),
 // plutôt qu'un mailto « brut » (demande d'Alexandre : relancer depuis l'interface, avec options pratiques).
 function cliRelance(key){ openClientCard(key, { relance:true }); }
-function syncCliFilterBtn(){ var fb=document.getElementById("cliFilterBtn"); if(!fb) return; var n=(cliFilterAdv.who?1:0)+(cliFilterAdv.secteur?1:0)+(cliFilterAdv.offer?1:0)+(cliFilterAdv.period?1:0)+(cliFilterAdv.aRelancer?1:0)+(cliFilterAdv.rdvAVenir?1:0); fb.classList.toggle("on",n>0); var lbl=fb.querySelector(".cli-fltn"); if(n){ if(!lbl){ lbl=document.createElement("span"); lbl.className="cli-fltn"; fb.appendChild(lbl); } lbl.textContent=n; } else if(lbl){ lbl.remove(); } }
-// Modale « Filtres » centrée : commercial / secteur / offre (les options viennent des données réelles).
+function syncCliFilterBtn(){ var fb=document.getElementById("cliFilterBtn"); if(!fb) return; var n=cliFilterCount(); fb.classList.toggle("on",n>0); var lbl=fb.querySelector(".cli-fltn"); if(n){ if(!lbl){ lbl=document.createElement("span"); lbl.className="cli-fltn"; fb.appendChild(lbl); } lbl.textContent=n; } else if(lbl){ lbl.remove(); } }
+// Fenêtre « Filtres » (même mécanisme centré) — CONTENU scalable : listes recherchables à cocher pour
+// commercial/secteur (tiennent à 10+/15+), plage de dates du/au précise, chips multi bornées (statut/offre),
+// raccourcis métier. Édition sur une copie `pend`, validée par Appliquer.
+var CLI_STATUS_FILTER=["lead","rdv","seen","discussion","devis","active","lost"];
 function openCliFilters(){
   var list=cliCurrentList||[]; var whos={}, secs={};
   list.forEach(function(c){ (c.owners||[]).forEach(function(w){ whos[w]=1; }); if(c.secteur) secs[c.secteur]=1; });
-  var pend={ who:cliFilterAdv.who||"", secteur:cliFilterAdv.secteur||"", offer:cliFilterAdv.offer||"", period:cliFilterAdv.period||"", aRelancer:!!cliFilterAdv.aRelancer, rdvAVenir:!!cliFilterAdv.rdvAVenir };
-  var togChips='<button type="button" class="cli-chip'+(pend.aRelancer?" on":"")+'" data-tog="aRelancer"><i data-lucide="bell"></i>À relancer</button><button type="button" class="cli-chip'+(pend.rdvAVenir?" on":"")+'" data-tog="rdvAVenir"><i data-lucide="calendar-clock"></i>RDV à venir</button>';
-  var periodChips=CLI_PERIOD_OPTS.map(function(o){ return '<button type="button" class="cli-chip'+(pend.period===o[0]?" on":"")+'" data-val="'+escAttr(o[0])+'">'+escHtml(o[1])+'</button>'; }).join("");
-  var whoChips='<button type="button" class="cli-chip'+(!pend.who?" on":"")+'" data-val="">Tous</button>'+Object.keys(whos).sort().map(function(w){ var cc=commercialChip(w); return '<button type="button" class="cli-chip'+(pend.who===w?" on":"")+'" data-val="'+escAttr(w)+'"><span class="avatar xs" style="background:'+cc.color+';color:#fff">'+cc.ini+'</span>'+escHtml(w)+'</button>'; }).join("");
-  var secChips='<button type="button" class="cli-chip'+(!pend.secteur?" on":"")+'" data-val="">Tous</button>'+Object.keys(secs).sort().map(function(s){ return '<button type="button" class="cli-chip'+(pend.secteur===s?" on":"")+'" data-val="'+escAttr(s)+'">'+escHtml(s)+'</button>'; }).join("");
-  var offChips='<button type="button" class="cli-chip'+(!pend.offer?" on":"")+'" data-val="">Toutes</button>'+CLI_OFFER_OPTS.filter(function(o){return o[0];}).map(function(o){ return '<button type="button" class="cli-chip'+(pend.offer===o[0]?" on":"")+'" data-val="'+escAttr(o[0])+'">'+escHtml(o[1])+'</button>'; }).join("");
+  var pend={ who:cliFilterAdv.who.slice(), secteur:cliFilterAdv.secteur.slice(), offer:cliFilterAdv.offer.slice(), statut:cliFilterAdv.statut.slice(), dateFrom:cliFilterAdv.dateFrom, dateTo:cliFilterAdv.dateTo, aRelancer:!!cliFilterAdv.aRelancer, rdvAVenir:!!cliFilterAdv.rdvAVenir, sansCommercial:!!cliFilterAdv.sansCommercial, avecCr:!!cliFilterAdv.avecCr };
+  var loupe='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>';
+  var togB=function(k,label,ic){ return '<button type="button" class="cli-chip'+(pend[k]?" on":"")+'" data-tog="'+k+'"><i data-lucide="'+ic+'"></i>'+label+'</button>'; };
+  var togChips=togB("aRelancer","À relancer","bell")+togB("rdvAVenir","RDV à venir","calendar-clock")+togB("sansCommercial","Sans commercial","user-x")+togB("avecCr","Avec compte-rendu","file-text");
+  var statChips=CLI_STATUS_FILTER.map(function(k){ return '<button type="button" class="cli-chip'+(pend.statut.indexOf(k)>=0?" on":"")+'" data-multi="statut" data-val="'+k+'">'+escHtml((CLI_STC[k]||{}).l||k)+'</button>'; }).join("");
+  var offChips=CLI_OFFER_OPTS.filter(function(o){return o[0];}).map(function(o){ return '<button type="button" class="cli-chip'+(pend.offer.indexOf(o[0])>=0?" on":"")+'" data-multi="offer" data-val="'+escAttr(o[0])+'">'+escHtml(o[1])+'</button>'; }).join("");
+  function checklist(field,opts,avatar){ if(!opts.length) return '<div class="cli-mrow" style="color:var(--muted);cursor:default">Aucune valeur</div>'; return opts.map(function(o){ var av=avatar?'<span class="avatar xs" style="background:'+o.color+';color:#fff">'+o.ini+'</span>':''; return '<label class="cli-mrow" data-lab="'+escAttr(o.lab.toLowerCase())+'"><input type="checkbox" data-multi="'+field+'" value="'+escAttr(o.val)+'"'+(pend[field].indexOf(o.val)>=0?" checked":"")+'>'+av+'<span>'+escHtml(o.lab)+'</span></label>'; }).join(""); }
+  var whoOpts=Object.keys(whos).sort().map(function(w){ var cc=commercialChip(w); return {val:w,lab:w,color:cc.color,ini:cc.ini}; });
+  var secOpts=Object.keys(secs).sort().map(function(s){ return {val:s,lab:s}; });
+  var presetChips=CLI_DATE_PRESETS.map(function(p){ return '<button type="button" class="cli-chip sm" data-preset="'+p[0]+'">'+escHtml(p[1])+'</button>'; }).join("")+'<button type="button" class="cli-chip sm" data-preset="clear">Effacer</button>';
   var ov=document.createElement("div"); ov.className="thm-ov"; ov.id="cliFiltOv";
-  ov.innerHTML='<div class="thm-card" style="max-width:480px" role="dialog" aria-modal="true"><button class="thm-x" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'
+  ov.innerHTML='<div class="thm-card" style="max-width:520px" role="dialog" aria-modal="true"><button class="thm-x" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'
     +'<div class="cli-d-name" style="margin:0 30px 16px 0">Filtrer les clients</div>'
     +'<div class="cli-flt-grp"><span class="lbl">Vues rapides</span><div class="cli-chips">'+togChips+'</div></div>'
-    +'<div class="cli-flt-grp" data-grp="period"><span class="lbl">Dernière activité</span><div class="cli-chips">'+periodChips+'</div></div>'
-    +'<div class="cli-flt-grp" data-grp="who"><span class="lbl">Commercial</span><div class="cli-chips">'+whoChips+'</div></div>'
-    +'<div class="cli-flt-grp" data-grp="secteur"><span class="lbl">Secteur</span><div class="cli-chips">'+secChips+'</div></div>'
-    +'<div class="cli-flt-grp" data-grp="offer"><span class="lbl">Offre souscrite</span><div class="cli-chips">'+offChips+'</div></div>'
-    +'<div class="cli-flt-actions"><button class="btn ghost" id="fltReset">Réinitialiser</button><button class="btn primary" id="fltApply">Appliquer</button></div>'
+    +'<div class="cli-flt-grp"><span class="lbl">Statut</span><div class="cli-chips">'+statChips+'</div></div>'
+    +'<div class="cli-flt-grp"><span class="lbl">Dernière activité</span><div class="cli-drow"><span>du</span><input type="date" id="fltFrom" value="'+escAttr(pend.dateFrom)+'"><span>au</span><input type="date" id="fltTo" value="'+escAttr(pend.dateTo)+'"></div><div class="cli-chips">'+presetChips+'</div></div>'
+    +'<div class="cli-flt-grp cli-mgrp"><span class="lbl">Commercial</span><div class="cli-msearch">'+loupe+'<input type="search" placeholder="Rechercher un commercial…"></div><div class="cli-checklist">'+checklist("who",whoOpts,true)+'</div></div>'
+    +'<div class="cli-flt-grp cli-mgrp"><span class="lbl">Secteur</span><div class="cli-msearch">'+loupe+'<input type="search" placeholder="Rechercher un secteur…"></div><div class="cli-checklist">'+checklist("secteur",secOpts,false)+'</div></div>'
+    +'<div class="cli-flt-grp"><span class="lbl">Offre souscrite</span><div class="cli-chips">'+offChips+'</div></div>'
+    +'<div class="cli-flt-actions"><button class="btn ghost" id="fltReset">Tout réinitialiser</button><button class="btn primary" id="fltApply">Appliquer</button></div>'
     +'</div>';
   document.body.appendChild(ov);
   function close(){ ov.remove(); document.removeEventListener("keydown",esc); }
@@ -4897,10 +4919,15 @@ function openCliFilters(){
   ov.querySelector(".thm-x").addEventListener("click",close);
   ov.addEventListener("mousedown",function(e){ if(e.target===ov) close(); });
   document.addEventListener("keydown",esc);
-  ov.querySelectorAll(".cli-flt-grp[data-grp]").forEach(function(grp){ var g=grp.getAttribute("data-grp"); grp.querySelectorAll("[data-val]").forEach(function(b){ b.addEventListener("click",function(){ pend[g]=b.getAttribute("data-val")||""; grp.querySelectorAll("[data-val]").forEach(function(x){x.classList.remove("on");}); b.classList.add("on"); }); }); });
   ov.querySelectorAll("[data-tog]").forEach(function(b){ b.addEventListener("click",function(){ var k=b.getAttribute("data-tog"); pend[k]=!pend[k]; b.classList.toggle("on",pend[k]); }); });
-  ov.querySelector("#fltApply").addEventListener("click",function(){ cliFilterAdv={ who:pend.who, secteur:pend.secteur, offer:pend.offer, period:pend.period, aRelancer:pend.aRelancer, rdvAVenir:pend.rdvAVenir }; cliPage=1; cliSel.clear(); close(); renderClients(); });
-  ov.querySelector("#fltReset").addEventListener("click",function(){ cliFilterAdv={who:"",secteur:"",offer:"",period:"",aRelancer:false,rdvAVenir:false}; cliPage=1; cliSel.clear(); close(); renderClients(); });
+  ov.querySelectorAll(".cli-chip[data-multi][data-val]").forEach(function(b){ b.addEventListener("click",function(){ var g=b.getAttribute("data-multi"), v=b.getAttribute("data-val"); var i=pend[g].indexOf(v); if(i>=0) pend[g].splice(i,1); else pend[g].push(v); b.classList.toggle("on",pend[g].indexOf(v)>=0); }); });
+  ov.querySelectorAll(".cli-checklist input[type=checkbox]").forEach(function(cb){ cb.addEventListener("change",function(){ var g=cb.getAttribute("data-multi"), v=cb.value, i=pend[g].indexOf(v); if(cb.checked && i<0) pend[g].push(v); else if(!cb.checked && i>=0) pend[g].splice(i,1); }); });
+  ov.querySelectorAll(".cli-mgrp").forEach(function(grp){ var si=grp.querySelector(".cli-msearch input"); if(!si) return; si.addEventListener("input",function(){ var q=si.value.toLowerCase(); grp.querySelectorAll(".cli-mrow").forEach(function(row){ if(!row.hasAttribute("data-lab")) return; row.style.display=(row.getAttribute("data-lab").indexOf(q)>=0)?"":"none"; }); }); });
+  var ff=ov.querySelector("#fltFrom"), ft=ov.querySelector("#fltTo");
+  ff.addEventListener("change",function(){ pend.dateFrom=ff.value; }); ft.addEventListener("change",function(){ pend.dateTo=ft.value; });
+  ov.querySelectorAll("[data-preset]").forEach(function(b){ b.addEventListener("click",function(){ var p=b.getAttribute("data-preset"); if(p==="clear"){ pend.dateFrom=""; pend.dateTo=""; } else { pend.dateFrom=cliDatePresetFrom(p); pend.dateTo=""; } ff.value=pend.dateFrom; ft.value=pend.dateTo; }); });
+  ov.querySelector("#fltApply").addEventListener("click",function(){ cliFilterAdv={ who:pend.who, secteur:pend.secteur, offer:pend.offer, statut:pend.statut, dateFrom:pend.dateFrom, dateTo:pend.dateTo, aRelancer:pend.aRelancer, rdvAVenir:pend.rdvAVenir, sansCommercial:pend.sansCommercial, avecCr:pend.avecCr }; cliPage=1; cliSel.clear(); close(); renderClients(); });
+  ov.querySelector("#fltReset").addEventListener("click",function(){ cliFilterAdv=cliFilterEmpty(); cliPage=1; cliSel.clear(); close(); renderClients(); });
   refreshIcons();
 }
 // Modèles de relance e-mail (éditables dans la fiche) contextualisés au client.

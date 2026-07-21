@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.57.1" };
+const ADMIN_BUILD = { version: "0.57.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1397,7 +1397,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.57.1", cur:true, date:"2026-07-21", title:"Site : le bouton principal vend la consultation", items:[
+  { v:"v0.57.2", cur:true, date:"2026-07-21", title:"Site : « CDI » → « salarié(e)s » (exactitude)", items:[
+    {t:"fix", x:"Nettoyage : suppression des derniers « CDI » qui subsistaient dans des libellés d'ANCIENNES sections d'accueil laissés dans le dictionnaire (→ « salarié(e)s » / « 100% salariés », FR + EN). La page d'accueil actuelle n'affichait déjà plus « CDI » (corrigé en v0.57.0) ; ce nettoyage évite toute réapparition et colle à la réalité « CDD ou CDI »"}
+  ]},
+  { v:"v0.57.1", date:"2026-07-21", title:"Site : le bouton principal vend la consultation", items:[
     {t:"imp", x:"« Planifier un appel gratuit » devient « Réserver ma consultation offerte » (hero, bouton flottant, pied de page, menu) : même action, mais présentée comme une valeur reçue — cohérent avec la pastille « créneaux de rendez-vous » et la section « Votre consultation logistique offerte » (FR + EN)"}
   ]},
   { v:"v0.57.0", date:"2026-07-21", title:"Site vitrine : retours client (lot validé)", items:[

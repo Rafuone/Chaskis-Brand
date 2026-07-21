@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.45.0" };
+const ADMIN_BUILD = { version: "0.46.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1393,7 +1393,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.45.0", cur:true, date:"2026-07-21", title:"Les demandes du site remontent à l'admin", items:[
+  { v:"v0.46.0", cur:true, date:"2026-07-21", title:"Nouvelle page « Clients » : le commercial relié", items:[
+    {t:"add", x:"Une page « Clients » regroupe automatiquement tous vos clients et prospects à partir des rendez-vous et des demandes reçues (fini les silos)"},
+    {t:"add", x:"Chaque fiche client réunit ses coordonnées, ses rendez-vous et surtout ses comptes-rendus au même endroit : plus besoin de chercher où retrouver un compte-rendu"},
+    {t:"add", x:"Recherche et filtres par statut (nouveaux leads, RDV planifié, rencontrés, sans suite)"}
+  ]},
+  { v:"v0.45.0", date:"2026-07-21", title:"Les demandes du site remontent à l'admin", items:[
     {t:"add", x:"Les demandes envoyées via le formulaire « Commander » sont désormais reçues côté serveur et regroupées dans un panneau « Demandes reçues » du tableau de bord (entreprise, contact, e-mail, téléphone, résumé de la demande)"},
     {t:"imp", x:"Ces demandes restaient auparavant sur l'appareil du visiteur (invisibles) : les commerciaux peuvent maintenant les retrouver et recontacter en un clic"}
   ]},
@@ -1884,6 +1889,7 @@ const PROGRESS=[
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
+  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.1.0",recent:["Nouvelle page : tous les clients et prospects regroupés depuis les RDV et les demandes","Fiche client reliant coordonnées, rendez-vous et comptes-rendus","Recherche et filtres par statut"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"beta",version:"0.8.0",recent:["Cycle complet : préparer depuis un RDV → piloter → compte-rendu rattaché au rendez-vous","Comptes-rendus récents consultables (relire / re-télécharger)","Actions plaquette/offre = email pré-rempli au prospect"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audience réelle agrégée de tous les visiteurs (collecteur maison, sans cookie)","Visiteurs uniques anonymisés + filtrage des robots","Vraie mesure sans cookie (cet appareil) en repli"]},
@@ -3593,7 +3599,7 @@ function saveUsrForm(){ const name=(document.getElementById("usrName").value||""
 /* ============================================================
    View switching + sidebar
    ============================================================ */
-const TITLES={ dashboard:"Tableau de bord", editor:"Édition du site", structure:"Structure & stratégie", media:"Médiathèque", versions:"Versions", notes:"Notes de version", progress:"Avancement", chatbot:"Chatbot", "chatbot-stats":"Statistiques du chatbot", rdv:"Rendez-vous", stats:"Statistiques", perf:"Performance", affiliation:"Affiliation", copilot:"Copilote RDV", users:"Utilisateurs & accès", tech:"Suivi technique" };
+const TITLES={ dashboard:"Tableau de bord", editor:"Édition du site", structure:"Structure & stratégie", media:"Médiathèque", versions:"Versions", notes:"Notes de version", progress:"Avancement", chatbot:"Chatbot", "chatbot-stats":"Statistiques du chatbot", clients:"Clients", rdv:"Rendez-vous", stats:"Statistiques", perf:"Performance", affiliation:"Affiliation", copilot:"Copilote RDV", users:"Utilisateurs & accès", tech:"Suivi technique" };
 function showView(name){
   if(name==="chatbot-stats") name="chatbot";   // ancienne vue supprimée : les stats vivent dans le tiroir de la page Chatbot
   if(!canView(name)) name="dashboard";          // un rôle ne peut pas ouvrir une vue hors de son périmètre
@@ -3617,6 +3623,7 @@ function showView(name){
   if(name==="progress") renderProgress();
   if(name==="dashboard") updateDashboard();
   if(name==="chatbot") renderChatbot();
+  if(name==="clients") renderClients();
   if(name==="rdv"){ renderRdv(); if(getStoredPublishKey()) syncCalendlyRdv(true); }
   if(name==="stats") renderStats();
   if(name==="perf") renderPerf();
@@ -4498,6 +4505,112 @@ function cbAsk(q){
   const send=document.getElementById("cbSend"); if(send) send.addEventListener("click",()=>{ const i=document.getElementById("cbInput"); cbAsk(i.value); i.value=""; });
   const inp=document.getElementById("cbInput"); if(inp) inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){ cbAsk(e.target.value); e.target.value=""; } });
 })();
+
+/* ============================================================
+   Clients — hub commercial (agrège RDV + demandes ; relie les comptes-rendus)
+   ============================================================
+   La liste est DÉRIVÉE de sources déjà partagées : les rendez-vous (Calendly en direct ou démo) et
+   les demandes reçues (/api/crm). Tous les commerciaux voient donc les mêmes clients. L'enrichissement
+   PARTAGÉ (statut/prochaine étape saisis à la main) viendra dans un incrément suivant. Repli : sans
+   demandes chargées, les clients proviennent des RDV -> démo intacte. */
+var cliLeads=[], cliQuery="", cliFilter="all", cliLeadsLoaded=false, cliCurrentList=[];
+var GENERIC_MAIL=/^(gmail|hotmail|outlook|yahoo|icloud|live|msn|bluewin|gmx|proton|protonmail|orange|wanadoo|free)\./;
+function cliNormKey(s){ return String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]/g,""); }
+function cliMailDomain(e){ var m=/@(.+)$/.exec(String(e||"").trim().toLowerCase()); return m?m[1]:""; }
+/* Clé d'identité : entreprise normalisée si connue, sinon domaine e-mail pro, sinon e-mail, sinon contact.
+   Regroupe les RDV et demandes d'une même entreprise sous un seul client. */
+function cliKeyFor(o){
+  var co=cliNormKey(o.company||o.client); if(co) return "co:"+co;
+  var d=cliMailDomain(o.email); if(d && !GENERIC_MAIL.test(d)) return "dom:"+d;
+  var e=String(o.email||"").trim().toLowerCase(); if(e) return "em:"+e;
+  var ct=cliNormKey(o.contact); if(ct) return "ct:"+ct;
+  return "";
+}
+function cliStatus(c){
+  var st=c.rdvs.map(function(r){return r.st;});
+  if(st.indexOf("avenir")>=0) return {k:"rdv",lbl:"RDV planifié",c:"#2F6FE0"};
+  if(st.indexOf("honore")>=0) return {k:"seen",lbl:"Rencontré",c:"#0F6E56"};
+  if(c.sources.lead && !c.rdvs.length) return {k:"lead",lbl:"Nouveau lead",c:"#9A6A15"};
+  if(st.indexOf("refuse")>=0||st.indexOf("noshow")>=0||st.indexOf("annule")>=0) return {k:"lost",lbl:"Sans suite",c:"#8a8c89"};
+  return {k:"other",lbl:"À traiter",c:"#8a8c89"};
+}
+function cliBuildIndex(){
+  var idx=new Map();
+  function ensure(key,name){ if(!idx.has(key)) idx.set(key,{key:key,name:name||"",contacts:[],emails:[],phones:[],secteur:"",rdvs:[],recaps:[],leads:[],sources:{},lastTs:0}); var c=idx.get(key); if(name && name.length>(c.name||"").length) c.name=name; return c; }
+  function add(arr,v){ v=(v||"").trim(); if(v && arr.indexOf(v)<0) arr.push(v); }
+  (typeof rdvData!=="undefined"&&Array.isArray(rdvData)?rdvData:[]).forEach(function(r){
+    var key=cliKeyFor({company:r.client,email:r.email,contact:r.contact}); if(!key) return;
+    var c=ensure(key,r.client); add(c.contacts,r.contact); add(c.emails,r.email); add(c.phones,r.tel);
+    if(r.secteur&&!c.secteur) c.secteur=r.secteur; c.rdvs.push(r); c.sources.rdv=true;
+    if(r.compteRendu) c.recaps.push({at:r.compteRenduAt,text:r.compteRendu,rdv:r});
+    if((r.ts||0)>c.lastTs) c.lastTs=r.ts||0;
+  });
+  (cliLeads||[]).forEach(function(l){
+    var key=cliKeyFor({company:l.company,email:l.email,contact:l.contact}); if(!key) return;
+    var c=ensure(key,l.company); add(c.contacts,l.contact); add(c.emails,l.email); add(c.phones,l.phone);
+    c.leads.push(l); c.sources.lead=true; var ts=Date.parse(l.receivedAt)||0; if(ts>c.lastTs) c.lastTs=ts;
+  });
+  var list=Array.from(idx.values());
+  list.forEach(function(c){ if(!c.name) c.name=c.contacts[0]||c.emails[0]||"Client"; c.status=cliStatus(c); });
+  list.sort(function(a,b){ return (b.lastTs-a.lastTs) || a.name.localeCompare(b.name); });
+  return list;
+}
+function cliMatch(c,q){ if(!q) return true; q=q.toLowerCase();
+  return (c.name||"").toLowerCase().indexOf(q)>=0 || c.contacts.join(" ").toLowerCase().indexOf(q)>=0
+    || c.emails.join(" ").toLowerCase().indexOf(q)>=0 || (c.secteur||"").toLowerCase().indexOf(q)>=0; }
+var CLI_FILTERS=[["all","Tous"],["rdv","RDV planifié"],["lead","Nouveaux leads"],["seen","Rencontrés"],["lost","Sans suite"]];
+function renderClients(){
+  var list=cliBuildIndex(); cliCurrentList=list;
+  var total=list.length, nLead=list.filter(function(c){return c.status.k==="lead";}).length, nRdv=list.filter(function(c){return c.status.k==="rdv";}).length, nCr=list.reduce(function(s,c){return s+c.recaps.length;},0);
+  var sr=document.getElementById("cliStats");
+  if(sr){ sr.style.gridTemplateColumns="repeat(4,1fr)"; sr.innerHTML=[["Clients & prospects",total,"contact-round","teal"],["Nouveaux leads",nLead,"inbox","amber"],["RDV planifiés",nRdv,"calendar","blue"],["Comptes-rendus",nCr,"file-text","purple"]].map(function(t){ var bc=DASH_ICOL[t[3]]||DASH_ICOL.teal; return '<div class="statc"><div class="top"><div class="ic-badge" style="background:'+bc[0]+';color:'+bc[1]+';border-radius:9px"><i data-lucide="'+t[2]+'"></i></div></div><div class="k">'+t[0]+'</div><div class="v">'+t[1]+'</div></div>'; }).join(""); }
+  var fw=document.getElementById("cliFilters");
+  if(fw){ fw.innerHTML=CLI_FILTERS.map(function(f){ return '<button type="button" class="cli-fbtn'+(cliFilter===f[0]?" on":"")+'" data-f="'+f[0]+'">'+f[1]+'</button>'; }).join("");
+    fw.querySelectorAll("[data-f]").forEach(function(b){ b.addEventListener("click",function(){ cliFilter=b.dataset.f; renderClients(); }); }); }
+  var shown=list.filter(function(c){ return cliMatch(c,cliQuery) && (cliFilter==="all"||c.status.k===cliFilter); });
+  var w=document.getElementById("cliList"); if(!w) return;
+  if(!shown.length){ w.innerHTML='<div class="cli-empty">'+(list.length?"Aucun client ne correspond à cette recherche.":"Aucun client pour l'instant. Ils apparaîtront à partir des rendez-vous et des demandes reçues.")+'</div>'; }
+  else { w.innerHTML=shown.map(cliCardHtml).join(""); w.querySelectorAll("[data-cli]").forEach(function(el){ el.addEventListener("click",function(){ openClientCard(el.dataset.cli); }); }); }
+  var s=document.getElementById("cliSearch"); if(s && !s.dataset.wired){ s.dataset.wired="1"; s.addEventListener("input",function(){ cliQuery=s.value||""; renderClients(); }); }
+  refreshIcons();
+  if(!cliLeadsLoaded) loadClientLeads();
+}
+async function loadClientLeads(){
+  cliLeadsLoaded=true;
+  try{ var key=getStoredPublishKey(); if(!key) return;
+    var r=await fetch("/api/crm?days=120",{headers:{Authorization:"Bearer "+key}}); if(!r.ok) return;
+    var j=await r.json(); if(j&&Array.isArray(j.leads)&&j.leads.length){ cliLeads=j.leads; var v=document.getElementById("view-clients"); if(v&&v.classList.contains("on")) renderClients(); }
+  }catch(e){ /* silencieux : la liste dérivée des RDV reste affichée */ }
+}
+function cliCardHtml(c){
+  var sub=[c.secteur, c.contacts[0]||"", (c.rdvs.length?c.rdvs.length+" RDV":""), (c.recaps.length?c.recaps.length+" compte-rendu"+(c.recaps.length>1?"s":""):"")].filter(Boolean).join(" · ");
+  return '<div class="cli-card" data-cli="'+escAttr(c.key)+'" tabindex="0" role="button"><div class="cli-card-main"><div class="cli-name">'+escHtml(c.name)+'</div><div class="cli-sub">'+escHtml(sub)+'</div></div>'
+    +'<span class="cli-badge" style="color:'+c.status.c+';background:'+c.status.c+'18">'+c.status.lbl+'</span></div>';
+}
+function openClientCard(key){
+  var c=cliCurrentList.find(function(x){return x.key===key;}); if(!c) return;
+  var mailBtns=c.emails.map(function(e){return '<a class="lead-lnk" href="mailto:'+escAttr(e)+'"><i data-lucide="mail"></i>'+escHtml(e)+'</a>';}).join("");
+  var telBtns=c.phones.map(function(p){return '<a class="lead-lnk" href="tel:'+escAttr(String(p).replace(/\s+/g,""))+'"><i data-lucide="phone"></i>'+escHtml(p)+'</a>';}).join("");
+  var rdvRows=c.rdvs.length? c.rdvs.map(function(r){ var stc=(typeof RDV_STC!=="undefined"&&RDV_STC[r.st])||{l:r.st||"—",c:"#8a8c89",bg:"#eee"}; return '<div class="cli-rdv-row"><span class="cli-rdv-d">'+escHtml((r.day||"")+" "+(r.mon||"")+" · "+(r.time||""))+'</span><span class="cli-rdv-s" style="color:'+stc.c+';background:'+stc.bg+'">'+escHtml(stc.l)+'</span><span class="cli-rdv-w">'+escHtml(r.who||"")+'</span><span class="cli-rdv-su">'+escHtml(r.sujet||"")+'</span></div>'; }).join("") : '<p class="hint" style="margin:0">Aucun rendez-vous pour ce client.</p>';
+  var recaps=c.recaps.slice().sort(function(a,b){return String(b.at||"").localeCompare(String(a.at||""));});
+  var crHtml=recaps.length? recaps.map(function(cr){ var d=""; try{ d=cr.at?new Date(cr.at).toLocaleString("fr-CH",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}):""; }catch(e){} return '<div class="cli-cr">'+(d?'<div class="cli-cr-d">'+escHtml(d)+'</div>':'')+'<div class="cli-cr-t">'+escHtml(cr.text)+'</div></div>'; }).join("") : '<p class="hint" style="margin:0">Aucun compte-rendu. Utilisez le copilote pendant un rendez-vous pour en générer un.</p>';
+  var leadHtml=c.leads.length? '<div class="cli-sec-h">Demandes reçues ('+c.leads.length+')</div>'+c.leads.map(function(l){ var d=""; try{ d=l.receivedAt?new Date(l.receivedAt).toLocaleDateString("fr-CH"):""; }catch(e){} return '<div class="cli-lead">'+escHtml((l.summary||"Demande")+(d?" · "+d:""))+'</div>'; }).join("") : "";
+  var ov=document.createElement("div"); ov.className="thm-ov"; ov.id="cliCardOv";
+  ov.innerHTML='<div class="thm-card cli-detail" role="dialog" aria-modal="true"><button class="thm-x" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'
+    +'<div class="cli-d-hd"><div class="cli-d-name">'+escHtml(c.name)+'</div><span class="cli-badge" style="color:'+c.status.c+';background:'+c.status.c+'18">'+c.status.lbl+'</span></div>'
+    +(c.secteur?'<div class="cli-d-sec">'+escHtml(c.secteur)+'</div>':'')
+    +((mailBtns||telBtns)?'<div class="cli-d-contact">'+mailBtns+telBtns+'</div>':'')
+    +'<div class="cli-sec-h">Rendez-vous ('+c.rdvs.length+')</div><div class="cli-rdv-list">'+rdvRows+'</div>'
+    +'<div class="cli-sec-h">Comptes-rendus ('+c.recaps.length+')</div><div class="cli-cr-list">'+crHtml+'</div>'
+    +leadHtml
+    +'</div>';
+  document.body.appendChild(ov);
+  function close(){ ov.remove(); document.removeEventListener("keydown",esc); }
+  function esc(e){ if(e.key==="Escape") close(); }
+  ov.querySelector(".thm-x").addEventListener("click",close);
+  ov.addEventListener("mousedown",function(e){ if(e.target===ov) close(); });
+  document.addEventListener("keydown",esc); refreshIcons();
+}
 
 /* ============================================================
    Rendez-vous module

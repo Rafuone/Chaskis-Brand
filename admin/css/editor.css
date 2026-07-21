@@ -255,6 +255,37 @@
   .lead-lnk:hover{text-decoration:underline}
   .lead-lnk i,.lead-lnk svg{width:14px;height:14px}
   .lead-when{font-size:12px;color:var(--muted);white-space:nowrap;flex-shrink:0;padding-top:1px}
+  /* Vue Clients (hub commercial) */
+  .cli-filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+  .cli-fbtn{all:unset;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:5px 13px}
+  .cli-fbtn:hover{border-color:var(--border-2);color:var(--ink)}
+  .cli-fbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  #cliStats{margin-bottom:16px}
+  .cli-card{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--panel);border:1px solid var(--border);border-radius:12px;margin-bottom:9px;cursor:pointer;transition:border-color .12s,box-shadow .12s}
+  .cli-card:hover{border-color:var(--border-2);box-shadow:0 3px 12px rgba(40,32,60,.07)}
+  .cli-card:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+  .cli-card-main{flex:1;min-width:0}
+  .cli-name{font-size:14px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cli-sub{font-size:12px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cli-badge{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap;flex-shrink:0}
+  .cli-empty{padding:34px 20px;text-align:center;color:var(--muted);font-size:13px;background:var(--panel);border:1px dashed var(--border-2);border-radius:12px}
+  .cli-detail{max-width:640px;width:100%;max-height:86vh;overflow:auto;padding:24px}
+  .cli-d-hd{display:flex;align-items:center;gap:12px;justify-content:space-between;margin:0 34px 4px 0}
+  .cli-d-name{font-size:19px;font-weight:800;color:var(--ink)}
+  .cli-d-sec{font-size:12.5px;color:var(--muted);margin-bottom:4px}
+  .cli-d-contact{display:flex;flex-wrap:wrap;gap:8px 16px;margin:10px 0 4px}
+  .cli-sec-h{font-size:12px;font-weight:700;color:var(--ink-soft);margin:18px 0 8px;padding-top:14px;border-top:1px solid var(--border)}
+  .cli-rdv-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:7px 0;border-bottom:1px solid var(--border);font-size:12.5px}
+  .cli-rdv-row:last-child{border-bottom:none}
+  .cli-rdv-d{font-weight:600;color:var(--ink);min-width:118px}
+  .cli-rdv-s{font-size:11px;font-weight:700;border-radius:20px;padding:2px 9px}
+  .cli-rdv-w{color:var(--muted)}
+  .cli-rdv-su{color:var(--ink-soft);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cli-cr{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-bottom:8px}
+  .cli-cr-d{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px}
+  .cli-cr-t{font-size:12.5px;color:var(--ink-soft);line-height:1.5;white-space:pre-wrap}
+  .cli-lead{font-size:12.5px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--border)}
+  .cli-lead:last-child{border-bottom:none}
   .drr-meta{display:inline-flex;align-items:center;gap:7px}
   .drr-com{margin-right:0}
   /* bandeau promotionnel (widget dashboard) */

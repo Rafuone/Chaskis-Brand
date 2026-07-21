@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.54.0" };
+const ADMIN_BUILD = { version: "0.55.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1396,7 +1396,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.54.0", cur:true, date:"2026-07-21", title:"Fiche client & filtres : refonte design", items:[
+  { v:"v0.55.0", cur:true, date:"2026-07-21", title:"Compte-rendu : rédaction après coup", items:[
+    {t:"add", x:"On peut maintenant rédiger (ou modifier) le compte-rendu d'un rendez-vous directement depuis sa fiche, même sans être passé par le copilote — utile pour un rendez-vous sur place ou noté après coup. Il est daté et rattaché au rendez-vous."}
+  ]},
+  { v:"v0.54.0", date:"2026-07-21", title:"Fiche client & filtres : refonte design", items:[
     {t:"imp", x:"Fiche client remise au propre : hiérarchie claire (intitulés discrets, valeurs lisibles), séparateurs entre sections et espacement régulier"},
     {t:"imp", x:"Relance : le choix du modèle de message se fait via un menu à droite de l'objet (il remplit objet et message d'un coup), au lieu d'une rangée de boutons"},
     {t:"imp", x:"Le menu de statut reprend les couleurs des badges du tableau (pastille + surbrillance au survol)"},
@@ -1947,7 +1950,7 @@ const PROGRESS=[
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
   {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.9.0",recent:["Fiche remise au propre : hiérarchie claire, séparateurs, espacement ; menu de statut aligné sur les badges","Relance : modèle choisi via un menu à droite de l'objet (remplit objet + message) ; horodatage de la relance","Filtres métier : « à relancer », « RDV à venir », tranche de dates, + commercial / secteur / offre"]},
-  {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.2.0",recent:["Tableau de l'équipe : rendez-vous et présence calculés sur vos vrais rendez-vous dès que Calendly est connecté ; Jean-Christophe inclus","Le taux de conversion est marqué « exemple » (pas calculable sans les abonnements du back-office)","Chiffres de démonstration clairement étiquetés « exemple »"]},
+  {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.3.0",recent:["Rédiger ou modifier le compte-rendu d'un rendez-vous depuis sa fiche, même sans le copilote (RDV sur place / après coup)","Tableau de l'équipe : rendez-vous et présence calculés sur vos vrais rendez-vous dès que Calendly est connecté ; Jean-Christophe inclus","Le taux de conversion est marqué « exemple » (pas calculable sans les abonnements du back-office)"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"beta",version:"0.8.0",recent:["Cycle complet : préparer depuis un RDV → piloter → compte-rendu rattaché au rendez-vous","Comptes-rendus récents consultables (relire / re-télécharger)","Actions plaquette/offre = email pré-rempli au prospect"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audience réelle agrégée de tous les visiteurs (collecteur maison, sans cookie)","Visiteurs uniques anonymisés + filtrage des robots","Vraie mesure sans cookie (cet appareil) en repli"]},
   {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.11.0",recent:["Mesure automatique planifiée (tous les jours, sans clic) + historique conservé côté serveur","Google note aussi Accessibilité, SEO et Bonnes pratiques (en plus de la vitesse)","Vraies mesures Core Web Vitals, historique et reprise automatique"]},
@@ -5246,6 +5249,26 @@ function renderRdvBulk(){
   el.querySelector("#bulkRel").onclick=()=>{ let c=0; rdvSel.forEach(i=>{ const r=rdvData[i]; if(r && r.st!=="avenir" && r.st!=="refuse" && !(r.relance&&r.relance.sent)){ r.relance={sent:true,date:RDV_TODAY}; c++; } }); rdvSel.clear(); saveRdv(); toast(c+" relance"+(c>1?"s":"")+" envoyée"+(c>1?"s":"")+" (simulé)"); renderRdv(); };
   el.querySelector("#bulkClear").onclick=()=>{ rdvSel.clear(); renderRdvTable(); };
 }
+// Compte-rendu rattaché au RDV : affichage + saisie/édition MANUELLE (RDV sur place ou sans copilote).
+// Persiste comme le copilote (saveRdvOverride en live, sinon saveRdv). Bloc et éditeur séparés pour un
+// échange DOM in-place dans le tiroir (pas d'état global).
+function rdvCrBlock(r){
+  var cr=r.compteRendu||"";
+  if(cr){ return '<div class="fiche-lbl" style="margin:0 0 4px">Compte-rendu'+(r.compteRenduAt?' · '+escHtml(fmtShort(r.compteRenduAt)):'')+'</div>'+
+    '<div class="cr-box">'+escHtml(cr)+'</div>'+
+    '<button class="btn sec-b sm" id="dCrEdit" style="margin-top:6px"><i data-lucide="pencil"></i>Modifier le compte-rendu</button>'; }
+  return '<button class="btn sec-b" id="dCrEdit" style="width:100%;justify-content:center"><i data-lucide="file-pen-line"></i>Rédiger le compte-rendu</button>'+
+    '<div class="fiche-hint" style="margin:6px 0 0">Rendez-vous sur place ou sans le copilote ? Rédigez le compte-rendu ici.</div>';
+}
+function rdvCrEditor(r){
+  return '<div class="fiche-lbl" style="margin:0 0 4px">Compte-rendu</div>'+
+    '<textarea class="dArea" id="dCrText" rows="6" placeholder="Points clés de l\'échange, besoin, offre chiffrée, prochaine étape…">'+escHtml(r.compteRendu||"")+'</textarea>'+
+    '<div style="display:flex;gap:8px;margin-top:2px"><button class="btn primary sm" id="dCrSave"><i data-lucide="save"></i>Enregistrer</button><button class="btn ghost sm" id="dCrCancel">Annuler</button></div>';
+}
+function saveRdvCr(i,text){
+  var r=rdvData[i]; if(!r) return; r.compteRendu=text; r.compteRenduAt=new Date().toISOString();
+  if(typeof rdvLiveOn!=="undefined" && rdvLiveOn) saveRdvOverride(r.calendlyUri||rdvStableKey(r),{compteRendu:r.compteRendu,compteRenduAt:r.compteRenduAt}); else saveRdv();
+}
 function rdvFicheInner(i){
   const r=rdvData[i];
   const past=(r.st!=="avenir"), sent=r.relance&&r.relance.sent, relok=past&&r.st!=="refuse";
@@ -5279,11 +5302,10 @@ function rdvFicheInner(i){
   const infoItems=[["Interlocuteur",r.contact],["Secteur",r.secteur],["Volume estimé",r.volume?r.volume+" / jour":""]].filter(x=>x[1]);
   const info=infoItems.length?'<div class="fiche-info">'+infoItems.map(x=>'<div class="fiche-ir"><span class="k">'+x[0]+'</span><span class="v" title="'+escHtml(x[1])+'">'+escHtml(x[1])+'</span></div>').join('')+'</div>':'';
 
-  // Entrée copilote + compte-rendu rattaché (s'il existe).
-  const cr=r.compteRendu||"";
+  // Entrée copilote + compte-rendu rattaché (affiché, modifiable, ou à rédiger après coup).
   const prep='<button class="btn" id="dPrepare" style="width:100%;justify-content:center;margin-bottom:10px"><i data-lucide="compass"></i>Préparer / piloter avec le copilote</button>'+
     '<button class="btn sec-b" id="dClient" style="width:100%;justify-content:center;margin-bottom:10px"><i data-lucide="contact-round"></i>Voir la fiche client</button>'+
-    (cr?'<div style="margin-bottom:10px"><div class="fiche-lbl" style="margin:0 0 4px">Compte-rendu du copilote'+(r.compteRenduAt?' · '+escHtml(fmtShort(r.compteRenduAt)):'')+'</div><div style="white-space:pre-wrap;font-size:12px;line-height:1.5;background:#F7F6FB;border:1px solid #E7E3F5;border-radius:8px;padding:9px 11px;max-height:140px;overflow:auto">'+escHtml(cr)+'</div></div>':'');
+    '<div id="dCrArea" style="margin-bottom:10px">'+rdvCrBlock(r)+'</div>';
 
   // 2 colonnes cohérentes : gauche = le prospect (qui + comment le joindre), droite = votre suivi
   const cols='<div class="fiche-cols">'+
@@ -5308,6 +5330,14 @@ function openRdvDrawer(i){
   const prep=d.querySelector("#dPrepare"); if(prep) prep.onclick=()=>prepareRdvCopilot(i);
   const dcli=d.querySelector("#dClient"); if(dcli) dcli.onclick=()=>{ closeRdvDrawer(); openClientCard(cliKeyFor(rdvData[i])); };
   const wsel=d.querySelector("#dWho"); if(wsel) wsel.onchange=()=>{ const v=wsel.value; if(!v||v===rdvData[i].who) return; rdvData[i].who=v; rdvData[i].assignedBy="manuel"; if(rdvLiveOn) saveRdvOverride(rdvData[i].calendlyUri||rdvStableKey(rdvData[i]),{who:v,assignedBy:"manuel"}); else saveRdv(); toast("Rendez-vous réattribué à "+v); renderRdv(); openRdvDrawer(i); };
+  // Compte-rendu : rédiger / modifier après coup (échange DOM in-place dans le tiroir)
+  (function wireCr(){ const area=d.querySelector("#dCrArea"); if(!area) return;
+    const ed=area.querySelector("#dCrEdit"); if(!ed) return;
+    ed.onclick=()=>{ area.innerHTML=rdvCrEditor(rdvData[i]); refreshIcons(); const ta=area.querySelector("#dCrText"); if(ta) ta.focus();
+      area.querySelector("#dCrSave").onclick=()=>{ const t=(area.querySelector("#dCrText").value||"").trim(); if(!t){ toast("Le compte-rendu est vide."); return; } saveRdvCr(i,t); toast("Compte-rendu enregistré"); openRdvDrawer(i); };
+      area.querySelector("#dCrCancel").onclick=()=>{ area.innerHTML=rdvCrBlock(rdvData[i]); refreshIcons(); wireCr(); };
+    };
+  })();
   renderRdvTable();
 }
 function closeRdvDrawer(){ rdvOpenRow=-1; renderRdvTable(); }

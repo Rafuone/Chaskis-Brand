@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.48.1" };
+const ADMIN_BUILD = { version: "0.48.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1396,7 +1396,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.48.1", cur:true, date:"2026-07-21", title:"Demandes reçues cliquables", items:[
+  { v:"v0.48.2", cur:true, date:"2026-07-21", title:"Clients : jeu de démonstration stable", items:[
+    {t:"fix", x:"La page Clients affiche un jeu de démonstration riche et stable (statuts variés, comptes-rendus, offres, prochaines étapes) tant qu'aucune vraie donnée n'existe : elle ne se vide plus quand Calendly est connecté sans rendez-vous. Le réel prend le relais dès la première vraie demande ou le premier vrai rendez-vous."}
+  ]},
+  { v:"v0.48.1", date:"2026-07-21", title:"Demandes reçues cliquables", items:[
     {t:"imp", x:"Dans le tableau de bord, cliquer une demande reçue ouvre directement la fiche client correspondante (les liens e-mail / téléphone restent cliquables séparément)"}
   ]},
   { v:"v0.48.0", date:"2026-07-21", title:"Clients : suivi commercial partagé", items:[
@@ -4556,25 +4559,61 @@ function cliStatus(c){
   if(st.indexOf("refuse")>=0||st.indexOf("noshow")>=0||st.indexOf("annule")>=0) return {k:"lost",lbl:"Sans suite",c:"#8a8c89"};
   return {k:"other",lbl:"À traiter",c:"#8a8c89"};
 }
+// Jeu de DÉMO stable pour la page Clients (projection commerciale). Découplé de Calendly : il reste
+// affiché tant qu'AUCUNE vraie donnée n'existe (pas de RDV live non vide, pas de vraie demande) et
+// disparaît dès que le réel arrive. Reprend les entreprises du seed RDV -> navigation RDV<->Client
+// cohérente. À RETIRER le jour où de vraies données alimentent la page (comme les autres démos).
+function cliDemoSources(){
+  var D=function(n){ return Date.now()-n*86400000; };
+  var rdv=[
+    {client:"Boucherie Dubois",contact:"Pierre Dubois",tel:"+41 22 311 22 09",email:"contact@boucherie-dubois.ch",secteur:"Restauration",day:"2",mon:"juil.",time:"10:00",sujet:"Découverte",who:"Sarah",mode:"tel",st:"avenir",ts:D(1)},
+    {client:"Pharmacie du Lac",contact:"Claire Fontaine",tel:"+41 22 736 44 10",email:"accueil@pharmaciedulac.ch",secteur:"Médical / Pharma",day:"2",mon:"juil.",time:"15:00",sujet:"Mise en place Flex",who:"Marc",mode:"tel",st:"avenir",ts:D(1)},
+    {client:"Atelier Vélo Plus",contact:"Thomas Girard",email:"hello@atelierveloplus.ch",secteur:"E-commerce / Retail",day:"4",mon:"juil.",time:"09:00",sujet:"Devis Dédié",who:"Sarah",mode:"visio",st:"avenir",ts:D(0)},
+    {client:"Café des Bains",contact:"Sofia Marchetti",tel:"+41 22 321 57 30",email:"resa@cafedesbains.ch",secteur:"Restauration",day:"7",mon:"juil.",time:"11:00",sujet:"Découverte",who:"Marc",mode:"tel",st:"avenir",ts:D(2)},
+    {client:"Cabinet Morand",contact:"Antoine Morand",email:"contact@cabinet-morand.ch",secteur:"Juridique / Notarial",day:"28",mon:"juin",time:"11:00",sujet:"Découverte",who:"Sarah",mode:"visio",st:"honore",ts:D(6),compteRendu:"Découverte : étude notariale, envois d'actes urgents en centre-ville.\nBesoin : coursier fiable 3x/semaine.\nOffre chiffrée : Flex — 240 CHF/mois.\nProchaine étape : relance après validation de l'associé.",compteRenduAt:new Date(D(6)).toISOString()},
+    {client:"Restaurant Sole",contact:"Luca Bianchi",tel:"+41 22 738 16 24",email:"info@restaurant-sole.ch",secteur:"Restauration",day:"27",mon:"juin",time:"15:30",sujet:"Suivi mensuel",who:"Marc",mode:"tel",st:"honore",ts:D(7),compteRendu:"Client satisfait du service, volumes en hausse.\nDécision : passage de Flex à Dédié dès le mois prochain.",compteRenduAt:new Date(D(7)).toISOString()},
+    {client:"Fleuriste Camélia",contact:"Nadia Berger",tel:"+41 22 344 28 71",email:"bonjour@camelia-fleurs.ch",secteur:"E-commerce / Retail",day:"26",mon:"juin",time:"16:00",sujet:"Question tarifs",who:"Sarah",mode:"tel",st:"refuse",ts:D(8)},
+    {client:"Établissements Vermeulen-Delacroix & Fils",contact:"Marie-Alexandra de Montmollin",email:"contact@vermeulen-delacroix.ch",secteur:"Luxe / Bijouterie",day:"24",mon:"juin",time:"14:00",sujet:"Renouvellement Dédié",who:"Jean-Christophe",mode:"visio",st:"honore",ts:D(10),compteRendu:"Renouvellement du contrat Dédié à l'ordre du jour.\nInterlocutrice favorable ; décision attendue au prochain comité de direction.",compteRenduAt:new Date(D(10)).toISOString()}
+  ];
+  var leads=[
+    {company:"Traiteur Belleville",contact:"Yannis Roux",email:"contact@traiteur-belleville.ch",phone:"+41 22 900 11 22",summary:"Voiture · Planifié · 3 arrêts · ~120 CHF",source:"commander",receivedAt:new Date(D(0)).toISOString()},
+    {company:"Studio Photo Lumen",contact:"Inès Caron",email:"hello@studiolumen.ch",phone:"",summary:"Vélo · Express · 1 arrêt · ~22 CHF",source:"commander",receivedAt:new Date(D(3)).toISOString()}
+  ];
+  var enrich={
+    "co:cabinetmorand":{status:"devis",offer:"",nextStep:"Relancer après validation de l'associé"},
+    "co:restaurantsole":{status:"active",offer:"dedie",nextStep:""},
+    "co:etablissementsvermeulendelacroixfils":{status:"discussion",offer:"dedie",nextStep:"Attendre le comité de direction"},
+    "co:boucheriedubois":{status:"discussion",offer:"",nextStep:"Envoyer le devis Flex"},
+    "co:cafedesbains":{status:"active",offer:"flex",nextStep:""}
+  };
+  return { rdv:rdv, leads:leads, enrich:enrich };
+}
 function cliBuildIndex(){
   var idx=new Map();
   function ensure(key,name){ if(!idx.has(key)) idx.set(key,{key:key,name:name||"",contacts:[],emails:[],phones:[],secteur:"",rdvs:[],recaps:[],leads:[],sources:{},lastTs:0}); var c=idx.get(key); if(name && name.length>(c.name||"").length) c.name=name; return c; }
   function add(arr,v){ v=(v||"").trim(); if(v && arr.indexOf(v)<0) arr.push(v); }
-  (typeof rdvData!=="undefined"&&Array.isArray(rdvData)?rdvData:[]).forEach(function(r){
+  // Réel dès qu'il existe une VRAIE donnée (RDV live non vide OU vraie demande) ; sinon DÉMO stable.
+  // L'enrichissement saisi (cliEnrich) prime toujours, même sur la démo -> un changement de statut est visible.
+  var hasReal=(typeof rdvLiveOn!=="undefined" && rdvLiveOn && typeof rdvData!=="undefined" && Array.isArray(rdvData) && rdvData.length>0) || (cliLeads&&cliLeads.length>0);
+  var dem=hasReal?null:cliDemoSources();
+  var rdvSrc=hasReal?(typeof rdvData!=="undefined"&&Array.isArray(rdvData)?rdvData:[]):dem.rdv;
+  var leadSrc=hasReal?(cliLeads||[]):dem.leads;
+  var enrichSrc=hasReal?cliEnrich:Object.assign({}, dem.enrich, cliEnrich);
+  rdvSrc.forEach(function(r){
     var key=cliKeyFor({company:r.client,email:r.email,contact:r.contact}); if(!key) return;
     var c=ensure(key,r.client); add(c.contacts,r.contact); add(c.emails,r.email); add(c.phones,r.tel);
     if(r.secteur&&!c.secteur) c.secteur=r.secteur; c.rdvs.push(r); c.sources.rdv=true;
     if(r.compteRendu) c.recaps.push({at:r.compteRenduAt,text:r.compteRendu,rdv:r});
     if((r.ts||0)>c.lastTs) c.lastTs=r.ts||0;
   });
-  (cliLeads||[]).forEach(function(l){
+  leadSrc.forEach(function(l){
     var key=cliKeyFor({company:l.company,email:l.email,contact:l.contact}); if(!key) return;
     var c=ensure(key,l.company); add(c.contacts,l.contact); add(c.emails,l.email); add(c.phones,l.phone);
     c.leads.push(l); c.sources.lead=true; var ts=Date.parse(l.receivedAt)||0; if(ts>c.lastTs) c.lastTs=ts;
   });
   var list=Array.from(idx.values());
   list.forEach(function(c){ if(!c.name) c.name=c.contacts[0]||c.emails[0]||"Client"; c.status=cliStatus(c);
-    var en=cliEnrich[c.key]; if(en){ c.enrich=en; c.nextStep=en.nextStep||""; c.offer=en.offer||""; if(en.status && CLI_STATUS_MANUAL[en.status]) c.status=CLI_STATUS_MANUAL[en.status]; } });
+    var en=enrichSrc[c.key]; if(en){ c.enrich=en; c.nextStep=en.nextStep||""; c.offer=en.offer||""; if(en.status && CLI_STATUS_MANUAL[en.status]) c.status=CLI_STATUS_MANUAL[en.status]; } });
   list.sort(function(a,b){ return (b.lastTs-a.lastTs) || a.name.localeCompare(b.name); });
   return list;
 }

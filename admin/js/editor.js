@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.51.0" };
+const ADMIN_BUILD = { version: "0.51.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1396,7 +1396,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.51.0", cur:true, date:"2026-07-21", title:"Clients : sélection multiple + suivi qui/quand", items:[
+  { v:"v0.51.1", cur:true, date:"2026-07-21", title:"Correctif : fenêtres transparentes", items:[
+    {t:"fix", x:"Les fenêtres (fiche client, Filtres, thème) s'affichaient sans fond, laissant voir la page derrière : leur fond blanc et leur ombre sont rétablis"}
+  ]},
+  { v:"v0.51.0", date:"2026-07-21", title:"Clients : sélection multiple + suivi qui/quand", items:[
     {t:"add", x:"Sélection multiple dans le tableau (cases à cocher + « tout sélectionner ») avec barre d'actions groupées : relancer la sélection en un e-mail (destinataires en copie cachée) ou changer le statut de plusieurs clients d'un coup"},
     {t:"imp", x:"En-tête revu : recherche et bouton « Filtres » (même hauteur) au-dessus, onglets de filtre soulignés en dessous ; pagination toujours visible ; cases à cocher remplies en bleu foncé ; boutons d'action carrés"},
     {t:"imp", x:"Fiche client = vrai suivi : chaque rendez-vous indique QUI l'a mené et QUAND, et se déplie sur son compte-rendu ; chaque compte-rendu est attribué à son commercial et daté"}

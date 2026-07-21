@@ -449,7 +449,7 @@ const T = {
   fr: {
     'stat1': 'Coursier(e)s salarié(e)s', 'stat2': 'Livraisons par an', 'stat3': 'Villes en Suisse romande',
     'diff.label': 'Pourquoi Chaskis', 'diff.h2': 'La livraison professionnelle,<br><span class="ac">sans les compromis habituels</span>', 'diff.p': 'Pour toute entreprise qui veut externaliser ses livraisons à un partenaire fiable, sans commission, sans mauvaise surprise.',
-    'diff1.h3': 'Coursiers salariés,<br>toujours au rendez-vous', 'diff1.p': 'Formés à votre image, équipés à vos couleurs.',
+    'diff1.h3': 'Coursier(e)s salarié(e)s,<br>toujours au rendez-vous', 'diff1.p': 'Formé(e)s à votre image, équipé(e)s à vos couleurs.',
     'diff1.li1': 'Remplacement garanti en cas d\'absence', 'diff1.li2': 'Pas de freelances ni de turnover', 'diff1.li3': 'Assurés et encadrés en interne',
     'diff2.h3': 'Tarif fixe,<br>coût maîtrisé', 'diff2.p': 'Un coût que vous contrôlez, pas un pourcentage prélevé sur chaque vente.',
     'diff2.li1': 'Jusqu\'à CHF 8 / livraison, dégressif selon volume', 'diff2.li2': 'Tarif fixe, défini à l\'avance', 'diff2.li3': 'Zéro commission sur vos ventes',
@@ -474,6 +474,7 @@ const T = {
     'sim.neutral.title': 'Chaskis n\'est pas systématiquement plus avantageux.', 'sim.neutral.p': 'Vos conditions actuelles sont déjà serrées. Pour savoir si nos tarifs dégressifs peuvent changer la donne sur une partie de vos commandes, parlons-en 20 minutes.',
     'sim.neutral.cta': 'Réserver l\'analyse <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>',
     'offres.label': 'Nos offres', 'offres.h2': 'Choisissez votre <span class="ac">formule</span>', 'offres.sd': 'Sans engagement. Flex s\'adapte à vos volumes qui fluctuent, Dédié prend le relais quand ils se stabilisent.',
+    'news.sl': 'Newsletter', 'news.h2': 'La logistique qui avance, <span class="sa">une fois par mois</span>', 'news.sd': 'Conseils d\'optimisation, nouveautés et retours terrain. Rien d\'autre. Désinscription en un clic.', 'news.ph': 'votre@entreprise.ch', 'news.cta': 'S\'inscrire', 'news.ok': 'Merci ! Votre inscription est bien enregistrée.', 'news.note': 'Une adresse pro de préférence. Vos données restent chez Chaskis, jamais revendues.',
     'offre.flex.ideal': 'Un service régulier qui s\'adapte à votre rythme',
     'offre.dedie.ideal': 'Fort volume quotidien : votre flotte, sans la gérer',
     'offre.express.ideal': 'Une course ponctuelle, sans compte ni engagement',
@@ -491,14 +492,14 @@ const T = {
     'hero.w1': 'On', 'hero.w2': 'gère', 'hero.w3': 'vos', 'hero.w4': 'livraisons,',
     'hero.w5': 'vous', 'hero.w6': 'gérez', 'hero.w7': 'votre', 'hero.w8': 'business',
     'hero.overline': '6 créneaux de rendez-vous disponibles cette semaine',
-    'hero.sub': 'Livraison professionnelle en Suisse romande. Coursiers salariés, tarifs fixes, traçabilité complète : le partenaire logistique des entreprises suisses.',
+    'hero.sub': 'Livraison professionnelle en Suisse romande. Coursier(e)s salarié(e)s, tarifs fixes, traçabilité complète : le partenaire logistique des entreprises suisses.',
     'hero.cta1': 'Réserver ma consultation offerte', 'hero.cta2': 'Commander une course',
-    'hero.stat1': 'Délai moyen', 'hero.stat2': 'vs plateformes', 'hero.stat3': 'Coursiers salariés', 'hero.stat4': 'Courses / an',
+    'hero.stat1': 'Délai moyen', 'hero.stat2': 'vs plateformes', 'hero.stat3': 'Coursier(e)s salarié(e)s', 'hero.stat4': 'Courses / an',
     'partners.headline': 'entreprises nous font confiance',
     'zoom.h2': 'La livraison pro, <span class="accent">sans les galères</span>',
-    'zoom.p': 'Tarifs fixes, coursiers salariés, suivi en temps réel. Chaskis est le partenaire logistique conçu pour les entreprises de Suisse romande qui veulent de la fiabilité, pas des mauvaises surprises.',
+    'zoom.p': 'Tarifs fixes, coursier(e)s salarié(e)s, suivi en temps réel. Chaskis est le partenaire logistique conçu pour les entreprises de Suisse romande qui veulent de la fiabilité, pas des mauvaises surprises.',
     'bento.label': 'Nos services', 'bento.h2': 'Tout ce dont votre logistique a <span class="ac">besoin</span>',
-    'bento1.h3': 'Coursiers & chauffeurs salariés', 'bento1.p': 'Vélo pour la zone urbaine, voiture pour les colis lourds ou longues distances. 800 coursiers salariés, formés & assurés. Pas d\'auto-entrepreneurs.',
+    'bento1.h3': 'Coursiers & chauffeurs salariés', 'bento1.p': 'Vélo pour la zone urbaine, voiture pour les colis lourds ou longues distances. 800 coursier(e)s salarié(e)s, formé(e)s & assuré(e)s. Pas d\'auto-entrepreneurs.',
     'bento2.h3': 'Import CSV & API', 'bento2.p': 'Connectez votre POS, WooCommerce ou Shopify. Commandes en masse par CSV. Zéro ressaisie.',
     'bento3.h3': 'Tournées multi-stops', 'bento3.p': 'Optimisez vos tournées de livraison. Ajoutez autant de points que nécessaire, l\'itinéraire est recalculé en temps réel.',
     'bento4.h3': 'Dashboard & analytics', 'bento4.p': 'Tableau de bord en temps réel, historique des courses, rapports mensuels, KPIs de performance.',
@@ -517,7 +518,7 @@ const T = {
     'why.label': 'Pourquoi Chaskis', 'why.h2': 'Vos livraisons méritent <span class="ac">mieux</span> qu\'une plateforme', 'why.p': 'Les plateformes prennent 30% de commission. Nous proposons un tarif fixe avec une équipe dédiée et zéro appel de dispatch.',
     'vpc1.h3': '-40% sur vos coûts', 'vpc1.p': 'Tarif fixe dès CHF 8/course. Sans commission, sans frais cachés. Vos marges restent vos marges.', 'vpc1.big': '-40%',
     'vpc2.h3': 'Zéro gestion manuelle', 'vpc2.p': 'Paiement Stripe → course créée → livreur assigné → SMS envoyé. Tout en automatique, sans intervention humaine.', 'vpc2.big': '0 appel',
-    'vpc3.h3': 'Fiabilité suisse', 'vpc3.p': '800 coursiers salariés (pas auto-entrepreneurs), formation interne, assurance complète et preuve de livraison sur chaque course.', 'vpc3.big': '100% salariés',
+    'vpc3.h3': 'Fiabilité suisse', 'vpc3.p': '800 coursier(e)s salarié(e)s (pas auto-entrepreneurs), formation interne, assurance complète et preuve de livraison sur chaque course.', 'vpc3.big': '100% salariés',
     'pipe.label': 'Le flux automatisé', 'pipe.h2': 'De la commande à la <span style="color:var(--teal-light)">livraison</span>, sans vous', 'pipe.p': 'Voici ce qui se passe quand un client passe commande. Zéro intervention humaine côté Chaskis, 100% traçable.',
     'pipe.auto': 'Automatique',
     'pipe1.n': 'Étape 1', 'pipe1.h3': 'Client commande', 'pipe1.p': 'Via le formulaire web, votre API ou un import CSV. Référence marchand obligatoire pour identifier le colis.',
@@ -602,6 +603,7 @@ const T = {
     'sim.neutral.title': 'Chaskis is not necessarily more competitive.', 'sim.neutral.p': 'Your current conditions are already tight. To find out whether our tiered pricing can make a difference on some of your orders, let\'s talk for 20 minutes.',
     'sim.neutral.cta': 'Book the analysis <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>',
     'offres.label': 'Our plans', 'offres.h2': 'Choose your <span class="ac">plan</span>', 'offres.sd': 'No commitment. Flex adapts to fluctuating volumes, Dedicated takes over once they stabilise.',
+    'news.sl': 'Newsletter', 'news.h2': 'Logistics that moves forward, <span class="sa">once a month</span>', 'news.sd': 'Optimisation tips, product news and field insights. Nothing else. Unsubscribe in one click.', 'news.ph': 'you@yourcompany.ch', 'news.cta': 'Subscribe', 'news.ok': 'Thanks! Your subscription is confirmed.', 'news.note': 'A work address preferably. Your data stays with Chaskis, never sold.',
     'offre.flex.ideal': 'A regular service that adapts to your rhythm',
     'offre.dedie.ideal': 'High daily volume: your fleet, without managing it',
     'offre.express.ideal': 'A one-off delivery, no account needed',
@@ -1421,5 +1423,23 @@ function setLang(lang) {
   btn.addEventListener('click', function(){
     document.body.classList.remove('has-promo');
     try { localStorage.setItem('promoDismissed','1'); } catch(e){}
+  });
+})();
+
+// ===== NEWSLETTER (accueil) — inscription best-effort vers l'admin (POST /api/crm) =====
+(function(){
+  var form=document.getElementById('newsForm'); if(!form) return;
+  var input=document.getElementById('newsEmail'), ok=document.getElementById('newsOk');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!input.checkValidity()){ input.reportValidity(); return; }
+    var email=input.value.trim();
+    try {
+      var payload=JSON.stringify({email:email,newsletter:true,source:'newsletter-accueil',message:"Inscription newsletter (page d'accueil)"});
+      if(navigator.sendBeacon){ navigator.sendBeacon('/api/crm', new Blob([payload],{type:'application/json'})); }
+      else { fetch('/api/crm',{method:'POST',headers:{'Content-Type':'application/json'},body:payload,keepalive:true}).catch(function(){}); }
+    } catch(err){}
+    form.style.display='none';
+    if(ok) ok.hidden=false;
   });
 })();

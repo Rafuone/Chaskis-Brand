@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.57.4" };
+const ADMIN_BUILD = { version: "0.57.5" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1397,7 +1397,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.57.4", cur:true, date:"2026-07-22", title:"Offres : le bouton mène à la consultation", items:[
+  { v:"v0.57.5", cur:true, date:"2026-07-22", title:"Accueil : genré inclusif, Calendly en popup, newsletter", items:[
+    {t:"fix", x:"« Coursiers salariés » devient « Coursier(e)s salarié(e)s » partout où c'était visible (hero, section différenciation) — forme inclusive, cohérente avec la statistique et les descriptions Google"},
+    {t:"fix", x:"Réservation : le vrai Calendly ne remplace plus le calendrier de démonstration (qui cassait la mise en page : widget étroit, « Powered by Calendly »). La démo maison reste le visuel ; le vrai Calendly s'ouvre en POPUP au clic sur « Suivant », aux couleurs Chaskis"},
+    {t:"add", x:"Nouvelle section « Newsletter » en bas de l'accueil (demande client) : e-mail + inscription aux couleurs du site ; l'inscription remonte à l'admin comme les demandes du formulaire Commander"}
+  ]},
+  { v:"v0.57.4", date:"2026-07-22", title:"Offres : le bouton mène à la consultation", items:[
     {t:"imp", x:"Les boutons des offres Flex et Dédié deviennent « Réserver ma consultation » (au lieu de « Demander une offre ») — ils menaient déjà au calendrier de rendez-vous, l'intitulé est désormais cohérent avec l'entonnoir (retour d'Olivier). Express reste « Commander maintenant » (course ponctuelle). FR + EN."}
   ]},
   { v:"v0.57.3", date:"2026-07-21", title:"Accueil : vraie photo de Genève (optimisée)", items:[

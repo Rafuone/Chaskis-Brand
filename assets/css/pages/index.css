@@ -692,3 +692,19 @@ span.ast{color:#e53e3e!important;font-weight:700}
 .mob-lang-btn:hover{background:rgba(75,179,164,.06);border-color:var(--teal);color:var(--teal)}
 .mob-lang-btn.active{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
 .mob-lang-btn span{font-size:1rem;line-height:1}
+
+/* ===== Newsletter (accueil) ===== */
+.news{padding:clamp(48px,7vw,88px) 0}
+.news-card{max-width:720px;margin:0 auto;text-align:center;background:var(--teal-bg);border:1px solid var(--teal-x-light);border-radius:var(--rxl);padding:clamp(30px,4vw,52px) clamp(20px,4vw,56px)}
+.news-ic{width:56px;height:56px;margin:0 auto 18px;border-radius:50%;background:var(--white);display:flex;align-items:center;justify-content:center;box-shadow:var(--sh-sm)}
+.news-ic svg{width:26px;height:26px;color:var(--teal-dark)}
+.news .sl{color:var(--teal-dark)}
+.news .st{margin:6px 0 10px}
+.news .sd{max-width:520px;margin:0 auto 26px}
+.news-form{display:flex;gap:10px;max-width:480px;margin:0 auto;flex-wrap:wrap}
+.news-form input{flex:1;min-width:200px;height:52px;padding:0 18px;border:1px solid var(--warm-gray);border-radius:var(--pill);background:var(--white);font-family:inherit;font-size:.9rem;color:var(--ink)}
+.news-form input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-bg)}
+.news-form .btn{height:52px;white-space:nowrap}
+.news-ok{margin:14px auto 0;color:var(--teal-deep);font-weight:700}
+.news-note{margin:16px auto 0;max-width:440px;font-size:.72rem;color:var(--ink-muted);line-height:1.5}
+@media(max-width:520px){.news-form .btn{width:100%}}

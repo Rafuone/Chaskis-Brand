@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.48.2" };
+const ADMIN_BUILD = { version: "0.49.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1396,7 +1396,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.48.2", cur:true, date:"2026-07-21", title:"Clients : jeu de démonstration stable", items:[
+  { v:"v0.49.0", cur:true, date:"2026-07-21", title:"Clients : statut en 1 clic + actions par ligne", items:[
+    {t:"add", x:"Dans le tableau Clients, le statut se change directement en un clic (même présentation que la page Rendez-vous) ; compteurs et filtres se mettent à jour aussitôt"},
+    {t:"add", x:"Chaque ligne a des actions rapides : lancer le rendez-vous (copilote), voir le compte-rendu, ouvrir la fiche"}
+  ]},
+  { v:"v0.48.2", date:"2026-07-21", title:"Clients : jeu de démonstration stable", items:[
     {t:"fix", x:"La page Clients affiche un jeu de démonstration riche et stable (statuts variés, comptes-rendus, offres, prochaines étapes) tant qu'aucune vraie donnée n'existe : elle ne se vide plus quand Calendly est connecté sans rendez-vous. Le réel prend le relais dès la première vraie demande ou le premier vrai rendez-vous."}
   ]},
   { v:"v0.48.1", date:"2026-07-21", title:"Demandes reçues cliquables", items:[
@@ -1909,7 +1913,7 @@ const PROGRESS=[
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
-  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.4.0",recent:["Suivi commercial partagé par client : statut, prochaine étape, offre souscrite","Navigation reliée : rendez-vous → fiche client → copilote","Vue en tableau (recherche, filtres comptés, pagination) adaptée à un grand nombre de clients"]},
+  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.5.0",recent:["Statut modifiable en 1 clic + actions rapides par ligne (rendez-vous, compte-rendu, fiche)","Jeu de démonstration riche et stable pour se projeter","Suivi commercial partagé (statut, prochaine étape, offre) ; navigation reliée RDV → client → copilote"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"beta",version:"0.8.0",recent:["Cycle complet : préparer depuis un RDV → piloter → compte-rendu rattaché au rendez-vous","Comptes-rendus récents consultables (relire / re-télécharger)","Actions plaquette/offre = email pré-rempli au prospect"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audience réelle agrégée de tous les visiteurs (collecteur maison, sans cookie)","Visiteurs uniques anonymisés + filtrage des robots","Vraie mesure sans cookie (cet appareil) en repli"]},
@@ -4637,14 +4641,24 @@ function renderClients(){
   pageItems.forEach(function(c){
     var tr=document.createElement("tr"); tr.className="rdv-row";
     var last=c.lastTs?new Date(c.lastTs).toLocaleDateString("fr-CH",{day:"2-digit",month:"short",year:"numeric"}):"—";
+    var stVal=(c.enrich&&c.enrich.status)?c.enrich.status:"";
+    // Colonne Statut = tag ÉDITABLE (même composant que la page Rendez-vous) : changement en 1 clic.
+    var stOpts='<option value="">'+(stVal?"Auto":"Auto · "+escHtml(c.status.lbl))+'</option>'+Object.keys(CLI_STATUS_MANUAL).map(function(k){ return '<option value="'+k+'"'+(k===stVal?" selected":"")+'>'+CLI_STATUS_MANUAL[k].lbl+'</option>'; }).join("");
+    var hasCr=c.recaps.length>0;
     tr.innerHTML='<td><div class="cl-co" title="'+escAttr(c.name)+'">'+escHtml(c.name)+'</div>'+(c.contacts[0]?'<div class="cl-ct">'+escHtml(c.contacts[0])+'</div>':'')+'</td>'
       +'<td>'+escHtml(c.secteur||"—")+'</td>'
-      +'<td><span class="cli-badge" style="color:'+c.status.c+';background:'+c.status.c+'18">'+c.status.lbl+'</span></td>'
+      +'<td><select class="statusel cli-stsel" data-k="'+escAttr(c.key)+'" style="background-color:'+c.status.c+'1f;color:'+c.status.c+';border-color:transparent;font-weight:600">'+stOpts+'</select></td>'
       +'<td style="text-align:center">'+(c.rdvs.length||"—")+'</td>'
-      +'<td style="text-align:center">'+(c.recaps.length||"—")+'</td>'
+      +'<td style="text-align:center">'+(hasCr?'<span class="cli-crn">'+c.recaps.length+'</span>':"—")+'</td>'
       +'<td style="white-space:nowrap;color:var(--ink-soft)">'+escHtml(last)+'</td>'
-      +'<td class="rdv-exp" title="Ouvrir la fiche client"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></td>';
+      +'<td class="cli-actions">'
+        +'<button class="iconbtn" data-act="cop" title="Lancer le rendez-vous (copilote)"><i data-lucide="compass"></i></button>'
+        +(hasCr?'<button class="iconbtn" data-act="fiche" title="Voir le compte-rendu"><i data-lucide="file-text"></i></button>':'')
+        +'<button class="iconbtn" data-act="fiche" title="Ouvrir la fiche client"><i data-lucide="arrow-right"></i></button>'
+      +'</td>';
     tr.addEventListener("click",function(){ openClientCard(c.key); });
+    var sel=tr.querySelector(".cli-stsel"); if(sel){ sel.addEventListener("click",function(e){e.stopPropagation();}); sel.addEventListener("change",function(e){ e.stopPropagation(); saveClientStatusInline(c.key, sel.value); }); if(typeof enhanceSelect==="function") enhanceSelect(sel); }
+    tr.querySelectorAll("[data-act]").forEach(function(bt){ bt.addEventListener("click",function(e){ e.stopPropagation(); if(bt.dataset.act==="cop") prepareCopilotForClient(c.key); else openClientCard(c.key); }); });
     b.appendChild(tr);
   });
   cliRenderPager(shown.length,pages,start,pageItems.length);
@@ -4701,6 +4715,19 @@ async function saveClientSuivi(key, ov){
     if(j&&j.ok&&j.saved){ cliEnrich[key]=j.client||payload; toast("Suivi enregistré (partagé)"); var x=ov.querySelector(".thm-x"); if(x) x.click(); if(document.getElementById("view-clients").classList.contains("on")) renderClients(); }
     else toast("Enregistrement impossible : "+((j&&j.error)||"stockage indisponible"));
   }catch(e){ toast("Enregistrement impossible (réseau)"); }
+}
+// Changement de statut EN 1 CLIC depuis le tableau (colonne Statut éditable). Optimiste + partagé.
+async function saveClientStatusInline(key, status){
+  var en=cliEnrich[key]||{};
+  cliEnrich[key]=Object.assign({}, en, { key:key, status:status });   // visible tout de suite (même sur la démo)
+  renderClients();
+  var pubkey=getStoredPublishKey();
+  if(!pubkey){ toast("Statut modifié (local) — connectez-vous pour le partager."); return; }
+  try{
+    var r=await fetch("/api/crm?kind=client",{method:"POST",headers:{Authorization:"Bearer "+pubkey,"Content-Type":"application/json"},body:JSON.stringify({ key:key, status:status, offer:en.offer||"", nextStep:en.nextStep||"" })});
+    if(r.ok){ var j=await r.json(); if(j&&j.client) cliEnrich[key]=j.client; toast("Statut enregistré (partagé)"); }
+    else if(r.status===401||r.status===403) toast("Droits insuffisants pour modifier ce client.");
+  }catch(e){ /* silencieux : le changement local reste affiché */ }
 }
 function openClientCard(key){
   var c=cliCurrentList.find(function(x){return x.key===key;});

@@ -1,28 +1,51 @@
 /* Chaskis — Calendly sur la page d'accueil (section #booking).
  *
- * On GARDE le calendrier de DÉMONSTRATION (design maison, cohérent avec le site) comme
- * visuel permanent, et on ouvre le VRAI Calendly en POPUP dès que l'utilisateur veut
- * réserver (clic sur « Suivant » une fois un créneau choisi). Aucun iframe inline :
- * la mise en page et la cohérence graphique de la démo restent intactes.
+ * Le calendrier de DÉMONSTRATION sert de placeholder pendant le chargement (et de repli
+ * hors-ligne). Dès que le VRAI Calendly a injecté son iframe, il REMPLACE la démo, INLINE
+ * dans la carte, en pleine largeur et aux couleurs Chaskis. Aucun popup.
  *
- * L'URL est publique (assets/js/site-config.js) ; aucun secret ici. Host-agnostique.
- * Voir docs/rdv-calendly.md.
+ * Note produit : la disponibilité affichée (nombre de créneaux, plage horaire) se règle
+ * côté compte Calendly. En la restreignant, l'agenda paraît actif et crée un effet de
+ * rareté (créneaux limités = exclusivité), sans jamais paraître vide — mais les vrais
+ * créneaux restent visibles AVANT toute saisie, et Calendly ne demande les coordonnées
+ * qu'APRÈS le choix du créneau (aucune barrière à l'engagement).
+ *
+ * URL publique (assets/js/site-config.js) ; aucun secret ici. Host-agnostique.
  */
 (function () {
   var cfg = window.CHASKIS_CONFIG || {};
   var url = (cfg.calendlyUrl || '').trim();
-  if (!url) return; // pas d'URL -> démo seule (aucune réservation réelle branchée)
+  if (!url) return; // pas d'URL -> la démo reste (aucune réservation réelle branchée)
 
   var host = document.getElementById('bkW');
   if (!host) return;
+  var urg = document.querySelector('#booking .bk-urgency');
 
-  // Popup aux couleurs Chaskis + bannière GDPR masquée.
-  function bookingUrl() {
-    var sep = url.indexOf('?') === -1 ? '?' : '&';
-    return url + sep + 'hide_gdpr_banner=1&primary_color=4bb3a4';
+  function themed(u) {
+    var sep = u.indexOf('?') === -1 ? '?' : '&';
+    return u + sep + 'hide_gdpr_banner=1&hide_event_type_details=1&primary_color=4bb3a4';
   }
 
-  // Charge le script + le style Calendly une seule fois (à la demande).
+  // Widget préparé À CÔTÉ, invisible : on ne retire la démo QUE lorsque l'iframe a rendu.
+  // Hors-ligne / bloqué : la démo n'est jamais touchée, elle reste vivante.
+  var w = document.createElement('div');
+  w.className = 'calendly-inline-widget';
+  w.setAttribute('data-url', themed(url));
+  w.style.width = '100%';      // pleine largeur de la carte (corrige l'ancien widget étroit)
+  w.style.minWidth = '280px';
+  w.style.height = '640px';
+  w.style.display = 'none';
+  host.appendChild(w);
+
+  var settled = false;
+  function restoreDemo() { if (settled) return; settled = true; if (w.parentNode) w.parentNode.removeChild(w); }
+  function confirmed() {
+    settled = true;
+    Array.prototype.slice.call(host.children).forEach(function (ch) { if (ch !== w) host.removeChild(ch); });
+    w.style.display = '';
+    if (urg) urg.style.display = 'none'; // la dispo de démo n'a plus de sens à côté du vrai agenda
+  }
+
   if (!document.querySelector('script[data-calendly]')) {
     var link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -32,25 +55,16 @@
     s.src = 'https://assets.calendly.com/assets/external/widget.js';
     s.async = true;
     s.setAttribute('data-calendly', '1');
+    s.onerror = restoreDemo; // script inaccessible -> on garde la démo
     document.head.appendChild(s);
   }
 
-  function openBooking() {
-    if (window.Calendly && typeof window.Calendly.initPopupWidget === 'function') {
-      window.Calendly.initPopupWidget({ url: bookingUrl() });
-    } else {
-      window.open(url, '_blank', 'noopener'); // filet de sécurité si le script tarde à charger
-    }
-  }
-
-  // Les boutons « Suivant » de la démo (#bkN1/#bkN2) déclenchent la vraie réservation.
-  // Écoute en phase de CAPTURE sur le conteneur : on intercepte AVANT le handler de la démo
-  // (qui ferait avancer les fausses étapes), on l'annule, et on ouvre le popup Calendly.
-  host.addEventListener('click', function (ev) {
-    var btn = ev.target.closest('#bkN1, #bkN2, .bk-nav .btn');
-    if (!btn || btn.disabled) return; // « Suivant » reste désactivé tant qu'aucun créneau n'est choisi
-    ev.preventDefault();
-    ev.stopPropagation(); // empêche la démo d'avancer d'étape : le vrai Calendly prend le relais
-    openBooking();
-  }, true);
+  // Calendly injecte un <iframe> quand il s'initialise. Présent -> on bascule ; absent après
+  // ~10 s (hors-ligne / bloqué) -> on garde le calendrier de démonstration.
+  var tries = 0;
+  var iv = setInterval(function () {
+    if (settled) { clearInterval(iv); return; }
+    if (w.querySelector('iframe')) { confirmed(); clearInterval(iv); return; }
+    if (++tries >= 40) { clearInterval(iv); restoreDemo(); }
+  }, 250);
 })();

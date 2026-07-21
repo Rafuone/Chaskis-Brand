@@ -174,6 +174,24 @@
     bkNextSlot.textContent = dayName+' '+n.d+' '+MONTHS()[n.m];
   }
 
+  // Chip du hero : nombre de créneaux de RENDEZ-VOUS réellement proposés par le calendrier sur les
+  // 7 prochains jours (même génération que le calendrier -> les deux chiffres restent cohérents).
+  // Appelée après l'application des traductions (via setLang -> _calRebuild), donc elle a le dernier mot.
+  function updateHeroSlots(){
+    const el = document.querySelector('[data-i18n="hero.overline"]');
+    if (!el) return;
+    let count = 0;
+    const d = new Date(today);
+    for (let i=0; i<7; i++){
+      count += slotsFor(d.getFullYear(), d.getMonth(), d.getDate()).length;
+      d.setDate(d.getDate()+1);
+    }
+    if (!count) return; // improbable (week-ends seuls) : on garde le texte statique
+    el.textContent = calLang === 'en'
+      ? (count === 1 ? '1 meeting slot available this week' : count + ' meeting slots available this week')
+      : (count === 1 ? '1 créneau de rendez-vous disponible cette semaine' : count + ' créneaux de rendez-vous disponibles cette semaine');
+  }
+
   bkPrev.addEventListener('click', () => {
     if (viewY === today.getFullYear() && viewM === today.getMonth()) return;
     viewM--; if (viewM < 0){ viewM = 11; viewY--; }
@@ -186,6 +204,7 @@
 
   renderMonth();
   updateNextSlotBadge();
+  updateHeroSlots();
 
   // Pre-select next available date in current view (or first dispo next month if none)
   const firstAv = bkCal.querySelector('.bk-d.av');
@@ -210,6 +229,7 @@
     calLang = lang;
     renderMonth();
     updateNextSlotBadge();
+    updateHeroSlots();
     if (selectedD !== null) renderSlots(selectedY, selectedMo, selectedD);
   };
 })();
@@ -427,7 +447,7 @@ document.querySelectorAll('.vpc, .pipe-step').forEach(el => extraReveal.observe(
 // ===== I18N =====
 const T = {
   fr: {
-    'stat1': 'Coursiers en CDI', 'stat2': 'Livraisons par an', 'stat3': 'Villes en Suisse romande',
+    'stat1': 'Coursier(e)s salarié(e)s', 'stat2': 'Livraisons par an', 'stat3': 'Villes en Suisse romande',
     'diff.label': 'Pourquoi Chaskis', 'diff.h2': 'La livraison professionnelle,<br><span class="ac">sans les compromis habituels</span>', 'diff.p': 'Pour toute entreprise qui veut externaliser ses livraisons à un partenaire fiable, sans commission, sans mauvaise surprise.',
     'diff1.h3': 'Coursiers salariés,<br>toujours au rendez-vous', 'diff1.p': 'Formés à votre image, équipés à vos couleurs.',
     'diff1.li1': 'Remplacement garanti en cas d\'absence', 'diff1.li2': 'Pas de freelances ni de turnover', 'diff1.li3': 'Assurés et encadrés en interne',
@@ -470,7 +490,7 @@ const T = {
     'express.spec.wait': '30-45 min', 'express.spec.billing': 'Au kilomètre', 'express.spec.degr': 'Selon la distance', 'express.btn': 'Commander maintenant', 'express.note': 'Pour une distance d\'1 km',
     'hero.w1': 'On', 'hero.w2': 'gère', 'hero.w3': 'vos', 'hero.w4': 'livraisons,',
     'hero.w5': 'vous', 'hero.w6': 'gérez', 'hero.w7': 'votre', 'hero.w8': 'business',
-    'hero.overline': '6 créneaux disponibles cette semaine',
+    'hero.overline': '6 créneaux de rendez-vous disponibles cette semaine',
     'hero.sub': 'Livraison professionnelle en Suisse romande. Coursiers salariés, tarifs fixes, traçabilité complète : le partenaire logistique des entreprises suisses.',
     'hero.cta1': 'Planifier un appel gratuit', 'hero.cta2': 'Commander une course',
     'hero.stat1': 'Délai moyen', 'hero.stat2': 'vs plateformes', 'hero.stat3': 'Coursiers CDI', 'hero.stat4': 'Courses / an',
@@ -598,7 +618,7 @@ const T = {
     'express.spec.wait': '30 to 45 min', 'express.spec.billing': 'Per kilometre', 'express.spec.degr': 'Based on distance', 'express.btn': 'Order now', 'express.note': 'For a 1 km distance',
     'hero.w1': 'We', 'hero.w2': 'handle', 'hero.w3': 'your', 'hero.w4': 'deliveries,',
     'hero.w5': 'you', 'hero.w6': 'handle', 'hero.w7': 'your', 'hero.w8': 'business',
-    'hero.overline': '6 slots available this week',
+    'hero.overline': '6 meeting slots available this week',
     'hero.sub': 'Professional delivery across French-speaking Switzerland. Employed couriers, fixed rates, full tracking: the logistics partner for Swiss businesses.',
     'hero.cta1': 'Schedule a free call', 'hero.cta2': 'Place an order',
     'hero.stat1': 'Avg. delivery', 'hero.stat2': 'vs platforms', 'hero.stat3': 'Employed couriers', 'hero.stat4': 'Deliveries / yr',

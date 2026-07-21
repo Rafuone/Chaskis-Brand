@@ -273,6 +273,14 @@ body.page-commander .nav{background:rgba(255,255,255,.92);backdrop-filter:blur(1
 .pay-contact-field input:focus{border-bottom-color:#2FA594}
 .pay-contact-field input.err{border-bottom-color:#ed1724}
 .pay-client-sep{height:1px;background:#E8E8EB;margin:16px 0 12px}
+/* Case à cocher (facturation différente, opt-in actualités) */
+.pay-check{display:flex;align-items:flex-start;gap:9px;margin-top:14px;font-size:13.5px;color:#695C73;line-height:1.45;cursor:pointer}
+.pay-check input{width:16px;height:16px;margin:1px 0 0;accent-color:#2FA594;cursor:pointer;flex-shrink:0}
+.pay-check:hover{color:#261835}
+.pay-field-full{grid-column:1 / -1}
+#billFields{margin-top:12px}
+#billFields[hidden]{display:none}
+.pay-newsletter{margin:12px 2px 0;justify-content:center}
 .pay-pickup-when{font-size:13.5px;color:#695C73;line-height:1.4}
 .pay-pickup-when strong{color:#261835;font-weight:700}
 

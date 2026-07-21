@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.56.0" };
+const ADMIN_BUILD = { version: "0.57.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1190,6 +1190,7 @@ function dashLeadRow(l){
   var when=""; try{ when=new Date(l.receivedAt).toLocaleString("fr-CH",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}); }catch(e){}
   var title=escHtml(l.company||l.contact||"Demande");
   var subBits=[]; if(l.company&&l.contact) subBits.push(escHtml(l.contact)); if(l.summary) subBits.push(escHtml(l.summary));
+  if(l.newsletter) subBits.push('<span class="ex-tag" style="color:#0F6E56;background:#E1F5EE">newsletter ok</span>');   // consentement opt-in donné à la commande
   var links=[];
   if(l.email) links.push('<a class="lead-lnk" href="mailto:'+escAttr(l.email)+'"><i data-lucide="mail"></i>'+escHtml(l.email)+'</a>');
   if(l.phone) links.push('<a class="lead-lnk" href="tel:'+escAttr(String(l.phone).replace(/\s+/g,""))+'"><i data-lucide="phone"></i>'+escHtml(l.phone)+'</a>');
@@ -1396,7 +1397,13 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.56.0", cur:true, date:"2026-07-21", title:"Filtres clients : contenu revu (même fenêtre)", items:[
+  { v:"v0.57.0", cur:true, date:"2026-07-21", title:"Site vitrine : retours client (lot validé)", items:[
+    {t:"imp", x:"Accueil : la pastille du haut annonce des « créneaux de rendez-vous » (plus d'ambiguïté avec la livraison) et son chiffre suit le vrai calendrier ; « Coursier(e)s salarié(e)s » remplace « en CDI » (aussi dans les descriptions Google) ; compteur « 7 villes »"},
+    {t:"imp", x:"Accueil : la grande photo (Genève) devient une vraie image remplaçable depuis la médiathèque — le client pourra fournir la sienne (couvrant les 2 cantons)"},
+    {t:"add", x:"Commander : taille/poids et description du colis (optionnel), adresse de facturation différente (repliée derrière une case), et case « recevoir les actualités » (décochée par défaut) — le consentement remonte avec la demande et s'affiche dans l'admin"},
+    {t:"fix", x:"Réservation : le calendrier de démonstration reste actif tant que le vrai Calendly n'a pas confirmé son chargement (hors-ligne, la démo reste cliquable ; plus de date figée périmée)"}
+  ]},
+  { v:"v0.56.0", date:"2026-07-21", title:"Filtres clients : contenu revu (même fenêtre)", items:[
     {t:"imp", x:"Dans la fenêtre Filtres : Commercial et Secteur deviennent des listes à cocher RECHERCHABLES (elles tiennent quand l'équipe ou les secteurs se multiplient), au lieu d'une rangée de pastilles"},
     {t:"add", x:"« Dernière activité » : on choisit une plage de dates précise (du / au), avec des raccourcis facultatifs — plus de dates imposées"},
     {t:"add", x:"Filtrer par statut (multiple) et par offre, + raccourcis métier : à relancer, RDV à venir, sans commercial attribué, avec compte-rendu"}
@@ -1947,7 +1954,7 @@ function renderReleaseLog(){ const host=document.getElementById("relLog"); if(!h
 const APP_ENV={dev:{lbl:"Développement",c:"#6B4CC4"},preprod:{lbl:"Pré-production (test)",c:"#C7891B"},prod:{lbl:"En production",c:"#0E7D48"}};
 const APP_STAGE={stable:{lbl:"Stable",c:"#0E7D48"},beta:{lbl:"Bêta",c:"#C7891B"},alpha:{lbl:"Alpha",c:"#B4632A"}};
 const PROGRESS=[
-  {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.17.0",recent:["Demandes reçues du site (formulaire « Commander ») visibles et recontactables en un clic","Activité récente tirée des vraies publications","Tuile Rendez-vous à venir réelle"]},
+  {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.17.1",recent:["Demandes reçues : le consentement « actualités » donné à la commande s'affiche (tag « newsletter ok »)","Demandes du site (formulaire « Commander ») visibles et recontactables en un clic","Activité récente tirée des vraies publications"]},
   {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.14.0",recent:["Les images remplacées apparaissent sur le site en ligne après publication","Publication organisée par page (chaque page ne reçoit que ses propres textes ; le commun s'applique partout)","Publication réelle en ligne depuis le bouton Publier"]},
   {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.1",recent:["Badge « actuellement masquée » sur les sections de l'accueil","Rôle de chaque page et section"]},
   {view:"media",name:"Médiathèque",env:"preprod",stage:"beta",version:"1.2.0",recent:["Stockage réel des fichiers en ligne (URL permanente au lieu du navigateur)","Compression et redimensionnement des images à l'import","Confirmation avant suppression d'un média"]},
@@ -4989,7 +4996,7 @@ function openClientCard(key, opts){
       var who=(cr.rdv&&cr.rdv.who)||""; var cc=who?commercialChip(who):null;
       var hd='<div class="cli-cr-hd">'+(cc?'<span class="avatar xs" style="background:'+cc.color+';color:#fff">'+cc.ini+'</span>':'')+(who?'<span class="cli-cr-au">'+escHtml(who)+'</span>':'')+(d?'<span class="cli-cr-when">'+escHtml(d)+'</span>':'')+((cr.rdv&&cr.rdv.sujet)?'<span class="cli-cr-su">'+escHtml(cr.rdv.sujet)+'</span>':'')+'</div>';
       return '<div class="cli-cr">'+hd+'<div class="cli-cr-t">'+escHtml(cr.text)+'</div></div>'; }).join("") : '<p class="hint" style="margin:0">Aucun compte-rendu. Utilisez le copilote pendant un rendez-vous pour en générer un.</p>';
-  var leadHtml=c.leads.length? '<div class="cli-sec-h">Demandes reçues ('+c.leads.length+')</div>'+c.leads.map(function(l){ var d=""; try{ d=l.receivedAt?new Date(l.receivedAt).toLocaleDateString("fr-CH"):""; }catch(e){} return '<div class="cli-lead">'+escHtml((l.summary||"Demande")+(d?" · "+d:""))+'</div>'; }).join("") : "";
+  var leadHtml=c.leads.length? '<div class="cli-sec-h">Demandes reçues ('+c.leads.length+')</div>'+c.leads.map(function(l){ var d=""; try{ d=l.receivedAt?new Date(l.receivedAt).toLocaleDateString("fr-CH"):""; }catch(e){} return '<div class="cli-lead">'+escHtml((l.summary||"Demande")+(d?" · "+d:""))+(l.newsletter?' <span class="ex-tag" style="color:#0F6E56;background:#E1F5EE">newsletter ok</span>':'')+'</div>'; }).join("") : "";
   // Bandeau de métriques clés (résumé en un coup d'œil : combien de RDV, le dernier, la dernière relance, la suite).
   var lastRdv=rdvSorted[0], lastRdvV, lastRdvCls="";
   if(lastRdv){ var lc=commercialChip(lastRdv.who); lastRdvV='<span class="avatar xs" style="background:'+lc.color+';color:#fff">'+lc.ini+'</span>'+escHtml((lastRdv.day||"")+" "+(lastRdv.mon||"")); }

@@ -17,11 +17,13 @@
   var host = document.getElementById('bkW');
   if (!host) return;
 
-  // IMPORTANT : on NE détruit PAS la démo tout de suite. On prépare le vrai widget Calendly ;
-  // on ne bascule (masquer la démo, montrer le widget) QUE lorsque Calendly a réellement injecté
-  // son iframe. Si le script échoue (hors-ligne, réseau bloqué) ou tarde trop, la démo reste en
-  // place (cas explicitement à préserver : démo cliente hors-ligne). Anti « cadre vide de 660px ».
-  var demoHTML = host.innerHTML;
+  // IMPORTANT : on NE détruit PAS la démo tout de suite. Le widget Calendly est préparé À CÔTÉ,
+  // invisible ; on ne bascule (retirer la démo, révéler le widget, masquer le badge « prochain
+  // créneau » de démo) QUE lorsque Calendly a réellement injecté son iframe. Ainsi :
+  //  - hors-ligne / réseau bloqué : la démo n'est JAMAIS touchée — elle reste VIVANTE (ses
+  //    écouteurs, posés par pages/index.js au chargement, ne sont pas perdus) ;
+  //  - le badge de démo est mis à jour par le vrai calcul (plus de date figée périmée).
+  // (L'ancienne version vidait la démo immédiatement : restaurée après échec, elle était inerte.)
   var urg = document.querySelector('#booking .bk-urgency');
 
   var w = document.createElement('div');
@@ -29,13 +31,18 @@
   w.setAttribute('data-url', url);
   w.style.minWidth = '320px';
   w.style.height = '660px';
-  host.innerHTML = '';
+  w.style.display = 'none';          // préparé mais invisible tant que l'iframe n'a pas rendu
   host.appendChild(w);
-  if (urg) urg.style.display = 'none';
 
   var settled = false;
-  function restoreDemo() { if (settled) return; settled = true; host.innerHTML = demoHTML; if (urg) urg.style.display = ''; }
-  function confirmed() { settled = true; } // le widget a rendu : on ne touche plus à rien
+  function restoreDemo() { if (settled) return; settled = true; if (w.parentNode) w.parentNode.removeChild(w); } // la démo n'a jamais bougé
+  function confirmed() {
+    settled = true;
+    // Bascule : on retire les nœuds de la démo et on révèle le vrai calendrier.
+    Array.prototype.slice.call(host.children).forEach(function (ch) { if (ch !== w) host.removeChild(ch); });
+    w.style.display = '';
+    if (urg) urg.style.display = 'none'; // la dispo de démo n'a pas de sens à côté du vrai Calendly
+  }
 
   // Charge le script + le style Calendly une seule fois (à la demande).
   if (!document.querySelector('script[data-calendly]')) {

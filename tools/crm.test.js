@@ -28,6 +28,9 @@ function loadCrm() { delete require.cache[require.resolve(path.join(ROOT, 'api/c
   var big = crm.leadFromBody({ email: 'a@b.ch', company: 'C'.repeat(200), contact: 'N'.repeat(200), summary: 'S'.repeat(500) });
   ok(big.company.length === 80 && big.contact.length === 80 && big.summary.length === 200, 'champs bornés (80/80/200)');
   ok(crm.leadFromBody({ email: ' a@b.ch \n' }).email === 'a@b.ch', 'email nettoyé (trim + retours ligne retirés)');
+  ok(crm.leadFromBody({ email: 'a@b.ch', newsletter: true }).newsletter === true, 'opt-in newsletter conservé');
+  ok(crm.leadFromBody({ email: 'a@b.ch' }).newsletter === false, 'newsletter absent -> false (opt-in strict)');
+  ok(crm.leadFromBody({ email: 'a@b.ch', newsletter: 'oui' }).newsletter === false, 'newsletter non-booléen -> false (pas de coercition)');
 
   section('BOT_RE — filtre anti-bots');
   ok(crm.BOT_RE.test('python-requests/2.x') && crm.BOT_RE.test('curl/8'), 'bots détectés');

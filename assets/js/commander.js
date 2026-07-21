@@ -53,6 +53,9 @@ const state = {
   scheduledDate: null,
   scheduledTime: null,
   note: '',
+  pkg: { size: '', desc: '' },            // colis (optionnel) : taille/poids + description brève
+  billing: { diff: false, addr: '' },     // adresse de facturation différente (optionnel)
+  newsletter: false,                      // opt-in actualités (décoché par défaut, nLPD)
   file: null,
   pricing: null,
   pricingLoading: false,
@@ -80,7 +83,7 @@ function loadDraft() {
     const raw = localStorage.getItem(DRAFT_KEY); if (!raw) return;
     const d = JSON.parse(raw);
     if (!d.ts || Date.now() - d.ts > 24*3600*1000) { localStorage.removeItem(DRAFT_KEY); return; }
-    ['contact','pickup','vehicle','timing','scheduledDate','scheduledTime','note'].forEach(k => { if (d[k] !== undefined) state[k] = d[k]; });
+    ['contact','pickup','vehicle','timing','scheduledDate','scheduledTime','note','pkg','billing','newsletter'].forEach(k => { if (d[k] !== undefined) state[k] = d[k]; });
     if (Array.isArray(d.stops) && d.stops.length) state.stops = d.stops.map(s => Object.assign(makeStop(), s));
   } catch(e){ try { localStorage.removeItem(DRAFT_KEY); } catch(_){} }
 }
@@ -603,6 +606,25 @@ document.getElementById('fileUp').addEventListener('change', e => {
 });
 document.getElementById('note').addEventListener('input', e => { state.note = e.target.value; saveDraft(); });
 
+// ===== COLIS / FACTURATION / NEWSLETTER (retours client — tous optionnels) =====
+(function initExtras(){
+  const size = document.getElementById('pkgSize');
+  const desc = document.getElementById('pkgDesc');
+  if (size) { size.value = state.pkg.size || ''; size.addEventListener('change', e => { state.pkg.size = e.target.value; saveDraft(); }); }
+  if (desc) { desc.value = state.pkg.desc || ''; desc.addEventListener('input', e => { state.pkg.desc = e.target.value; saveDraft(); }); }
+  const billDiff = document.getElementById('billDiff');
+  const billFields = document.getElementById('billFields');
+  const billAddr = document.getElementById('billAddr');
+  if (billDiff && billFields) {
+    billDiff.checked = !!state.billing.diff;
+    billFields.hidden = !state.billing.diff;
+    billDiff.addEventListener('change', e => { state.billing.diff = e.target.checked; billFields.hidden = !e.target.checked; saveDraft(); });
+  }
+  if (billAddr) { billAddr.value = state.billing.addr || ''; billAddr.addEventListener('input', e => { state.billing.addr = e.target.value; saveDraft(); }); }
+  const news = document.getElementById('newsletterOk');
+  if (news) { news.checked = !!state.newsletter; news.addEventListener('change', e => { state.newsletter = e.target.checked; saveDraft(); }); }
+})();
+
 // ===== VALIDATIONS PAR ETAPE =====
 // Étape 1 : Itinéraire (collecte + livraisons)
 function step1Valid() {
@@ -1039,6 +1061,7 @@ function captureLeadFromOrder() {
     var stops = (state.stops && state.stops.length) || 0;
     var montant = (state.pricing && typeof state.pricing.totalTTC === 'number') ? Math.round(state.pricing.totalTTC) : null;
     var summary = veh + ' · ' + timing + ' · ' + stops + ' arrêt' + (stops > 1 ? 's' : '') + (montant ? (' · ~' + montant + ' CHF') : '');
+    if (state.pkg && state.pkg.size) summary += ' · Colis : ' + state.pkg.size;   // aide le commercial à qualifier
     var payload = {
       company: (c.company || (state.pickup && state.pickup.society) || '').trim(),
       contact: (c.name || '').trim(),
@@ -1046,6 +1069,7 @@ function captureLeadFromOrder() {
       phone: (c.phone || '').trim(),
       summary: summary,
       source: 'commander',
+      newsletter: state.newsletter === true,   // opt-in explicite (décoché par défaut)
     };
     var json = JSON.stringify(payload);
     if (navigator.sendBeacon) {
@@ -1110,6 +1134,9 @@ async function simulateStripePayment() {
     } : null,
     timing: state.timing,
     vehicle: state.vehicle,
+    pkg: (state.pkg.size || state.pkg.desc) ? { size: state.pkg.size, desc: state.pkg.desc } : null,
+    billing: state.billing.diff ? { addr: state.billing.addr } : null,
+    newsletter: !!state.newsletter,
     status: 'confirmed',
     trackUrl: trackUrl,
   };

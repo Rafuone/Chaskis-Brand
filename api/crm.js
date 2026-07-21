@@ -75,6 +75,7 @@ function leadFromBody(body) {
     phone: phone,
     summary: clip(body.summary, 200),
     source: clip(body.source, 24) || 'commander',
+    newsletter: body.newsletter === true,   // opt-in actualités (booléen strict ; décoché par défaut côté site)
   };
 }
 

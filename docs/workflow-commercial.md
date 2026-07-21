@@ -1,6 +1,6 @@
 # Workflow commercial — état & reprise (note de passation)
 
-> **Point de reprise au 2026-07-21.** Branche `feat/foundation-vercel`, HEAD `6ffd255`, admin **v0.50.0**,
+> **Point de reprise au 2026-07-21.** Branche `feat/foundation-vercel`, HEAD `872a7d3`, admin **v0.51.0**,
 > **15 suites de tests vertes**, **12/12 fonctions Vercel Hobby**. `main` (prod) et `demo` intacts.
 > Contexte de départ (constat, décision produit, options CRM) : voir la section « Historique » en bas.
 
@@ -23,25 +23,38 @@
   secteur / offre) ; **choix du nombre par page** (10/25/50/100) ; colonne **Commercial** (avatars
   empilés) ; **tags de statut colorés éditables** (composant `.statusel`/`RDV_STC`+`CLI_STC`, sans « Auto ») ;
   colonne Actions **alignée** (`#view-clients .tbl td{vertical-align:middle}` + `<div class="cli-actions">`
-  dans un `<td>` normal) ; actions carrées `.iconbtn`+info-bulle (copilote / relance e-mail / fiche) ;
+  dans un `<td>` normal) ; actions `.iconbtn`+info-bulle (copilote / relance e-mail / fiche) ;
   nombre de comptes-rendus = pastille cliquable.
+- **Sélection multiple + actions groupées (v0.51.0)** : réutilise LITTÉRALEMENT la page RDV — `cliSel`
+  (Set par `c.key`), cellule `<td class="chk"><input class="rsel">`, `#cliSelAll` (état indéterminé),
+  `#cliBulk`/`.bulk-bar`, `renderCliBulk`/`cliSyncSelUI`. Barre : **relance groupée** (`cliBulkRelance` =
+  un `mailto` avec tous les destinataires en **Cci**) + **changement de statut en lot** (`cliBulkStatus`,
+  même chemin partagé que `saveClientStatusInline`). Sélection conservée (chaînable) ; vidée sur
+  recherche/filtre. Cases à cocher **bleu foncé** (`--ink`), boutons d'action **carrés** (32×32).
+- **En-tête revu + pagination (v0.51.0)** : onglets de filtre **soulignés SOUS** la barre de recherche
+  (`.cli-filters` en tabs) ; bouton **Filtres à la même hauteur** que l'input (40px) ; **pagination
+  toujours visible** dès qu'il y a des clients (plage + contrôles, même sur une seule page).
+- **Fiche client = fil de suivi (v0.51.0)** : chaque RDV affiche **qui** (avatar+nom via `commercialChip`)
+  et **quand**, **cliquable** → déplie son **compte-rendu attribué** (`cli-rdv-item`/`cli-rdv-detail`) ;
+  chaque compte-rendu de la section est **attribué** (commercial + date + sujet, `cr.rdv.who`).
 
 ## Ce qui RESTE (priorisé — reprise directe)
 
-1. **Sélection multiple + barre d'actions groupées** dans le tableau Clients (relancer / changer le
-   statut en lot). Utile à 200 clients. → **Réutiliser** la page RDV : `rdvSel` (Set), `renderRdvBulk`,
-   `#rdvSelAll`, cellule `<td class="chk"><input class="rsel">`, `<div class="bulk-bar">` ; CSS `.chk`/`.rsel`/`.bulk-bar`.
-2. **Fiche client** : afficher **qui a fait quel RDV** (le commercial de chaque rendez-vous dans
-   `openClientCard`) et rendre les RDV listés cliquables.
-3. **Copilote depuis un client sans RDV** : pré-remplir **date/heure du jour** (`prepareCopilotForClient`,
-   via `copState.rdvLabel` ; pas de champ date dans `copState` aujourd'hui).
-4. **Relance / note** (aujourd'hui bas de la page RDV) exposées dans la fiche client.
-5. **Lot 4 — KPIs réels + étiquetage démo** : calculer conversion/présence/à-venir depuis les vrais RDV
+> ✅ **Faits en v0.51.0** : (1) sélection multiple + barre d'actions groupées (relance groupée en Cci +
+> statut en lot) ; (2) fiche client = fil de suivi (qui/quand par RDV, RDV cliquable dépliant son
+> compte-rendu attribué). + retours design Alexandre (onglets sous la recherche, bouton Filtres même
+> hauteur, cases bleu foncé, boutons carrés, pagination visible).
+
+1. **Copilote depuis un client sans RDV** : pré-remplir **date/heure du jour** (`prepareCopilotForClient`,
+   via `copState.rdvLabel` ; pas de champ date dans `copState` aujourd'hui). ⚠️ Vérifier : d'après le
+   journal des versions, une partie a déjà été livrée en v0.49.0 — contrôler avant de recoder.
+2. **Relance / note** (aujourd'hui bas de la page RDV) exposées dans la fiche client (idem : vérifier v0.49.0).
+3. **Lot 4 — KPIs réels + étiquetage démo** : calculer conversion/présence/à-venir depuis les vrais RDV
    quand chargés (⚠️ la **conversion** n'est pas calculable sans les données d'abonnement du back-office
    → à **étiqueter « exemple »**, ne pas inventer) ; nettoyer/étiqueter « exemple » les stats de démo
    (dashboard, tableau équipe RDV, statistiques, chatbot, affiliation) ; corriger l'incohérence
    Jean-Christophe (absent de `TEAM_STATS`).
-6. **(transverse)** Articulation avec la **vraie page Clients du back-office** (clients ACTIFS abonnés
+4. **(transverse)** Articulation avec la **vraie page Clients du back-office** (clients ACTIFS abonnés
    Flex/Express/Dédié) : ma page = pipeline amont (prospects/leads/RDV). Prévu : statut « Client actif » +
    champ offre déjà en place ; brancher la synchro quand le CRM cible sera défini.
 
@@ -55,6 +68,11 @@
 - **Endpoint** `api/crm.js` : `POST` public (lead, anti-bot/rate-limit) · `GET` (leads, `clients.view`) ·
   `POST /api/crm?kind=client` (`clients.edit`, écrit `clients/<clé>`) · `GET /api/crm?kind=clients`.
 - Le coloriage des tags passe par `stcOf(v)` (lit `RDV_STC` puis `CLI_STC`) dans `enhanceSelect`.
+- **Sélection multiple** : `cliSel` (Set de `c.key`), `cliCurrentShown` (liste affichée pour « tout
+  sélectionner »), `renderCliBulk`/`cliSyncSelUI`, `cliBulkStatus`, `cliBulkRelance`, `#cliSelAll`/`#cliBulk`.
+  CSS partagé avec RDV : `td.chk`/`.rsel`/`.bulk-bar` (case cochée = `accent-color:var(--ink)`).
+- **Fiche = suivi** : dans `openClientCard`, RDV triés desc en `.cli-rdv-item` cliquables (`[data-rdvtoggle]`
+  déplie `.cli-rdv-detail`) ; comptes-rendus attribués via `cr.rdv.who` + `commercialChip`.
 
 ## Contraintes (rappel)
 

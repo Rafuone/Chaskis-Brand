@@ -273,11 +273,12 @@
   .cli-d-hd-tx{min-width:0}
   .cli-d-name{font-size:19px;font-weight:800;color:var(--ink);overflow:hidden;text-overflow:ellipsis}
   .cli-d-sec{font-size:12.5px;color:var(--muted);margin-bottom:4px}
-  .cli-d-contact{display:flex;flex-wrap:wrap;gap:8px 16px;margin:10px 0 4px}
-  .cli-d-actions{margin:12px 0 2px;display:flex;gap:8px;flex-wrap:wrap}
-  .cli-suivi{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;align-items:end;margin-top:4px}
-  .cli-fld{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--ink-soft)}
-  .cli-fld>span{font-weight:600}
+  .cli-d-contact{display:flex;flex-wrap:wrap;gap:8px 18px;margin:16px 0 0;padding-top:16px;border-top:1px solid var(--border)}
+  .cli-d-actions{margin:14px 0 0;display:flex;gap:8px;flex-wrap:wrap}
+  .cli-suivi{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;align-items:end;margin-top:6px}
+  .cli-fld{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--ink-soft)}
+  /* labels discrets (comme les KPI) pour créer une hiérarchie : label muted petit vs valeur en --ink */
+  .cli-fld>span{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
   .cli-fld-full{grid-column:1 / -1}
   .cli-suivi .dInput{margin-bottom:0}
   .cli-suivi #cliSaveSuivi{grid-column:1 / -1;justify-self:start}
@@ -349,11 +350,15 @@
   .cli-chip:hover{border-color:var(--border-2);color:var(--ink)}
   .cli-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
   .cli-chip .avatar.xs{width:18px;height:18px;font-size:8px;margin-right:0}
+  .cli-chip svg{width:14px;height:14px}
   /* Relance par e-mail intégrée à la fiche */
-  .cli-relance{border:1px solid var(--border);border-radius:12px;padding:14px;margin:2px 0 4px;background:var(--bg)}
-  .cli-relance-tpl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
-  .cli-relance .dInput,.cli-relance .dArea{background:var(--panel);margin-bottom:9px}
-  .cli-relance .dArea{min-height:120px;resize:vertical;line-height:1.5}
+  .cli-relance{border:1px solid var(--border);border-radius:12px;padding:16px;margin:12px 0 4px;background:var(--bg)}
+  /* objet + select de modèle sur une même ligne (le select à droite pré-remplit objet+corps) */
+  .cli-rel-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+  .cli-rel-row .dInput{flex:1;min-width:220px;margin-bottom:0}
+  .cli-rel-row .dd{flex-shrink:0}
+  .cli-relance .dInput,.cli-relance .dArea{background:var(--panel)}
+  .cli-relance .dArea{min-height:120px;resize:vertical;line-height:1.5;margin-bottom:10px}
   .cli-relance-acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .cli-relance-sent{font-size:12px;color:var(--ok);font-weight:600;display:inline-flex;align-items:center;gap:5px}
   .drr-meta{display:inline-flex;align-items:center;gap:7px}
@@ -1892,6 +1897,10 @@
   .dd-opt .dd-t{flex:1}
   .dd-opt .dd-check{width:15px;height:15px;margin-left:14px;color:var(--teal-d);opacity:0;flex-shrink:0}
   .dd-opt.sel .dd-check{opacity:1}
+  /* Menu de STATUT : hover et option sélectionnée reprennent la couleur du badge du tableau (cohérence). */
+  .dd-status-menu .dd-opt:hover{background:var(--so-bg,var(--bg));color:var(--so-c,var(--ink))}
+  .dd-status-menu .dd-opt.sel{background:var(--so-bg,transparent);color:var(--so-c,var(--teal-d))}
+  .dd-status-menu .dd-opt.sel .dd-check{color:currentColor}
   .dd-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0}
   /* pastille de statut : le bouton porte la couleur du statut */
   .dd-status-btn{font-weight:600;padding:6px 11px;border-radius:8px;box-shadow:none}

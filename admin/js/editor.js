@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.53.0" };
+const ADMIN_BUILD = { version: "0.54.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1396,7 +1396,13 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.53.0", cur:true, date:"2026-07-21", title:"Chiffres honnêtes : réels quand possible, sinon « exemple »", items:[
+  { v:"v0.54.0", cur:true, date:"2026-07-21", title:"Fiche client & filtres : refonte design", items:[
+    {t:"imp", x:"Fiche client remise au propre : hiérarchie claire (intitulés discrets, valeurs lisibles), séparateurs entre sections et espacement régulier"},
+    {t:"imp", x:"Relance : le choix du modèle de message se fait via un menu à droite de l'objet (il remplit objet et message d'un coup), au lieu d'une rangée de boutons"},
+    {t:"imp", x:"Le menu de statut reprend les couleurs des badges du tableau (pastille + surbrillance au survol)"},
+    {t:"add", x:"Filtres clients enrichis façon métier : vues rapides « à relancer » et « RDV à venir », tranche de dates (dernière activité), en plus de commercial / secteur / offre"}
+  ]},
+  { v:"v0.53.0", date:"2026-07-21", title:"Chiffres honnêtes : réels quand possible, sinon « exemple »", items:[
     {t:"imp", x:"Tableau de l'équipe (Rendez-vous) : rendez-vous et taux de présence calculés sur vos VRAIS rendez-vous dès que Calendly est connecté ; sinon chiffres d'exemple. Jean-Christophe apparaît désormais dans le tableau."},
     {t:"imp", x:"Le taux de conversion est clairement marqué « exemple » partout : il n'est pas calculable sans les données d'abonnement du back-office (jamais inventé)"},
     {t:"imp", x:"Les chiffres de démonstration sont étiquetés « exemple » là où ils apparaissent (tableau de bord, statistiques, chatbot, équipe commerciale) pour ne rien laisser croire de faux"}
@@ -1940,7 +1946,7 @@ const PROGRESS=[
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
-  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.8.0",recent:["Relance par e-mail intégrée à la fiche (modèles de messages modifiables + horodatage de la relance)","Résumé en tête de fiche : nombre de RDV, dernier RDV, dernière relance, prochaine étape","Fenêtre de filtres à pastilles ; sélection multiple + actions groupées ; suivi qui/quand par rendez-vous"]},
+  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.9.0",recent:["Fiche remise au propre : hiérarchie claire, séparateurs, espacement ; menu de statut aligné sur les badges","Relance : modèle choisi via un menu à droite de l'objet (remplit objet + message) ; horodatage de la relance","Filtres métier : « à relancer », « RDV à venir », tranche de dates, + commercial / secteur / offre"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.2.0",recent:["Tableau de l'équipe : rendez-vous et présence calculés sur vos vrais rendez-vous dès que Calendly est connecté ; Jean-Christophe inclus","Le taux de conversion est marqué « exemple » (pas calculable sans les abonnements du back-office)","Chiffres de démonstration clairement étiquetés « exemple »"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"beta",version:"0.8.0",recent:["Cycle complet : préparer depuis un RDV → piloter → compte-rendu rattaché au rendez-vous","Comptes-rendus récents consultables (relire / re-télécharger)","Actions plaquette/offre = email pré-rempli au prospect"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audience réelle agrégée de tous les visiteurs (collecteur maison, sans cookie)","Visiteurs uniques anonymisés + filtrage des robots","Vraie mesure sans cookie (cet appareil) en repli"]},
@@ -4569,7 +4575,12 @@ var cliLeads=[], cliQuery="", cliFilter="all", cliLeadsLoaded=false, cliCurrentL
 var CLI_PER_PAGE=25;
 var cliSel=new Set();       // sélection multiple (par c.key stable) pour actions groupées — cf. rdvSel
 var cliCurrentShown=[];     // clients affichés (filtrés, toutes pages) au dernier rendu — pour « tout sélectionner »
-var cliFilterAdv={who:"",secteur:"",offer:""}; // filtres avancés (modale)
+var cliFilterAdv={who:"",secteur:"",offer:"",period:"",aRelancer:false,rdvAVenir:false}; // filtres avancés (modale) : commercial / secteur / offre / période (dernière activité) / vues métier
+// Bornes de période sur la dernière activité (lastTs). "" = tout.
+function cliPeriodCutoff(p){ var d=86400000; if(p==="7j") return Date.now()-7*d; if(p==="30j") return Date.now()-30*d; if(p==="3m") return Date.now()-90*d; if(p==="year"){ var n=new Date(); return new Date(n.getFullYear(),0,1).getTime(); } return 0; }
+var CLI_PERIOD_OPTS=[["","Tout"],["7j","7 derniers jours"],["30j","30 derniers jours"],["3m","3 derniers mois"],["year","Cette année"]];
+// « À relancer » : pas de relance depuis 14 j (ou jamais), hors clients actifs / sans suite.
+function cliNeedsFollowUp(c){ var en=c.enrich||{}; var st=(c.status&&c.status.k)||""; if(st==="active"||st==="lost") return false; var lr=en.lastRelanceAt?Date.parse(en.lastRelanceAt):0; return !lr || (Date.now()-lr)>14*86400000; }
 // Statut manuel (enrichissement partagé) : override le statut dérivé. {k,lbl,c} comme cliStatus().
 // Table des statuts Clients — MÊME modèle que RDV_STC (couleur texte + FOND CLAIR net + point) pour
 // des tags colorés identiques à la page Rendez-vous (fini le blanc).
@@ -4685,7 +4696,10 @@ function renderClients(){
   var shown=list.filter(function(c){ return cliMatch(c,cliQuery) && (cliFilter==="all"||c.status.k===cliFilter)
     && (!cliFilterAdv.who || (c.owners||[]).indexOf(cliFilterAdv.who)>=0)
     && (!cliFilterAdv.secteur || c.secteur===cliFilterAdv.secteur)
-    && (!cliFilterAdv.offer || c.offer===cliFilterAdv.offer); });
+    && (!cliFilterAdv.offer || c.offer===cliFilterAdv.offer)
+    && (!cliFilterAdv.period || (c.lastTs||0) >= cliPeriodCutoff(cliFilterAdv.period))
+    && (!cliFilterAdv.aRelancer || cliNeedsFollowUp(c))
+    && (!cliFilterAdv.rdvAVenir || (c.rdvs||[]).some(function(r){return r.st==="avenir";})); });
   cliCurrentShown=shown;
   var b=document.getElementById("cliBody"); if(!b) return; b.innerHTML="";
   var pages=Math.max(1,Math.ceil(shown.length/CLI_PER_PAGE)); if(cliPage>pages) cliPage=pages; if(cliPage<1) cliPage=1;
@@ -4853,18 +4867,22 @@ async function saveClientStatusInline(key, status){
 // Relance depuis le tableau : on ouvre la FICHE sur le panneau de relance (édition + modèles dans l'interface),
 // plutôt qu'un mailto « brut » (demande d'Alexandre : relancer depuis l'interface, avec options pratiques).
 function cliRelance(key){ openClientCard(key, { relance:true }); }
-function syncCliFilterBtn(){ var fb=document.getElementById("cliFilterBtn"); if(!fb) return; var n=(cliFilterAdv.who?1:0)+(cliFilterAdv.secteur?1:0)+(cliFilterAdv.offer?1:0); fb.classList.toggle("on",n>0); var lbl=fb.querySelector(".cli-fltn"); if(n){ if(!lbl){ lbl=document.createElement("span"); lbl.className="cli-fltn"; fb.appendChild(lbl); } lbl.textContent=n; } else if(lbl){ lbl.remove(); } }
+function syncCliFilterBtn(){ var fb=document.getElementById("cliFilterBtn"); if(!fb) return; var n=(cliFilterAdv.who?1:0)+(cliFilterAdv.secteur?1:0)+(cliFilterAdv.offer?1:0)+(cliFilterAdv.period?1:0)+(cliFilterAdv.aRelancer?1:0)+(cliFilterAdv.rdvAVenir?1:0); fb.classList.toggle("on",n>0); var lbl=fb.querySelector(".cli-fltn"); if(n){ if(!lbl){ lbl=document.createElement("span"); lbl.className="cli-fltn"; fb.appendChild(lbl); } lbl.textContent=n; } else if(lbl){ lbl.remove(); } }
 // Modale « Filtres » centrée : commercial / secteur / offre (les options viennent des données réelles).
 function openCliFilters(){
   var list=cliCurrentList||[]; var whos={}, secs={};
   list.forEach(function(c){ (c.owners||[]).forEach(function(w){ whos[w]=1; }); if(c.secteur) secs[c.secteur]=1; });
-  var pend={ who:cliFilterAdv.who||"", secteur:cliFilterAdv.secteur||"", offer:cliFilterAdv.offer||"" };
+  var pend={ who:cliFilterAdv.who||"", secteur:cliFilterAdv.secteur||"", offer:cliFilterAdv.offer||"", period:cliFilterAdv.period||"", aRelancer:!!cliFilterAdv.aRelancer, rdvAVenir:!!cliFilterAdv.rdvAVenir };
+  var togChips='<button type="button" class="cli-chip'+(pend.aRelancer?" on":"")+'" data-tog="aRelancer"><i data-lucide="bell"></i>À relancer</button><button type="button" class="cli-chip'+(pend.rdvAVenir?" on":"")+'" data-tog="rdvAVenir"><i data-lucide="calendar-clock"></i>RDV à venir</button>';
+  var periodChips=CLI_PERIOD_OPTS.map(function(o){ return '<button type="button" class="cli-chip'+(pend.period===o[0]?" on":"")+'" data-val="'+escAttr(o[0])+'">'+escHtml(o[1])+'</button>'; }).join("");
   var whoChips='<button type="button" class="cli-chip'+(!pend.who?" on":"")+'" data-val="">Tous</button>'+Object.keys(whos).sort().map(function(w){ var cc=commercialChip(w); return '<button type="button" class="cli-chip'+(pend.who===w?" on":"")+'" data-val="'+escAttr(w)+'"><span class="avatar xs" style="background:'+cc.color+';color:#fff">'+cc.ini+'</span>'+escHtml(w)+'</button>'; }).join("");
   var secChips='<button type="button" class="cli-chip'+(!pend.secteur?" on":"")+'" data-val="">Tous</button>'+Object.keys(secs).sort().map(function(s){ return '<button type="button" class="cli-chip'+(pend.secteur===s?" on":"")+'" data-val="'+escAttr(s)+'">'+escHtml(s)+'</button>'; }).join("");
   var offChips='<button type="button" class="cli-chip'+(!pend.offer?" on":"")+'" data-val="">Toutes</button>'+CLI_OFFER_OPTS.filter(function(o){return o[0];}).map(function(o){ return '<button type="button" class="cli-chip'+(pend.offer===o[0]?" on":"")+'" data-val="'+escAttr(o[0])+'">'+escHtml(o[1])+'</button>'; }).join("");
   var ov=document.createElement("div"); ov.className="thm-ov"; ov.id="cliFiltOv";
-  ov.innerHTML='<div class="thm-card" style="max-width:460px" role="dialog" aria-modal="true"><button class="thm-x" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'
+  ov.innerHTML='<div class="thm-card" style="max-width:480px" role="dialog" aria-modal="true"><button class="thm-x" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'
     +'<div class="cli-d-name" style="margin:0 30px 16px 0">Filtrer les clients</div>'
+    +'<div class="cli-flt-grp"><span class="lbl">Vues rapides</span><div class="cli-chips">'+togChips+'</div></div>'
+    +'<div class="cli-flt-grp" data-grp="period"><span class="lbl">Dernière activité</span><div class="cli-chips">'+periodChips+'</div></div>'
     +'<div class="cli-flt-grp" data-grp="who"><span class="lbl">Commercial</span><div class="cli-chips">'+whoChips+'</div></div>'
     +'<div class="cli-flt-grp" data-grp="secteur"><span class="lbl">Secteur</span><div class="cli-chips">'+secChips+'</div></div>'
     +'<div class="cli-flt-grp" data-grp="offer"><span class="lbl">Offre souscrite</span><div class="cli-chips">'+offChips+'</div></div>'
@@ -4876,9 +4894,10 @@ function openCliFilters(){
   ov.querySelector(".thm-x").addEventListener("click",close);
   ov.addEventListener("mousedown",function(e){ if(e.target===ov) close(); });
   document.addEventListener("keydown",esc);
-  ov.querySelectorAll(".cli-flt-grp").forEach(function(grp){ var g=grp.getAttribute("data-grp"); grp.querySelectorAll("[data-val]").forEach(function(b){ b.addEventListener("click",function(){ pend[g]=b.getAttribute("data-val")||""; grp.querySelectorAll("[data-val]").forEach(function(x){x.classList.remove("on");}); b.classList.add("on"); }); }); });
-  ov.querySelector("#fltApply").addEventListener("click",function(){ cliFilterAdv={ who:pend.who, secteur:pend.secteur, offer:pend.offer }; cliPage=1; cliSel.clear(); close(); renderClients(); });
-  ov.querySelector("#fltReset").addEventListener("click",function(){ cliFilterAdv={who:"",secteur:"",offer:""}; cliPage=1; cliSel.clear(); close(); renderClients(); });
+  ov.querySelectorAll(".cli-flt-grp[data-grp]").forEach(function(grp){ var g=grp.getAttribute("data-grp"); grp.querySelectorAll("[data-val]").forEach(function(b){ b.addEventListener("click",function(){ pend[g]=b.getAttribute("data-val")||""; grp.querySelectorAll("[data-val]").forEach(function(x){x.classList.remove("on");}); b.classList.add("on"); }); }); });
+  ov.querySelectorAll("[data-tog]").forEach(function(b){ b.addEventListener("click",function(){ var k=b.getAttribute("data-tog"); pend[k]=!pend[k]; b.classList.toggle("on",pend[k]); }); });
+  ov.querySelector("#fltApply").addEventListener("click",function(){ cliFilterAdv={ who:pend.who, secteur:pend.secteur, offer:pend.offer, period:pend.period, aRelancer:pend.aRelancer, rdvAVenir:pend.rdvAVenir }; cliPage=1; cliSel.clear(); close(); renderClients(); });
+  ov.querySelector("#fltReset").addEventListener("click",function(){ cliFilterAdv={who:"",secteur:"",offer:"",period:"",aRelancer:false,rdvAVenir:false}; cliPage=1; cliSel.clear(); close(); renderClients(); });
   refreshIcons();
 }
 // Modèles de relance e-mail (éditables dans la fiche) contextualisés au client.
@@ -4959,9 +4978,9 @@ function openClientCard(key, opts){
   var tpls=cliRelanceTemplates(c);
   var relanceHtml = c.emails[0] ? (
       '<div class="cli-relance" id="cliRelancePanel"'+(opts.relance?"":" hidden")+'>'
-      +'<div class="cli-relance-tpl">'+tpls.map(function(t,i){ return '<button type="button" class="cli-chip'+(i===0?" on":"")+'" data-tpl="'+i+'">'+escHtml(t.label)+'</button>'; }).join("")+'</div>'
-      +'<input class="dInput" id="cliRelSubj" maxlength="160" value="'+escAttr(tpls[0].subject)+'">'
-      +'<textarea class="dArea" id="cliRelBody" maxlength="2000">'+escHtml(tpls[0].body)+'</textarea>'
+      +'<div class="cli-rel-row"><input class="dInput" id="cliRelSubj" maxlength="160" aria-label="Objet de l\'e-mail" value="'+escAttr(tpls[0].subject)+'">'
+        +'<select class="cli-rel-tpl" id="cliRelTpl" aria-label="Modèle de message">'+tpls.map(function(t,i){ return '<option value="'+i+'">'+escHtml(t.label)+'</option>'; }).join("")+'</select></div>'
+      +'<textarea class="dArea" id="cliRelBody" maxlength="2000" aria-label="Message">'+escHtml(tpls[0].body)+'</textarea>'
       +'<div class="cli-relance-acts"><button class="btn primary sm" id="cliRelSend"><i data-lucide="send"></i>Ouvrir dans ma messagerie</button>'
       +'<button class="btn sec-b sm" id="cliRelMark"><i data-lucide="check"></i>Marquer comme relancé</button></div>'
       +'</div>'
@@ -4992,7 +5011,8 @@ function openClientCard(key, opts){
   if(relPanel){
     var subjEl=relPanel.querySelector("#cliRelSubj"), bodyEl=relPanel.querySelector("#cliRelBody");
     relPanel.dataset.kind=tpls[0].label;
-    relPanel.querySelectorAll("[data-tpl]").forEach(function(b){ b.addEventListener("click",function(){ var t=tpls[+b.dataset.tpl]; if(!t) return; subjEl.value=t.subject; bodyEl.value=t.body; relPanel.querySelectorAll("[data-tpl]").forEach(function(x){x.classList.remove("on");}); b.classList.add("on"); relPanel.dataset.kind=t.label; }); });
+    var tplSel=relPanel.querySelector("#cliRelTpl");
+    if(tplSel){ tplSel.addEventListener("change",function(){ var t=tpls[+tplSel.value]; if(!t) return; subjEl.value=t.subject; bodyEl.value=t.body; relPanel.dataset.kind=t.label; }); if(typeof enhanceSelect==="function") enhanceSelect(tplSel); }
     var sb=relPanel.querySelector("#cliRelSend"); if(sb) sb.addEventListener("click",function(){ var url="mailto:"+encodeURIComponent(c.emails[0]||"")+"?subject="+encodeURIComponent(subjEl.value||"")+"&body="+encodeURIComponent(bodyEl.value||""); try{ window.location.href=url; }catch(e){} saveClientRelance(key, relPanel.dataset.kind||"", ov); });
     var mb=relPanel.querySelector("#cliRelMark"); if(mb) mb.addEventListener("click",function(){ saveClientRelance(key, relPanel.dataset.kind||"", ov); });
   }
@@ -5508,10 +5528,13 @@ function enhanceSelect(sel){
   const btn=document.createElement("button"); btn.type="button"; btn.className="dd-btn"+(status?" dd-status-btn":"");
   const lbl=document.createElement("span"); lbl.className="dd-lbl"; btn.appendChild(lbl);
   btn.insertAdjacentHTML("beforeend",'<svg class="dd-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>');
-  const menu=document.createElement("div"); menu.className="dd-menu";
+  const menu=document.createElement("div"); menu.className="dd-menu"+(status?" dd-status-menu":"");
   [...sel.options].forEach((op,i)=>{ const it=document.createElement("div"); it.className="dd-opt";
     var _S = (typeof stcOf==="function") ? stcOf(op.value) : RDV_STC[op.value];
     const dot = status && _S ? '<span class="dd-dot" style="background:'+_S.solid+'"></span>' : '';
+    // couleurs du statut passées en variables : le hover et l'option sélectionnée reprennent le look du badge du tableau
+    if(status && _S){ it.style.setProperty("--so-bg",_S.bg); it.style.setProperty("--so-c",_S.c); }
+    else if(status && op.value==="" && sel.dataset.stcBg){ it.style.setProperty("--so-bg",sel.dataset.stcBg); it.style.setProperty("--so-c",sel.dataset.stcColor||""); } // option « déduit » : couleur du statut réel
     it.innerHTML=dot+'<span class="dd-t">'+op.text+'</span><svg class="dd-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
     it.addEventListener("click",e=>{ e.stopPropagation(); if(sel.selectedIndex!==i){ sel.selectedIndex=i; sync(); sel.dispatchEvent(new Event("change",{bubbles:true})); } close(); });
     menu.appendChild(it); });

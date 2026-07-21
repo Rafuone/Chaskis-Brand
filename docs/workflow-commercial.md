@@ -1,7 +1,13 @@
 # Workflow commercial — état & reprise (note de passation)
 
-> **Point de reprise au 2026-07-21.** Branche `feat/foundation-vercel`, HEAD `0f0fa07`, admin **v0.54.0**,
+> **Point de reprise au 2026-07-21.** Branche `feat/foundation-vercel`, HEAD `dbb9b96`, admin **v0.55.0**,
 > **15 suites de tests vertes**, **11/12 fonctions Vercel Hobby**. `main` (prod) et `demo` intacts.
+>
+> ⏳ **EN ATTENTE d'Alexandre** : choix du système de FILTRES parmi 3 propositions (page artifact,
+> lien dans le fil de conversation). Il doit répondre « 1 » (barre à jetons — reco), « 2 » (panneau
+> à facettes) ou « 3 » (constructeur de règles). Implémenter le choisi ensuite dans l'admin Chaskis
+> (plage de dates du/au + listes recherchables pour tenir à l'échelle). Les filtres actuels
+> (`openCliFilters` à puces) restent en place tant que le choix n'est pas fait.
 > Contexte de départ (constat, décision produit, options CRM) : voir la section « Historique » en bas.
 
 ## Ce qui est FAIT
@@ -37,6 +43,10 @@
 - **Fiche client = fil de suivi (v0.51.0)** : chaque RDV affiche **qui** (avatar+nom via `commercialChip`)
   et **quand**, **cliquable** → déplie son **compte-rendu attribué** (`cli-rdv-item`/`cli-rdv-detail`) ;
   chaque compte-rendu de la section est **attribué** (commercial + date + sujet, `cr.rdv.who`).
+- **Compte-rendu après coup (v0.55.0)** : rédiger/modifier le compte-rendu d'un RDV depuis sa fiche
+  (`rdvFicheInner`/`openRdvDrawer` : `rdvCrBlock` lecture+Modifier / bouton Rédiger, `rdvCrEditor`,
+  `saveRdvCr` → `r.compteRendu`/`compteRenduAt`, persiste via saveRdvOverride/saveRdv, remonte dans la
+  fiche client). Cas d'usage : RDV sur place ou sans copilote.
 - **Refonte design fiche + filtres (v0.54.0, audit UI/UX demandé par Alexandre)** : hiérarchie typo
   (labels `.cli-fld>span` muted uppercase petits vs valeurs `--ink`), **dividers** entre sections
   (`.cli-d-contact` bordé), espacement régulier ; **dropdown statut** (`enhanceSelect`) aligné sur les

@@ -4,7 +4,7 @@
 // Les questions LIBRES sont d'abord envoyées à l'endpoint /api/chat (récupération RAG,
 // réponse générative si une clé LLM est configurée, sinon extractive). Si l'endpoint est
 // absent (démo 100% statique) ou en échec, on retombe SILENCIEUSEMENT sur les réponses
-// scriptées ci-dessous — la démo reste donc riche sans aucun backend. Voir docs/chatbot.md.
+// scriptées ci-dessous, la démo reste donc riche sans aucun backend. Voir docs/chatbot.md.
 
 (function() {
   if (document.getElementById('chaskisChatbot')) return;

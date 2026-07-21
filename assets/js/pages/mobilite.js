@@ -1,4 +1,4 @@
-/* Chaskis — mobilite.js (ex-inline de mobilite.html) */
+/* Chaskis, mobilite.js (ex-inline de mobilite.html) */
 // Échappement HTML local (l'autocomplétion insère la réponse de l'API geo.admin en innerHTML).
 function mEsc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 // ===== FORM : type toggle + 3-step stepper =====
@@ -39,7 +39,7 @@ function mEsc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ 
 (function() {
   const section = document.querySelector('.mob-prestige');
   if (!section) return;
-  // Desktop : le pin GSAP (window.load) prend la main — on ne touche pas à scene-pinned
+  // Desktop : le pin GSAP (window.load) prend la main, on ne touche pas à scene-pinned
   if (window.matchMedia('(min-width:900px)').matches) return;
   section.classList.add('scene-ready');
   if (!('IntersectionObserver' in window)) {
@@ -154,7 +154,7 @@ function submitMobRequest(e) {
   const PIN_SVG = '<svg class="mob-ac-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 
   // Parse "label" HTML from swisstopo and split into street + (zip + city)
-  // Swisstopo label examples: "1 Rue Eugène-DUPONT <b>1207</b> <b>Genève</b>" — we strip tags then regex
+  // Swisstopo label examples: "1 Rue Eugène-DUPONT <b>1207</b> <b>Genève</b>", we strip tags then regex
   function splitAddress(raw) {
     const text = raw.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
     const m = text.match(/^(.*?)\s(\d{4}\s+.+)$/);
@@ -311,7 +311,7 @@ function submitMobRequest(e) {
 document.querySelectorAll('.mob-faq-q').forEach((q, qi) => {
   // a11y : état ouvert/fermé annoncé aux lecteurs d'écran
   if (!q.hasAttribute('aria-expanded')) q.setAttribute('aria-expanded', q.parentElement.classList.contains('open') ? 'true' : 'false');
-  // a11y : relier la question à son panneau réponse (aria-controls) — id généré si absent
+  // a11y : relier la question à son panneau réponse (aria-controls), id généré si absent
   const ans = q.parentElement.querySelector('.mob-faq-a');
   if (ans) { if (!ans.id) ans.id = 'mob-faq-a-' + (qi + 1); q.setAttribute('aria-controls', ans.id); }
   q.addEventListener('click', () => {
@@ -469,7 +469,7 @@ setTimeout(() => window.__mobSigFallback(), 200);
 (function() {
   const container = document.getElementById('mobHowSteps');
   if (!container) return;
-  // Sur desktop ≥900px, le pin GSAP prend le relais — on ne touche à rien ici
+  // Sur desktop ≥900px, le pin GSAP prend le relais, on ne touche à rien ici
   if (window.matchMedia('(min-width:900px)').matches) return;
   const steps = Array.from(container.querySelectorAll('.mob-how-step'));
   if (!steps.length) return;
@@ -494,7 +494,7 @@ window.addEventListener('load', () => {
   // Scroll natif (Lenis retire) : ScrollTrigger fonctionne nativement sur tous navigateurs.
   // Les scrubs GSAP (0.6 / 1 / 1.4) assurent le rendu lisse sur parallax et pins.
 
-  // ===== HERO : subtle parallax on scroll (no opacity fade — avoids grayed-out state on mid-page load) =====
+  // ===== HERO : subtle parallax on scroll (no opacity fade, avoids grayed-out state on mid-page load) =====
   gsap.to('.mob-hero-content', {
     y: -60, ease: 'none',
     scrollTrigger: { trigger: '.mob-hero', start: 'top top', end: 'bottom 30%', scrub: .8 }
@@ -522,7 +522,7 @@ window.addEventListener('load', () => {
 
   // ===== DIFF CARDS : no GSAP transform (cards use .rev IO reveal, no extra offset needed) =====
 
-  // ===== PRESTIGE : pin GSAP désactivé — le fallback IO (scene-ready/scene-active) prend le relais =====
+  // ===== PRESTIGE : pin GSAP désactivé, le fallback IO (scene-ready/scene-active) prend le relais =====
   // Le pin ScrollTrigger causait des chevauchements visuels avec la section précédente
   // selon l'état du layout au moment de l'init. La révélation CSS+IO est plus fiable.
 

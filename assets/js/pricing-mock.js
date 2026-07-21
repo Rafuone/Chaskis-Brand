@@ -6,7 +6,7 @@
  * Routing via OpenRouteService (cle ci-dessous), fallback haversine.
  */
 
-// ⚠️ SÉCURITÉ (clé exposée côté client — inévitable pour un appel navigateur direct) :
+// ⚠️ SÉCURITÉ (clé exposée côté client, inévitable pour un appel navigateur direct) :
 //  Ce module est un MOCK provisoire ; le calcul de prix passera côté serveur (vrai /api/pricing),
 //  qui portera la clé de routage en variable d'environnement (jamais servie au navigateur).
 //  D'ici là, RESTREINDRE cette clé OpenRouteService par domaine/referrer dans le compte ORS

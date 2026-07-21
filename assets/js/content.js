@@ -1,4 +1,4 @@
-// assets/js/content.js — lecteur de contenu publie (chantier "publish", cote public).
+// assets/js/content.js, lecteur de contenu publie (chantier "publish", cote public).
 //
 // Charge /site-content.json (le fichier ecrit par l'admin lors d'une publication) et
 // fusionne son contenu par-dessus les valeurs par defaut de la page : textes i18n

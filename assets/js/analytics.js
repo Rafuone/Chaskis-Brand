@@ -1,4 +1,4 @@
-// assets/js/analytics.js — mesure d'audience SANS COOKIE, première partie (chantier "analytics", étape 1).
+// assets/js/analytics.js, mesure d'audience SANS COOKIE, première partie (chantier "analytics", étape 1).
 //
 // Enregistre les pages vues côté navigateur (localStorage first-party), sans cookie et
 // sans service tiers : c'est le « petit outil de mesure sur toutes les pages » du plan.

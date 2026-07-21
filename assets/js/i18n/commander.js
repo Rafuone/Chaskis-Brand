@@ -1,4 +1,4 @@
-/* Chaskis — commander.js (ex-inline de commander.html) */
+/* Chaskis, commander.js (ex-inline de commander.html) */
 /* i18n dict for commander.html; assets/js/shared.js merges with T_BASE and applies automatically. */
 window.T = {
   fr: {

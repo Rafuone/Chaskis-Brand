@@ -1,4 +1,4 @@
-/* Chaskis — index.js (ex-inline de index.html) */
+/* Chaskis, index.js (ex-inline de index.html) */
 // ===== BOOKING CALENDAR (3 steps, dynamic) =====
 (function() {
   const bkCal = document.getElementById('bkCal');
@@ -1426,7 +1426,7 @@ function setLang(lang) {
   });
 })();
 
-// ===== NEWSLETTER (accueil) — inscription best-effort vers l'admin (POST /api/crm) =====
+// ===== NEWSLETTER (accueil), inscription best-effort vers l'admin (POST /api/crm) =====
 (function(){
   var form=document.getElementById('newsForm'); if(!form) return;
   var input=document.getElementById('newsEmail'), ok=document.getElementById('newsOk');

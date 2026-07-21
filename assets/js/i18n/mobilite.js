@@ -1,4 +1,4 @@
-/* Chaskis — mobilite.js (ex-inline de mobilite.html) */
+/* Chaskis, mobilite.js (ex-inline de mobilite.html) */
 /* i18n dict for mobilite.html */
 window.T = {
   fr: {

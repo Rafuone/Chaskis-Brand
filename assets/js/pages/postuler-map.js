@@ -1,4 +1,4 @@
-/* Chaskis — postuler-map.js (ex-inline de postuler.html) */
+/* Chaskis, postuler-map.js (ex-inline de postuler.html) */
 (function(){
   var el = document.getElementById('rdlGmap');
   if (!el) return;

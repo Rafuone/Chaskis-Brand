@@ -1,4 +1,4 @@
-/* Chaskis — Calendly sur la page d'accueil (section #booking).
+/* Chaskis, Calendly sur la page d'accueil (section #booking).
  *
  * Le calendrier de DÉMONSTRATION sert de placeholder pendant le chargement (et de repli
  * hors-ligne). Dès que le VRAI Calendly a injecté son iframe, il REMPLACE la démo, INLINE
@@ -6,7 +6,7 @@
  *
  * Note produit : la disponibilité affichée (nombre de créneaux, plage horaire) se règle
  * côté compte Calendly. En la restreignant, l'agenda paraît actif et crée un effet de
- * rareté (créneaux limités = exclusivité), sans jamais paraître vide — mais les vrais
+ * rareté (créneaux limités = exclusivité), sans jamais paraître vide, mais les vrais
  * créneaux restent visibles AVANT toute saisie, et Calendly ne demande les coordonnées
  * qu'APRÈS le choix du créneau (aucune barrière à l'engagement).
  *

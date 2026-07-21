@@ -1,4 +1,4 @@
-/* Chaskis — postuler.js (ex-inline de postuler.html) */
+/* Chaskis, postuler.js (ex-inline de postuler.html) */
 /* i18n dict for postuler.html; assets/js/shared.js merges with T_BASE and applies automatically. */
 window.T = {
   fr: {

@@ -1,4 +1,4 @@
-/* Chaskis — configuration du site, éditable SANS build.
+/* Chaskis, configuration du site, éditable SANS build.
  *
  * Un seul endroit pour les réglages « par déploiement » qui ne sont ni du contenu
  * (site-content.json, éditable dans l'admin) ni des secrets (variables d'environnement

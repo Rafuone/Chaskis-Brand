@@ -154,7 +154,7 @@ function attachAutocomplete(rootEl, inputEl, onSelect) {
   document.addEventListener('click', e => { if (!rootEl.contains(e.target)) dd.classList.remove('show'); });
 }
 
-// ===== CONTACT (commanditaire) — step 3 =====
+// ===== CONTACT (commanditaire), step 3 =====
 (function initContact(){
   const map = { contactName: 'name', contactEmail: 'email', contactPhone: 'phone', contactCompany: 'company' };
   Object.entries(map).forEach(([id, key]) => {
@@ -606,7 +606,7 @@ document.getElementById('fileUp').addEventListener('change', e => {
 });
 document.getElementById('note').addEventListener('input', e => { state.note = e.target.value; saveDraft(); });
 
-// ===== COLIS / FACTURATION / NEWSLETTER (retours client — tous optionnels) =====
+// ===== COLIS / FACTURATION / NEWSLETTER (retours client, tous optionnels) =====
 (function initExtras(){
   const size = document.getElementById('pkgSize');
   const desc = document.getElementById('pkgDesc');
@@ -704,7 +704,7 @@ function onAnyChange() {
 }
 
 function updateUrgentPrice() {
-  // Bloc options supprime — plus rien a mettre a jour cote UI
+  // Bloc options supprime, plus rien a mettre a jour cote UI
 }
 
 // ===== OPTIMIZATION SUGGESTION =====
@@ -852,7 +852,7 @@ function renderSummary() {
     sumTotal.style.display = 'none';
     sumMobileVal.classList.add('empty');
     sumMobileVal.textContent = state.pricingError ? 'Adresse non couverte' : (state.step === 1 ? 'Complétez l\'itinéraire' : 'En attente...');
-    document.getElementById('payAmount').textContent = '—';
+    document.getElementById('payAmount').textContent = ', ';
   }
 
   // Mobile CTA
@@ -898,7 +898,7 @@ function renderRecap() {
   if (when) {
     const date = state.timing === 'express'
       ? 'sous 2 heures, aujourd\'hui'
-      : `le <strong>${fmtDateLong(state.scheduledDate)} à ${state.scheduledTime || '—'}</strong>`;
+      : `le <strong>${fmtDateLong(state.scheduledDate)} à ${state.scheduledTime || ', '}</strong>`;
     when.innerHTML = `Collecte prévue ${date}`;
   }
 
@@ -915,8 +915,8 @@ function renderRecap() {
       <span class="pay-tl-line"></span>
       <div class="pay-tl-content">
         <div class="pay-tl-label">Point de collecte</div>
-        <div class="pay-tl-name">${escapeHtml((state.pickup.first+' '+state.pickup.last).trim() || '—')}${pComp}</div>
-        <div class="pay-tl-addr">${escapeHtml(state.pickup.label || '—')}</div>
+        <div class="pay-tl-name">${escapeHtml((state.pickup.first+' '+state.pickup.last).trim() || ', ')}${pComp}</div>
+        <div class="pay-tl-addr">${escapeHtml(state.pickup.label || ', ')}</div>
       </div>
     </div>`;
     // Ligne 2 : header "Livraisons"
@@ -936,8 +936,8 @@ function renderRecap() {
         <div class="pay-tl-gutter"><div class="pay-tl-num">${i+1}</div></div>
         <span class="pay-tl-line"></span>
         <div class="pay-tl-content">
-          <div class="pay-tl-name">${escapeHtml((s.first+' '+s.last).trim() || '—')}${sc}</div>
-          <div class="pay-tl-addr">${escapeHtml(s.label || '—')}</div>
+          <div class="pay-tl-name">${escapeHtml((s.first+' '+s.last).trim() || ', ')}${sc}</div>
+          <div class="pay-tl-addr">${escapeHtml(s.label || ', ')}</div>
         </div>
       </div>`;
     });
@@ -975,9 +975,9 @@ function renderRecap() {
     if (payTotal) payTotal.textContent = `CHF ${formatCHF(p.totalTTC)}`;
     document.getElementById('payAmount').textContent = `CHF ${formatCHF(p.totalTTC)}`;
   } else {
-    if (courseTotal) courseTotal.textContent = 'CHF —';
+    if (courseTotal) courseTotal.textContent = 'CHF, ';
     if (costLines) costLines.innerHTML = '';
-    if (payTotal) payTotal.textContent = 'CHF —';
+    if (payTotal) payTotal.textContent = 'CHF, ';
   }
 
   // --- Super Express supplement switch UI ---
@@ -1002,7 +1002,7 @@ function fmtDuration(totalSec) {
 }
 
 function fmtDateLong(iso) {
-  if (!iso) return '—';
+  if (!iso) return ', ';
   const [y,m,d] = iso.split('-');
   const MONTHS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
   return `${parseInt(d,10)} ${MONTHS[parseInt(m,10)-1]} ${y}`;

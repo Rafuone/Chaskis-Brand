@@ -1,4 +1,4 @@
-/* Chaskis — postuler.js (ex-inline de postuler.html) */
+/* Chaskis, postuler.js (ex-inline de postuler.html) */
 /* NAV OVER DARK */
 (function(){
   const nav = document.getElementById('nav');

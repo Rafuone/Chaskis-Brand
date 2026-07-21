@@ -1,7 +1,7 @@
 # Workflow commercial — état & reprise (note de passation)
 
-> **Point de reprise au 2026-07-21.** Branche `feat/foundation-vercel`, HEAD `872a7d3`, admin **v0.51.0**,
-> **15 suites de tests vertes**, **12/12 fonctions Vercel Hobby**. `main` (prod) et `demo` intacts.
+> **Point de reprise au 2026-07-21.** Branche `feat/foundation-vercel`, HEAD `27693e7`, admin **v0.52.0**,
+> **15 suites de tests vertes**, **11/12 fonctions Vercel Hobby**. `main` (prod) et `demo` intacts.
 > Contexte de départ (constat, décision produit, options CRM) : voir la section « Historique » en bas.
 
 ## Ce qui est FAIT
@@ -37,6 +37,15 @@
 - **Fiche client = fil de suivi (v0.51.0)** : chaque RDV affiche **qui** (avatar+nom via `commercialChip`)
   et **quand**, **cliquable** → déplie son **compte-rendu attribué** (`cli-rdv-item`/`cli-rdv-detail`) ;
   chaque compte-rendu de la section est **attribué** (commercial + date + sujet, `cr.rdv.who`).
+- **Fiche client = vrai OUTIL + relance intégrée + filtres à puces (v0.52.0)** : bandeau **résumé** en tête
+  (`.cli-kpis` : nb RDV / dernier RDV / dernière relance / prochaine étape) + avatar entreprise ; **relance
+  par e-mail DANS la fiche** (`.cli-relance` : `cliRelanceTemplates` = 4 modèles éditables contextualisés,
+  objet+corps modifiables, « Ouvrir dans ma messagerie » + « Marquer comme relancé » → `lastRelanceAt`
+  horodaté, visible au résumé) ; l'icône relance du tableau ouvre la fiche sur ce panneau (`cliRelance` →
+  `openClientCard(key,{relance:true})`). **Modale Filtres** = **puces** `.cli-chip` (avatars commerciaux,
+  pastilles secteur/offre) au lieu des dropdowns. Backend : `clientEnrichFromBody` accepte
+  `lastRelanceAt`/`lastRelanceKind` ; **tous les POST partiels passent par `cliEnrichPayload()`** (payload
+  COMPLET) pour ne pas écraser les champs non modifiés (l'objet `clients/<clé>` est réécrit en entier).
 
 ## Ce qui RESTE (priorisé — reprise directe)
 

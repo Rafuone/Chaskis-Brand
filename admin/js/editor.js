@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.47.0" };
+const ADMIN_BUILD = { version: "0.48.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1393,7 +1393,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.47.0", cur:true, date:"2026-07-21", title:"Tout est relié : Rendez-vous, Clients et Copilote", items:[
+  { v:"v0.48.0", cur:true, date:"2026-07-21", title:"Clients : suivi commercial partagé", items:[
+    {t:"add", x:"Chaque fiche client a un « Suivi commercial » modifiable et partagé entre tous les commerciaux : statut (nouveau lead, en discussion, devis envoyé, client actif, sans suite), prochaine étape et offre souscrite (Flex / Express / Dédié)"},
+    {t:"add", x:"Nouveau filtre « Clients actifs » ; le statut choisi à la main prime sur le statut déduit automatiquement des rendez-vous"}
+  ]},
+  { v:"v0.47.0", date:"2026-07-21", title:"Tout est relié : Rendez-vous, Clients et Copilote", items:[
     {t:"add", x:"Depuis un rendez-vous, le bouton « Voir la fiche client » ouvre la vue d'ensemble du client (ses rendez-vous, ses comptes-rendus, ses coordonnées)"},
     {t:"add", x:"Depuis une fiche client, le bouton « Piloter avec le copilote » démarre le copilote pré-rempli (relié au prochain rendez-vous s'il y en a un)"}
   ]},
@@ -1896,7 +1900,7 @@ const PROGRESS=[
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
-  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.3.0",recent:["Navigation reliée : depuis un rendez-vous → fiche client, depuis un client → copilote","Vue en tableau (recherche, filtres comptés, pagination) adaptée à un grand nombre de clients","Fiche client reliant coordonnées, rendez-vous et comptes-rendus"]},
+  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.4.0",recent:["Suivi commercial partagé par client : statut, prochaine étape, offre souscrite","Navigation reliée : rendez-vous → fiche client → copilote","Vue en tableau (recherche, filtres comptés, pagination) adaptée à un grand nombre de clients"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"beta",version:"0.8.0",recent:["Cycle complet : préparer depuis un RDV → piloter → compte-rendu rattaché au rendez-vous","Comptes-rendus récents consultables (relire / re-télécharger)","Actions plaquette/offre = email pré-rempli au prospect"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audience réelle agrégée de tous les visiteurs (collecteur maison, sans cookie)","Visiteurs uniques anonymisés + filtrage des robots","Vraie mesure sans cookie (cet appareil) en repli"]},
@@ -4520,8 +4524,12 @@ function cbAsk(q){
    les demandes reçues (/api/crm). Tous les commerciaux voient donc les mêmes clients. L'enrichissement
    PARTAGÉ (statut/prochaine étape saisis à la main) viendra dans un incrément suivant. Repli : sans
    demandes chargées, les clients proviennent des RDV -> démo intacte. */
-var cliLeads=[], cliQuery="", cliFilter="all", cliLeadsLoaded=false, cliCurrentList=[], cliPage=1;
+var cliLeads=[], cliQuery="", cliFilter="all", cliLeadsLoaded=false, cliCurrentList=[], cliPage=1, cliEnrich={};
 var CLI_PER_PAGE=12;
+// Statut manuel (enrichissement partagé) : override le statut dérivé. {k,lbl,c} comme cliStatus().
+var CLI_STATUS_MANUAL={ lead:{k:"lead",lbl:"Nouveau lead",c:"#9A6A15"}, discussion:{k:"discussion",lbl:"En discussion",c:"#2F6FE0"}, devis:{k:"devis",lbl:"Devis envoyé",c:"#7A5AF0"}, active:{k:"active",lbl:"Client actif",c:"#0F6E56"}, lost:{k:"lost",lbl:"Sans suite",c:"#8a8c89"} };
+var CLI_STATUS_OPTS=[["","(automatique)"],["lead","Nouveau lead"],["discussion","En discussion"],["devis","Devis envoyé"],["active","Client actif"],["lost","Sans suite"]];
+var CLI_OFFER_OPTS=[["","(aucune)"],["flex","Flex"],["express","Express"],["dedie","Dédié"]];
 var GENERIC_MAIL=/^(gmail|hotmail|outlook|yahoo|icloud|live|msn|bluewin|gmx|proton|protonmail|orange|wanadoo|free)\./;
 function cliNormKey(s){ return String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]/g,""); }
 function cliMailDomain(e){ var m=/@(.+)$/.exec(String(e||"").trim().toLowerCase()); return m?m[1]:""; }
@@ -4559,14 +4567,15 @@ function cliBuildIndex(){
     c.leads.push(l); c.sources.lead=true; var ts=Date.parse(l.receivedAt)||0; if(ts>c.lastTs) c.lastTs=ts;
   });
   var list=Array.from(idx.values());
-  list.forEach(function(c){ if(!c.name) c.name=c.contacts[0]||c.emails[0]||"Client"; c.status=cliStatus(c); });
+  list.forEach(function(c){ if(!c.name) c.name=c.contacts[0]||c.emails[0]||"Client"; c.status=cliStatus(c);
+    var en=cliEnrich[c.key]; if(en){ c.enrich=en; c.nextStep=en.nextStep||""; c.offer=en.offer||""; if(en.status && CLI_STATUS_MANUAL[en.status]) c.status=CLI_STATUS_MANUAL[en.status]; } });
   list.sort(function(a,b){ return (b.lastTs-a.lastTs) || a.name.localeCompare(b.name); });
   return list;
 }
 function cliMatch(c,q){ if(!q) return true; q=q.toLowerCase();
   return (c.name||"").toLowerCase().indexOf(q)>=0 || c.contacts.join(" ").toLowerCase().indexOf(q)>=0
     || c.emails.join(" ").toLowerCase().indexOf(q)>=0 || (c.secteur||"").toLowerCase().indexOf(q)>=0; }
-var CLI_FILTERS=[["all","Tous"],["rdv","RDV planifié"],["lead","Nouveaux leads"],["seen","Rencontrés"],["lost","Sans suite"]];
+var CLI_FILTERS=[["all","Tous"],["lead","Nouveaux leads"],["rdv","RDV planifié"],["seen","Rencontrés"],["active","Clients actifs"],["lost","Sans suite"]];
 function renderClients(){
   var list=cliBuildIndex(); cliCurrentList=list;
   var total=list.length, nLead=list.filter(function(c){return c.status.k==="lead";}).length, nRdv=list.filter(function(c){return c.status.k==="rdv";}).length, nCr=list.reduce(function(s,c){return s+c.recaps.length;},0);
@@ -4611,10 +4620,42 @@ function cliRenderPager(total,pages,start,count){
 }
 async function loadClientLeads(){
   cliLeadsLoaded=true;
-  try{ var key=getStoredPublishKey(); if(!key) return;
-    var r=await fetch("/api/crm?days=120",{headers:{Authorization:"Bearer "+key}}); if(!r.ok) return;
-    var j=await r.json(); if(j&&Array.isArray(j.leads)&&j.leads.length){ cliLeads=j.leads; var v=document.getElementById("view-clients"); if(v&&v.classList.contains("on")) renderClients(); }
-  }catch(e){ /* silencieux : la liste dérivée des RDV reste affichée */ }
+  var key=getStoredPublishKey(); if(!key) return;              // non connecté -> liste dérivée des RDV (démo intacte)
+  try{
+    var res=await Promise.all([
+      fetch("/api/crm?days=120",{headers:{Authorization:"Bearer "+key}}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;}),
+      fetch("/api/crm?kind=clients",{headers:{Authorization:"Bearer "+key}}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;})
+    ]);
+    var changed=false;
+    if(res[0]&&Array.isArray(res[0].leads)){ cliLeads=res[0].leads; changed=true; }
+    if(res[1]&&Array.isArray(res[1].clients)){ cliEnrich={}; res[1].clients.forEach(function(e){ if(e&&e.key) cliEnrich[e.key]=e; }); changed=true; }
+    if(changed){ var v=document.getElementById("view-clients"); if(v&&v.classList.contains("on")) renderClients(); }
+  }catch(e){ /* silencieux : liste dérivée des RDV / démo intacte */ }
+}
+// Section « Suivi commercial » (enrichissement partagé) de la fiche client.
+function cliSuiviHtml(c){
+  var en=c.enrich||{};
+  var opt=function(list,val){ return list.map(function(o){ return '<option value="'+o[0]+'"'+(o[0]===val?' selected':'')+'>'+o[1]+'</option>'; }).join(""); };
+  return '<div class="cli-sec-h">Suivi commercial <span class="hint" style="margin:0;font-weight:400">partagé entre commerciaux</span></div>'
+    +'<div class="cli-suivi">'
+    +'<label class="cli-fld"><span>Statut</span><select class="statusel" id="cliStatusSel">'+opt(CLI_STATUS_OPTS,en.status||"")+'</select></label>'
+    +'<label class="cli-fld"><span>Offre souscrite</span><select class="statusel" id="cliOfferSel">'+opt(CLI_OFFER_OPTS,en.offer||"")+'</select></label>'
+    +'<label class="cli-fld cli-fld-full"><span>Prochaine étape</span><input class="dInput" id="cliNextStep" value="'+escAttr(en.nextStep||"")+'" placeholder="ex. Rappeler mardi, envoyer le devis…" maxlength="160"></label>'
+    +'<button class="btn primary sm" id="cliSaveSuivi"><i data-lucide="save"></i>Enregistrer le suivi</button>'
+    +'</div>';
+}
+async function saveClientSuivi(key, ov){
+  var pubkey=getStoredPublishKey();
+  if(!pubkey){ toast("Connectez-vous pour enregistrer le suivi partagé."); return; }
+  var g=function(id){ var el=ov.querySelector("#"+id); return el?(el.value||""):""; };
+  var payload={ key:key, status:g("cliStatusSel"), offer:g("cliOfferSel"), nextStep:g("cliNextStep") };
+  try{
+    var r=await fetch("/api/crm?kind=client",{method:"POST",headers:{Authorization:"Bearer "+pubkey,"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    if(r.status===401||r.status===403){ toast("Droits insuffisants pour modifier un client."); return; }
+    var j=await r.json();
+    if(j&&j.ok&&j.saved){ cliEnrich[key]=j.client||payload; toast("Suivi enregistré (partagé)"); var x=ov.querySelector(".thm-x"); if(x) x.click(); if(document.getElementById("view-clients").classList.contains("on")) renderClients(); }
+    else toast("Enregistrement impossible : "+((j&&j.error)||"stockage indisponible"));
+  }catch(e){ toast("Enregistrement impossible (réseau)"); }
 }
 function openClientCard(key){
   var c=cliCurrentList.find(function(x){return x.key===key;});
@@ -4632,6 +4673,7 @@ function openClientCard(key){
     +(c.secteur?'<div class="cli-d-sec">'+escHtml(c.secteur)+'</div>':'')
     +((mailBtns||telBtns)?'<div class="cli-d-contact">'+mailBtns+telBtns+'</div>':'')
     +'<div class="cli-d-actions"><button class="btn primary sm" data-cli-cop><i data-lucide="compass"></i>Piloter avec le copilote</button></div>'
+    +cliSuiviHtml(c)
     +'<div class="cli-sec-h">Rendez-vous ('+c.rdvs.length+')</div><div class="cli-rdv-list">'+rdvRows+'</div>'
     +'<div class="cli-sec-h">Comptes-rendus ('+c.recaps.length+')</div><div class="cli-cr-list">'+crHtml+'</div>'
     +leadHtml
@@ -4641,6 +4683,9 @@ function openClientCard(key){
   function esc(e){ if(e.key==="Escape") close(); }
   ov.querySelector(".thm-x").addEventListener("click",close);
   var cop=ov.querySelector("[data-cli-cop]"); if(cop) cop.addEventListener("click",function(){ close(); prepareCopilotForClient(key); });
+  var stSel=ov.querySelector("#cliStatusSel"); if(stSel && typeof enhanceSelect==="function") enhanceSelect(stSel);
+  var ofSel=ov.querySelector("#cliOfferSel"); if(ofSel && typeof enhanceSelect==="function") enhanceSelect(ofSel);
+  var sv=ov.querySelector("#cliSaveSuivi"); if(sv) sv.addEventListener("click",function(){ saveClientSuivi(key, ov); });
   ov.addEventListener("mousedown",function(e){ if(e.target===ov) close(); });
   document.addEventListener("keydown",esc); refreshIcons();
 }

@@ -38,6 +38,8 @@ la réponse est **403** (`{ error, need }`) et **aucune action n'a lieu**.
 | `GET /api/calendly` | `rdv.view` |
 | `GET /api/crm` (demandes reçues) | `clients.view` |
 | `POST /api/crm` (nouvelle demande) | *(public — formulaire « Commander », anti-bot + rate-limit)* |
+| `GET /api/crm?kind=clients` (enrichissements) | `clients.view` |
+| `POST /api/crm?kind=client` (suivi : statut/étape/offre) | `clients.edit` |
 | `POST /api/media-upload` · `GET` (diagnostic) | `media.import` |
 | `GET /api/collect` (stats) | `stats.view` |
 | `POST /api/collect` (page vue) | *(public — collecte anonyme, rate-limité)* |

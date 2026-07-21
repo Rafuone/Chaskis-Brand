@@ -32,6 +32,12 @@ var READ_BATCH = 10;       // lectures de corps en parallèle par lot
 var RL_MAX = 20;           // demandes/min/IP (best-effort) — un vrai formulaire en produit très peu
 var BOT_RE = /(bot|crawl|spider|slurp|headless|phantom|curl|wget|python-requests|node-fetch|axios|monitor|preview)/i;
 
+// Enrichissement CLIENT (suivi commercial saisi à la main, PARTAGÉ) : 1 objet Blob `clients/<clé>`
+// DÉTERMINISTE (écrasable, pas de suffixe aléatoire) pour être mis à jour en place.
+var CLIENTS_PREFIX = 'clients/';
+var CLIENT_STATUS = ['lead', 'discussion', 'devis', 'active', 'lost']; // '' = laisser le statut dérivé
+var CLIENT_OFFER = ['flex', 'express', 'dedie'];                       // '' = pas d'offre (prospect)
+
 function dayKey(d) { return d.toISOString().slice(0, 10); } // YYYY-MM-DD (UTC)
 
 // IP client : en-têtes POSÉS PAR LA PLATEFORME d'abord (non falsifiables), comme api/collect.js.
@@ -131,17 +137,67 @@ async function listLeads(req, res) {
   return send(res, 200, { ok: true, provider: storage.provider(), count: leads.length, truncated: truncated, leads: leads });
 }
 
+// Enrichissement borné à partir d'un corps non fiable. null si pas de clé client.
+function clientEnrichFromBody(body) {
+  body = body || {};
+  var key = clip(body.key, 120); if (!key) return null;
+  var status = clip(body.status, 20); if (status && CLIENT_STATUS.indexOf(status) < 0) status = '';
+  var offer = clip(body.offer, 20); if (offer && CLIENT_OFFER.indexOf(offer) < 0) offer = '';
+  return { key: key, status: status, offer: offer, nextStep: clip(body.nextStep, 160), owner: clip(body.owner, 60), note: clip(body.note, 400) };
+}
+
+// POST enrichissement (capacité clients.edit) : écrit `clients/<clé>` en place (écrasable).
+async function saveClient(req, res, auth) {
+  var body = await readJson(req, 16 * 1024, 'charge trop volumineuse');
+  if (body && body.__error) return send(res, 400, { error: body.__error });
+  var e = clientEnrichFromBody(body);
+  if (!e) return send(res, 400, { error: 'clé client requise' });
+  e.updatedAt = new Date().toISOString();
+  e.updatedBy = (auth && auth.sub) ? String(auth.sub).slice(0, 60) : '';
+  var r = await storage.put(CLIENTS_PREFIX + storage.cleanKey(e.key), JSON.stringify(e), { contentType: 'application/json', addRandomSuffix: false });
+  if (!r.ok) return send(res, 200, { ok: false, saved: false, error: r.error || 'stockage indisponible' });
+  return send(res, 200, { ok: true, saved: true, client: e });
+}
+
+// GET enrichissements clients (capacité clients.view) : liste `clients/` et renvoie les objets.
+async function listClients(req, res) {
+  var refs = [], cursor = null, calls = 0, anyOk = false;
+  do {
+    if (calls >= MAX_LIST_CALLS) break;
+    var r = await storage.list(CLIENTS_PREFIX, 1000, cursor); calls++;
+    if (!r || !r.ok) break; anyOk = true;
+    (r.blobs || []).forEach(function (b) { refs.push(b.url); });
+    cursor = (r.hasMore && r.cursor) ? r.cursor : null;
+  } while (cursor);
+  if (!anyOk) return send(res, 200, { ok: true, provider: storage.provider(), note: 'stockage indisponible', clients: [] });
+  var out = [];
+  for (var j = 0; j < refs.length; j += READ_BATCH) {
+    var bodies = await Promise.all(refs.slice(j, j + READ_BATCH).map(function (u) { return storage.readUrl(u); }));
+    bodies.forEach(function (rr) { if (rr && rr.ok && rr.text) { try { var o = JSON.parse(rr.text); if (o && o.key) out.push(o); } catch (e) {} } });
+  }
+  return send(res, 200, { ok: true, provider: storage.provider(), count: out.length, clients: out });
+}
+
 module.exports = async function handler(req, res) {
-  if (req.method === 'POST') return collectLead(req, res);
-  if (req.method === 'GET') {
+  var kind = ''; try { kind = (new URL(req.url, 'http://localhost').searchParams.get('kind') || '').toLowerCase(); } catch (e) {}
+  if (req.method === 'POST') {
+    // POST client = enrichissement AUTHENTIFIÉ (?kind=client) ; sinon demande PUBLIQUE (formulaire).
+    if (kind !== 'client') return collectLead(req, res);
     var auth = await requireAuth(req);
     if (!auth) return send(res, 401, { error: 'non autorisé' });
-    if (!can('clients.view', auth)) return send(res, 403, { error: 'accès refusé', need: 'clients.view' });
-    return listLeads(req, res);
+    if (!can('clients.edit', auth)) return send(res, 403, { error: 'accès refusé', need: 'clients.edit' });
+    return saveClient(req, res, auth);
+  }
+  if (req.method === 'GET') {
+    var g = await requireAuth(req);
+    if (!g) return send(res, 401, { error: 'non autorisé' });
+    if (!can('clients.view', g)) return send(res, 403, { error: 'accès refusé', need: 'clients.view' });
+    return (kind === 'clients') ? listClients(req, res) : listLeads(req, res);
   }
   return send(res, 405, { error: 'méthode non autorisée' });
 };
 
 // Exposés pour les tests.
 module.exports.leadFromBody = leadFromBody;
+module.exports.clientEnrichFromBody = clientEnrichFromBody;
 module.exports.BOT_RE = BOT_RE;

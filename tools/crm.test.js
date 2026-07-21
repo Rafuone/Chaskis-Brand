@@ -61,6 +61,24 @@ function loadCrm() { delete require.cache[require.resolve(path.join(ROOT, 'api/c
   ok(jg.leads.every(function (l) { return l.receivedAt; }), 'chaque demande porte une date de réception');
   ok(jg.leads.every(function (l) { return l.source === 'commander'; }), 'source par défaut = commander');
 
+  section('enrichissement client — clientEnrichFromBody + POST/GET ?kind=client');
+  ok(crm.clientEnrichFromBody({ key: 'co:x', status: 'active', offer: 'flex' }).status === 'active', 'statut valide conservé');
+  ok(crm.clientEnrichFromBody({ key: 'co:x', status: 'nimp' }).status === '', 'statut hors allowlist -> vidé');
+  ok(crm.clientEnrichFromBody({ key: 'co:x', offer: 'nimp' }).offer === '', 'offre hors allowlist -> vidée');
+  ok(crm.clientEnrichFromBody({ status: 'active' }) === null, 'sans clé -> null');
+  function postClient(body, bearer) { return { method: 'POST', url: '/api/crm?kind=client', headers: bearer ? { authorization: 'Bearer ' + bearer } : {}, body: body }; }
+  var pc401 = fakeRes(); await crm(postClient({ key: 'co:x', status: 'active' }, null), pc401);
+  ok(pc401.statusCode === 401, 'POST client sans auth -> 401');
+  var pc = fakeRes(); await crm(postClient({ key: 'co:bd', status: 'discussion', nextStep: 'Envoyer le contrat', offer: 'flex' }, 'sek'), pc);
+  ok(pc.statusCode === 200 && pc.json().saved === true, 'POST client (admin) -> 200 enregistré');
+  var gc = fakeRes(); await crm({ method: 'GET', url: '/api/crm?kind=clients', headers: { authorization: 'Bearer sek' } }, gc);
+  var jgc = gc.json();
+  ok(gc.statusCode === 200 && Array.isArray(jgc.clients) && jgc.clients.length === 1, 'GET ?kind=clients -> 1 enrichissement');
+  ok(jgc.clients[0].key === 'co:bd' && jgc.clients[0].status === 'discussion' && jgc.clients[0].nextStep === 'Envoyer le contrat', 'enrichissement relu correct');
+  var pc2 = fakeRes(); await crm(postClient({ key: 'co:bd', status: 'active' }, 'sek'), pc2);
+  var gc2 = fakeRes(); await crm({ method: 'GET', url: '/api/crm?kind=clients', headers: { authorization: 'Bearer sek' } }, gc2);
+  ok(gc2.json().clients.length === 1 && gc2.json().clients[0].status === 'active', 'ré-enregistrement ÉCRASE (pas de doublon)');
+
   Object.keys(saved).forEach(function (k) { var e = { SP: 'STORAGE_PROVIDER', SEC: 'PUBLISH_SECRET', ROLES: 'CHASKIS_ROLES', DEF: 'CHASKIS_DEFAULT_ROLE', SUBS: 'CLERK_ALLOWED_SUBS' }[k]; if (saved[k] === undefined) delete process.env[e]; else process.env[e] = saved[k]; });
   console.log('\n' + (fail === 0 ? '✅' : '❌') + ' ' + pass + ' réussis, ' + fail + ' échoués');
   process.exit(fail === 0 ? 0 : 1);

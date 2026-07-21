@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap">
 <script src="https://unpkg.com/lucide@latest"></script>
-<link rel="stylesheet" href="/admin/css/editor.css?v=20260721d">
+<link rel="stylesheet" href="/admin/css/editor.css?v=20260721e">
 </head>
 <body>
 <!-- Écran de connexion (auth Clerk). Recouvre l'admin tant que la connexion n'est pas établie.
@@ -352,7 +352,13 @@
         </div>
         <div class="stat-row" id="cliStats"></div>
         <div class="cli-filters" id="cliFilters"></div>
-        <div id="cliList"></div>
+        <div class="tbl-scroll">
+          <table class="tbl">
+            <thead><tr><th>Client</th><th>Secteur</th><th>Statut</th><th style="text-align:center">Rendez-vous</th><th style="text-align:center">Comptes-rendus</th><th>Dernière activité</th><th></th></tr></thead>
+            <tbody id="cliBody"></tbody>
+          </table>
+        </div>
+        <div class="pager" id="cliPager"></div>
       </section>
 
       <!-- ===== Rendez-vous (Calendly) ===== -->
@@ -822,7 +828,7 @@
 </div>
 
 <script src="/admin/data/tech-plan.js?v=20260714c"></script>
-<script src="/admin/js/editor.js?v=20260721d"></script>
+<script src="/admin/js/editor.js?v=20260721e"></script>
 <!-- Auth Clerk (front). editor.js reste inchangé : getStoredPublishKey() renvoie window.__clerkToken
      quand on est connecté via Clerk, sinon la clé stockée (repli). Zéro appel /api modifié. -->
 <script>

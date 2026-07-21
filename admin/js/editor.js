@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.46.0" };
+const ADMIN_BUILD = { version: "0.46.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1393,7 +1393,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.46.0", cur:true, date:"2026-07-21", title:"Nouvelle page « Clients » : le commercial relié", items:[
+  { v:"v0.46.1", cur:true, date:"2026-07-21", title:"Clients : vue en tableau", items:[
+    {t:"imp", x:"La page Clients passe en tableau (comme le bas de la page Rendez-vous) : lisible même avec beaucoup de clients, avec recherche, filtres comptés et pagination ; un clic sur une ligne ouvre la fiche détaillée"}
+  ]},
+  { v:"v0.46.0", date:"2026-07-21", title:"Nouvelle page « Clients » : le commercial relié", items:[
     {t:"add", x:"Une page « Clients » regroupe automatiquement tous vos clients et prospects à partir des rendez-vous et des demandes reçues (fini les silos)"},
     {t:"add", x:"Chaque fiche client réunit ses coordonnées, ses rendez-vous et surtout ses comptes-rendus au même endroit : plus besoin de chercher où retrouver un compte-rendu"},
     {t:"add", x:"Recherche et filtres par statut (nouveaux leads, RDV planifié, rencontrés, sans suite)"}
@@ -1889,7 +1892,7 @@ const PROGRESS=[
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
-  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.1.0",recent:["Nouvelle page : tous les clients et prospects regroupés depuis les RDV et les demandes","Fiche client reliant coordonnées, rendez-vous et comptes-rendus","Recherche et filtres par statut"]},
+  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.2.0",recent:["Vue en tableau (recherche, filtres comptés, pagination) adaptée à un grand nombre de clients","Tous les clients et prospects regroupés depuis les RDV et les demandes","Fiche client reliant coordonnées, rendez-vous et comptes-rendus"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"beta",version:"0.8.0",recent:["Cycle complet : préparer depuis un RDV → piloter → compte-rendu rattaché au rendez-vous","Comptes-rendus récents consultables (relire / re-télécharger)","Actions plaquette/offre = email pré-rempli au prospect"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audience réelle agrégée de tous les visiteurs (collecteur maison, sans cookie)","Visiteurs uniques anonymisés + filtrage des robots","Vraie mesure sans cookie (cet appareil) en repli"]},
@@ -4513,7 +4516,8 @@ function cbAsk(q){
    les demandes reçues (/api/crm). Tous les commerciaux voient donc les mêmes clients. L'enrichissement
    PARTAGÉ (statut/prochaine étape saisis à la main) viendra dans un incrément suivant. Repli : sans
    demandes chargées, les clients proviennent des RDV -> démo intacte. */
-var cliLeads=[], cliQuery="", cliFilter="all", cliLeadsLoaded=false, cliCurrentList=[];
+var cliLeads=[], cliQuery="", cliFilter="all", cliLeadsLoaded=false, cliCurrentList=[], cliPage=1;
+var CLI_PER_PAGE=12;
 var GENERIC_MAIL=/^(gmail|hotmail|outlook|yahoo|icloud|live|msn|bluewin|gmx|proton|protonmail|orange|wanadoo|free)\./;
 function cliNormKey(s){ return String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]/g,""); }
 function cliMailDomain(e){ var m=/@(.+)$/.exec(String(e||"").trim().toLowerCase()); return m?m[1]:""; }
@@ -4565,15 +4569,41 @@ function renderClients(){
   var sr=document.getElementById("cliStats");
   if(sr){ sr.style.gridTemplateColumns="repeat(4,1fr)"; sr.innerHTML=[["Clients & prospects",total,"contact-round","teal"],["Nouveaux leads",nLead,"inbox","amber"],["RDV planifiés",nRdv,"calendar","blue"],["Comptes-rendus",nCr,"file-text","purple"]].map(function(t){ var bc=DASH_ICOL[t[3]]||DASH_ICOL.teal; return '<div class="statc"><div class="top"><div class="ic-badge" style="background:'+bc[0]+';color:'+bc[1]+';border-radius:9px"><i data-lucide="'+t[2]+'"></i></div></div><div class="k">'+t[0]+'</div><div class="v">'+t[1]+'</div></div>'; }).join(""); }
   var fw=document.getElementById("cliFilters");
-  if(fw){ fw.innerHTML=CLI_FILTERS.map(function(f){ return '<button type="button" class="cli-fbtn'+(cliFilter===f[0]?" on":"")+'" data-f="'+f[0]+'">'+f[1]+'</button>'; }).join("");
-    fw.querySelectorAll("[data-f]").forEach(function(b){ b.addEventListener("click",function(){ cliFilter=b.dataset.f; renderClients(); }); }); }
+  if(fw){ fw.innerHTML=CLI_FILTERS.map(function(f){ var n=f[0]==="all"?total:list.filter(function(c){return c.status.k===f[0];}).length; return '<button type="button" class="cli-fbtn'+(cliFilter===f[0]?" on":"")+'" data-f="'+f[0]+'">'+f[1]+'<span class="cli-fn">'+n+'</span></button>'; }).join("");
+    fw.querySelectorAll("[data-f]").forEach(function(b){ b.addEventListener("click",function(){ cliFilter=b.dataset.f; cliPage=1; renderClients(); }); }); }
   var shown=list.filter(function(c){ return cliMatch(c,cliQuery) && (cliFilter==="all"||c.status.k===cliFilter); });
-  var w=document.getElementById("cliList"); if(!w) return;
-  if(!shown.length){ w.innerHTML='<div class="cli-empty">'+(list.length?"Aucun client ne correspond à cette recherche.":"Aucun client pour l'instant. Ils apparaîtront à partir des rendez-vous et des demandes reçues.")+'</div>'; }
-  else { w.innerHTML=shown.map(cliCardHtml).join(""); w.querySelectorAll("[data-cli]").forEach(function(el){ el.addEventListener("click",function(){ openClientCard(el.dataset.cli); }); }); }
-  var s=document.getElementById("cliSearch"); if(s && !s.dataset.wired){ s.dataset.wired="1"; s.addEventListener("input",function(){ cliQuery=s.value||""; renderClients(); }); }
+  var b=document.getElementById("cliBody"); if(!b) return; b.innerHTML="";
+  var pages=Math.max(1,Math.ceil(shown.length/CLI_PER_PAGE)); if(cliPage>pages) cliPage=pages; if(cliPage<1) cliPage=1;
+  var start=(cliPage-1)*CLI_PER_PAGE, pageItems=shown.slice(start,start+CLI_PER_PAGE);
+  if(!shown.length){ var tre=document.createElement("tr"); tre.innerHTML='<td colspan="7" style="color:var(--muted);padding:16px">'+(list.length?"Aucun client ne correspond à cette recherche.":"Aucun client pour l'instant. Ils apparaîtront depuis les rendez-vous et les demandes reçues.")+'</td>'; b.appendChild(tre); }
+  pageItems.forEach(function(c){
+    var tr=document.createElement("tr"); tr.className="rdv-row";
+    var last=c.lastTs?new Date(c.lastTs).toLocaleDateString("fr-CH",{day:"2-digit",month:"short",year:"numeric"}):"—";
+    tr.innerHTML='<td><div class="cl-co" title="'+escAttr(c.name)+'">'+escHtml(c.name)+'</div>'+(c.contacts[0]?'<div class="cl-ct">'+escHtml(c.contacts[0])+'</div>':'')+'</td>'
+      +'<td>'+escHtml(c.secteur||"—")+'</td>'
+      +'<td><span class="cli-badge" style="color:'+c.status.c+';background:'+c.status.c+'18">'+c.status.lbl+'</span></td>'
+      +'<td style="text-align:center">'+(c.rdvs.length||"—")+'</td>'
+      +'<td style="text-align:center">'+(c.recaps.length||"—")+'</td>'
+      +'<td style="white-space:nowrap;color:var(--ink-soft)">'+escHtml(last)+'</td>'
+      +'<td class="rdv-exp" title="Ouvrir la fiche client"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></td>';
+    tr.addEventListener("click",function(){ openClientCard(c.key); });
+    b.appendChild(tr);
+  });
+  cliRenderPager(shown.length,pages,start,pageItems.length);
+  var s=document.getElementById("cliSearch"); if(s && !s.dataset.wired){ s.dataset.wired="1"; s.addEventListener("input",function(){ cliQuery=s.value||""; cliPage=1; renderClients(); }); }
   refreshIcons();
   if(!cliLeadsLoaded) loadClientLeads();
+}
+function cliRenderPager(total,pages,start,count){
+  var el=document.getElementById("cliPager"); if(!el) return;
+  if(pages<=1){ el.innerHTML=""; return; }
+  var chevL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>';
+  var chevR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
+  var mk=function(n,lbl,cls,dis){ return '<button class="pg-btn'+(cls?" "+cls:"")+'" data-pg="'+n+'"'+(dis?" disabled":"")+'>'+lbl+'</button>'; };
+  var win=[]; for(var n=1;n<=pages;n++){ if(n===1||n===pages||Math.abs(n-cliPage)<=1) win.push(n); }
+  var nums="",lastN=0; win.forEach(function(k){ if(k-lastN>1) nums+='<span class="pg-ell">…</span>'; nums+=mk(k,String(k),k===cliPage?"on":""); lastN=k; });
+  el.innerHTML='<span class="pg-info">'+(start+1)+'–'+(start+count)+' sur '+total+' client'+(total>1?"s":"")+'</span><span class="pg-ctrl">'+mk(cliPage-1,chevL,"",cliPage<=1)+nums+mk(cliPage+1,chevR,"",cliPage>=pages)+'</span>';
+  el.querySelectorAll(".pg-btn[data-pg]").forEach(function(bt){ if(bt.disabled) return; bt.addEventListener("click",function(){ var k=+bt.dataset.pg; if(k>=1&&k<=pages&&k!==cliPage){ cliPage=k; renderClients(); } }); });
 }
 async function loadClientLeads(){
   cliLeadsLoaded=true;
@@ -4581,11 +4611,6 @@ async function loadClientLeads(){
     var r=await fetch("/api/crm?days=120",{headers:{Authorization:"Bearer "+key}}); if(!r.ok) return;
     var j=await r.json(); if(j&&Array.isArray(j.leads)&&j.leads.length){ cliLeads=j.leads; var v=document.getElementById("view-clients"); if(v&&v.classList.contains("on")) renderClients(); }
   }catch(e){ /* silencieux : la liste dérivée des RDV reste affichée */ }
-}
-function cliCardHtml(c){
-  var sub=[c.secteur, c.contacts[0]||"", (c.rdvs.length?c.rdvs.length+" RDV":""), (c.recaps.length?c.recaps.length+" compte-rendu"+(c.recaps.length>1?"s":""):"")].filter(Boolean).join(" · ");
-  return '<div class="cli-card" data-cli="'+escAttr(c.key)+'" tabindex="0" role="button"><div class="cli-card-main"><div class="cli-name">'+escHtml(c.name)+'</div><div class="cli-sub">'+escHtml(sub)+'</div></div>'
-    +'<span class="cli-badge" style="color:'+c.status.c+';background:'+c.status.c+'18">'+c.status.lbl+'</span></div>';
 }
 function openClientCard(key){
   var c=cliCurrentList.find(function(x){return x.key===key;}); if(!c) return;

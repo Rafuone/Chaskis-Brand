@@ -261,14 +261,8 @@
   .cli-fbtn:hover{border-color:var(--border-2);color:var(--ink)}
   .cli-fbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
   #cliStats{margin-bottom:16px}
-  .cli-card{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--panel);border:1px solid var(--border);border-radius:12px;margin-bottom:9px;cursor:pointer;transition:border-color .12s,box-shadow .12s}
-  .cli-card:hover{border-color:var(--border-2);box-shadow:0 3px 12px rgba(40,32,60,.07)}
-  .cli-card:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
-  .cli-card-main{flex:1;min-width:0}
-  .cli-name{font-size:14px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .cli-sub{font-size:12px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .cli-badge{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap;flex-shrink:0}
-  .cli-empty{padding:34px 20px;text-align:center;color:var(--muted);font-size:13px;background:var(--panel);border:1px dashed var(--border-2);border-radius:12px}
+  .cli-fn{margin-left:7px;font-size:11px;font-weight:700;opacity:.72}
+  .cli-badge{display:inline-block;font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap}
   .cli-detail{max-width:640px;width:100%;max-height:86vh;overflow:auto;padding:24px}
   .cli-d-hd{display:flex;align-items:center;gap:12px;justify-content:space-between;margin:0 34px 4px 0}
   .cli-d-name{font-size:19px;font-weight:800;color:var(--ink)}

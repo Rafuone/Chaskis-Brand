@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap">
 <script src="https://unpkg.com/lucide@latest"></script>
-<link rel="stylesheet" href="/admin/css/editor.css?v=20260721o">
+<link rel="stylesheet" href="/admin/css/editor.css?v=20260721p">
 </head>
 <body>
 <!-- Écran de connexion (auth Clerk). Recouvre l'admin tant que la connexion n'est pas établie.
@@ -418,6 +418,7 @@
             <div class="dpan">
               <h4><span class="hic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Performance de l'équipe</h4>
               <p class="hint" style="margin:2px 0 10px">Sur <span id="rdvTeamPeriod">les 30 derniers jours</span>. Vue manager : les résultats de chaque personne (dans sa propre session, chacun ne voit que les siens). Les taux se lisent avec le nombre de rendez-vous indiqué à gauche.</p>
+              <div class="ex-note" id="rdvTeamNote" style="margin:2px 0 12px"></div>
               <table class="tbl"><thead><tr><th>Personne</th><th style="text-align:center">Rendez-vous</th><th style="text-align:center">À venir</th><th style="text-align:center">Honorés</th><th style="text-align:center">Présence</th><th style="text-align:center">Conversion</th></tr></thead><tbody id="rdvTeamBody"></tbody></table>
             </div>
 
@@ -832,7 +833,7 @@
 </div>
 
 <script src="/admin/data/tech-plan.js?v=20260714c"></script>
-<script src="/admin/js/editor.js?v=20260721o"></script>
+<script src="/admin/js/editor.js?v=20260721p"></script>
 <!-- Auth Clerk (front). editor.js reste inchangé : getStoredPublishKey() renvoie window.__clerkToken
      quand on est connecté via Clerk, sinon la clé stockée (repli). Zéro appel /api modifié. -->
 <script>

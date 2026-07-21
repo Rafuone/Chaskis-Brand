@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.52.0" };
+const ADMIN_BUILD = { version: "0.53.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1099,9 +1099,9 @@ const DASH_ICOL={ teal:["#E1F5EE","#0F6E56"], purple:["#EEEDFE","#534AB7"], ambe
 function dashTip(h, period, val, delta){ return '<div class="tt-h">'+h+'</div><div class="tt-row"><span>'+period+'</span><b>'+val+'</b></div><div class="tt-sub">'+delta+'</div>'; }
 function renderDashStats(role){ const w=document.getElementById("dashStats"); if(!w) return; const c=changeCount(draft); let cards;
   if(role==="commercial") cards=[
-    {k:"RDV à venir", v:"5", d:"2 cette semaine", ic:"calendar", col:"teal", goto:"rdv"},
-    {k:"RDV honorés (30 j)", v:"18", trend:trendChip(12), ic:"calendar-check", col:"purple", tip:dashTip("RDV honorés","30 derniers jours","18","+12 % vs les 30 jours précédents")},
-    {k:"Taux de conversion (30 j)", v:"34 %", trend:trendChip(5," pts"), ic:"trending-up", col:"amber", tip:dashTip("Taux de conversion","30 derniers jours","34 %","+5 pts vs les 30 jours précédents")}
+    {k:"RDV à venir", v:"5", d:"2 cette semaine", ic:"calendar", col:"teal", goto:"rdv", ex:1},
+    {k:"RDV honorés (30 j)", v:"18", ic:"calendar-check", col:"purple", ex:1, tip:dashTip("RDV honorés","30 derniers jours","18","exemple de démonstration")},
+    {k:"Taux de conversion (30 j)", v:"34 %", ic:"trending-up", col:"amber", ex:1, tip:dashTip("Taux de conversion","30 derniers jours","34 %","exemple — nécessite les abonnements du back-office")}
   ];
   else if(role==="editor") cards=[
     {k:"Modifs en attente", v:String(c.total), d:c.total?"à publier":"tout est à jour", ic:"file-pen", col:"amber", goto:"editor"},
@@ -1109,15 +1109,15 @@ function renderDashStats(role){ const w=document.getElementById("dashStats"); if
     {k:"Médiathèque", v:String(draft.media.length), d:"éléments", ic:"image", col:"purple", goto:"media"}
   ];
   else cards=[
-    {k:"Visites (30 j)", v:"4 280", trend:trendChip(12), ic:"eye", col:"blue", tip:dashTip("Visites","30 derniers jours","4 280","+12 % vs les 30 jours précédents")},
-    {k:"Chatbot · conversations (30 j)", v:"1 248", trend:trendChip(18), ic:"message-square", col:"purple", tip:dashTip("Conversations chatbot","30 derniers jours","1 248","+18 % vs les 30 jours précédents")},
+    {k:"Visites (30 j)", v:"4 280", ic:"eye", col:"blue", ex:1, tip:dashTip("Visites","30 derniers jours","4 280","exemple — l'audience réelle est dans Statistiques")},
+    {k:"Chatbot · conversations (30 j)", v:"1 248", ic:"message-square", col:"purple", ex:1, tip:dashTip("Conversations chatbot","30 derniers jours","1 248","exemple de démonstration")},
     {k:"Rendez-vous à venir", v:String(rdvUpcomingCount()), ic:"calendar", col:"teal", goto:"rdv"},
-    {k:"Conversion des RDV (30 j)", v:"34 %", trend:trendChip(5," pts"), ic:"target", col:"amber", goto:"rdv", tip:dashTip("Conversion des rendez-vous","RDV transformés en clients (30 j)","34 %","+5 pts vs les 30 jours précédents")}
+    {k:"Conversion des RDV (30 j)", v:"34 %", ic:"target", col:"amber", goto:"rdv", ex:1, tip:dashTip("Conversion des rendez-vous","RDV transformés en clients (30 j)","34 %","exemple — nécessite les abonnements du back-office")}
   ];
   w.style.gridTemplateColumns="repeat("+cards.length+",1fr)"; w.innerHTML="";
   cards.forEach(cd=>{ const el=document.createElement("div"); el.className="statc"+(cd.goto?" dash-clic":"")+(cd.tip?" tipped":"");
     const bc=DASH_ICOL[cd.col]||DASH_ICOL.teal;
-    el.innerHTML='<div class="top"><div class="ic-badge" style="background:'+bc[0]+';color:'+bc[1]+';border-radius:9px"><i data-lucide="'+cd.ic+'"></i></div>'+(cd.trend||"")+'</div><div class="k">'+cd.k+'</div><div class="v">'+cd.v+'</div>'+(cd.d?'<div class="d">'+cd.d+'</div>':'');
+    el.innerHTML='<div class="top"><div class="ic-badge" style="background:'+bc[0]+';color:'+bc[1]+';border-radius:9px"><i data-lucide="'+cd.ic+'"></i></div>'+(cd.ex?'<span class="ex-tag">exemple</span>':(cd.trend||""))+'</div><div class="k">'+cd.k+'</div><div class="v">'+cd.v+'</div>'+(cd.d?'<div class="d">'+cd.d+'</div>':'');
     if(cd.tip) el._tip=cd.tip;
     if(cd.goto) el.addEventListener("click",()=>showView(cd.goto));
     w.appendChild(el); }); }
@@ -1396,7 +1396,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.52.0", cur:true, date:"2026-07-21", title:"Clients : fiche outil + relance intégrée + filtres à puces", items:[
+  { v:"v0.53.0", cur:true, date:"2026-07-21", title:"Chiffres honnêtes : réels quand possible, sinon « exemple »", items:[
+    {t:"imp", x:"Tableau de l'équipe (Rendez-vous) : rendez-vous et taux de présence calculés sur vos VRAIS rendez-vous dès que Calendly est connecté ; sinon chiffres d'exemple. Jean-Christophe apparaît désormais dans le tableau."},
+    {t:"imp", x:"Le taux de conversion est clairement marqué « exemple » partout : il n'est pas calculable sans les données d'abonnement du back-office (jamais inventé)"},
+    {t:"imp", x:"Les chiffres de démonstration sont étiquetés « exemple » là où ils apparaissent (tableau de bord, statistiques, chatbot, équipe commerciale) pour ne rien laisser croire de faux"}
+  ]},
+  { v:"v0.52.0", date:"2026-07-21", title:"Clients : fiche outil + relance intégrée + filtres à puces", items:[
     {t:"add", x:"Relance par e-mail directement dans la fiche : modèles de messages prêts à l'emploi et modifiables, ouverture de votre messagerie pré-remplie, et la relance est horodatée"},
     {t:"add", x:"Résumé en tête de fiche : nombre de rendez-vous, dernier rendez-vous, dernière relance et prochaine étape en un coup d'œil"},
     {t:"imp", x:"Fenêtre de filtres repensée : sélection par pastilles (avatars des commerciaux, secteurs, offres) au lieu des menus déroulants"}
@@ -1936,7 +1941,7 @@ const PROGRESS=[
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
   {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.8.0",recent:["Relance par e-mail intégrée à la fiche (modèles de messages modifiables + horodatage de la relance)","Résumé en tête de fiche : nombre de RDV, dernier RDV, dernière relance, prochaine étape","Fenêtre de filtres à pastilles ; sélection multiple + actions groupées ; suivi qui/quand par rendez-vous"]},
-  {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
+  {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.2.0",recent:["Tableau de l'équipe : rendez-vous et présence calculés sur vos vrais rendez-vous dès que Calendly est connecté ; Jean-Christophe inclus","Le taux de conversion est marqué « exemple » (pas calculable sans les abonnements du back-office)","Chiffres de démonstration clairement étiquetés « exemple »"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"beta",version:"0.8.0",recent:["Cycle complet : préparer depuis un RDV → piloter → compte-rendu rattaché au rendez-vous","Comptes-rendus récents consultables (relire / re-télécharger)","Actions plaquette/offre = email pré-rempli au prospect"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audience réelle agrégée de tous les visiteurs (collecteur maison, sans cookie)","Visiteurs uniques anonymisés + filtrage des robots","Vraie mesure sans cookie (cet appareil) en repli"]},
   {view:"perf",name:"Performance",env:"preprod",stage:"beta",version:"0.11.0",recent:["Mesure automatique planifiée (tous les jours, sans clic) + historique conservé côté serveur","Google note aussi Accessibilité, SEO et Bonnes pratiques (en plus de la vitesse)","Vraies mesures Core Web Vitals, historique et reprise automatique"]},
@@ -4056,7 +4061,8 @@ function renderCbCards(id, nav){
     '<div class="tt-h">Questions sans réponse</div>'+tS("Hors périmètre (normal)",p.unScope)+tS("À documenter (action)",p.unKnow)+'<div class="tt-sub">Cliquez pour voir le détail.</div>',"questions"]]
   .forEach(c=>{ const el=document.createElement("div"); el.className="statc tipped"; const col=ICOL[c[2]];
     const openNow = nav && cbOpen===c[7];
-    el.innerHTML='<div class="top"><div class="ic-badge" style="background:'+col[0]+';color:'+col[1]+';border-radius:9px">'+c[3]+'</div>'+(c[4]||"")+'</div>'+
+    // Statistiques chatbot = démonstration (pas de journalisation réelle des conversations branchée).
+    el.innerHTML='<div class="top"><div class="ic-badge" style="background:'+col[0]+';color:'+col[1]+';border-radius:9px">'+c[3]+'</div><span class="ex-tag">exemple</span></div>'+
       '<div class="k">'+c[0]+'</div>'+
       '<div class="v">'+c[1]+'</div>'+
       '<div class="statc-foot">'+
@@ -5021,14 +5027,30 @@ const RDV_STC={
 const RDV_REASONS=[["Tarif jugé trop élevé",38],["Pas le bon moment",27],["Parti à la concurrence",19],["Sans réponse / injoignable",16]];
 /* agrégat 30 jours par personne (source unique et cohérente pour équipe + statuts + raisons + cartes).
    Distinct de la liste ci-dessous, qui ne montre que les rendez-vous récents/à venir. */
+// Jeu de DÉMO du tableau d'équipe (Jean-Christophe inclus pour rester cohérent avec rdvData, où il a un RDV).
+// Sert de repli tant que Calendly n'est pas connecté ; sinon les chiffres sont calculés sur les vrais RDV.
 const TEAM_STATS={
   Sarah:{avenir:2, honores:15, annules:3, noshow:2, clients:5},
-  Marc: {avenir:2, honores:11, annules:3, noshow:2, clients:3}
+  Marc: {avenir:2, honores:11, annules:3, noshow:2, clients:3},
+  "Jean-Christophe":{avenir:1, honores:6, annules:1, noshow:1, clients:2}
 };
+// Compte les RDV réels par personne (répartis par statut). clients=null : la conversion n'est PAS dérivable
+// des RDV (il faut la source d'abonnement du back-office) -> marquée « exemple ».
+function teamCountsFromRdv(who){
+  const a={avenir:0,honores:0,annules:0,noshow:0,clients:null};
+  (typeof rdvData!=="undefined"?rdvData:[]).forEach(r=>{ if(!r||!r.who) return; if(who&&who!=="all"&&r.who!==who) return;
+    if(r.st==="avenir") a.avenir++; else if(r.st==="honore") a.honores++; else if(r.st==="noshow") a.noshow++; else if(r.st==="annule"||r.st==="refuse") a.annules++; });
+  return a;
+}
+// Agrégat équipe : RÉEL calculé sur les vrais RDV quand Calendly est connecté (rdvLiveOn), sinon DÉMO (TEAM_STATS).
 function teamAgg(who){
-  const a={avenir:0,honores:0,annules:0,noshow:0,clients:0};
-  Object.keys(TEAM_STATS).forEach(p=>{ if(who&&who!=="all"&&p!==who) return; const s=TEAM_STATS[p];
-    a.avenir+=s.avenir; a.honores+=s.honores; a.annules+=s.annules; a.noshow+=s.noshow; a.clients+=s.clients; });
+  const live=(typeof rdvLiveOn!=="undefined"&&rdvLiveOn);
+  let a;
+  if(live){ a=teamCountsFromRdv(who); a.clients=0; a.convReal=false; }   // conversion non calculable en live -> exemple
+  else { a={avenir:0,honores:0,annules:0,noshow:0,clients:0,convReal:false};
+    Object.keys(TEAM_STATS).forEach(p=>{ if(who&&who!=="all"&&p!==who) return; const s=TEAM_STATS[p];
+      a.avenir+=s.avenir; a.honores+=s.honores; a.annules+=s.annules; a.noshow+=s.noshow; a.clients+=s.clients; }); }
+  a.live=live;
   a.past=a.honores+a.annules+a.noshow; a.total=a.past+a.avenir;
   a.presence=a.past?Math.round(a.honores/a.past*100):0;
   a.conversion=a.honores?Math.round(a.clients/a.honores*100):0;
@@ -5315,19 +5337,40 @@ function rdvZoom(dir){ let i=RDV_ZOOM.indexOf(rdvKey); if(i<0)i=RDV_ZOOM.indexOf
 function statZoom(dir){ let i=STAT_ZOOM.indexOf(statKey); if(i<0)i=STAT_ZOOM.indexOf("30j"); const ni=Math.min(STAT_ZOOM.length-1,Math.max(0,i+dir)); if(ni!==i){ statKey=STAT_ZOOM[ni]; setSelectValue("statRange",statKey); const c=document.getElementById("statCustom"); if(c)c.classList.remove("show"); renderStats(); } }
 function renderTeam(){
   const t=document.getElementById("rdvTeamBody"); if(!t) return; t.innerHTML="";
-  Object.keys(TEAM_STATS).forEach(p=>{ const s=TEAM_STATS[p];
+  const live=(typeof rdvLiveOn!=="undefined"&&rdvLiveOn);
+  // Source : RÉELLE (comptée sur les vrais RDV par personne) quand Calendly est connecté, sinon DÉMO (TEAM_STATS).
+  let rows;
+  if(live){
+    const by={};
+    rdvData.forEach(r=>{ if(!r||!r.who) return; const s=by[r.who]||(by[r.who]={name:r.who,avenir:0,honores:0,annules:0,noshow:0,clients:null});
+      if(r.st==="avenir") s.avenir++; else if(r.st==="honore") s.honores++; else if(r.st==="noshow") s.noshow++; else if(r.st==="annule"||r.st==="refuse") s.annules++; });
+    rows=Object.keys(by).sort().map(k=>by[k]);
+  } else {
+    rows=Object.keys(TEAM_STATS).map(p=>Object.assign({name:p}, TEAM_STATS[p]));
+  }
+  if(!rows.length){ const tr=document.createElement("tr"); tr.innerHTML='<td colspan="6" style="color:var(--muted);padding:12px">Aucun rendez-vous sur la période.</td>'; t.appendChild(tr); }
+  rows.forEach(s=>{
     const past=s.honores+s.annules+s.noshow, total=past+s.avenir;
     const pres=past?Math.round(s.honores/past*100):0;
-    const conv=s.honores?Math.round(s.clients/s.honores*100):0;
+    // Conversion : JAMAIS calculable ici (pas de source d'abonnement) -> toujours « exemple ».
+    // En démo on montre un % illustratif étiqueté ; en réel il n'y a pas de chiffre -> « à brancher ».
+    const convCell=(s.clients!=null)
+      ? (s.honores?Math.round(s.clients/s.honores*100):0)+' % <span class="ex-tag">exemple</span><span class="frac">'+s.clients+' / '+s.honores+' honorés (démo)</span>'
+      : '<span class="ex-tag">exemple</span><span class="frac">à brancher sur le back-office</span>';
     const tr=document.createElement("tr");
-    tr.innerHTML='<td><span class="who"><span class="avatar xs">'+initials(p)+'</span>'+p+'</span></td>'+
+    tr.innerHTML='<td><span class="who"><span class="avatar xs">'+initials(s.name)+'</span>'+escHtml(s.name)+'</span></td>'+
       '<td style="text-align:center;font-weight:600">'+total+'</td>'+
       '<td style="text-align:center">'+s.avenir+'</td><td style="text-align:center">'+s.honores+'</td>'+
       '<td style="text-align:center">'+pres+' %<span class="frac">'+s.honores+' / '+past+' passés</span></td>'+
-      '<td style="text-align:center;font-weight:600">'+conv+' %<span class="frac">'+s.clients+' client'+(s.clients>1?'s':'')+' / '+s.honores+' honorés</span></td>';
+      '<td style="text-align:center;font-weight:600">'+convCell+'</td>';
     t.appendChild(tr);
   });
+  var note=document.getElementById("rdvTeamNote");
+  if(note){ note.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg><div>'+(live
+      ? 'Rendez-vous et présence <b>calculés sur vos vrais rendez-vous</b>. La <b>conversion reste un exemple</b> : elle nécessite les abonnements du back-office (source non branchée).'
+      : 'Chiffres d\'<b>exemple</b> tant que Calendly n\'est pas connecté. Une fois connecté, rendez-vous et présence seront calculés sur vos vrais rendez-vous ; la conversion restera un exemple (source d\'abonnement du back-office).')+'</div>'; }
   setTxt("rdvTeamPeriod", rdvPeriodLabel());
+  refreshIcons();
 }
 /* Synchronisation des vrais rendez-vous depuis Calendly (endpoint /api/calendly).
    Additif et à repli SÛR : en cas d'absence de clé, d'endpoint non configuré (501) ou
@@ -5408,17 +5451,22 @@ function renderRdv(){
     const rpc=RDV_PERIODS[rdvKey]||RDV_PERIODS["30j"], curR=rpc.curR, prevR=rpc.prevR;
     const tR=(k,v)=>'<div class="tt-row"><span>'+k+'</span><b>'+v+'</b></div>';
     const tS=(k,v)=>'<div class="tt-row"><span>'+k+'</span><span>'+v+'</span></div>';
-    [["RDV à venir",String(avenir),"cal","blue",trendChip(2,""),"vs "+prevR,
-      '<div class="tt-h">Rendez-vous à venir</div>'+tR("Planifiés dès aujourd'hui",avenir)+tS("Période préc. ("+prevR+")",Math.max(0,avenir-2))],
-     ["Cette semaine","3","clock","violet","","à honorer d'ici dimanche",
-      '<div class="tt-h">Cette semaine</div>'+tR("À honorer d'ici dimanche","3")+tS("Du lundi au dimanche","semaine en cours")],
-     ["Taux de présence",agg.presence+" %","check","green",trendChip(3," pts"),agg.honores+" honorés sur "+agg.past+" passés",
-      '<div class="tt-h">Taux de présence</div>'+tS("Rendez-vous honorés",agg.honores+" / "+agg.past+" passés")+tS(curR,agg.presence+" %")+tS("Période préc. ("+prevR+")",(agg.presence-3)+" %")],
-     ["Taux de conversion",agg.conversion+" %","target","red",trendChip(5," pts"),agg.clients+" clients sur "+agg.honores+" honorés",
-      '<div class="tt-h">Taux de conversion</div>'+tS("Devenus clients",agg.clients+" / "+agg.honores+" honorés")+tS(curR,agg.conversion+" %")+tS("Période préc. ("+prevR+")",(agg.conversion-5)+" %")]]
-    .forEach(c=>{ const el=document.createElement("div"); el.className="statc tipped"; const col=ICOL[c[3]];
-      el.innerHTML='<div class="top"><div class="ic-badge" style="background:'+col[0]+';color:'+col[1]+';border-radius:9px">'+sIcon(c[2])+'</div>'+(c[4]||"")+'</div><div class="k">'+c[0]+'</div><div class="v">'+c[1]+'</div>'+(c[5]?'<div class="d">'+c[5]+'</div>':'');
-      el._tip=c[6];
+    const exTag='<span class="ex-tag">exemple</span>';
+    // RDV à venir = compte RÉEL (ups.length) ; présence RÉELLE quand Calendly connecté (agg.live) ;
+    // « cette semaine » (non calculée) et conversion (pas de source d'abonnement) = toujours « exemple ».
+    const cards=[
+      {k:"RDV à venir", v:String(avenir), ic:"cal", col:"blue", badge:(agg.live?"":trendChip(2,"")), d:(agg.live?"planifiés dès aujourd'hui":"vs "+prevR),
+        tip:'<div class="tt-h">Rendez-vous à venir</div>'+tR("Planifiés dès aujourd'hui",avenir)},
+      {k:"Cette semaine", v:"3", ic:"clock", col:"violet", ex:true, d:"à honorer d'ici dimanche",
+        tip:'<div class="tt-h">Cette semaine</div>'+tR("À honorer d'ici dimanche","3")},
+      {k:"Taux de présence", v:agg.presence+" %", ic:"check", col:"green", ex:!agg.live, d:agg.honores+" honorés sur "+agg.past+" passés",
+        tip:'<div class="tt-h">Taux de présence</div>'+tS("Rendez-vous honorés",agg.honores+" / "+agg.past+" passés")+tS(curR,agg.presence+" %")},
+      {k:"Taux de conversion", v:(agg.live?"—":agg.conversion+" %"), ic:"target", col:"red", ex:true, d:(agg.live?"à brancher sur le back-office":agg.clients+" clients sur "+agg.honores+" honorés"),
+        tip:'<div class="tt-h">Taux de conversion</div>'+(agg.live?tS("Source","abonnements du back-office (non branchée)"):tS("Devenus clients",agg.clients+" / "+agg.honores+" honorés"))}
+    ];
+    cards.forEach(c=>{ const el=document.createElement("div"); el.className="statc tipped"; const col=ICOL[c.col];
+      el.innerHTML='<div class="top"><div class="ic-badge" style="background:'+col[0]+';color:'+col[1]+';border-radius:9px">'+sIcon(c.ic)+'</div>'+(c.ex?exTag:(c.badge||""))+'</div><div class="k">'+c.k+'</div><div class="v">'+c.v+'</div>'+(c.d?'<div class="d">'+c.d+'</div>':'');
+      el._tip=c.tip;
       cw.appendChild(el); }); }
   // graphe d'évolution
   const rp=RDV_PERIODS[rdvKey]||RDV_PERIODS["30j"]; const prev=rp.chart.vals.map(v=>Math.round(v*0.85));
@@ -5430,8 +5478,9 @@ function renderRdv(){
   // répartition des statuts (passés) + raisons de non-conversion
   renderRdvStatus();
   renderBars("rdvReasons", RDV_REASONS, "#C47A5E");
-  const nonConv=Math.max(0, agg.honores-agg.clients);
-  setTxt("rdvReasonsCap", nonConv+" rendez-vous honorés non convertis sur la période");
+  // Raisons de non-conversion = exemple (nécessite la source d'abonnement du back-office, non branchée).
+  var rc=document.getElementById("rdvReasonsCap");
+  if(rc) rc.innerHTML='<span class="ex-tag">exemple</span> Répartition illustrative — la conversion réelle nécessite les abonnements du back-office';
   renderTeam();
   // liste
   renderRdvTable();
@@ -5589,7 +5638,8 @@ function renderStats(){
   if(cw){ cw.innerHTML="";
     [["Visites",nfr(STAT_BASE.visits*m),"eye"],["Visiteurs uniques",nfr(STAT_BASE.uniques*m),"user"],["Durée moyenne",p.dur,"clock"]]
     .forEach((c,i)=>{ const el=document.createElement("div"); el.className="statc"; const col=SICOL[i]||SICOL[0];
-      el.innerHTML='<div class="top"><div class="ic-badge" style="background:'+col[0]+';color:'+col[1]+';border-radius:9px">'+sIcon(c[2])+'</div>'+trendChip(trends[i])+'</div><div class="k">'+c[0]+' · '+sh+'</div><div class="v">'+c[1]+'</div>';
+      // Chiffres du haut = exemples de démonstration (l'audience réelle mesurée est dans le panneau dédié plus bas).
+      el.innerHTML='<div class="top"><div class="ic-badge" style="background:'+col[0]+';color:'+col[1]+';border-radius:9px">'+sIcon(c[2])+'</div><span class="ex-tag">exemple</span></div><div class="k">'+c[0]+' · '+sh+'</div><div class="v">'+c[1]+'</div>';
       cw.appendChild(el); }); }
   const prevVals=p.chart.vals.map(v=>Math.round(v*0.88));
   drawLine(document.getElementById("statChart"), p.chart.labels, p.chart.vals, prevVals);

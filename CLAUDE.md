@@ -28,7 +28,7 @@ Dès que l'utilisateur demande de **committer** (ou dit « mets à jour les vers
 4. **Avancement** — `PROGRESS` dans `admin/js/editor.js` : mettre à jour `stage`/`version` des pages modifiées.
 5. **Plan de faisabilité** — `TECH_PLAN` dans `admin/data/tech-plan.js` (les données) et `TECH_EFF_DAYS` dans `admin/js/editor.js` : refléter l'avancement, réduire l'effort restant.
 6. **`TECH_DONE`** — `%` par chantier dans `admin/js/editor.js` : ne créditer que le vrai travail « développé & fonctionnel » (les correctifs de revue NE bumpent PAS `TECH_DONE`).
-7. **Contrôle** — `node --check admin/js/editor.js && node --check admin/data/tech-plan.js` (une apostrophe non échappée casse le fichier) **PUIS `node tools/test.js`** (14 suites, 0 réseau : doit rester vert). Vérifier au navigateur (preview). Puis committer. NB : `feat/foundation-vercel` (préversion) est poussée ; `git fetch` + `pull --rebase` avant chaque push (les publications d'Alexandre créent des commits distants). Ne pas pousser sur `main`/prod.
+7. **Contrôle** — `node --check admin/js/editor.js && node --check admin/data/tech-plan.js` (une apostrophe non échappée casse le fichier) **PUIS `node tools/test.js`** (15 suites, 0 réseau : doit rester vert). Vérifier au navigateur (preview). Puis committer. NB : `feat/foundation-vercel` (préversion) est poussée ; `git fetch` + `pull --rebase` avant chaque push (les publications d'Alexandre créent des commits distants). Ne pas pousser sur `main`/prod.
 
 ## Conventions
 

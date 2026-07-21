@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.44.2" };
+const ADMIN_BUILD = { version: "0.45.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1125,20 +1125,22 @@ function dashPanel(icon, title, bodyId, hic, moreView){ const more=moreView?'<bu
 function renderDashPanels(role){ const w=document.getElementById("dashPanels"); if(!w) return;
   if(role==="editor"){ w.innerHTML='<div class="dash-grid">'+dashPanel("history","Versions récentes","dashVersions")+dashPanel("image","Médiathèque","dashMedia","violet")+'</div>'+dashPanel("clock","Activité récente","dashActivity","teal");
     fillDashVersions(); fillDashMedia(); fillDashActivity(); }
-  else if(role==="commercial"){ w.innerHTML='<div class="dash-grid">'+dashPanel("calendar","Prochains rendez-vous","dashRdv","teal")+dashPanel("clipboard-check","Votre copilote","dashCop","violet")+'</div>';
-    fillDashRdv(); fillDashCop(); }
+  else if(role==="commercial"){ w.innerHTML='<div class="dash-grid">'+dashPanel("calendar","Prochains rendez-vous","dashRdv","teal")+dashPanel("clipboard-check","Votre copilote","dashCop","violet")+'</div>'+dashLeadsPanelHtml();
+    fillDashRdv(); fillDashCop(); loadDashLeads(); }
   else { const zbtn='<span class="zoomctl"><button class="zoom-btn" id="dashZoomOut" title="Dézoomer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button><button class="zoom-btn" id="dashZoomIn" title="Zoomer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></span>';
     w.innerHTML='<div class="dash-grid dash-grid-21">'
       + '<div class="dpan"><div class="pan-head"><h4><span class="hic teal"><i data-lucide="trending-up"></i></span> Trafic du site</h4><div class="ch-hd-r"><span class="hint" id="dashChartHint" style="margin:0"></span>'+zbtn+'</div></div><svg class="lchart" id="dashChart" viewBox="0 0 700 176" preserveAspectRatio="none"></svg><div class="leg" id="dashChartLeg" style="margin-top:16px"></div></div>'
       + dashPanel("calendar","Prochains rendez-vous","dashRdv","amber","rdv")
-    + '</div><div class="dash-grid">'
+    + '</div>'
+      + dashLeadsPanelHtml()
+    + '<div class="dash-grid">'
       + dashPanel("activity","Avancement du projet","dashProgress","teal","progress")
       + dashPanel("users","Utilisateurs & accès","dashTeam","violet","users")
     + '</div><div class="dash-grid">'
       + dashPanel("clock","Activité récente","dashActivity","purple")
       + dashPanel("megaphone","Bandeau promotionnel","dashBanner","amber")
     + '</div>';
-    fillDashChart(); fillDashRdv(); fillDashActivity(); fillDashBanner(); fillDashTeam(); fillDashProgress();
+    fillDashChart(); fillDashRdv(); fillDashActivity(); fillDashBanner(); fillDashTeam(); fillDashProgress(); loadDashLeads();
     w.querySelectorAll(".dash-more[data-goto]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.goto))); refreshIcons(); } }
 let dashChartKey="30j";
 function dashChartZoom(dir){ let i=STAT_ZOOM.indexOf(dashChartKey); if(i<0)i=STAT_ZOOM.indexOf("30j"); const ni=Math.min(STAT_ZOOM.length-1,Math.max(0,i+dir)); if(ni===i) return; dashChartKey=STAT_ZOOM[ni]; fillDashChart(); }
@@ -1180,6 +1182,31 @@ function fillDashRdv(){ const el=document.getElementById("dashRdv"); if(!el) ret
   el.innerHTML=up.map(r=>{ const c=commercialChip(r.who); const mi=r.mode==="visio"?{l:"Visio",i:"video",cls:"visio"}:{l:"Appel",i:"phone",cls:"tel"};
     return '<div class="dash-rdv"><div class="drr-main"><div class="drr-client" title="'+escHtml(r.client)+'">'+escHtml(r.client)+'</div><div class="drr-sub"><span class="drr-secteur">'+escHtml(r.secteur)+'</span><span class="drr-contact">'+escHtml(r.contact)+'</span></div></div>'
       +'<div class="drr-side"><div class="drr-date">'+r.day+' '+r.mon+' · '+r.time+'</div><div class="drr-meta"><span class="fmode fmode-'+mi.cls+'"><i data-lucide="'+mi.i+'"></i>'+mi.l+'</span><span class="avatar xs drr-com" style="background:'+c.color+';color:#fff" title="Commercial attitré : '+escHtml(c.full)+'">'+c.ini+'</span></div></div></div>'; }).join(""); }
+/* ---- Demandes reçues (leads du formulaire « Commander » -> GET /api/crm) : RÉEL, repli SILENCIEUX ----
+   Panneau caché par défaut : ne s'affiche que si des demandes réelles reviennent (pas de clé /
+   endpoint absent / aucune demande -> reste masqué, la démo hors-ligne est intacte). */
+function dashLeadsPanelHtml(){ return '<div class="dpan" id="dashLeadsPan" style="display:none;margin-top:16px"><div class="pan-head"><h4><span class="hic amber"><i data-lucide="inbox"></i></span> Demandes reçues</h4><span class="hint" id="dashLeadsHint" style="margin:0"></span></div><div id="dashLeads"></div></div>'; }
+function dashLeadRow(l){
+  var when=""; try{ when=new Date(l.receivedAt).toLocaleString("fr-CH",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}); }catch(e){}
+  var title=escHtml(l.company||l.contact||"Demande");
+  var subBits=[]; if(l.company&&l.contact) subBits.push(escHtml(l.contact)); if(l.summary) subBits.push(escHtml(l.summary));
+  var links=[];
+  if(l.email) links.push('<a class="lead-lnk" href="mailto:'+escAttr(l.email)+'"><i data-lucide="mail"></i>'+escHtml(l.email)+'</a>');
+  if(l.phone) links.push('<a class="lead-lnk" href="tel:'+escAttr(String(l.phone).replace(/\s+/g,""))+'"><i data-lucide="phone"></i>'+escHtml(l.phone)+'</a>');
+  return '<div class="lead-row"><div class="lead-main"><div class="lead-co">'+title+'</div>'+(subBits.length?'<div class="lead-sub">'+subBits.join(" · ")+'</div>':'')+(links.length?'<div class="lead-links">'+links.join("")+'</div>':'')+'</div><div class="lead-when">'+escHtml(when)+'</div></div>';
+}
+async function loadDashLeads(){
+  var pan=document.getElementById("dashLeadsPan"), body=document.getElementById("dashLeads"); if(!body) return;
+  try{
+    var key=getStoredPublishKey(); if(!key) return;               // non connecté -> panneau caché (démo intacte)
+    var r=await fetch("/api/crm?days=60",{headers:{Authorization:"Bearer "+key}}); if(!r.ok) return;
+    var j=await r.json(); var leads=(j&&Array.isArray(j.leads))?j.leads:[];
+    if(!leads.length) return;                                     // aucune demande -> reste caché
+    body.innerHTML=leads.slice(0,8).map(dashLeadRow).join("");
+    var hint=document.getElementById("dashLeadsHint"); if(hint) hint.textContent=leads.length+" demande"+(leads.length>1?"s":"")+" (60 j)";
+    if(pan) pan.style.display=""; refreshIcons();
+  }catch(e){ /* silencieux : démo / hors-ligne intacte */ }
+}
 /* ---- Bandeaux : plusieurs bandeaux enregistres + modeles prets a l'emploi, un seul actif a la fois ---- */
 const BANNER_PRESETS=[
   {name:"Lancement", badge:"Nouveau site", emphasis:"-15%", text:"sur votre premier mois avec Flex & Dédié", cta:"Découvrir nos offres", href:"#offres", code:"FLEX15"},
@@ -1366,7 +1393,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.44.2", cur:true, date:"2026-07-21", title:"Optimisation technique interne", items:[
+  { v:"v0.45.0", cur:true, date:"2026-07-21", title:"Les demandes du site remontent à l'admin", items:[
+    {t:"add", x:"Les demandes envoyées via le formulaire « Commander » sont désormais reçues côté serveur et regroupées dans un panneau « Demandes reçues » du tableau de bord (entreprise, contact, e-mail, téléphone, résumé de la demande)"},
+    {t:"imp", x:"Ces demandes restaient auparavant sur l'appareil du visiteur (invisibles) : les commerciaux peuvent maintenant les retrouver et recontacter en un clic"}
+  ]},
+  { v:"v0.44.2", date:"2026-07-21", title:"Optimisation technique interne", items:[
     {t:"imp", x:"Regroupement technique de fonctions serveur (préparation des prochaines évolutions), sans changement visible ni perte de fonctionnalité"}
   ]},
   { v:"v0.44.1", date:"2026-07-21", title:"Copilote RDV : fiabilité (revue)", items:[
@@ -1846,7 +1877,7 @@ function renderReleaseLog(){ const host=document.getElementById("relLog"); if(!h
 const APP_ENV={dev:{lbl:"Développement",c:"#6B4CC4"},preprod:{lbl:"Pré-production (test)",c:"#C7891B"},prod:{lbl:"En production",c:"#0E7D48"}};
 const APP_STAGE={stable:{lbl:"Stable",c:"#0E7D48"},beta:{lbl:"Bêta",c:"#C7891B"},alpha:{lbl:"Alpha",c:"#B4632A"}};
 const PROGRESS=[
-  {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.16.0",recent:["Activité récente tirée des vraies publications","Tuile Rendez-vous à venir réelle"]},
+  {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.17.0",recent:["Demandes reçues du site (formulaire « Commander ») visibles et recontactables en un clic","Activité récente tirée des vraies publications","Tuile Rendez-vous à venir réelle"]},
   {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.14.0",recent:["Les images remplacées apparaissent sur le site en ligne après publication","Publication organisée par page (chaque page ne reçoit que ses propres textes ; le commun s'applique partout)","Publication réelle en ligne depuis le bouton Publier"]},
   {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.1",recent:["Badge « actuellement masquée » sur les sections de l'accueil","Rôle de chaque page et section"]},
   {view:"media",name:"Médiathèque",env:"preprod",stage:"beta",version:"1.2.0",recent:["Stockage réel des fichiers en ligne (URL permanente au lieu du navigateur)","Compression et redimensionnement des images à l'import","Confirmation avant suppression d'un média"]},
@@ -5220,6 +5251,7 @@ const CAP_GROUPS=[
   {mod:"media", label:"Médiathèque", ic:"image", caps:[["media.view","Voir la médiathèque"],["media.import","Importer un média"],["media.delete","Supprimer un média"]]},
   {mod:"versions", label:"Versions", ic:"history", caps:[["versions.view","Voir l'historique"],["versions.restore","Restaurer une version"]]},
   {mod:"chatbot", label:"Chatbot", ic:"bot", caps:[["chatbot.view","Voir le chatbot"],["chatbot.edit","Modifier la configuration"],["chatbot.sources","Gérer les sources"]]},
+  {mod:"clients", label:"Clients", ic:"contact-round", caps:[["clients.view","Voir les clients et les demandes"],["clients.edit","Modifier une fiche / convertir une demande"]]},
   {mod:"rdv", label:"Rendez-vous", ic:"calendar", caps:[["rdv.view","Voir les rendez-vous"],["rdv.edit","Modifier une fiche"],["rdv.assign","Attribuer un commercial"],["rdv.relance","Gérer la relance automatique"],["rdv.export","Exporter la liste"]]},
   {mod:"copilot", label:"Copilote RDV", ic:"compass", caps:[["copilot.view","Utiliser le copilote"]]},
   {mod:"stats", label:"Statistiques", ic:"bar-chart-3", caps:[["stats.view","Voir les statistiques"],["stats.export","Exporter les statistiques"]]},
@@ -5231,8 +5263,8 @@ const CAP_LABEL={}; CAP_GROUPS.forEach(g=>g.caps.forEach(c=>CAP_LABEL[c[0]]=c[1]
 function isCap(k){ return !!CAP_LABEL[k]; }
 /* Preset par défaut de chaque rôle (l'admin a tout, géré à part). Éditable via la matrice. */
 const DEFAULT_ROLE_CAPS={
-  commercial:["dashboard.view","rdv.view","rdv.edit","copilot.view"],
-  leadcommercial:["dashboard.view","rdv.view","rdv.edit","rdv.assign","rdv.relance","rdv.export","copilot.view","stats.view","affiliation.view"],
+  commercial:["dashboard.view","rdv.view","rdv.edit","copilot.view","clients.view","clients.edit"],
+  leadcommercial:["dashboard.view","rdv.view","rdv.edit","rdv.assign","rdv.relance","rdv.export","copilot.view","stats.view","affiliation.view","clients.view","clients.edit"],
   editor:["dashboard.view","editor.view","editor.edit","structure.view","media.view","media.import","media.delete","versions.view","chatbot.view","chatbot.edit"]
 };
 const USER_COLORS=["#534AB7","#0F6E56","#9A6A15","#C0407B","#2F6FE0","#0EA5A0","#B0518F"];

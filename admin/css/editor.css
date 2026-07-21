@@ -244,6 +244,17 @@
   .drr-contact{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
   .drr-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
   .drr-date{font-size:12px;font-weight:600;color:var(--ink-soft);white-space:nowrap}
+  /* Demandes reçues (panneau dashboard : leads du formulaire Commander) */
+  .lead-row{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+  .lead-row:last-child{border-bottom:none}
+  .lead-main{flex:1;min-width:0}
+  .lead-co{font-size:13.5px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lead-sub{font-size:12px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lead-links{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px}
+  .lead-lnk{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--purple);text-decoration:none}
+  .lead-lnk:hover{text-decoration:underline}
+  .lead-lnk i,.lead-lnk svg{width:14px;height:14px}
+  .lead-when{font-size:12px;color:var(--muted);white-space:nowrap;flex-shrink:0;padding-top:1px}
   .drr-meta{display:inline-flex;align-items:center;gap:7px}
   .drr-com{margin-right:0}
   /* bandeau promotionnel (widget dashboard) */

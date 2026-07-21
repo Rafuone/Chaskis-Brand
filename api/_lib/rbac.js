@@ -22,8 +22,8 @@ var ROLE_ORDER = ['admin', 'commercial', 'leadcommercial', 'editor'];
 // Garder synchronisé avec le client ; une divergence = l'UI montre un bouton que le serveur refuse.
 var ROLE_CAPS = {
   admin: '*',
-  commercial: ['dashboard.view', 'rdv.view', 'rdv.edit', 'copilot.view'],
-  leadcommercial: ['dashboard.view', 'rdv.view', 'rdv.edit', 'rdv.assign', 'rdv.relance', 'rdv.export', 'copilot.view', 'stats.view', 'affiliation.view'],
+  commercial: ['dashboard.view', 'rdv.view', 'rdv.edit', 'copilot.view', 'clients.view', 'clients.edit'],
+  leadcommercial: ['dashboard.view', 'rdv.view', 'rdv.edit', 'rdv.assign', 'rdv.relance', 'rdv.export', 'copilot.view', 'stats.view', 'affiliation.view', 'clients.view', 'clients.edit'],
   editor: ['dashboard.view', 'editor.view', 'editor.edit', 'structure.view', 'media.view', 'media.import', 'media.delete', 'versions.view', 'chatbot.view', 'chatbot.edit']
 };
 

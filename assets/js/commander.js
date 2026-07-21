@@ -1027,6 +1027,35 @@ function fmtDateLong(iso) {
   inp.addEventListener('input', e => { state.promo.code = e.target.value; if (state.promo.applied && e.target.value.trim().toUpperCase() !== state.promo.applied.code) { state.promo.applied = null; btn.textContent = 'Appliquer'; btn.style.background = ''; onAnyChange(); } });
 })();
 
+// Capture la demande côté serveur pour que les commerciaux la retrouvent dans l'admin (POST /api/crm).
+// BEST-EFFORT : n'interrompt jamais le parcours et ne casse rien si l'API est absente (démo hors-ligne).
+// La commande reste de toute façon enregistrée localement (persistOrder) pour le suivi PWA.
+function captureLeadFromOrder() {
+  try {
+    var c = state.contact || {};
+    if (!c.email && !c.phone) return; // aucun moyen de recontact -> rien à capturer
+    var veh = state.vehicle === 'bike' ? 'Vélo' : 'Voiture';
+    var timing = state.timing === 'express' ? 'Express' : 'Planifié';
+    var stops = (state.stops && state.stops.length) || 0;
+    var montant = (state.pricing && typeof state.pricing.totalTTC === 'number') ? Math.round(state.pricing.totalTTC) : null;
+    var summary = veh + ' · ' + timing + ' · ' + stops + ' arrêt' + (stops > 1 ? 's' : '') + (montant ? (' · ~' + montant + ' CHF') : '');
+    var payload = {
+      company: (c.company || (state.pickup && state.pickup.society) || '').trim(),
+      contact: (c.name || '').trim(),
+      email: (c.email || '').trim(),
+      phone: (c.phone || '').trim(),
+      summary: summary,
+      source: 'commander',
+    };
+    var json = JSON.stringify(payload);
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/api/crm', new Blob([json], { type: 'application/json' }));
+    } else {
+      fetch('/api/crm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: json, keepalive: true }).catch(function () {});
+    }
+  } catch (e) { /* silencieux : ne jamais perturber la confirmation de commande */ }
+}
+
 // ===== PAY (simulation Stripe Checkout) =====
 async function simulateStripePayment() {
   const sim = document.getElementById('stripeSim');
@@ -1085,6 +1114,7 @@ async function simulateStripePayment() {
     trackUrl: trackUrl,
   };
   persistOrder(order);
+  captureLeadFromOrder(); // remonte la demande à l'admin (best-effort, fail-silent)
 
   // Success screen + QR
   document.getElementById('successOrderId').textContent = orderId;

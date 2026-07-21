@@ -18,7 +18,7 @@ la réponse est **403** (`{ error, need }`) et **aucune action n'a lieu**.
 | Rôle | Capacités (défaut) |
 |------|--------------------|
 | `admin` | **toutes** (`*`) |
-| `commercial` | `dashboard.view`, `rdv.view`, `rdv.edit`, `copilot.view` |
+| `commercial` | `dashboard.view`, `rdv.view`, `rdv.edit`, `copilot.view`, `clients.view`, `clients.edit` |
 | `leadcommercial` | + `rdv.assign`, `rdv.relance`, `rdv.export`, `stats.view`, `affiliation.view` |
 | `editor` | `dashboard.view`, `editor.view`, `editor.edit`, `structure.view`, `media.*`, `versions.view`, `chatbot.view`, `chatbot.edit` |
 
@@ -36,6 +36,8 @@ la réponse est **403** (`{ error, need }`) et **aucune action n'a lieu**.
 | `GET /api/perf-history` | `perf.view` |
 | `GET /api/perf-history?run=1` | *(Bearer `CRON_SECRET` OU clé admin — mesure planifiée)* |
 | `GET /api/calendly` | `rdv.view` |
+| `GET /api/crm` (demandes reçues) | `clients.view` |
+| `POST /api/crm` (nouvelle demande) | *(public — formulaire « Commander », anti-bot + rate-limit)* |
 | `POST /api/media-upload` · `GET` (diagnostic) | `media.import` |
 | `GET /api/collect` (stats) | `stats.view` |
 | `POST /api/collect` (page vue) | *(public — collecte anonyme, rate-limité)* |

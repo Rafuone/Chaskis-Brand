@@ -31,10 +31,10 @@ aperçu rapide du site, insuffisant pour l'admin (Publier/Perf/Calendly renverro
 node tools/test.js        # lance toutes les suites tools/*.test.js (0 dépendance, 0 réseau)
 ```
 
-**14 suites** dans `tools/*.test.js` : `perf`, `chat`, `calendly`, `publish`, `schema` (validateur
-de contenu), `session`, `rbac`, `rbac-endpoints`, `history`, `restore`, `storage`, `media`,
-`collect`, `test` (lanceur). Aucune ne touche le réseau (fetch/GitHub/PageSpeed/Blob sont mockés)
-ni n'exige de clé.
+**15 suites** dans `tools/*.test.js` : `perf`, `perf-server`, `chat`, `calendly`, `crm`, `publish`,
+`schema` (validateur de contenu), `session`, `rbac`, `rbac-endpoints`, `history`, `restore`,
+`storage`, `media`, `collect` (lancées par `tools/test.js`). Aucune ne touche le réseau
+(fetch/GitHub/PageSpeed/Blob sont mockés) ni n'exige de clé.
 
 ## Architecture
 
@@ -53,7 +53,7 @@ Back-office admin (SPA vanilla mono-page)
 API / serverless host-agnostique (CommonJS (req,res), 0 dépendance, 0 build)
   Cœur     : health (+ ?probe=env) · publish · restore · history
   Features : perf (PageSpeed) · perf-history (lecture + mesure planifiée ?run=1) · chat (RAG + LLM optionnel) · calendly
-             · media-upload (Blob) · collect (audience) · config
+             · media-upload (Blob) · collect (audience) · crm (demandes/leads) · config
   api/_lib/: content-schema (contrat central) · storage (couture Blob→Azure) · rag · llm
              · calendly-map · assign · availability · github · http · auth · session · rbac · perf-store
   api/_data/: kb.json (base de connaissances seed du chatbot)

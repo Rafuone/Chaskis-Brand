@@ -1,6 +1,6 @@
 # Workflow commercial — état & reprise (note de passation)
 
-> **Point de reprise au 2026-07-21.** Branche `feat/foundation-vercel`, HEAD `5570940`, admin **v0.53.0**,
+> **Point de reprise au 2026-07-21.** Branche `feat/foundation-vercel`, HEAD `0f0fa07`, admin **v0.54.0**,
 > **15 suites de tests vertes**, **11/12 fonctions Vercel Hobby**. `main` (prod) et `demo` intacts.
 > Contexte de départ (constat, décision produit, options CRM) : voir la section « Historique » en bas.
 
@@ -37,6 +37,14 @@
 - **Fiche client = fil de suivi (v0.51.0)** : chaque RDV affiche **qui** (avatar+nom via `commercialChip`)
   et **quand**, **cliquable** → déplie son **compte-rendu attribué** (`cli-rdv-item`/`cli-rdv-detail`) ;
   chaque compte-rendu de la section est **attribué** (commercial + date + sujet, `cr.rdv.who`).
+- **Refonte design fiche + filtres (v0.54.0, audit UI/UX demandé par Alexandre)** : hiérarchie typo
+  (labels `.cli-fld>span` muted uppercase petits vs valeurs `--ink`), **dividers** entre sections
+  (`.cli-d-contact` bordé), espacement régulier ; **dropdown statut** (`enhanceSelect`) aligné sur les
+  badges = menu `.dd-status-menu` + variables `--so-bg/--so-c` par option → hover ET sélection teintés
+  comme le badge, option « déduit » via `data-stc-*` ; **relance** = SELECT de modèle à droite de l'objet
+  (`.cli-rel-row`, `#cliRelTpl`) au lieu des 4 puces ; **filtres métier** = vues rapides « À relancer »
+  (`cliNeedsFollowUp`) / « RDV à venir » + tranche de dates (`cliPeriodCutoff`/`CLI_PERIOD_OPTS`), en
+  plus de commercial/secteur/offre (`cliFilterAdv` étendu). Vérifié navigateur, 15 suites vertes.
 - **Fiche client = vrai OUTIL + relance intégrée + filtres à puces (v0.52.0)** : bandeau **résumé** en tête
   (`.cli-kpis` : nb RDV / dernier RDV / dernière relance / prochaine étape) + avatar entreprise ; **relance
   par e-mail DANS la fiche** (`.cli-relance` : `cliRelanceTemplates` = 4 modèles éditables contextualisés,

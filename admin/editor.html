@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap">
 <script src="https://unpkg.com/lucide@latest"></script>
-<link rel="stylesheet" href="/admin/css/editor.css?v=20260721j">
+<link rel="stylesheet" href="/admin/css/editor.css?v=20260721l">
 </head>
 <body>
 <!-- Écran de connexion (auth Clerk). Recouvre l'admin tant que la connexion n'est pas établie.
@@ -347,13 +347,17 @@
       <section class="view scroll" id="view-clients">
         <div class="pan-head" style="align-items:flex-start">
           <div><h1 class="pg-h">Clients</h1><p class="pg-sub" style="margin-bottom:0">Tous vos clients et prospects, reliés à leurs rendez-vous et comptes-rendus.</p></div>
-          <input id="cliSearch" class="rangesel" type="search" placeholder="Rechercher un client, un contact, un e-mail…" style="min-width:240px" aria-label="Rechercher un client">
         </div>
         <div class="stat-row" id="cliStats"></div>
         <div class="cli-filters" id="cliFilters"></div>
+        <div class="cli-toolbar">
+          <div class="cli-search-wrap"><i data-lucide="search"></i><input id="cliSearch" type="search" placeholder="Rechercher un client, un contact, un e-mail…" aria-label="Rechercher un client"></div>
+          <button class="btn sec-b sm" type="button" id="cliFilterBtn"><i data-lucide="sliders-horizontal"></i>Filtres</button>
+          <label class="cli-pp">Par page <select id="cliPerPage" class="rangesel"><option value="10">10</option><option value="25" selected>25</option><option value="50">50</option><option value="100">100</option></select></label>
+        </div>
         <div class="tbl-scroll">
           <table class="tbl">
-            <thead><tr><th>Client</th><th>Secteur</th><th>Statut</th><th style="text-align:center">Rendez-vous</th><th style="text-align:center">Comptes-rendus</th><th>Dernière activité</th><th></th></tr></thead>
+            <thead><tr><th>Client</th><th>Secteur</th><th>Statut</th><th>Commercial</th><th style="text-align:center">Rendez-vous</th><th style="text-align:center">Comptes-rendus</th><th>Dernière activité</th><th></th></tr></thead>
             <tbody id="cliBody"></tbody>
           </table>
         </div>
@@ -827,7 +831,7 @@
 </div>
 
 <script src="/admin/data/tech-plan.js?v=20260714c"></script>
-<script src="/admin/js/editor.js?v=20260721k"></script>
+<script src="/admin/js/editor.js?v=20260721l"></script>
 <!-- Auth Clerk (front). editor.js reste inchangé : getStoredPublishKey() renvoie window.__clerkToken
      quand on est connecté via Clerk, sinon la clé stockée (repli). Zéro appel /api modifié. -->
 <script>

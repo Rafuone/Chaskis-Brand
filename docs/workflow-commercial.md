@@ -1,64 +1,75 @@
-# Workflow commercial — état, trous et direction (note de passation)
+# Workflow commercial — état & reprise (note de passation)
 
-Cette note cadre la **cohérence du parcours commercial** dans l'admin. Elle est le point de
-départ du prochain chantier (demandé par le propriétaire le 2026-07-21).
+> **Point de reprise au 2026-07-21.** Branche `feat/foundation-vercel`, HEAD `6ffd255`, admin **v0.50.0**,
+> **15 suites de tests vertes**, **12/12 fonctions Vercel Hobby**. `main` (prod) et `demo` intacts.
+> Contexte de départ (constat, décision produit, options CRM) : voir la section « Historique » en bas.
 
-## Les « notions commerciales » de l'admin aujourd'hui
+## Ce qui est FAIT
 
-- **Rendez-vous** (`view-rdv`) : liste des RDV (démo + synchro Calendly réelle), fiche/tiroir par
-  RDV avec statut, note, réattribution du commercial, relance.
-- **Copilote RDV** (`view-copilot`) : outil pendant l'entretien (découverte guidée, simulateur
-  d'offre, compte-rendu).
-- **Statistiques**, **Performance**, **Affiliation** : vues avec beaucoup de données de
-  démonstration.
-- Il n'existe **AUCUNE vue « Clients »**. La notion de « client » n'a pas d'entité propre : un
-  client n'existe qu'implicitement, dupliqué dans chaque ligne de `rdvData`.
+- **Capture des demandes** : le formulaire public « Commander » n'envoyait rien ; il POST désormais
+  vers `api/crm.js` (append-only Blob, fail-silent). Panneau **« Demandes reçues »** au tableau de bord
+  (cliquable → fiche client).
+- **Page Clients** (nouvelle vue, menu + capacités `clients.view`/`clients.edit`) : registre dérivé et
+  dédupliqué des RDV + demandes (clé = entreprise normalisée > domaine e-mail pro > e-mail > contact),
+  **partagé** (sources déjà communes). Tableau paginé calqué sur la page Rendez-vous.
+- **Fiche client** (modale) : coordonnées cliquables, ses rendez-vous, ses **comptes-rendus centralisés**,
+  ses demandes, + section **« Suivi commercial » partagée** (statut / prochaine étape / offre) enregistrée
+  via `POST /api/crm?kind=client` → `clients/<clé>` (Blob).
+- **Recâblage** : RDV → « Voir la fiche client » ; fiche client → « Piloter avec le copilote » ;
+  **Copilote retiré du menu** (se lance uniquement depuis un client/RDV).
+- **Jeu de démonstration stable** (`cliDemoSources`) : 8 entreprises + 2 demandes, statuts variés,
+  comptes-rendus, offres — affiché tant qu'aucune vraie donnée n'existe (découplé de Calendly).
+- **Refonte du tableau (v0.50.0)** : recherche à gauche ; bouton **Filtres** → modale (commercial /
+  secteur / offre) ; **choix du nombre par page** (10/25/50/100) ; colonne **Commercial** (avatars
+  empilés) ; **tags de statut colorés éditables** (composant `.statusel`/`RDV_STC`+`CLI_STC`, sans « Auto ») ;
+  colonne Actions **alignée** (`#view-clients .tbl td{vertical-align:middle}` + `<div class="cli-actions">`
+  dans un `<td>` normal) ; actions carrées `.iconbtn`+info-bulle (copilote / relance e-mail / fiche) ;
+  nombre de comptes-rendus = pastille cliquable.
 
-## Ce qui est DÉJÀ relié (fait en v0.44.x)
+## Ce qui RESTE (priorisé — reprise directe)
 
-- **Copilote ↔ Rendez-vous** : depuis la fiche d'un RDV, « Préparer / piloter avec le copilote »
-  ouvre le copilote pré-rempli et le **lie** au RDV. À « Terminer », le **compte-rendu est
-  rattaché au RDV** (`r.compteRendu`, visible dans la fiche) et proposé « honoré ».
-- **Comptes-rendus** : consultables (a) dans la **fiche du RDV** concerné, (b) dans le panneau
-  **« Comptes-rendus récents »** de la vue Copilote (relire + re-télécharger), (c) en `.txt`
-  téléchargé. Persistés en `localStorage` (override RDV `RDV_OVR_KEY` pour le live, `chaskis_rdv_v1`
-  pour la démo ; historique copilote `chaskis_copilot_hist`).
+1. **Sélection multiple + barre d'actions groupées** dans le tableau Clients (relancer / changer le
+   statut en lot). Utile à 200 clients. → **Réutiliser** la page RDV : `rdvSel` (Set), `renderRdvBulk`,
+   `#rdvSelAll`, cellule `<td class="chk"><input class="rsel">`, `<div class="bulk-bar">` ; CSS `.chk`/`.rsel`/`.bulk-bar`.
+2. **Fiche client** : afficher **qui a fait quel RDV** (le commercial de chaque rendez-vous dans
+   `openClientCard`) et rendre les RDV listés cliquables.
+3. **Copilote depuis un client sans RDV** : pré-remplir **date/heure du jour** (`prepareCopilotForClient`,
+   via `copState.rdvLabel` ; pas de champ date dans `copState` aujourd'hui).
+4. **Relance / note** (aujourd'hui bas de la page RDV) exposées dans la fiche client.
+5. **Lot 4 — KPIs réels + étiquetage démo** : calculer conversion/présence/à-venir depuis les vrais RDV
+   quand chargés (⚠️ la **conversion** n'est pas calculable sans les données d'abonnement du back-office
+   → à **étiqueter « exemple »**, ne pas inventer) ; nettoyer/étiqueter « exemple » les stats de démo
+   (dashboard, tableau équipe RDV, statistiques, chatbot, affiliation) ; corriger l'incohérence
+   Jean-Christophe (absent de `TEAM_STATS`).
+6. **(transverse)** Articulation avec la **vraie page Clients du back-office** (clients ACTIFS abonnés
+   Flex/Express/Dédié) : ma page = pipeline amont (prospects/leads/RDV). Prévu : statut « Client actif » +
+   champ offre déjà en place ; brancher la synchro quand le CRM cible sera défini.
 
-## Les TROUS identifiés par le propriétaire (à traiter)
+## Repères techniques (fichiers/fonctions)
 
-1. **Cloisonnement** : Client / Copilote / Rendez-vous restent « enfermés les uns dans les
-   autres ». Il n'y a pas de fil conducteur **par client** (un client = plusieurs RDV, plusieurs
-   comptes-rendus, un statut dans le temps, une prochaine étape).
-2. **Découvrabilité des comptes-rendus** : même rattachés, ils ne sont pas assez centraux — « je
-   ne sais pas où retrouver le compte-rendu d'un rendez-vous ».
-3. **Trop de données factices qui ne remontent nulle part** : `TEAM_STATS`, KPIs RDV, graphes,
-   stats chatbot, affiliation = démonstration pure, aucune agrégation depuis le réel.
-4. **Pas de « registre clients »** : les commerciaux devraient retrouver **l'ensemble des clients**
-   quelque part (dans cet admin), OU les données devraient partir vers le **back-office / CRM**.
+- **Vue Clients** (`admin/js/editor.js`) : `renderClients` + boucle des lignes, `cliBuildIndex`,
+  `cliDemoSources`, `cliStatus`/`cliStat`/`CLI_STC`, `openClientCard`, `openCliFilters`,
+  `saveClientStatusInline`, `saveClientSuivi`, `cliRelance`, `prepareCopilotForClient`,
+  `CLI_PER_PAGE`/`cliPage`/`cliFilterAdv`. CSS : bloc `.cli-*` + `.lead-*` dans `admin/css/editor.css`.
+  Markup : `#view-clients` dans `admin/editor.html`.
+- **Endpoint** `api/crm.js` : `POST` public (lead, anti-bot/rate-limit) · `GET` (leads, `clients.view`) ·
+  `POST /api/crm?kind=client` (`clients.edit`, écrit `clients/<clé>`) · `GET /api/crm?kind=clients`.
+- Le coloriage des tags passe par `stcOf(v)` (lit `RDV_STC` puis `CLI_STC`) dans `enhanceSelect`.
 
-## Décision produit à trancher AVANT de coder
+## Contraintes (rappel)
 
-**Où vit la relation client ?**
+- Host-agnostique (CommonJS, 0 dépendance, couture `api/_lib/storage.js`), **démo préservée**, éditeur fragile.
+- **12 Serverless Functions max** (on est à 12 : consolider avant d'en ajouter).
+- Rituel de release (ADMIN_BUILD / RELEASE_LOG / PROGRESS / TECH_UPDATED) + `node tools/test.js` (15 suites)
+  avant de conclure ; `git fetch` + `pull --rebase` avant push ; **ne pas toucher `main`/`demo`**.
+- ⚠️ Ne **jamais** tester le portail d'auth avec un `POST /api/publish` valide (ça écrit le vrai contenu).
+- **Décision % :** un chantier « Espace commercial » dans le Suivi technique reste à créer en une fois
+  (fera baisser le global ~87 % par dilution du périmètre = pas une régression, à expliquer au proprio).
 
-- **Option A — Hub « Clients » dans cet admin (mini-CRM léger).** Une nouvelle vue **Clients** :
-  liste dédupliquée des clients/prospects (dérivée des RDV + comptes-rendus + leads), chaque fiche
-  agrégeant historique des RDV, comptes-rendus, statut, prochaine étape. Les vues RDV/Copilote y
-  renvoient (fil conducteur par client). Reste host-agnostique (stockage via la couture existante).
-- **Option B — Pousser vers le vrai back-office / CRM.** L'admin reste un outil de préparation ;
-  clients + comptes-rendus + leads sont envoyés à un endpoint (`/api/lead`, `/api/crm-…`) qui
-  alimente le CRM Chaskis. Plus léger côté admin, mais dépend d'un back-office cible à définir.
-- (Les deux peuvent se combiner : hub local qui se synchronise plus tard vers le CRM.)
+## Historique (contexte de départ)
 
-## Pistes connexes déjà identifiées (audit produit)
-
-- **Capturer les leads du formulaire « Commander »** (`POST /api/lead`, même modèle append-only que
-  `api/collect.js`) → un panneau « Demandes reçues » convertible en RDV : la brique de conversion
-  la plus rentable, et un point d'entrée naturel du registre clients.
-- **KPIs commerciaux calculés depuis le réel** (au lieu des constantes) quand les vrais RDV sont
-  chargés : présence, conversion, à-venir (voir `teamAgg`).
-
-## Contraintes à respecter (rappel)
-
-- Host-agnostique (CommonJS, 0 dépendance, couture stockage), démo à préserver, éditeur fragile.
-- Plan Vercel Hobby = **12 Serverless Functions max** (actuellement à 12 : consolider avant d'en
-  ajouter). Rituel de release + `node tools/test.js` avant de conclure. Ne pas toucher `main`/`demo`.
+Constat initial : Client / Copilote / Rendez-vous cloisonnés, aucune entité « client », comptes-rendus
+peu découvrables, trop de données factices. Décisions validées par le propriétaire : hub Clients **dans
+l'admin** (mini-CRM léger), **partagé** entre commerciaux, **réel dès que possible + démo étiquetée**.
+Option CRM back-office (pousser clients/leads vers un CRM cible) reste ouverte pour plus tard (combinable
+avec le hub local qui se synchronisera).

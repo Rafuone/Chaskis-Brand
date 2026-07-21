@@ -269,7 +269,9 @@
   .cli-badge{display:inline-block;font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap}
   .thm-card.cli-detail{max-width:640px;width:100%;max-height:86vh;overflow:auto;padding:24px}
   .cli-d-hd{display:flex;align-items:center;gap:12px;justify-content:space-between;margin:0 34px 4px 0}
-  .cli-d-name{font-size:19px;font-weight:800;color:var(--ink)}
+  .cli-d-hd-l{display:flex;align-items:center;gap:12px;min-width:0}
+  .cli-d-hd-tx{min-width:0}
+  .cli-d-name{font-size:19px;font-weight:800;color:var(--ink);overflow:hidden;text-overflow:ellipsis}
   .cli-d-sec{font-size:12.5px;color:var(--muted);margin-bottom:4px}
   .cli-d-contact{display:flex;flex-wrap:wrap;gap:8px 16px;margin:10px 0 4px}
   .cli-d-actions{margin:12px 0 2px;display:flex;gap:8px;flex-wrap:wrap}
@@ -331,6 +333,29 @@
   .cli-rdv-cr-h{font-size:11px;font-weight:700;color:var(--ink-soft);margin-bottom:5px}
   .cli-lead{font-size:12.5px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--border)}
   .cli-lead:last-child{border-bottom:none}
+  /* Fiche client : bandeau de métriques clés (résumé en un coup d'œil) */
+  .cli-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin:14px 0 2px}
+  .cli-kpi{background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:9px 12px;min-width:0}
+  .cli-kpi-k{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+  .cli-kpi-v{font-size:14px;font-weight:700;color:var(--ink);line-height:1.25;display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis}
+  .cli-kpi-v .avatar.xs{margin-right:0;flex-shrink:0}
+  .cli-kpi-v.sub{font-size:12.5px;font-weight:600;color:var(--ink-soft)}
+  .cli-kpi-v.dim{color:var(--muted);font-weight:600}
+  /* Filtres : sélection par PUCES (remplace les dropdowns ferrés à gauche) */
+  .cli-flt-grp{margin-bottom:15px}
+  .cli-flt-grp>.lbl{display:block;font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:8px}
+  .cli-chips{display:flex;flex-wrap:wrap;gap:7px}
+  .cli-chip{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:5px 12px}
+  .cli-chip:hover{border-color:var(--border-2);color:var(--ink)}
+  .cli-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .cli-chip .avatar.xs{width:18px;height:18px;font-size:8px;margin-right:0}
+  /* Relance par e-mail intégrée à la fiche */
+  .cli-relance{border:1px solid var(--border);border-radius:12px;padding:14px;margin:2px 0 4px;background:var(--bg)}
+  .cli-relance-tpl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+  .cli-relance .dInput,.cli-relance .dArea{background:var(--panel);margin-bottom:9px}
+  .cli-relance .dArea{min-height:120px;resize:vertical;line-height:1.5}
+  .cli-relance-acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .cli-relance-sent{font-size:12px;color:var(--ok);font-weight:600;display:inline-flex;align-items:center;gap:5px}
   .drr-meta{display:inline-flex;align-items:center;gap:7px}
   .drr-com{margin-right:0}
   /* bandeau promotionnel (widget dashboard) */

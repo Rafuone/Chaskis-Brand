@@ -143,7 +143,8 @@ function clientEnrichFromBody(body) {
   var key = clip(body.key, 120); if (!key) return null;
   var status = clip(body.status, 20); if (status && CLIENT_STATUS.indexOf(status) < 0) status = '';
   var offer = clip(body.offer, 20); if (offer && CLIENT_OFFER.indexOf(offer) < 0) offer = '';
-  return { key: key, status: status, offer: offer, nextStep: clip(body.nextStep, 160), owner: clip(body.owner, 60), note: clip(body.note, 400) };
+  // lastRelanceAt : date ISO de la dernière relance (bornée) ; lastRelanceKind : libellé du modèle utilisé.
+  return { key: key, status: status, offer: offer, nextStep: clip(body.nextStep, 160), owner: clip(body.owner, 60), note: clip(body.note, 400), lastRelanceAt: clip(body.lastRelanceAt, 30), lastRelanceKind: clip(body.lastRelanceKind, 40) };
 }
 
 // POST enrichissement (capacité clients.edit) : écrit `clients/<clé>` en place (écrasable).

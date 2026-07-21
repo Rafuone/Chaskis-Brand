@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.51.1" };
+const ADMIN_BUILD = { version: "0.52.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1396,7 +1396,12 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.51.1", cur:true, date:"2026-07-21", title:"Correctif : fenêtres transparentes", items:[
+  { v:"v0.52.0", cur:true, date:"2026-07-21", title:"Clients : fiche outil + relance intégrée + filtres à puces", items:[
+    {t:"add", x:"Relance par e-mail directement dans la fiche : modèles de messages prêts à l'emploi et modifiables, ouverture de votre messagerie pré-remplie, et la relance est horodatée"},
+    {t:"add", x:"Résumé en tête de fiche : nombre de rendez-vous, dernier rendez-vous, dernière relance et prochaine étape en un coup d'œil"},
+    {t:"imp", x:"Fenêtre de filtres repensée : sélection par pastilles (avatars des commerciaux, secteurs, offres) au lieu des menus déroulants"}
+  ]},
+  { v:"v0.51.1", date:"2026-07-21", title:"Correctif : fenêtres transparentes", items:[
     {t:"fix", x:"Les fenêtres (fiche client, Filtres, thème) s'affichaient sans fond, laissant voir la page derrière : leur fond blanc et leur ombre sont rétablis"}
   ]},
   { v:"v0.51.0", date:"2026-07-21", title:"Clients : sélection multiple + suivi qui/quand", items:[
@@ -1930,7 +1935,7 @@ const PROGRESS=[
   {view:"versions",name:"Versions",env:"preprod",stage:"beta",version:"0.9.0",recent:["Historique réel des publications en ligne","Restauration d'une version en un clic","Recherche et épinglage"]},
   {view:"notes",name:"Notes de version",env:"preprod",stage:"beta",version:"0.3.0",recent:["Journal typé ajout / correctif","Bloc reste à faire adouci"]},
   {view:"chatbot",name:"Chatbot",env:"prod",stage:"stable",version:"1.4.0",recent:["Réponses en direct au fil de l'eau (streaming, mot après mot)","Mémoire de conversation : l'assistant suit le fil des questions de suivi","IA générative ancrée FR/EN, périmètre strict, coût maîtrisé (repli sans coupure)"]},
-  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.7.0",recent:["Sélection multiple + actions groupées : relancer plusieurs clients ou changer leur statut en une fois","Fiche client = vrai suivi : chaque rendez-vous montre qui l'a mené et quand, et se déplie sur son compte-rendu (attribué + daté)","En-tête revu (recherche + filtres soulignés), pagination visible, cases à cocher bleu foncé, actions carrées"]},
+  {view:"clients",name:"Clients",env:"preprod",stage:"beta",version:"0.8.0",recent:["Relance par e-mail intégrée à la fiche (modèles de messages modifiables + horodatage de la relance)","Résumé en tête de fiche : nombre de RDV, dernier RDV, dernière relance, prochaine étape","Fenêtre de filtres à pastilles ; sélection multiple + actions groupées ; suivi qui/quand par rendez-vous"]},
   {view:"rdv",name:"Rendez-vous",env:"prod",stage:"stable",version:"1.1.1",recent:["Filtre par personne complet (tous les commerciaux)","Statuts et relances mémorisés"]},
   {view:"copilot",name:"Copilote RDV",env:"preprod",stage:"beta",version:"0.8.0",recent:["Cycle complet : préparer depuis un RDV → piloter → compte-rendu rattaché au rendez-vous","Comptes-rendus récents consultables (relire / re-télécharger)","Actions plaquette/offre = email pré-rempli au prospect"]},
   {view:"stats",name:"Statistiques",env:"preprod",stage:"beta",version:"0.8.0",recent:["Audience réelle agrégée de tous les visiteurs (collecteur maison, sans cookie)","Visiteurs uniques anonymisés + filtrage des robots","Vraie mesure sans cookie (cet appareil) en repli"]},
@@ -4767,8 +4772,7 @@ async function cliBulkStatus(status){
   if(!pubkey){ toast(keys.length+" statut"+(keys.length>1?"s":"")+" modifié"+(keys.length>1?"s":"")+" (local) → "+label+" — connectez-vous pour partager."); return; }
   var ok=0;
   await Promise.all(keys.map(function(key){
-    var en=cliEnrich[key]||{};
-    return fetch("/api/crm?kind=client",{method:"POST",headers:{Authorization:"Bearer "+pubkey,"Content-Type":"application/json"},body:JSON.stringify({ key:key, status:status, offer:en.offer||"", nextStep:en.nextStep||"" })})
+    return fetch("/api/crm?kind=client",{method:"POST",headers:{Authorization:"Bearer "+pubkey,"Content-Type":"application/json"},body:JSON.stringify(cliEnrichPayload(key,{status:status}))})
       .then(function(r){ if(r.ok){ ok++; return r.json().then(function(j){ if(j&&j.client) cliEnrich[key]=j.client; }).catch(function(){}); } })
       .catch(function(){});
   }));
@@ -4817,7 +4821,7 @@ async function saveClientSuivi(key, ov){
   var pubkey=getStoredPublishKey();
   if(!pubkey){ toast("Connectez-vous pour enregistrer le suivi partagé."); return; }
   var g=function(id){ var el=ov.querySelector("#"+id); return el?(el.value||""):""; };
-  var payload={ key:key, status:g("cliStatusSel"), offer:g("cliOfferSel"), nextStep:g("cliNextStep") };
+  var payload=cliEnrichPayload(key,{ status:g("cliStatusSel"), offer:g("cliOfferSel"), nextStep:g("cliNextStep") });
   try{
     var r=await fetch("/api/crm?kind=client",{method:"POST",headers:{Authorization:"Bearer "+pubkey,"Content-Type":"application/json"},body:JSON.stringify(payload)});
     if(r.status===401||r.status===403){ toast("Droits insuffisants pour modifier un client."); return; }
@@ -4834,32 +4838,30 @@ async function saveClientStatusInline(key, status){
   var pubkey=getStoredPublishKey();
   if(!pubkey){ toast("Statut modifié (local) — connectez-vous pour le partager."); return; }
   try{
-    var r=await fetch("/api/crm?kind=client",{method:"POST",headers:{Authorization:"Bearer "+pubkey,"Content-Type":"application/json"},body:JSON.stringify({ key:key, status:status, offer:en.offer||"", nextStep:en.nextStep||"" })});
+    var r=await fetch("/api/crm?kind=client",{method:"POST",headers:{Authorization:"Bearer "+pubkey,"Content-Type":"application/json"},body:JSON.stringify(cliEnrichPayload(key,{status:status}))});
     if(r.ok){ var j=await r.json(); if(j&&j.client) cliEnrich[key]=j.client; toast("Statut enregistré (partagé)"); }
     else if(r.status===401||r.status===403) toast("Droits insuffisants pour modifier ce client.");
   }catch(e){ /* silencieux : le changement local reste affiché */ }
 }
 // Relance : ouvre un e-mail pré-rempli au contact du client (action directe depuis le tableau/la fiche).
-function cliRelance(key){
-  var c=(cliCurrentList||[]).find(function(x){return x.key===key;}); if(!c) return;
-  var em=c.emails[0]; if(!em){ toast("Aucun e-mail pour relancer ce client."); return; }
-  var subj=encodeURIComponent("Chaskis — suite à notre échange");
-  var body=encodeURIComponent("Bonjour"+(c.contacts[0]?" "+c.contacts[0]:"")+",\n\nJe me permets de revenir vers vous concernant votre projet de livraison avec Chaskis.\n\nBien à vous,");
-  try{ window.location.href="mailto:"+em+"?subject="+subj+"&body="+body; }catch(e){}
-}
+// Relance depuis le tableau : on ouvre la FICHE sur le panneau de relance (édition + modèles dans l'interface),
+// plutôt qu'un mailto « brut » (demande d'Alexandre : relancer depuis l'interface, avec options pratiques).
+function cliRelance(key){ openClientCard(key, { relance:true }); }
 function syncCliFilterBtn(){ var fb=document.getElementById("cliFilterBtn"); if(!fb) return; var n=(cliFilterAdv.who?1:0)+(cliFilterAdv.secteur?1:0)+(cliFilterAdv.offer?1:0); fb.classList.toggle("on",n>0); var lbl=fb.querySelector(".cli-fltn"); if(n){ if(!lbl){ lbl=document.createElement("span"); lbl.className="cli-fltn"; fb.appendChild(lbl); } lbl.textContent=n; } else if(lbl){ lbl.remove(); } }
 // Modale « Filtres » centrée : commercial / secteur / offre (les options viennent des données réelles).
 function openCliFilters(){
   var list=cliCurrentList||[]; var whos={}, secs={};
   list.forEach(function(c){ (c.owners||[]).forEach(function(w){ whos[w]=1; }); if(c.secteur) secs[c.secteur]=1; });
-  var opt=function(vals,cur){ return '<option value="">Tous</option>'+Object.keys(vals).sort().map(function(v){ return '<option value="'+escAttr(v)+'"'+(v===cur?" selected":"")+'>'+escHtml(v)+'</option>'; }).join(""); };
-  var offOpt='<option value="">Toutes</option>'+CLI_OFFER_OPTS.filter(function(o){return o[0];}).map(function(o){ return '<option value="'+o[0]+'"'+(o[0]===cliFilterAdv.offer?" selected":"")+'>'+o[1]+'</option>'; }).join("");
+  var pend={ who:cliFilterAdv.who||"", secteur:cliFilterAdv.secteur||"", offer:cliFilterAdv.offer||"" };
+  var whoChips='<button type="button" class="cli-chip'+(!pend.who?" on":"")+'" data-val="">Tous</button>'+Object.keys(whos).sort().map(function(w){ var cc=commercialChip(w); return '<button type="button" class="cli-chip'+(pend.who===w?" on":"")+'" data-val="'+escAttr(w)+'"><span class="avatar xs" style="background:'+cc.color+';color:#fff">'+cc.ini+'</span>'+escHtml(w)+'</button>'; }).join("");
+  var secChips='<button type="button" class="cli-chip'+(!pend.secteur?" on":"")+'" data-val="">Tous</button>'+Object.keys(secs).sort().map(function(s){ return '<button type="button" class="cli-chip'+(pend.secteur===s?" on":"")+'" data-val="'+escAttr(s)+'">'+escHtml(s)+'</button>'; }).join("");
+  var offChips='<button type="button" class="cli-chip'+(!pend.offer?" on":"")+'" data-val="">Toutes</button>'+CLI_OFFER_OPTS.filter(function(o){return o[0];}).map(function(o){ return '<button type="button" class="cli-chip'+(pend.offer===o[0]?" on":"")+'" data-val="'+escAttr(o[0])+'">'+escHtml(o[1])+'</button>'; }).join("");
   var ov=document.createElement("div"); ov.className="thm-ov"; ov.id="cliFiltOv";
-  ov.innerHTML='<div class="thm-card" style="max-width:440px" role="dialog" aria-modal="true"><button class="thm-x" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'
-    +'<div class="cli-d-name" style="margin:0 30px 14px 0">Filtrer les clients</div>'
-    +'<div class="cli-flt"><label class="cli-fld"><span>Commercial</span><select id="fltWho" class="rangesel">'+opt(whos,cliFilterAdv.who)+'</select></label>'
-    +'<label class="cli-fld"><span>Secteur</span><select id="fltSec" class="rangesel">'+opt(secs,cliFilterAdv.secteur)+'</select></label>'
-    +'<label class="cli-fld"><span>Offre souscrite</span><select id="fltOff" class="rangesel">'+offOpt+'</select></label></div>'
+  ov.innerHTML='<div class="thm-card" style="max-width:460px" role="dialog" aria-modal="true"><button class="thm-x" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'
+    +'<div class="cli-d-name" style="margin:0 30px 16px 0">Filtrer les clients</div>'
+    +'<div class="cli-flt-grp" data-grp="who"><span class="lbl">Commercial</span><div class="cli-chips">'+whoChips+'</div></div>'
+    +'<div class="cli-flt-grp" data-grp="secteur"><span class="lbl">Secteur</span><div class="cli-chips">'+secChips+'</div></div>'
+    +'<div class="cli-flt-grp" data-grp="offer"><span class="lbl">Offre souscrite</span><div class="cli-chips">'+offChips+'</div></div>'
     +'<div class="cli-flt-actions"><button class="btn ghost" id="fltReset">Réinitialiser</button><button class="btn primary" id="fltApply">Appliquer</button></div>'
     +'</div>';
   document.body.appendChild(ov);
@@ -4868,15 +4870,42 @@ function openCliFilters(){
   ov.querySelector(".thm-x").addEventListener("click",close);
   ov.addEventListener("mousedown",function(e){ if(e.target===ov) close(); });
   document.addEventListener("keydown",esc);
-  ov.querySelector("#fltApply").addEventListener("click",function(){ cliFilterAdv={ who:(ov.querySelector("#fltWho").value||""), secteur:(ov.querySelector("#fltSec").value||""), offer:(ov.querySelector("#fltOff").value||"") }; cliPage=1; cliSel.clear(); close(); renderClients(); });
+  ov.querySelectorAll(".cli-flt-grp").forEach(function(grp){ var g=grp.getAttribute("data-grp"); grp.querySelectorAll("[data-val]").forEach(function(b){ b.addEventListener("click",function(){ pend[g]=b.getAttribute("data-val")||""; grp.querySelectorAll("[data-val]").forEach(function(x){x.classList.remove("on");}); b.classList.add("on"); }); }); });
+  ov.querySelector("#fltApply").addEventListener("click",function(){ cliFilterAdv={ who:pend.who, secteur:pend.secteur, offer:pend.offer }; cliPage=1; cliSel.clear(); close(); renderClients(); });
   ov.querySelector("#fltReset").addEventListener("click",function(){ cliFilterAdv={who:"",secteur:"",offer:""}; cliPage=1; cliSel.clear(); close(); renderClients(); });
-  ["#fltWho","#fltSec","#fltOff"].forEach(function(s){ var el=ov.querySelector(s); if(el && typeof enhanceSelect==="function") enhanceSelect(el); });
   refreshIcons();
 }
-function openClientCard(key){
+// Modèles de relance e-mail (éditables dans la fiche) contextualisés au client.
+function cliRelanceTemplates(c){
+  var contact=(c.contacts&&c.contacts[0])||"";
+  var hi="Bonjour"+(contact?" "+contact.split(/\s+/)[0]:"")+",";
+  var o=(c.enrich&&c.enrich.offer)||c.offer||""; var of=CLI_OFFER_OPTS.filter(function(x){return x[0]===o;})[0]; var offerLbl=(of&&o)?of[1]:"";
+  return [
+    {label:"Après le rendez-vous", subject:"Chaskis — suite à notre rendez-vous", body:hi+"\n\nMerci pour le temps que vous m'avez accordé lors de notre échange. Comme convenu, je reste à votre disposition pour avancer sur votre projet de livraison avec Chaskis.\n\nBien à vous,"},
+    {label:"Relancer le devis", subject:"Chaskis — votre offre"+(offerLbl?" "+offerLbl:""), body:hi+"\n\nJe reviens vers vous concernant l'offre"+(offerLbl?" "+offerLbl:"")+" que je vous ai transmise. Avez-vous pu en prendre connaissance ? Je reste disponible pour en discuter ou l'ajuster.\n\nBien à vous,"},
+    {label:"Reprendre contact", subject:"Chaskis — reprise de contact", body:hi+"\n\nSans nouvelle de votre part, je me permets de revenir vers vous concernant votre projet de livraison. Souhaitez-vous que nous en reparlions ?\n\nBien à vous,"},
+    {label:"Proposer un rendez-vous", subject:"Chaskis — proposition d'échange", body:hi+"\n\nSeriez-vous disponible pour un court échange afin de découvrir comment Chaskis peut vous accompagner sur vos livraisons ? Je m'adapte à vos disponibilités.\n\nBien à vous,"}
+  ];
+}
+// Payload d'enrichissement COMPLET : préserve tous les champs (le POST écrase l'objet clients/<clé>, donc ne jamais
+// omettre un champ existant sous peine de l'effacer — ex. lastRelanceAt lors d'un simple changement de statut).
+function cliEnrichPayload(key, over){ var en=cliEnrich[key]||{}; return Object.assign({ key:key, status:en.status||"", offer:en.offer||"", nextStep:en.nextStep||"", lastRelanceAt:en.lastRelanceAt||"", lastRelanceKind:en.lastRelanceKind||"" }, over||{}); }
+// Enregistre une relance (horodatée aujourd'hui) : local d'abord (démo), partagé si connecté ; MAJ en place de la fiche.
+async function saveClientRelance(key, kind, ov){
+  var now=new Date().toISOString();
+  var en=cliEnrich[key]||{}; cliEnrich[key]=Object.assign({}, en, { key:key, lastRelanceAt:now, lastRelanceKind:kind||"" });
+  var d=""; try{ d=new Date(now).toLocaleDateString("fr-CH",{day:"2-digit",month:"short",year:"numeric"}); }catch(e){}
+  if(ov){ var k=ov.querySelector("#cliKpiRel"); if(k){ k.textContent=d; k.className="cli-kpi-v sub"; } }
+  toast("Relance enregistrée"+(kind?" — "+kind:"")+(d?" ("+d+")":""));
+  var pubkey=getStoredPublishKey(); if(!pubkey) return;   // démo : déjà reflété localement
+  try{ await fetch("/api/crm?kind=client",{method:"POST",headers:{Authorization:"Bearer "+pubkey,"Content-Type":"application/json"},body:JSON.stringify(cliEnrichPayload(key,{lastRelanceAt:now,lastRelanceKind:kind||""}))}); }catch(e){}
+}
+function openClientCard(key, opts){
+  opts=opts||{};
   var c=cliCurrentList.find(function(x){return x.key===key;});
   if(!c){ cliCurrentList=cliBuildIndex(); c=cliCurrentList.find(function(x){return x.key===key;}); } // robuste : ouvrable depuis une autre page (fiche RDV)
   if(!c) return;
+  var en=c.enrich||{};
   var mailBtns=c.emails.map(function(e){return '<a class="lead-lnk" href="mailto:'+escAttr(e)+'"><i data-lucide="mail"></i>'+escHtml(e)+'</a>';}).join("");
   var telBtns=c.phones.map(function(p){return '<a class="lead-lnk" href="tel:'+escAttr(String(p).replace(/\s+/g,""))+'"><i data-lucide="phone"></i>'+escHtml(p)+'</a>';}).join("");
   // RDV triés du + récent au + ancien = fil de suivi ; chaque ligne montre QUI (avatar+nom) et QUAND, et
@@ -4906,12 +4935,38 @@ function openClientCard(key){
       var hd='<div class="cli-cr-hd">'+(cc?'<span class="avatar xs" style="background:'+cc.color+';color:#fff">'+cc.ini+'</span>':'')+(who?'<span class="cli-cr-au">'+escHtml(who)+'</span>':'')+(d?'<span class="cli-cr-when">'+escHtml(d)+'</span>':'')+((cr.rdv&&cr.rdv.sujet)?'<span class="cli-cr-su">'+escHtml(cr.rdv.sujet)+'</span>':'')+'</div>';
       return '<div class="cli-cr">'+hd+'<div class="cli-cr-t">'+escHtml(cr.text)+'</div></div>'; }).join("") : '<p class="hint" style="margin:0">Aucun compte-rendu. Utilisez le copilote pendant un rendez-vous pour en générer un.</p>';
   var leadHtml=c.leads.length? '<div class="cli-sec-h">Demandes reçues ('+c.leads.length+')</div>'+c.leads.map(function(l){ var d=""; try{ d=l.receivedAt?new Date(l.receivedAt).toLocaleDateString("fr-CH"):""; }catch(e){} return '<div class="cli-lead">'+escHtml((l.summary||"Demande")+(d?" · "+d:""))+'</div>'; }).join("") : "";
+  // Bandeau de métriques clés (résumé en un coup d'œil : combien de RDV, le dernier, la dernière relance, la suite).
+  var lastRdv=rdvSorted[0], lastRdvV, lastRdvCls="";
+  if(lastRdv){ var lc=commercialChip(lastRdv.who); lastRdvV='<span class="avatar xs" style="background:'+lc.color+';color:#fff">'+lc.ini+'</span>'+escHtml((lastRdv.day||"")+" "+(lastRdv.mon||"")); }
+  else { lastRdvV="Aucun"; lastRdvCls=" dim"; }
+  var relV, relCls;
+  if(en.lastRelanceAt){ var rd=""; try{ rd=new Date(en.lastRelanceAt).toLocaleDateString("fr-CH",{day:"2-digit",month:"short",year:"numeric"}); }catch(e){} relV=escHtml(rd||"—"); relCls=" sub"; }
+  else { relV="Jamais"; relCls=" dim"; }
+  var nextStep=en.nextStep||c.nextStep||"";
+  var kpisHtml='<div class="cli-kpis">'
+    +'<div class="cli-kpi"><div class="cli-kpi-k">Rendez-vous</div><div class="cli-kpi-v">'+c.rdvs.length+'</div></div>'
+    +'<div class="cli-kpi"><div class="cli-kpi-k">Dernier RDV</div><div class="cli-kpi-v'+lastRdvCls+'">'+lastRdvV+'</div></div>'
+    +'<div class="cli-kpi"><div class="cli-kpi-k">Dernière relance</div><div class="cli-kpi-v'+relCls+'" id="cliKpiRel">'+relV+'</div></div>'
+    +'<div class="cli-kpi"><div class="cli-kpi-k">Prochaine étape</div><div class="cli-kpi-v'+(nextStep?" sub":" dim")+'">'+(nextStep?escHtml(nextStep):"—")+'</div></div>'
+    +'</div>';
+  // Relance par e-mail intégrée : modèles éditables → ouverture messagerie + horodatage (pas de mailto « brut »).
+  var tpls=cliRelanceTemplates(c);
+  var relanceHtml = c.emails[0] ? (
+      '<div class="cli-relance" id="cliRelancePanel"'+(opts.relance?"":" hidden")+'>'
+      +'<div class="cli-relance-tpl">'+tpls.map(function(t,i){ return '<button type="button" class="cli-chip'+(i===0?" on":"")+'" data-tpl="'+i+'">'+escHtml(t.label)+'</button>'; }).join("")+'</div>'
+      +'<input class="dInput" id="cliRelSubj" maxlength="160" value="'+escAttr(tpls[0].subject)+'">'
+      +'<textarea class="dArea" id="cliRelBody" maxlength="2000">'+escHtml(tpls[0].body)+'</textarea>'
+      +'<div class="cli-relance-acts"><button class="btn primary sm" id="cliRelSend"><i data-lucide="send"></i>Ouvrir dans ma messagerie</button>'
+      +'<button class="btn sec-b sm" id="cliRelMark"><i data-lucide="check"></i>Marquer comme relancé</button></div>'
+      +'</div>'
+    ) : "";
   var ov=document.createElement("div"); ov.className="thm-ov"; ov.id="cliCardOv";
   ov.innerHTML='<div class="thm-card cli-detail" role="dialog" aria-modal="true"><button class="thm-x" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'
-    +'<div class="cli-d-hd"><div class="cli-d-name">'+escHtml(c.name)+'</div><span class="cli-badge" style="color:'+c.status.c+';background:'+c.status.bg+'">'+c.status.lbl+'</span></div>'
-    +(c.secteur?'<div class="cli-d-sec">'+escHtml(c.secteur)+'</div>':'')
+    +'<div class="cli-d-hd"><div class="cli-d-hd-l"><span class="avatar lg">'+initials(c.name)+'</span><div class="cli-d-hd-tx"><div class="cli-d-name">'+escHtml(c.name)+'</div>'+(c.secteur?'<div class="cli-d-sec">'+escHtml(c.secteur)+'</div>':'')+'</div></div><span class="cli-badge" style="color:'+c.status.c+';background:'+c.status.bg+'">'+escHtml(c.status.lbl)+'</span></div>'
+    +kpisHtml
     +((mailBtns||telBtns)?'<div class="cli-d-contact">'+mailBtns+telBtns+'</div>':'')
-    +'<div class="cli-d-actions"><button class="btn primary sm" data-cli-cop><i data-lucide="compass"></i>Piloter avec le copilote</button></div>'
+    +'<div class="cli-d-actions"><button class="btn primary sm" data-cli-cop><i data-lucide="compass"></i>Piloter avec le copilote</button>'+(c.emails[0]?'<button class="btn sec-b sm" id="cliRelToggle"><i data-lucide="mail"></i>Relancer par e-mail</button>':'')+'</div>'
+    +relanceHtml
     +cliSuiviHtml(c)
     +'<div class="cli-sec-h">Rendez-vous ('+c.rdvs.length+')</div><div class="cli-rdv-list">'+rdvRows+'</div>'
     +'<div class="cli-sec-h">Comptes-rendus ('+c.recaps.length+')</div><div class="cli-cr-list">'+crHtml+'</div>'
@@ -4925,6 +4980,17 @@ function openClientCard(key){
   var stSel=ov.querySelector("#cliStatusSel"); if(stSel && typeof enhanceSelect==="function") enhanceSelect(stSel);
   var ofSel=ov.querySelector("#cliOfferSel"); if(ofSel && typeof enhanceSelect==="function") enhanceSelect(ofSel);
   var sv=ov.querySelector("#cliSaveSuivi"); if(sv) sv.addEventListener("click",function(){ saveClientSuivi(key, ov); });
+  // Relance par e-mail : dépliage + choix d'un modèle + envoi/marquage
+  var relPanel=ov.querySelector("#cliRelancePanel"), relToggle=ov.querySelector("#cliRelToggle");
+  if(relToggle&&relPanel){ relToggle.addEventListener("click",function(){ if(relPanel.hasAttribute("hidden")){ relPanel.removeAttribute("hidden"); try{ relPanel.scrollIntoView({block:"nearest"}); }catch(e){} } else relPanel.setAttribute("hidden",""); }); }
+  if(relPanel){
+    var subjEl=relPanel.querySelector("#cliRelSubj"), bodyEl=relPanel.querySelector("#cliRelBody");
+    relPanel.dataset.kind=tpls[0].label;
+    relPanel.querySelectorAll("[data-tpl]").forEach(function(b){ b.addEventListener("click",function(){ var t=tpls[+b.dataset.tpl]; if(!t) return; subjEl.value=t.subject; bodyEl.value=t.body; relPanel.querySelectorAll("[data-tpl]").forEach(function(x){x.classList.remove("on");}); b.classList.add("on"); relPanel.dataset.kind=t.label; }); });
+    var sb=relPanel.querySelector("#cliRelSend"); if(sb) sb.addEventListener("click",function(){ var url="mailto:"+encodeURIComponent(c.emails[0]||"")+"?subject="+encodeURIComponent(subjEl.value||"")+"&body="+encodeURIComponent(bodyEl.value||""); try{ window.location.href=url; }catch(e){} saveClientRelance(key, relPanel.dataset.kind||"", ov); });
+    var mb=relPanel.querySelector("#cliRelMark"); if(mb) mb.addEventListener("click",function(){ saveClientRelance(key, relPanel.dataset.kind||"", ov); });
+  }
+  if(opts.relance && relPanel){ try{ relPanel.scrollIntoView({block:"nearest"}); }catch(e){} }
   ov.querySelectorAll("[data-rdvtoggle]").forEach(function(row){ function tog(){ var it=row.parentNode; var d=it.querySelector(".cli-rdv-detail"); if(!d) return; if(d.hasAttribute("hidden")){ d.removeAttribute("hidden"); it.classList.add("open"); } else { d.setAttribute("hidden",""); it.classList.remove("open"); } } row.addEventListener("click",tog); row.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); tog(); } }); });
   ov.addEventListener("mousedown",function(e){ if(e.target===ov) close(); });
   document.addEventListener("keydown",esc); refreshIcons();

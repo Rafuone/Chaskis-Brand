@@ -1,6 +1,6 @@
 # Workflow commercial — état & reprise (note de passation)
 
-> **Point de reprise au 2026-07-21.** Branche `feat/foundation-vercel`, HEAD `27693e7`, admin **v0.52.0**,
+> **Point de reprise au 2026-07-21.** Branche `feat/foundation-vercel`, HEAD `5570940`, admin **v0.53.0**,
 > **15 suites de tests vertes**, **11/12 fonctions Vercel Hobby**. `main` (prod) et `demo` intacts.
 > Contexte de départ (constat, décision produit, options CRM) : voir la section « Historique » en bas.
 
@@ -54,16 +54,16 @@
 > compte-rendu attribué). + retours design Alexandre (onglets sous la recherche, bouton Filtres même
 > hauteur, cases bleu foncé, boutons carrés, pagination visible).
 
+> ✅ **Lot 4 fait en v0.53.0** : tableau d'équipe RDV **réel** quand Calendly connecté (`teamAgg`/`renderTeam`
+> live-aware) sinon démo ; **Jean-Christophe** ajouté à `TEAM_STATS` ; **conversion « exemple » partout**
+> (jamais calculable sans le back-office) ; tag `.ex-tag` sur les chiffres démo (dashboard/stats/chatbot/
+> équipe) + note `#rdvTeamNote`. Affiliation NON taguée (vrais décomptes, pas des métriques fabriquées).
+
 1. **Copilote depuis un client sans RDV** : pré-remplir **date/heure du jour** (`prepareCopilotForClient`,
    via `copState.rdvLabel` ; pas de champ date dans `copState` aujourd'hui). ⚠️ Vérifier : d'après le
    journal des versions, une partie a déjà été livrée en v0.49.0 — contrôler avant de recoder.
 2. **Relance / note** (aujourd'hui bas de la page RDV) exposées dans la fiche client (idem : vérifier v0.49.0).
-3. **Lot 4 — KPIs réels + étiquetage démo** : calculer conversion/présence/à-venir depuis les vrais RDV
-   quand chargés (⚠️ la **conversion** n'est pas calculable sans les données d'abonnement du back-office
-   → à **étiqueter « exemple »**, ne pas inventer) ; nettoyer/étiqueter « exemple » les stats de démo
-   (dashboard, tableau équipe RDV, statistiques, chatbot, affiliation) ; corriger l'incohérence
-   Jean-Christophe (absent de `TEAM_STATS`).
-4. **(transverse)** Articulation avec la **vraie page Clients du back-office** (clients ACTIFS abonnés
+3. **(transverse)** Articulation avec la **vraie page Clients du back-office** (clients ACTIFS abonnés
    Flex/Express/Dédié) : ma page = pipeline amont (prospects/leads/RDV). Prévu : statut « Client actif » +
    champ offre déjà en place ; brancher la synchro quand le CRM cible sera défini.
 

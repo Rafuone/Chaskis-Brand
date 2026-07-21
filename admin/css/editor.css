@@ -255,6 +255,8 @@
   .lead-lnk:hover{text-decoration:underline}
   .lead-lnk i,.lead-lnk svg{width:14px;height:14px}
   .lead-when{font-size:12px;color:var(--muted);white-space:nowrap;flex-shrink:0;padding-top:1px}
+  .lead-clic{cursor:pointer}
+  .lead-clic:hover .lead-co{color:var(--purple);text-decoration:underline}
   /* Vue Clients (hub commercial) */
   .cli-filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
   .cli-fbtn{all:unset;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--ink-soft);background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:5px 13px}

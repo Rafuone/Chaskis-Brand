@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.48.0" };
+const ADMIN_BUILD = { version: "0.48.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1193,7 +1193,8 @@ function dashLeadRow(l){
   var links=[];
   if(l.email) links.push('<a class="lead-lnk" href="mailto:'+escAttr(l.email)+'"><i data-lucide="mail"></i>'+escHtml(l.email)+'</a>');
   if(l.phone) links.push('<a class="lead-lnk" href="tel:'+escAttr(String(l.phone).replace(/\s+/g,""))+'"><i data-lucide="phone"></i>'+escHtml(l.phone)+'</a>');
-  return '<div class="lead-row"><div class="lead-main"><div class="lead-co">'+title+'</div>'+(subBits.length?'<div class="lead-sub">'+subBits.join(" · ")+'</div>':'')+(links.length?'<div class="lead-links">'+links.join("")+'</div>':'')+'</div><div class="lead-when">'+escHtml(when)+'</div></div>';
+  var lk=cliKeyFor({company:l.company,email:l.email,contact:l.contact});
+  return '<div class="lead-row'+(lk?' lead-clic':'')+'"'+(lk?' data-lk="'+escAttr(lk)+'" title="Ouvrir la fiche client"':'')+'><div class="lead-main"><div class="lead-co">'+title+'</div>'+(subBits.length?'<div class="lead-sub">'+subBits.join(" · ")+'</div>':'')+(links.length?'<div class="lead-links">'+links.join("")+'</div>':'')+'</div><div class="lead-when">'+escHtml(when)+'</div></div>';
 }
 async function loadDashLeads(){
   var pan=document.getElementById("dashLeadsPan"), body=document.getElementById("dashLeads"); if(!body) return;
@@ -1203,6 +1204,8 @@ async function loadDashLeads(){
     var j=await r.json(); var leads=(j&&Array.isArray(j.leads))?j.leads:[];
     if(!leads.length) return;                                     // aucune demande -> reste caché
     body.innerHTML=leads.slice(0,8).map(dashLeadRow).join("");
+    body.querySelectorAll(".lead-row[data-lk]").forEach(function(row){ row.addEventListener("click",function(){ openClientCard(row.dataset.lk); }); });
+    body.querySelectorAll(".lead-lnk").forEach(function(a){ a.addEventListener("click",function(e){ e.stopPropagation(); }); }); // mail/tel : ne pas ouvrir la fiche
     var hint=document.getElementById("dashLeadsHint"); if(hint) hint.textContent=leads.length+" demande"+(leads.length>1?"s":"")+" (60 j)";
     if(pan) pan.style.display=""; refreshIcons();
   }catch(e){ /* silencieux : démo / hors-ligne intacte */ }
@@ -1393,7 +1396,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.48.0", cur:true, date:"2026-07-21", title:"Clients : suivi commercial partagé", items:[
+  { v:"v0.48.1", cur:true, date:"2026-07-21", title:"Demandes reçues cliquables", items:[
+    {t:"imp", x:"Dans le tableau de bord, cliquer une demande reçue ouvre directement la fiche client correspondante (les liens e-mail / téléphone restent cliquables séparément)"}
+  ]},
+  { v:"v0.48.0", date:"2026-07-21", title:"Clients : suivi commercial partagé", items:[
     {t:"add", x:"Chaque fiche client a un « Suivi commercial » modifiable et partagé entre tous les commerciaux : statut (nouveau lead, en discussion, devis envoyé, client actif, sans suite), prochaine étape et offre souscrite (Flex / Express / Dédié)"},
     {t:"add", x:"Nouveau filtre « Clients actifs » ; le statut choisi à la main prime sur le statut déduit automatiquement des rendez-vous"}
   ]},

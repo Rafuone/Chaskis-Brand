@@ -172,3 +172,37 @@
 /* ===== NAV CTA HIDDEN ON COMMANDER PAGE ===== */
 body.page-commander .nav-cta-btn{display:none}
 
+/* ===== NEWSLETTER (CTA sombre facon carte Geneve) — repris de la section postuler, partage accueil + commander ===== */
+.nl{background:#050d14;position:relative;overflow:hidden}
+.nl-map{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.22}
+.nl::after{content:'';position:absolute;bottom:-30%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(75,179,164,.18) 0%,transparent 65%);border-radius:50%;pointer-events:none}
+.nl-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);align-items:center}
+.nl-left{display:flex;flex-direction:column;gap:0}
+.nl .sl{color:var(--teal-light);opacity:.8}
+.nl .sl::before{background:var(--teal);opacity:.5}
+.nl h2{font-size:clamp(1.8rem,3vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:1.05;color:#fff;margin-bottom:18px}
+.nl h2 .sa{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--teal-light)}
+.nl-desc{font-size:1rem;color:rgba(255,255,255,.5);line-height:1.65;max-width:400px;margin-bottom:0}
+/* Carte droite (glass) */
+.nl-right{display:flex;flex-direction:column;align-items:stretch;gap:0;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--rxl);padding:clamp(32px,4vw,48px);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.nl-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:rgba(255,255,255,.35);margin-bottom:18px}
+.nl-feats{display:flex;flex-direction:column;gap:10px;margin-bottom:26px}
+.nl-feat{display:flex;align-items:center;gap:9px;font-size:.82rem;color:rgba(255,255,255,.55)}
+.nl-feat svg{color:var(--teal-light);flex-shrink:0}
+.nl-form{display:flex;gap:10px;width:100%}
+.nl-email{flex:1;min-width:0;padding:14px 16px;border-radius:var(--r);border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;font-size:.9rem;transition:border-color .2s ease,background .2s ease}
+.nl-email::placeholder{color:rgba(255,255,255,.4)}
+.nl-email:focus{outline:none;border-color:rgba(75,179,164,.6);background:rgba(255,255,255,.1)}
+.nl-btn{flex-shrink:0;padding:14px 22px;border-radius:var(--r);border:1px solid rgba(255,255,255,.9);background:#fff;color:#0a0f1a;font-size:.9rem;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.25);transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease}
+.nl-btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.3)}
+.nl-ok{font-size:.9rem;color:var(--teal-light);font-weight:600;margin-top:2px}
+.nl-note{font-size:.72rem;color:rgba(255,255,255,.4);line-height:1.5;margin-top:14px}
+@media(max-width:860px){
+  .nl-inner{grid-template-columns:1fr;gap:32px}
+  .nl-desc{max-width:none}
+}
+@media(max-width:480px){
+  .nl-form{flex-direction:column}
+  .nl-btn{width:100%}
+}
+

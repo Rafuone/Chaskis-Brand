@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.58.0" };
+const ADMIN_BUILD = { version: "0.59.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1397,7 +1397,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.58.0", cur:true, date:"2026-07-22", title:"Mode démonstration : l’outillage technique se masque en ligne", items:[
+  { v:"v0.59.0", cur:true, date:"2026-07-22", title:"Section newsletter sur l’accueil et la commande, correctif de bas de page", items:[
+    {t:"add", x:"Nouvelle section d’inscription à la newsletter, au style de la page « postuler » (fond carte, encart vitré), ajoutée sur l’accueil et sur « Commander une course ». Bilingue, formulaire relié à l’admin."},
+    {t:"fix", x:"Page « Commander une course » : l’espace vide sous le bas de page disparaît en version ordinateur (il ne reste qu’en mobile, là où la barre de résumé flottante l’exige)."}
+  ]},
+  { v:"v0.58.0", date:"2026-07-22", title:"Mode démonstration : l’outillage technique se masque en ligne", items:[
     {t:"add", x:"En ligne, le back-office masque automatiquement les pages réservées au pilotage technique (« Suivi technique », « Avancement », « Notes de version ») et le bloc d’avancement du tableau de bord. En local, tout reste visible. L’environnement est reconnu selon l’adresse : plus besoin de basculer à la main."},
     {t:"imp", x:"Les mentions internes de mise au point (par exemple « démo » sur les notifications) n’apparaissent plus dans l’espace en ligne."}
   ]},

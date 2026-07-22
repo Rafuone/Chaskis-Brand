@@ -474,7 +474,7 @@ const T = {
     'sim.neutral.title': 'Chaskis n\'est pas systématiquement plus avantageux.', 'sim.neutral.p': 'Vos conditions actuelles sont déjà serrées. Pour savoir si nos tarifs dégressifs peuvent changer la donne sur une partie de vos commandes, parlons-en 20 minutes.',
     'sim.neutral.cta': 'Réserver l\'analyse <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>',
     'offres.label': 'Nos offres', 'offres.h2': 'Choisissez votre <span class="ac">formule</span>', 'offres.sd': 'Sans engagement. Flex s\'adapte à vos volumes qui fluctuent, Dédié prend le relais quand ils se stabilisent.',
-    'news.sl': 'Newsletter', 'news.h2': 'La logistique qui avance, <span class="sa">une fois par mois</span>', 'news.sd': 'Conseils d\'optimisation, nouveautés et retours terrain. Rien d\'autre. Désinscription en un clic.', 'news.ph': 'votre@entreprise.ch', 'news.cta': 'S\'inscrire', 'news.ok': 'Merci ! Votre inscription est bien enregistrée.', 'news.note': 'Une adresse pro de préférence. Vos données restent chez Chaskis, jamais revendues.',
+    'news.sl': 'Newsletter', 'news.h2': 'La logistique qui avance, <span class="sa">une fois par mois</span>', 'news.sd': 'Conseils d\'optimisation, nouveautés et retours terrain. Rien d\'autre. Désinscription en un clic.', 'news.ph': 'votre@entreprise.ch', 'news.cta': 'S\'inscrire', 'news.ok': 'Merci ! Votre inscription est bien enregistrée.', 'news.note': 'Une adresse pro de préférence. Vos données restent chez Chaskis, jamais revendues.', 'news.card': 'Recevez le meilleur de Chaskis', 'news.f1': 'Conseils d\'optimisation logistique', 'news.f2': 'Nouveautés produit en avant-première', 'news.f3': 'Retours terrain concrets, une fois par mois',
     'offre.flex.ideal': 'Un service régulier qui s\'adapte à votre rythme',
     'offre.dedie.ideal': 'Fort volume quotidien : votre flotte, sans la gérer',
     'offre.express.ideal': 'Une course ponctuelle, sans compte ni engagement',
@@ -603,7 +603,7 @@ const T = {
     'sim.neutral.title': 'Chaskis is not necessarily more competitive.', 'sim.neutral.p': 'Your current conditions are already tight. To find out whether our tiered pricing can make a difference on some of your orders, let\'s talk for 20 minutes.',
     'sim.neutral.cta': 'Book the analysis <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>',
     'offres.label': 'Our plans', 'offres.h2': 'Choose your <span class="ac">plan</span>', 'offres.sd': 'No commitment. Flex adapts to fluctuating volumes, Dedicated takes over once they stabilise.',
-    'news.sl': 'Newsletter', 'news.h2': 'Logistics that moves forward, <span class="sa">once a month</span>', 'news.sd': 'Optimisation tips, product news and field insights. Nothing else. Unsubscribe in one click.', 'news.ph': 'you@yourcompany.ch', 'news.cta': 'Subscribe', 'news.ok': 'Thanks! Your subscription is confirmed.', 'news.note': 'A work address preferably. Your data stays with Chaskis, never sold.',
+    'news.sl': 'Newsletter', 'news.h2': 'Logistics that moves forward, <span class="sa">once a month</span>', 'news.sd': 'Optimisation tips, product news and field insights. Nothing else. Unsubscribe in one click.', 'news.ph': 'you@yourcompany.ch', 'news.cta': 'Subscribe', 'news.ok': 'Thanks! Your subscription is confirmed.', 'news.note': 'A work address preferably. Your data stays with Chaskis, never sold.', 'news.card': 'Get the best of Chaskis', 'news.f1': 'Logistics optimisation tips', 'news.f2': 'Early access to product news', 'news.f3': 'Concrete field insights, once a month',
     'offre.flex.ideal': 'A regular service that adapts to your rhythm',
     'offre.dedie.ideal': 'High daily volume: your fleet, without managing it',
     'offre.express.ideal': 'A one-off delivery, no account needed',
@@ -1426,20 +1426,4 @@ function setLang(lang) {
   });
 })();
 
-// ===== NEWSLETTER (accueil), inscription best-effort vers l'admin (POST /api/crm) =====
-(function(){
-  var form=document.getElementById('newsForm'); if(!form) return;
-  var input=document.getElementById('newsEmail'), ok=document.getElementById('newsOk');
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    if(!input.checkValidity()){ input.reportValidity(); return; }
-    var email=input.value.trim();
-    try {
-      var payload=JSON.stringify({email:email,newsletter:true,source:'newsletter-accueil',message:"Inscription newsletter (page d'accueil)"});
-      if(navigator.sendBeacon){ navigator.sendBeacon('/api/crm', new Blob([payload],{type:'application/json'})); }
-      else { fetch('/api/crm',{method:'POST',headers:{'Content-Type':'application/json'},body:payload,keepalive:true}).catch(function(){}); }
-    } catch(err){}
-    form.style.display='none';
-    if(ok) ok.hidden=false;
-  });
-})();
+// La newsletter (accueil + commander) est geree par assets/js/newsletter.js (fond carte Leaflet + envoi /api/crm).

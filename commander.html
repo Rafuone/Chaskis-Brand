@@ -30,6 +30,7 @@
 <link rel="stylesheet" href="assets/css/chatbot.css?v=20260722d">
 
 <link rel="stylesheet" href="assets/css/pages/commander.css?v=20260722d">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 </head>
 <body class="page-commander">
 <a class="sr-only sr-only-focusable" href="#content">Aller au contenu</a>
@@ -511,7 +512,33 @@
 </div>
 </main>
 
-<footer class="footer" data-nav-dark data-shared style="margin-bottom:64px"></footer>
+<!-- ===== NEWSLETTER ===== -->
+<section class="nl" id="newsletter">
+  <div class="nl-map" aria-hidden="true"></div>
+  <div class="ct nl-inner rv">
+    <div class="nl-left">
+      <span class="sl" data-i18n="news.sl">Newsletter</span>
+      <h2 data-i18n-html="news.h2">La logistique qui avance, <span class="sa">une fois par mois</span></h2>
+      <p class="nl-desc" data-i18n="news.sd">Conseils d'optimisation, nouveautés et retours terrain. Rien d'autre. Désinscription en un clic.</p>
+    </div>
+    <div class="nl-right">
+      <div class="nl-label" data-i18n="news.card">Recevez le meilleur de Chaskis</div>
+      <div class="nl-feats">
+        <div class="nl-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="news.f1">Conseils d'optimisation logistique</span></div>
+        <div class="nl-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="news.f2">Nouveautés produit en avant-première</span></div>
+        <div class="nl-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg><span data-i18n="news.f3">Retours terrain concrets, une fois par mois</span></div>
+      </div>
+      <form class="nl-form" data-source="newsletter-commander" novalidate>
+        <input type="email" class="nl-email" required autocomplete="email" data-i18n-placeholder="news.ph" placeholder="votre@entreprise.ch" aria-label="Votre adresse email">
+        <button type="submit" class="nl-btn"><span data-i18n="news.cta">S'inscrire</span></button>
+      </form>
+      <p class="nl-ok" role="status" hidden data-i18n="news.ok">Merci ! Votre inscription est bien enregistrée.</p>
+      <p class="nl-note" data-i18n="news.note">Une adresse pro de préférence. Vos données restent chez Chaskis, jamais revendues.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer" data-nav-dark data-shared></footer>
 
 <script src="assets/js/i18n/commander.js?v=20260722d"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js" defer></script>
@@ -521,6 +548,8 @@
 <script src="assets/js/analytics.js?v=20260722d"></script>
 <script src="assets/js/pricing-mock.js?v=20260722d"></script>
 <script src="assets/js/commander.js?v=20260722d"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="assets/js/newsletter.js?v=20260722d"></script>
 
 </body>
 </html>

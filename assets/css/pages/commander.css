@@ -514,6 +514,8 @@ body.page-commander .nav{background:rgba(255,255,255,.92);backdrop-filter:blur(1
   .cmd-summary{display:none}
   .cmd-summary-mobile{display:block}
   .opt-cards{grid-template-columns:1fr}
+  /* La barre de resume fixe (position:fixed) flotte en bas : on reserve l'espace sous le footer pour ne pas le recouvrir. En desktop la barre est masquee, donc pas d'espace (corrige le vide sous le footer). */
+  .footer{margin-bottom:64px}
 }
 @media(max-width:540px){
   .stp-lbl{display:none}

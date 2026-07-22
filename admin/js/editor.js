@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.57.8" };
+const ADMIN_BUILD = { version: "0.57.9" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1397,7 +1397,10 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.57.8", cur:true, date:"2026-07-22", title:"Typographie : suppression des tirets cadratin", items:[
+  { v:"v0.57.9", cur:true, date:"2026-07-22", title:"« CDI » retiré partout, remplacé par « salarié »", items:[
+    {t:"fix", x:"« CDI » remplacé par une formulation « salarié / vrai contrat / CCT » sur les pages Mobilité, Postuler (et son référencement) et le chatbot, comme sur l'accueil. La force du recrutement (vrai contrat, salaire CCT, assurance, pas d'auto-entrepreneuriat) est conservée, sans affirmer un type de contrat non garanti pour tous."}
+  ]},
+  { v:"v0.57.8", date:"2026-07-22", title:"Typographie : suppression des tirets cadratin", items:[
     {t:"fix", x:"Tous les tirets cadratin « — » (usage anglophone, rare en français) sont remplacés par une ponctuation française (virgule, deux-points, point médian) sur le site et dans le deck de présentation. Textes plus naturels."}
   ]},
   { v:"v0.57.7", date:"2026-07-22", title:"Réservation : on garde le calendrier maison", items:[

@@ -19,7 +19,7 @@ window.T = {
     'm.pil.p2.u1': 'Horlogerie', 'm.pil.p2.u2': 'Joaillerie', 'm.pil.p2.u3': 'Haute couture', 'm.pil.p2.u4': 'Grands crus', 'm.pil.p2.u5': "Pièces d'exception",
     'm.diff.lbl': 'Pourquoi Chaskis Mobilité', 'm.diff.h2': 'Trois raisons de <span class="ac">nous choisir</span>.',
     'm.diff.desc': 'Ce qui nous distingue des plateformes VTC classiques : des chauffeurs salariés, des véhicules entretenus, une facturation pensée pour les pros.',
-    'm.diff.c1.h': 'Chauffeurs salariés CDI',
+    'm.diff.c1.h': 'Chauffeurs salariés',
     'm.diff.c1.p': 'Aucun freelance, aucune rotation. Des chauffeurs formés aux standards des hôtels 5 étoiles.',
     'm.diff.c1.l1': "Remplacement garanti en cas d'absence", 'm.diff.c1.l2': 'Formation prestige continue', 'm.diff.c1.l3': 'Assurés et encadrés en interne',
     'm.diff.c2.h': 'Véhicules premium, standards hôtel',

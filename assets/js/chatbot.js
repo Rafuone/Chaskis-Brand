@@ -25,7 +25,7 @@
       categories: [
         { id: 'livraison', label: 'Livraison', icon: 'truck', intro: "Livraison pour entreprises (Genève · Nyon · Lausanne · Riviera). Quelle question ?" },
         { id: 'mobilite', label: 'Mobilité', icon: 'car', intro: "Chauffeurs salariés et collecte prestige. Quelle info vous intéresse ?" },
-        { id: 'postuler', label: 'Postuler', icon: 'user', intro: "Rejoindre les équipes (CDI, coursier ou chauffeur). Dites-moi ce qui vous freine ou vous intrigue." },
+        { id: 'postuler', label: 'Postuler', icon: 'user', intro: "Rejoindre les équipes (coursier ou chauffeur salarié). Dites-moi ce qui vous freine ou vous intrigue." },
         { id: 'contact', label: 'Contact', icon: 'chat', intro: "Plusieurs canaux pour nous joindre." },
       ],
       topics: {
@@ -40,7 +40,7 @@
         mobilite: [
           { q: 'Quels services Mobilité ?', a: "Deux services : <strong>transport de personnes</strong> (transferts aéroport, mise à disposition, événementiel, mobilité réduite, stations de ski) et <strong>collecte prestige</strong> (horlogerie, joaillerie, haute couture, grands crus). <a href=\"mobilite.html\">Tout voir</a>." },
           { q: 'Délai de réservation', a: "Les demandes classiques sont traitées dès 2 heures d'anticipation. Pour les trajets prestige ou événements, comptez 24 à 48 heures pour caler les détails." },
-          { q: 'Flotte et chauffeurs', a: "Chauffeurs <strong>salariés en CDI</strong>, formés aux standards hôtels 5 étoiles. Berlines classe affaires et vans VIP, entretenus en atelier partenaire." },
+          { q: 'Flotte et chauffeurs', a: "Chauffeurs <strong>salariés</strong>, formés aux standards hôtels 5 étoiles. Berlines classe affaires et vans VIP, entretenus en atelier partenaire." },
           { q: 'Assurance objets de valeur', a: "Les missions prestige sont couvertes par une assurance spécifique jusqu'à plusieurs millions de CHF. Attestation fournie au départ, avec numéro de police." },
           { q: 'Annulation', a: "Annulation gratuite jusqu'à 4h avant pour le transport de personnes, 24h avant pour les missions prestige. Au-delà, une part du forfait reste due." },
         ],
@@ -63,7 +63,7 @@
       keywords: [
         { kw: ['tarif','prix','coût','cout','combien'], a: "Les tarifs dépendent de la zone, du volume et du service. Pour un prix précis sur une course ponctuelle, <a href=\"commander.html\">utilisez le simulateur</a>. Pour un devis volumétrique : <a href=\"index.html#booking\">réserver un appel</a>." },
         { kw: ['délai','delai','express','rapide','vite','temps'], a: "Super Express = prise en charge sous 2h. Sinon vous choisissez le créneau lors de la création de la course." },
-        { kw: ['postul','emploi','job','travail','rejoindre','équipe','equipe'], a: "Nous recrutons en CDI, coursiers et chauffeurs. <a href=\"postuler.html\">Voir les métiers</a> · <a href=\"postuler.html#download\">Postuler en 2 min via l'app</a>." },
+        { kw: ['postul','emploi','job','travail','rejoindre','équipe','equipe'], a: "Nous recrutons des coursiers et chauffeurs salariés. <a href=\"postuler.html\">Voir les métiers</a> · <a href=\"postuler.html#download\">Postuler en 2 min via l'app</a>." },
         { kw: ['zone','couvre','couvert','ville','genève','geneve','lausanne','nyon','riviera'], a: "Couverture : Genève · Nyon · Lausanne · Riviera vaudoise. Certains codes postaux sont livraison uniquement (pas de collecte). <a href=\"commander.html\">Vérifier une adresse</a>." },
         { kw: ['mobilité','mobilite','vtc','transfert','aéroport','aeroport','chauffeur'], a: "Chaskis Mobilité = chauffeurs salariés + collecte prestige. <a href=\"mobilite.html\">Voir Mobilité</a>." },
         { kw: ['contact','humain','conseill','appel','téléphone','telephone','email','mail'], a: "<a href=\"tel:+41227000127\">+41 22 700 01 27</a> · <a href=\"mailto:hello@chaskis.ch\">hello@chaskis.ch</a> · <a href=\"index.html#booking\">réserver un appel</a>." },

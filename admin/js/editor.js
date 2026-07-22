@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.57.9" };
+const ADMIN_BUILD = { version: "0.58.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1133,10 +1133,10 @@ function renderDashPanels(role){ const w=document.getElementById("dashPanels"); 
       + dashPanel("calendar","Prochains rendez-vous","dashRdv","amber","rdv")
     + '</div>'
       + dashLeadsPanelHtml()
+    + (getEnv()==="dev"
+        ? '<div class="dash-grid">'+dashPanel("activity","Avancement du projet","dashProgress","teal","progress")+dashPanel("users","Utilisateurs & accès","dashTeam","violet","users")+'</div>'
+        : dashPanel("users","Utilisateurs & accès","dashTeam","violet","users"))
     + '<div class="dash-grid">'
-      + dashPanel("activity","Avancement du projet","dashProgress","teal","progress")
-      + dashPanel("users","Utilisateurs & accès","dashTeam","violet","users")
-    + '</div><div class="dash-grid">'
       + dashPanel("clock","Activité récente","dashActivity","purple")
       + dashPanel("megaphone","Bandeau promotionnel","dashBanner","amber")
     + '</div>';
@@ -1397,7 +1397,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.57.9", cur:true, date:"2026-07-22", title:"« CDI » retiré partout, remplacé par « salarié »", items:[
+  { v:"v0.58.0", cur:true, date:"2026-07-22", title:"Mode démonstration : l’outillage technique se masque en ligne", items:[
+    {t:"add", x:"En ligne, le back-office masque automatiquement les pages réservées au pilotage technique (« Suivi technique », « Avancement », « Notes de version ») et le bloc d’avancement du tableau de bord. En local, tout reste visible. L’environnement est reconnu selon l’adresse : plus besoin de basculer à la main."},
+    {t:"imp", x:"Les mentions internes de mise au point (par exemple « démo » sur les notifications) n’apparaissent plus dans l’espace en ligne."}
+  ]},
+  { v:"v0.57.9", date:"2026-07-22", title:"« CDI » retiré partout, remplacé par « salarié »", items:[
     {t:"fix", x:"« CDI » remplacé par une formulation « salarié / vrai contrat / CCT » sur les pages Mobilité, Postuler (et son référencement) et le chatbot, comme sur l'accueil. La force du recrutement (vrai contrat, salaire CCT, assurance, pas d'auto-entrepreneuriat) est conservée, sans affirmer un type de contrat non garanti pour tous."}
   ]},
   { v:"v0.57.8", date:"2026-07-22", title:"Typographie : suppression des tirets cadratin", items:[
@@ -1983,7 +1987,7 @@ function renderReleaseLog(){ const host=document.getElementById("relLog"); if(!h
 const APP_ENV={dev:{lbl:"Développement",c:"#6B4CC4"},preprod:{lbl:"Pré-production (test)",c:"#C7891B"},prod:{lbl:"En production",c:"#0E7D48"}};
 const APP_STAGE={stable:{lbl:"Stable",c:"#0E7D48"},beta:{lbl:"Bêta",c:"#C7891B"},alpha:{lbl:"Alpha",c:"#B4632A"}};
 const PROGRESS=[
-  {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.17.1",recent:["Demandes reçues : le consentement « actualités » donné à la commande s'affiche (tag « newsletter ok »)","Demandes du site (formulaire « Commander ») visibles et recontactables en un clic","Activité récente tirée des vraies publications"]},
+  {view:"dashboard",name:"Tableau de bord",env:"preprod",stage:"beta",version:"0.17.2",recent:["Tableau de bord épuré en ligne : le suivi d'avancement interne n'apparaît qu'en local","Demandes reçues : le consentement « actualités » donné à la commande s'affiche (tag « newsletter ok »)","Demandes du site (formulaire « Commander ») visibles et recontactables en un clic","Activité récente tirée des vraies publications"]},
   {view:"editor",name:"Édition du site",env:"preprod",stage:"beta",version:"0.14.0",recent:["Les images remplacées apparaissent sur le site en ligne après publication","Publication organisée par page (chaque page ne reçoit que ses propres textes ; le commun s'applique partout)","Publication réelle en ligne depuis le bouton Publier"]},
   {view:"structure",name:"Structure & stratégie",env:"preprod",stage:"beta",version:"0.6.1",recent:["Badge « actuellement masquée » sur les sections de l'accueil","Rôle de chaque page et section"]},
   {view:"media",name:"Médiathèque",env:"preprod",stage:"beta",version:"1.2.0",recent:["Stockage réel des fichiers en ligne (URL permanente au lieu du navigateur)","Compression et redimensionnement des images à l'import","Confirmation avant suppression d'un média"]},
@@ -2182,7 +2186,7 @@ function renderTech(){ const tabs=document.getElementById("techTabs"), body=docu
   refreshIcons();
 }
 function techEsc(s){ return escHtml(String(s==null?"":s)); }
-const TECH_UPDATED="21 juillet 2026";
+const TECH_UPDATED="22 juillet 2026";
 const TECH_EFF_LBL={S:"Rapide",M:"Moyen",L:"Long"};
 const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Arthur",calendly:"Paul",auth:"Youcef",perf:"Arthur",media:"Arthur",chatbot:"Youcef"};
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};
@@ -5998,9 +6002,18 @@ function logout(){
 }
 
 /* ---- environnement (dev / prod) + version du back-office ---- */
-function getEnv(){ return loadUI().env==="prod" ? "prod" : "dev"; }
+/* Défaut selon l'emplacement : en local = "dev" (on travaille), en ligne = "prod"
+   (le client ne voit jamais l'outillage de dev). Un choix explicite via le sélecteur
+   reste prioritaire (stocké par navigateur). */
+function isLocalEnv(){ try{ const h=(location.hostname||"").toLowerCase();
+  return h==="localhost"||h==="127.0.0.1"||h==="0.0.0.0"||h===""||h.endsWith(".local")
+    ||/^192\.168\./.test(h)||/^10\./.test(h)||/^172\.(1[6-9]|2\d|3[01])\./.test(h); }catch(e){ return false; } }
+function defaultEnv(){ return isLocalEnv() ? "dev" : "prod"; }
+function getEnv(){ const s=loadUI().env; return (s==="prod"||s==="dev") ? s : defaultEnv(); }
+const DEVONLY_VIEWS=["tech","notes","progress"];
+function isDevOnlyView(v){ return DEVONLY_VIEWS.indexOf(v)>=0; }
 function setEnv(env){ env=(env==="prod")?"prod":"dev"; saveUI({env}); renderBuild(); document.querySelector(".app")?.setAttribute("data-env",env);
-  applyEnvNav(); if(env==="prod" && (loadUI().view==="tech")) showView("dashboard");
+  applyEnvNav(); if(env==="prod" && isDevOnlyView(loadUI().view)) showView("dashboard");
   toast(env==="prod"?"Environnement : production (le site en ligne)":"Environnement : développement (brouillon de travail)"); }
 function renderBuild(){ const el=document.getElementById("sbBuild"); if(!el) return; const env=getEnv();
   el.innerHTML='<span class="sb-build-env '+env+'">'+(env==="prod"?"prod":"dev")+'</span><span class="sb-build-v">v'+ADMIN_BUILD.version+'</span>';
@@ -6039,7 +6052,7 @@ function renderSettings(){ const b=document.getElementById("setBody"); if(!b) re
       +setToggleRow("Menu réduit par défaut","La barre latérale s\'ouvre repliée à la connexion",mini,'id="setMini"')
       +'<div class="set-row"><div class="set-row-tx"><div class="set-row-t">Langue d\'édition par défaut</div><div class="set-row-s">La langue montrée à l\'ouverture de l\'éditeur</div></div><div class="seg set-seg" id="setLang"><button data-l="fr" class="'+(currentLang==="fr"?"on":"")+'">FR</button><button data-l="en" class="'+(currentLang==="en"?"on":"")+'">EN</button></div></div>'
     +'</div></div>'
-    +'<div class="set-sec"><div class="set-sec-t"><i data-lucide="bell"></i>Notifications <span style="color:var(--muted);font-weight:400">· démo</span></div><div class="set-card">'
+    +'<div class="set-sec"><div class="set-sec-t"><i data-lucide="bell"></i>Notifications'+(env==="prod"?"":' <span style="color:var(--muted);font-weight:400">· démo</span>')+'</div><div class="set-card">'
       +setToggleRow("Résumé hebdomadaire","Un email chaque lundi avec l\'activité du site",n.weekly,'data-n="weekly"')
       +setToggleRow("Nouveau rendez-vous","Alerte à chaque prise de rendez-vous",n.newRdv,'data-n="newRdv"')
       +setToggleRow("Version publiée","Alerte quand une mise en ligne est faite",n.published,'data-n="published"')
@@ -6048,7 +6061,7 @@ function renderSettings(){ const b=document.getElementById("setBody"); if(!b) re
       +'<div class="set-about-v"><span class="set-about">Back-office Chaskis</span><b class="set-about" style="color:var(--ink)">v'+ADMIN_BUILD.version+'</b></div>'
       +'<div class="set-about-v"><span class="set-about">Environnement</span><span class="sb-build-env '+env+'" style="font-size:10.5px">'+(env==="prod"?"prod":"dev")+'</span></div>'
       +'<div class="set-about-v"><span class="set-about">Support technique</span><b class="set-about" style="color:var(--ink)">'+GAMMA+'</b></div>'
-    +'</div><p class="set-about" style="margin:10px 2px 0">L\'authentification réelle (mots de passe, invitations) arrivera à la mise en ligne.</p></div>';
+    +'</div>'+(env==="prod"?"":'<p class="set-about" style="margin:10px 2px 0">L\'authentification réelle (mots de passe, invitations) arrivera à la mise en ligne.</p>')+'</div>';
   // profil
   const nm=document.getElementById("setName"); if(nm) nm.addEventListener("input",()=>{ u.name=nm.value; saveUsers(); renderUserChip(); const pn=b.querySelector(".set-prof-n"); if(pn) pn.textContent=nm.value; });
   const em=document.getElementById("setEmail"); if(em) em.addEventListener("input",()=>{ u.email=em.value; saveUsers(); });
@@ -6079,6 +6092,7 @@ function renderSettings(){ const b=document.getElementById("setBody"); if(!b) re
   updateDashboard();
   let start = ui.view && TITLES[ui.view] ? ui.view : "dashboard";
   if(!canView(start)) start = "dashboard";
+  if(getEnv()!=="dev" && isDevOnlyView(start)) start = "dashboard";
   showView(start);
   seedMediaStatic().then(()=>{ renderAllMedia(); updateDashboard(); });
 })();

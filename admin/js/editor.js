@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.60.0" };
+const ADMIN_BUILD = { version: "0.60.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1397,7 +1397,14 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.60.0", cur:true, date:"2026-07-23", title:"Accueil recentré sur la livraison + sections pilotables en ligne", items:[
+  { v:"v0.60.1", cur:true, date:"2026-07-23", title:"Finitions : accueil, pied de page et pages légales", items:[
+    {t:"imp", x:"Titre de la section « Comment ça marche » revu : « Vos livraisons, entre de bonnes mains »."},
+    {t:"fix", x:"Pied de page nettoyé : liens « Tableau de bord » et « Nos secteurs » retirés, séparateur superflu supprimé, lien de contact e-mail rendu fonctionnel."},
+    {t:"fix", x:"Pages « Mentions légales » et « Confidentialité » : mise en page corrigée (colonne de lecture centrée et espacements normaux, au lieu des marges géantes)."},
+    {t:"imp", x:"Politique de confidentialité complétée (newsletter, cookies, RGPD, réclamation). Les contenus légaux sont prêts : reste à compléter les mentions entre crochets et à faire valider par un juriste."},
+    {t:"imp", x:"Inscription à la newsletter : intitulé lisible dans le back-office (l'e-mail était déjà transmis)."}
+  ]},
+  { v:"v0.60.0", date:"2026-07-23", title:"Accueil recentré sur la livraison + sections pilotables en ligne", items:[
     {t:"add", x:"Nouvelle section « Comment ça marche » sur l’accueil : la livraison en trois étapes (vous commandez, on récupère et on livre, preuve et suivi), sur fond sombre, avec une animation au défilement (la ligne se remplit et les étapes s’activent une à une)."},
     {t:"imp", x:"Boutons de l’accueil réordonnés : « Commander une course » devient l’action principale, « Réserver ma consultation » passe en second (y compris le bouton flottant)."},
     {t:"imp", x:"Le masquage des sections et du bandeau depuis l’éditeur s’applique désormais réellement sur le site en ligne, et reste réactivable depuis l’éditeur."},

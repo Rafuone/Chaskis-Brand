@@ -35,7 +35,7 @@
         var email = input ? input.value.trim() : '';
         var source = form.getAttribute('data-source') || 'newsletter';
         try {
-          var payload = JSON.stringify({ email: email, newsletter: true, source: source, message: 'Inscription newsletter (' + source + ')' });
+          var payload = JSON.stringify({ email: email, newsletter: true, source: source, summary: 'Inscription newsletter (' + source + ')' });
           if (navigator.sendBeacon) { navigator.sendBeacon('/api/crm', new Blob([payload], { type: 'application/json' })); }
           else { fetch('/api/crm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload, keepalive: true }).catch(function () {}); }
         } catch (err) {}

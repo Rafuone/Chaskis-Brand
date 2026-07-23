@@ -1,6 +1,10 @@
 /* Page Confidentialité : mise en page sobre pour du texte légal long. */
-.page-legal{ padding:120px 0 80px; }
-.page-legal .legal{ max-width:760px; margin:0 auto; color:var(--ink); }
+.page-legal{ padding:120px 0 96px; }
+/* Une seule enveloppe de lecture centrée : on neutralise le double centrage (.ct 1200px + .legal 760px). */
+.page-legal > .ct{ max-width:840px; padding-inline:clamp(20px,5vw,48px); }
+.page-legal .legal{ max-width:none; margin:0; color:var(--ink); }
+/* Les <section> héritaient du grand padding vertical global (sections du landing) : on le neutralise ici. */
+.page-legal .legal section{ padding:0; }
 
 .legal-head{ margin-bottom:28px; padding-bottom:22px; border-bottom:1px solid var(--line,#E7E9E7); }
 .legal-kicker{ font-size:.78rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--teal); margin:0 0 6px; }

@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.60.1" };
+const ADMIN_BUILD = { version: "0.60.2" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1397,7 +1397,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.60.1", cur:true, date:"2026-07-23", title:"Finitions : accueil, pied de page et pages légales", items:[
+  { v:"v0.60.2", cur:true, date:"2026-07-23", title:"Préparation de l'hébergement Azure (outillage développeurs)", items:[
+    {t:"add", x:"Kit d'intégration Azure pour les développeurs : guide complet (docs/integration-azure.md) et adaptateur de stockage Azure Blob prêt à activer, pour faciliter la bascule vers l'hébergement final."},
+    {t:"imp", x:"Quelques détails techniques rendus indépendants de l'hébergeur (lien de suivi de commande, diagnostic du stockage) — sans effet visible sur le site."}
+  ]},
+  { v:"v0.60.1", date:"2026-07-23", title:"Finitions : accueil, pied de page et pages légales", items:[
     {t:"imp", x:"Titre de la section « Comment ça marche » revu : « Vos livraisons, entre de bonnes mains »."},
     {t:"fix", x:"Pied de page nettoyé : liens « Tableau de bord » et « Nos secteurs » retirés, séparateur superflu supprimé, lien de contact e-mail rendu fonctionnel."},
     {t:"fix", x:"Pages « Mentions légales » et « Confidentialité » : mise en page corrigée (colonne de lecture centrée et espacements normaux, au lieu des marges géantes)."},

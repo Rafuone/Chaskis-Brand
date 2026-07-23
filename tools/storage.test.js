@@ -16,6 +16,7 @@ function resetEnv() {
   delete process.env.STORAGE_PROVIDER;
   delete process.env.BLOB_READ_WRITE_TOKEN;
   delete process.env.BLOB_API_VERSION;
+  delete process.env.AZURE_BLOB_SAS_URL;
   storage._resetMemory();
 }
 
@@ -85,6 +86,38 @@ function mockFetch(status, bodyObjOrText) {
   mockFetch(200, { url: 'u', pathname: 'p' });
   await storage.put('c.png', 'x', {});
   ok(lastFetch.opts.headers['x-api-version'] === '9', 'BLOB_API_VERSION surcharge la version (config, pas code)');
+
+  section('azure — Blob Storage REST (fetch simulé, cible finale)');
+  resetEnv();
+  process.env.STORAGE_PROVIDER = 'azure';
+  process.env.AZURE_BLOB_SAS_URL = 'https://acct.blob.core.windows.net/media?sv=2021-08-06&sig=SECRET';
+  ok(storage.provider() === 'azure', 'STORAGE_PROVIDER=azure -> azure');
+  mockFetch(201, '');
+  var pa = await storage.put('leads/x.json', '{}', { contentType: 'application/json' });
+  ok(pa.ok && pa.url === 'https://acct.blob.core.windows.net/media/leads/x.json', 'put azure -> url publique (sans SAS)');
+  ok(lastFetch.opts.method === 'PUT' && lastFetch.url === 'https://acct.blob.core.windows.net/media/leads/x.json?sv=2021-08-06&sig=SECRET', 'PUT sur le blob avec SAS');
+  ok(lastFetch.opts.headers['x-ms-blob-type'] === 'BlockBlob', 'en-tête x-ms-blob-type: BlockBlob');
+  ok(lastFetch.opts.headers['Content-Type'] === 'application/json', 'en-tête Content-Type');
+  ok(lastFetch.opts.headers['x-ms-version'] === '2021-08-06', 'en-tête x-ms-version');
+
+  mockFetch(201, '');
+  var pas = await storage.put('leads/y.json', '{}', { contentType: 'application/json', addRandomSuffix: true });
+  ok(pas.ok && /\/leads\/y-[0-9a-f]{12}\.json$/.test(pas.url), 'addRandomSuffix insère un suffixe aléatoire');
+
+  var xml = '<EnumerationResults><Blobs><Blob><Name>leads/2026/a.json</Name><Properties><Last-Modified>Wed, 23 Jul 2026 10:00:00 GMT</Last-Modified><Content-Length>42</Content-Length></Properties></Blob></Blobs><NextMarker></NextMarker></EnumerationResults>';
+  mockFetch(200, xml);
+  var la = await storage.list('leads/', 100);
+  ok(la.ok && la.blobs.length === 1 && la.blobs[0].pathname === 'leads/2026/a.json' && la.blobs[0].size === 42, 'list azure parse le XML');
+  ok(la.blobs[0].url === 'https://acct.blob.core.windows.net/media/leads/2026/a.json', 'list azure reconstruit l\'url publique');
+  ok(/comp=list/.test(lastFetch.url) && /prefix=leads/.test(lastFetch.url) && /sig=SECRET/.test(lastFetch.url), 'GET list avec comp=list + prefix + SAS');
+
+  mockFetch(202, '');
+  var da = await storage.del('https://acct.blob.core.windows.net/media/leads/x.json');
+  ok(da.ok && lastFetch.opts.method === 'DELETE' && lastFetch.url === 'https://acct.blob.core.windows.net/media/leads/x.json?sv=2021-08-06&sig=SECRET', 'del azure -> DELETE avec SAS');
+
+  mockFetch(200, '');
+  await storage.readUrl('https://acct.blob.core.windows.net/media/leads/x.json');
+  ok(lastFetch.url === 'https://acct.blob.core.windows.net/media/leads/x.json?sv=2021-08-06&sig=SECRET', 'readUrl azure ajoute le SAS pour la lecture');
 
   section('off — désactivé');
   resetEnv(); process.env.STORAGE_PROVIDER = 'off';

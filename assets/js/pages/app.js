@@ -63,7 +63,10 @@ function etaFromStatus(order, status) {
 // State lives in the URL: ?code=CH-XXX opens detail; otherwise list.
 function currentCode() {
   const u = new URL(location.href);
-  const c = (u.searchParams.get('code') || '').trim().toUpperCase();
+  let c = (u.searchParams.get('code') || '').trim().toUpperCase();
+  // Repli host-neutre : deep link « propre » /suivi/CODE (code dans le chemin, pas la query).
+  // Marche sur tout hôte (Vercel réécrit vers ?code=, Azure SWA garde /suivi/*) sans dépendre d'une réécriture.
+  if (!c) { const m = u.pathname.match(/\/suivi\/([^/?#]+)/i); if (m) { try { c = decodeURIComponent(m[1]).trim().toUpperCase(); } catch (e) { c = m[1].trim().toUpperCase(); } } }
   return CODE_RE.test(c) ? c : null; // code hors format ignoré (ni stocké ni rendu)
 }
 function goDetail(code) {

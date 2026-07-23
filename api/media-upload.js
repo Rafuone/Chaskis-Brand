@@ -56,7 +56,7 @@ async function diagnostic(res) {
     var p = await storage.put(key, payload, { contentType: 'text/plain; charset=utf-8', addRandomSuffix: true });
     report.steps.put = { ok: p.ok, status: p.status, error: p.error };
     if (p.ok) {
-      report.steps.put.isPublicUrl = /\.public\.blob\.vercel-storage\.com/.test(p.url || '');
+      report.steps.put.isPublicUrl = /^https:\/\//.test(p.url || ''); // host-neutre (Vercel Blob ou Azure Blob)
       var rr = await storage.readUrl(p.url);
       report.steps.read = { ok: !!(rr.ok && rr.text === payload), status: rr.status };
       var d = await storage.del(p.url);

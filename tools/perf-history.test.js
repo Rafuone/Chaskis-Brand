@@ -1,4 +1,4 @@
-// tools/perf-server.test.js — endpoint SERVEUR de la performance (api/perf-history.js, fusionné) :
+// tools/perf-history.test.js — endpoint SERVEUR de la performance (api/perf-history.js, fusionné) :
 // lecture de l'historique (GET, capacité perf.view) + mesure PLANIFIÉE (GET/POST ?run=1, auth
 // CRON_SECRET/PUBLISH_SECRET), et la couture de stockage api/_lib/perf-store.js (mémoire + GitHub
 // mocké). Sans réseau (fetch mocké).

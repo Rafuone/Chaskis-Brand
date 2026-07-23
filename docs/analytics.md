@@ -58,7 +58,7 @@ renvoie l'agrégat (`provider:blob`, pages vues / visiteurs / top pages / proven
 | Variable | Rôle |
 |----------|------|
 | `BLOB_READ_WRITE_TOKEN` | stockage des événements (même store que les médias). Sans lui → repli `memory` (éphémère), le panneau admin reste masqué. |
-| `STORAGE_PROVIDER` | `blob` (défaut si token) \| `memory` \| `off`. |
+| `STORAGE_PROVIDER` | `blob` (défaut si token) \| `azure` (Azure Blob, livré) \| `memory` \| `off`. |
 | `ANALYTICS_SALT` | sel du hachage des visiteurs. Optionnel (repli : `PING_TOKEN` puis constante). Mettre une valeur dédiée en prod. |
 
 ## Tests

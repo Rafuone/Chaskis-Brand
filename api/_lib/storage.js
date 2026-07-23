@@ -1,8 +1,8 @@
 // api/_lib/storage.js — couture de stockage d'objets (médias + événements analytics).
-// CommonJS, AUCUNE dépendance npm : on parle DIRECTEMENT à l'API REST de Vercel Blob (le SDK
-// @vercel/blob n'est qu'un emballage). C'est la condition pour rester host-agnostique : sur
-// Azure, on remplacera l'adaptateur 'blob' par 'azure' (Blob Storage / Table) sans réécrire les
-// appelants — même interface put/readUrl/list/del. Blob = banc d'essai TEMPORAIRE, pas le final.
+// CommonJS, AUCUNE dépendance npm : on parle DIRECTEMENT à l'API REST (le SDK @vercel/blob n'est
+// qu'un emballage). C'est la condition pour rester host-agnostique : l'adaptateur 'azure' (Azure
+// Blob Storage, cible finale) EST implémenté ci-dessous à côté de 'blob', même interface
+// put/readUrl/list/del. Blob = banc d'essai ; Azure = cible (STORAGE_PROVIDER=azure). Voir docs/integration-azure.md.
 //
 // Fournisseur par ENV STORAGE_PROVIDER : 'blob' | 'memory' | 'off'.
 //   - défaut = 'blob' si BLOB_READ_WRITE_TOKEN présent, sinon 'memory' (local/tests).

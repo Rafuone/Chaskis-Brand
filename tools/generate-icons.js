@@ -1,3 +1,8 @@
+// tools/generate-icons.js — générateur PONCTUEL des icônes PWA (assets/icons/icon-192.png et
+// icon-512.png), en PNG pur Node (crc32 + zlib, AUCUNE dépendance). Les icônes générées SONT
+// committées : ce script ne tourne PAS en production ni dans les tests. À relancer uniquement si
+// l'icône de marque change :  node tools/generate-icons.js
+'use strict';
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');

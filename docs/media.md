@@ -18,11 +18,13 @@ visible sur le site après publication.
      Vercel Blob** (`https://blob.vercel-storage.com`, en-tête `Authorization: Bearer <token>` +
      `x-content-type`). **AUCUN SDK `@vercel/blob`** (ce serait une dépendance npm + un couplage
      Vercel, interdits). Version d'API surchargeable par `BLOB_API_VERSION` (défaut `7`).
+   - `azure` : **Azure Blob Storage** (cible finale). **Livré et testé** — `STORAGE_PROVIDER=azure`
+     + `AZURE_BLOB_SAS_URL` (URL du conteneur + jeton SAS). Contrat REST `x-ms-blob-type` / `comp=list`.
    - `memory` : en mémoire (tests + local sans token).
    - `off` : désactivé.
    Tout est **fail-soft** : jamais d'exception qui remonte, retour `{ ok:false, error }`.
-   **Migration Azure** = écrire un adaptateur `azure` (Azure Blob Storage) derrière la même
-   interface + changer `STORAGE_PROVIDER`. Aucun appelant à réécrire.
+   **Migration Azure** = poser `STORAGE_PROVIDER=azure` + `AZURE_BLOB_SAS_URL` ; aucun appelant à
+   réécrire (l'adaptateur est déjà en place). Détails : `docs/integration-azure.md`.
 
 2. **Upload** — `api/media-upload.js` :
    - `POST` (capacité `media.import`) : reçoit `{ filename, contentType, dataBase64 }`, valide le
@@ -59,7 +61,8 @@ visible sur le site après publication.
 | Variable | Rôle |
 |----------|------|
 | `BLOB_READ_WRITE_TOKEN` | token du store Vercel Blob (**public**). À copier depuis l'onglet `.env.local` du store (Vercel ne l'ajoute pas seul : auth OIDC par défaut). Sert AUSSI à l'analytics. |
-| `STORAGE_PROVIDER` | `blob` (défaut si token) \| `memory` \| `off`. |
+| `STORAGE_PROVIDER` | `blob` (défaut si token) \| `azure` (Azure Blob, livré) \| `memory` \| `off`. |
+| `AZURE_BLOB_SAS_URL` | (si `azure`) URL du conteneur Azure Blob + jeton SAS. Voir `docs/integration-azure.md`. |
 | `BLOB_API_VERSION` | version d'API REST Blob (défaut `7`). |
 
 ## Tests

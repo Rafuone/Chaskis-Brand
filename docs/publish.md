@@ -13,7 +13,7 @@ redéploie).
 1. **Contrat** — `api/_lib/content-schema.js` : `validateContent()` (allowlist stricte ;
    rejet de toute balise HTML, `javascript:`, `data:text/html`, dataURL > 2 Ko, clés
    `__proto__`/`prototype`/`constructor`, `NaN`/`Infinity` ; taille max ~300 Ko ; sections
-   allowlistées : `pricing`, `testimonials`, `logos`, `pages`, `chatbot`). Doc : `docs/schema/site-content.md`.
+   allowlistées : `pricing`, `testimonials`, `logos`, `pages`, `chatbot`, `sections`). Doc : `docs/schema/site-content.md`.
 2. **Lecteur public** — `assets/js/content.js` : au chargement, `fetch('/site-content.json')`
    (no-store), fusionne les i18n dans `window.T` + `window.CHASKIS_PRICING`, puis rappelle
    `applyI18n`. **Strictement fail-silent** : fichier absent/illisible → la page garde ses

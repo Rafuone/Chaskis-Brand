@@ -526,6 +526,5 @@ body.page-commander .nav{background:rgba(255,255,255,.92);backdrop-filter:blur(1
   #devAutofillBtn{top:10px;right:10px;font-size:10px;padding:5px 9px}
 }
 
-/* ===== Page transition curtain ===== */
-#pageCurtain{position:fixed;inset:0;z-index:9999;background:#FAFAF9;transform:translateX(0);transition:transform .62s cubic-bezier(.4,0,.2,1);pointer-events:all}
-#pageCurtain.is-lifted{transform:translateX(-110%);pointer-events:none}
+/* Rideau de transition : mutualisé dans chrome.css ; ici override du fond. */
+#pageCurtain{background:#FAFAF9}

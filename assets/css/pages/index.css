@@ -1,7 +1,5 @@
 /* Chaskis — pages/index.css : styles specifiques a la page index (ex-inline) */
-/* ===== PAGE TRANSITION CURTAIN ===== */
-#pageCurtain{position:fixed;inset:0;z-index:9999;background:#FAFAF7;transform:translateX(0);transition:transform .62s cubic-bezier(.4,0,.2,1);pointer-events:all}
-#pageCurtain.is-lifted{transform:translateX(-110%);pointer-events:none}
+/* Rideau de transition : mutualisé dans chrome.css (fond par défaut #FAFAF7). */
 
 /* ===== HERO v7 ===== */
 .hero{display:flex;align-items:flex-start;padding:156px 0 140px;position:relative;overflow:hidden;background:var(--bg)}

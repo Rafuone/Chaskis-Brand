@@ -70,6 +70,25 @@ n'accepte que `title, tags, text` (`CHATBOT_SOURCE_KEYS`). **Le texte des source
 (present dans `site-content.json`) : n'y mettre aucune donnee confidentielle. Meme controle
 anti-XSS que le reste du contenu.
 
+### Cle `sections` (visibilite des sections / bandeau, chantier structure, FAIT)
+
+Publiee depuis l'editeur (edits de STRUCTURE) et appliquee cote public par `assets/js/content.js` :
+masque les sections listees et le bandeau promo. Forme par page :
+
+```jsonc
+"sections": {
+  "accueil": {
+    "hidden": ["diff", "sim", "offres"],   // identifiants de section (cf. SECTION_DEFS de admin/js/editor.js)
+    "promoHidden": true                      // masque le bandeau promotionnel
+  }
+}
+```
+
+Cles autorisees par page : `hidden` (tableau d'identifiants courts, motif `^[a-z0-9_-]{1,40}$`) et
+`promoHidden` (booleen). Un masquage par defaut existe AUSSI cote source (classe `.ck-off` + retrait
+de `has-promo`), donc les sections restent cachees meme sans JS ; l'etat publie fait autorite des que
+`content.js` s'execute. Details : `docs/integration-azure.md` (host-neutre) et la memoire projet.
+
 ## Regles imposees par le validateur (`validateContent`)
 
 | Regle | Comportement |
@@ -79,6 +98,7 @@ anti-XSS que le reste du contenu.
 | Page hors `accueil/mobilite/recrutement/commander/suivi/dashboard` | rejet |
 | Langue hors `fr/en/de/it` | rejet |
 | Cle `pricing` inconnue | rejet |
+| Cle `sections` : page inconnue, identifiant de section invalide, ou sous-cle hors `{hidden, promoHidden}` | rejet |
 | Valeur contenant une **balise HTML** (`<script`, `<img`, `<svg`, `<iframe`...) | rejet (XSS stocke) |
 | Valeur contenant `javascript:`, `vbscript:` ou `data:text/html` | rejet (XSS / navigation) |
 | `data:` URI > 2 Ko | rejet (les medias passent par Vercel Blob, chantier `media`) |

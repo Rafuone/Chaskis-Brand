@@ -31,7 +31,7 @@ aperçu rapide du site, insuffisant pour l'admin (Publier/Perf/Calendly renverro
 node tools/test.js        # lance toutes les suites tools/*.test.js (0 dépendance, 0 réseau)
 ```
 
-**15 suites** dans `tools/*.test.js` : `perf`, `perf-server`, `chat`, `calendly`, `crm`, `publish`,
+**15 suites** dans `tools/*.test.js` : `perf`, `perf-history`, `chat`, `calendly`, `crm`, `publish`,
 `schema` (validateur de contenu), `session`, `rbac`, `rbac-endpoints`, `history`, `restore`,
 `storage`, `media`, `collect` (lancées par `tools/test.js`). Aucune ne touche le réseau
 (fetch/GitHub/PageSpeed/Blob sont mockés) ni n'exige de clé.
@@ -116,7 +116,7 @@ silence** (repli sur les données de démo / `501`), le site ne casse jamais.
 | `AVAILABILITY_PROVIDER` | calendly (Phase 2) | source de disponibilité agrégée (`none` par défaut). |
 | `GOOGLE_CALENDAR_TOKEN` / `GOOGLE_SERVICE_ACCOUNT_JSON` | calendly (Phase 2) | agenda Google agrégé (non activé). |
 | `BLOB_READ_WRITE_TOKEN` | media + analytics | token du stockage d'objets (Vercel Blob, store **public**). Copié depuis l'onglet `.env.local` du store. Sans lui, stockage en repli `memory`. Cible Azure : Blob/Table. Voir [docs/media.md](docs/media.md) / [docs/analytics.md](docs/analytics.md). |
-| `STORAGE_PROVIDER` | media + analytics | `blob` (défaut si token présent) \| `memory` (tests/local) \| `off`. |
+| `STORAGE_PROVIDER` | media + analytics | `blob` (défaut si token présent) \| `azure` (Azure Blob, cible finale, livré) \| `memory` (tests/local) \| `off`. |
 | `BLOB_API_VERSION` | media + analytics | version d'API REST Blob (défaut `7`), surchargeable si Vercel la fait évoluer. |
 | `ANALYTICS_SALT` | analytics | sel du hachage des visiteurs uniques (anonyme, rotatif par jour). Optionnel (repli `PING_TOKEN` puis constante). |
 | `PING_TOKEN` | health | jeton de sonde de fondation (optionnel), lu par `/api/health?probe=env` (booléen seul). |
@@ -128,6 +128,7 @@ silence** (repli sur les données de démo / `501`), le site ne casse jamais.
 ## Documentation détaillée
 
 `docs/` — un fichier par chantier : `deploiement-host`, `migration-vrai-environnement`,
-`publish`, `schema/site-content` (contrat de contenu), `auth-roles` (rôles & capacités serveur),
+`integration-azure` (runbook d'intégration Azure pour les devs), `publish`,
+`schema/site-content` (contrat de contenu), `auth-roles` (rôles & capacités serveur),
 `chatbot`, `rdv-calendly`, `perf`, `media` (stockage Blob), `analytics` (collecteur maison),
 `workflow-commercial` (cohérence Clients/Copilote/RDV — direction en cours), `accessibilite`.

@@ -81,6 +81,4 @@
 .pod-close{width:100%;padding:11px;border-radius:var(--r);background:var(--bg);color:var(--ink-mid);font-weight:700;font-size:.82rem;cursor:pointer;border:none;font-family:inherit;transition:all .3s}
 .pod-close:hover{background:var(--sand)}
 
-/* ===== Page transition curtain ===== */
-#pageCurtain{position:fixed;inset:0;z-index:9999;background:#FAFAF7;transform:translateX(0);transition:transform .62s cubic-bezier(.4,0,.2,1);pointer-events:all}
-#pageCurtain.is-lifted{transform:translateX(-110%);pointer-events:none}
+/* Rideau de transition : mutualisé dans chrome.css (fond par défaut #FAFAF7). */

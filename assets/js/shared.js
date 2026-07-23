@@ -215,6 +215,13 @@ const CHATBOT_ENABLED = false;
 (function() {
   if (!CHATBOT_ENABLED) return;
   if (document.getElementById('chaskisChatbot')) return;
+  // CSS + JS du chatbot injectés ENSEMBLE et uniquement quand activé (v2) : les pages ne portent
+  // plus de <link chatbot.css> mort tant que le chatbot est off.
+  if (!document.querySelector('link[data-chatbot-css]')) {
+    const l = document.createElement('link');
+    l.rel = 'stylesheet'; l.href = 'assets/css/chatbot.css'; l.setAttribute('data-chatbot-css', '1');
+    document.head.appendChild(l);
+  }
   const s = document.createElement('script');
   s.src = 'assets/js/chatbot.js?v=20260720';
   s.async = true;

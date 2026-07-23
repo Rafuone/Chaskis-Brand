@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.60.2" };
+const ADMIN_BUILD = { version: "0.60.3" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1397,7 +1397,11 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.60.2", cur:true, date:"2026-07-23", title:"Préparation de l'hébergement Azure (outillage développeurs)", items:[
+  { v:"v0.60.3", cur:true, date:"2026-07-23", title:"Nettoyage et cohérence du projet", items:[
+    {t:"fix", x:"Rideau de transition entre pages désormais correct sur les pages légales (style mutualisé au lieu d'être recopié dans chaque page)."},
+    {t:"imp", x:"Rangement : documentation mise à jour, fichiers CSS/tests renommés pour plus de clarté, balise de style morte du chatbot retirée des pages, versions d'assets uniformisées. Sans effet visible ailleurs."}
+  ]},
+  { v:"v0.60.2", date:"2026-07-23", title:"Préparation de l'hébergement Azure (outillage développeurs)", items:[
     {t:"add", x:"Kit d'intégration Azure pour les développeurs : guide complet (docs/integration-azure.md) et adaptateur de stockage Azure Blob prêt à activer, pour faciliter la bascule vers l'hébergement final."},
     {t:"imp", x:"Quelques détails techniques rendus indépendants de l'hébergeur (lien de suivi de commande, diagnostic du stockage) — sans effet visible sur le site."}
   ]},

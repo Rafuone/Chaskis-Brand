@@ -46,7 +46,7 @@ hôte au timeout plus large :
 
 ```
 node tools/perf.test.js                                   # endpoint + measure(), sans réseau
-node tools/perf-server.test.js                            # mesure planifiée + store + historique, sans réseau
+node tools/perf-history.test.js                            # mesure planifiée + store + historique, sans réseau
 PUBLISH_SECRET=x node tools/api-server.js 3199
 curl -H 'Authorization: Bearer x' 'localhost:3199/api/perf?url=https://chaskis.ch'   # 501 tant que PAGESPEED_KEY absent
 curl -H 'Authorization: Bearer x' 'localhost:3199/api/perf-history?run=1'                     # mesure planifiée (manuel)

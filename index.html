@@ -48,11 +48,11 @@
 <meta name="theme-color" content="#4BB3A4">
 <link rel="icon" href="assets/icons/icon-192.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
-<link rel="stylesheet" href="assets/css/base.css?v=20260722d">
-<link rel="stylesheet" href="assets/css/chrome.css?v=20260722d">
-<link rel="stylesheet" href="assets/css/layout.css?v=20260722d">
-<link rel="stylesheet" href="assets/css/components.css?v=20260722d">
-<link rel="stylesheet" href="assets/css/chatbot.css?v=20260722d">
+<link rel="stylesheet" href="assets/css/base.css?v=20260723a">
+<link rel="stylesheet" href="assets/css/chrome.css?v=20260723a">
+<link rel="stylesheet" href="assets/css/layout.css?v=20260723a">
+<link rel="stylesheet" href="assets/css/components.css?v=20260723a">
+<link rel="stylesheet" href="assets/css/chatbot.css?v=20260723a">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 
 <!-- ===== Structured Data ===== -->
@@ -152,9 +152,9 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="assets/css/pages/index.css?v=20260722d">
+<link rel="stylesheet" href="assets/css/pages/index.css?v=20260723a">
 </head>
-<body class="page-home has-promo">
+<body class="page-home">
 <a class="sr-only sr-only-focusable" href="#content">Aller au contenu</a>
 <div id="pageCurtain" aria-hidden="true"></div>
 <script>
@@ -198,8 +198,8 @@
       </h1>
       <p class="hero-sub" data-i18n="hero.sub">Livraison professionnelle en Suisse romande. Coursiers salariés, tarifs fixes, traçabilité complète : le partenaire logistique des entreprises suisses.</p>
       <div class="hero-actions">
-        <a href="#booking" class="btn btn-p pulse"><span data-i18n="hero.cta1">Réserver ma consultation offerte</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-        <a href="commander.html" class="btn btn-o"><span data-i18n="hero.cta2">Commander une course</span></a>
+        <a href="commander.html" class="btn btn-p pulse"><span data-i18n="hero.cta2">Commander une course</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#booking" class="btn btn-o"><span data-i18n="hero.cta1">Réserver ma consultation offerte</span></a>
       </div>
     </div>
     <div class="hero-vis" id="heroVis">
@@ -253,7 +253,7 @@
 </div>
 
 <!-- ===== DIFFÉRENCIATEURS ===== -->
-<section class="diff-sec">
+<section class="diff-sec ck-off">
   <div class="ct">
     <div class="diff-head rv">
       <span class="sl" data-i18n="diff.label" style="color:var(--teal-light)">Pourquoi Chaskis</span>
@@ -304,6 +304,36 @@
         </ul>
       </div>
 
+    </div>
+  </div>
+</section>
+
+<!-- ===== COMMENT ÇA MARCHE (livraison en 3 étapes) ===== -->
+<section class="hiw" data-nav-dark>
+  <div class="ct">
+    <div class="hiw-head">
+      <span class="hiw-label" data-i18n="hiw.lbl">Comment ça marche</span>
+      <h2 data-i18n-html="hiw.h2">Chaque jour, <span class="ac">on livre.</span></h2>
+      <p class="hiw-sub" data-i18n="hiw.sub">De la commande à la preuve de livraison, tout est en ligne et traçable.</p>
+      <p class="hiw-desc" data-i18n="hiw.desc">Nos coursiers salariés s'occupent du reste, vous suivez chaque étape en temps réel.</p>
+    </div>
+    <div class="hiw-steps">
+      <div class="hiw-track" aria-hidden="true"><div class="hiw-track-fill"></div></div>
+      <div class="hiw-step">
+        <div class="hiw-num">1</div>
+        <h4 data-i18n="hiw.s1.h">Vous commandez</h4>
+        <p data-i18n="hiw.s1.p">Créez votre course en ligne en quelques clics, ou importez vos envois du jour par fichier. Adresses, créneau, options : tout est cadré.</p>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">2</div>
+        <h4 data-i18n="hiw.s2.h">On récupère et on livre</h4>
+        <p data-i18n="hiw.s2.p">Un coursier salarié Chaskis prend en charge votre colis et le livre dans le créneau choisi, partout en Suisse romande.</p>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">3</div>
+        <h4 data-i18n="hiw.s3.h">Preuve et suivi</h4>
+        <p data-i18n="hiw.s3.p">Suivi en temps réel, notification au destinataire et preuve de livraison photo. Facturation mensuelle consolidée.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -372,7 +402,7 @@
 </section>
 
 <!-- ===== SIMULATEUR D'ÉCONOMIES (dark) ===== -->
-<section class="sim-dark" data-nav-dark>
+<section class="sim-dark ck-off" data-nav-dark>
   <div class="ct">
     <div class="sim-dark-grid">
       <div class="sim-dark-l rv">
@@ -441,7 +471,7 @@
 </section>
 
 <!-- ===== OFFRES ===== -->
-<section class="offres" id="offres">
+<section class="offres ck-off" id="offres">
   <div class="ct">
     <div class="offres-header">
       <div class="sh rv"><span class="sl" data-i18n="offres.label">Nos offres</span><h2 class="st" data-i18n-html="offres.h2">Choisissez votre <span class="ac">formule</span></h2><p class="sd" data-i18n="offres.sd">Sans engagement. Flex s'adapte à vos volumes qui fluctuent, Dédié prend le relais quand ils se stabilisent.</p></div>
@@ -619,7 +649,7 @@
 <section class="faq" id="faq">
   <div class="ct">
     <!-- Vraie <img> (pas un fond CSS) : remplaçable via la médiathèque de l'éditeur et publiable. -->
-    <div class="faq-banner"><img class="faq-banner-img" src="assets/img/geneve-rade.webp?v=20260722d" alt="Vue aérienne de la rade de Genève, du Jet d'eau et du lac Léman" loading="lazy" decoding="async"></div>
+    <div class="faq-banner"><img class="faq-banner-img" src="assets/img/geneve-rade.webp?v=20260723a" alt="Vue aérienne de la rade de Genève, du Jet d'eau et du lac Léman" loading="lazy" decoding="async"></div>
     <div class="faq-layout">
       <div class="rl">
         <span class="sl" data-i18n="faq.sl">FAQ</span>
@@ -675,17 +705,17 @@
 </main>
 <footer class="footer" data-nav-dark data-shared></footer>
 
-<a href="#booking" class="btn btn-p pulse nav-cta-float"><span data-i18n="float.cta">Réserver ma consultation</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+<a href="commander.html" class="btn btn-p pulse nav-cta-float"><span data-i18n="hero.cta2">Commander une course</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-<script src="assets/js/newsletter.js?v=20260722d"></script>
-<script src="assets/js/utils.js?v=20260722d"></script>
-<script src="assets/js/site-config.js?v=20260722d"></script>
-<script src="assets/js/shared.js?v=20260722d"></script>
-<script src="assets/js/content.js?v=20260722d"></script>
-<script src="assets/js/analytics.js?v=20260722d"></script>
-<script src="assets/js/auth.js?v=20260722d"></script>
+<script src="assets/js/newsletter.js?v=20260723a"></script>
+<script src="assets/js/utils.js?v=20260723a"></script>
+<script src="assets/js/site-config.js?v=20260723a"></script>
+<script src="assets/js/shared.js?v=20260723a"></script>
+<script src="assets/js/content.js?v=20260723a"></script>
+<script src="assets/js/analytics.js?v=20260723a"></script>
+<script src="assets/js/auth.js?v=20260723a"></script>
 <!-- Calendrier maison (charte Chaskis) conservé comme visuel, embed Calendly retiré (son UI générique remplaçait le design). Réservation réelle : à brancher selon décision (demande -> admin, ou API Calendly). -->
-<script src="assets/js/pages/index.js?v=20260722d"></script>
+<script src="assets/js/pages/index.js?v=20260723a"></script>
 </body>
 </html>

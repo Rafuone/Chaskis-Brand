@@ -19,7 +19,7 @@ const SCHEMA_VERSION = 1;
 
 // Allowlist STRICTE des cles racine. Toute autre cle => rejet (barriere anti-fuite :
 // aucune donnee personnelle de RDV/lead ne doit se retrouver dans le JSON public).
-const TOP_LEVEL_KEYS = ['schemaVersion', 'version', 'updatedAt', 'updatedBy', 'pricing', 'testimonials', 'logos', 'pages', 'chatbot'];
+const TOP_LEVEL_KEYS = ['schemaVersion', 'version', 'updatedAt', 'updatedBy', 'pricing', 'testimonials', 'logos', 'pages', 'chatbot', 'sections'];
 
 // Pages editables : miroir EXACT de EDIT_PAGES dans admin/js/editor.js.
 const PAGE_KEYS = ['accueil', 'mobilite', 'recrutement', 'commander', 'suivi', 'dashboard'];
@@ -38,6 +38,14 @@ const PRICING_KEYS = ['days', 'tiers', 'zones', 'flexMonthly', 'flexIncluded', '
 const CHATBOT_KEYS = ['forbidden', 'allowed', 'tone', 'length', 'fallback', 'botName', 'instructions', 'address', 'emojiLevel', 'defaultLang', 'uncertain', 'sources'];
 // Cles autorisees pour un element de chatbot.sources (base de connaissances publiee).
 const CHATBOT_SOURCE_KEYS = ['title', 'tags', 'text'];
+
+// `sections` = visibilite des sections/bandeau publiee depuis l'editeur (edits de STRUCTURE).
+// Forme : { <page> : { hidden:[<id de section>], promoHidden:<bool> } }. content.js l'applique
+// cote public (masque les sections listees + le bandeau promo). Miroir des SECTION_DEFS de
+// admin/js/editor.js. Aucune PII : uniquement des identifiants de section connus + un booleen.
+const SECTION_PAGE_SUBKEYS = ['hidden', 'promoHidden'];
+const RE_SECTION_ID = /^[a-z0-9_-]{1,40}$/; // identifiant court et sur (jamais un selecteur libre).
+const MAX_HIDDEN_IDS = 40;
 
 // Bornes de securite.
 const MAX_TOTAL_BYTES = 300 * 1024; // 300 Ko : du contenu texte reste petit ; au-dela = anomalie.
@@ -156,6 +164,29 @@ function validateContent(input) {
       } else if (typeof cv !== 'string') {
         errors.push('chatbot.' + k + ' : chaine attendue');
       }
+    }
+  }
+
+  // 5c. sections : visibilite par page. { <page> : { hidden:[ids], promoHidden:bool } }.
+  if ('sections' in input) {
+    if (!isPlainObject(input.sections)) errors.push('sections : objet attendu');
+    else for (const pk of Object.keys(input.sections)) {
+      if (!PAGE_KEYS.includes(pk)) { errors.push('sections : page inconnue : ' + pk); continue; }
+      const sc = input.sections[pk];
+      if (!isPlainObject(sc)) { errors.push('sections.' + pk + ' : objet attendu'); continue; }
+      for (const k of Object.keys(sc)) {
+        if (!SECTION_PAGE_SUBKEYS.includes(k)) errors.push('sections.' + pk + '.' + k + ' : cle inconnue (hidden / promoHidden)');
+      }
+      if ('hidden' in sc) {
+        if (!Array.isArray(sc.hidden)) errors.push('sections.' + pk + '.hidden : tableau attendu');
+        else {
+          if (sc.hidden.length > MAX_HIDDEN_IDS) errors.push('sections.' + pk + '.hidden : trop d\'entrees (' + sc.hidden.length + ' > ' + MAX_HIDDEN_IDS + ')');
+          sc.hidden.forEach((id, i) => {
+            if (typeof id !== 'string' || !RE_SECTION_ID.test(id)) errors.push('sections.' + pk + '.hidden[' + i + '] : identifiant de section invalide');
+          });
+        }
+      }
+      if ('promoHidden' in sc && typeof sc.promoHidden !== 'boolean') errors.push('sections.' + pk + '.promoHidden : booleen attendu');
     }
   }
 

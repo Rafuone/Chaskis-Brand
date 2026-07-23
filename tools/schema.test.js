@@ -53,6 +53,16 @@ var rejects = function (o) { return validateContent(o).ok === false; };
   ok(rejects({ schemaVersion: 1, pages: { accueil: { images: { 'a.png': 123 } } } }), 'valeur non-chaîne rejetée');
   ok(rejects({ schemaVersion: 1, pages: { accueil: { autre: {} } } }), 'clé de page hors {i18n, images} rejetée');
 
+  section('Sections (visibilité publiée)');
+  ok(accepts({ schemaVersion: 1, sections: { accueil: { hidden: ['diff', 'sim', 'offres'], promoHidden: true } } }), 'hidden + promoHidden acceptés');
+  ok(accepts({ schemaVersion: 1, sections: { accueil: { hidden: [] } } }), 'hidden vide accepté');
+  ok(rejects({ schemaVersion: 1, sections: 'x' }), 'sections non-objet rejeté');
+  ok(rejects({ schemaVersion: 1, sections: { pageFantome: { hidden: [] } } }), 'page inconnue rejetée');
+  ok(rejects({ schemaVersion: 1, sections: { accueil: { autre: 1 } } }), 'sous-clé inconnue rejetée');
+  ok(rejects({ schemaVersion: 1, sections: { accueil: { hidden: 'pas-un-tableau' } } }), 'hidden non-tableau rejeté');
+  ok(rejects({ schemaVersion: 1, sections: { accueil: { hidden: ['.diff-sec'] } } }), 'sélecteur CSS libre rejeté (id seulement)');
+  ok(rejects({ schemaVersion: 1, sections: { accueil: { promoHidden: 'oui' } } }), 'promoHidden non-booléen rejeté');
+
   console.log('\n' + (fail === 0 ? '✅' : '❌') + ' ' + pass + ' réussis, ' + fail + ' échoués');
   process.exit(fail === 0 ? 0 : 1);
 })();

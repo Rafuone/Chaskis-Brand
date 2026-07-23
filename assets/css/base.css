@@ -8,6 +8,8 @@
 html{scroll-behavior:smooth;font-size:16px}
 body{font-family:'Urbanist',system-ui,sans-serif;color:var(--ink);background:var(--bg);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
 img,svg{display:block;max-width:100%}a{text-decoration:none;color:inherit}button{font-family:inherit;cursor:pointer;border:none;background:none}ul,ol{list-style:none}
+/* Section/bloc masqué : défaut robuste au niveau source (aucune dépendance JS, pas de flash). L'éditeur/content.js peut réafficher en retirant cette classe. */
+.ck-off{display:none!important}
 ::selection{background:var(--teal);color:#fff}
 
 /* ===== TOKENS ===== */

@@ -708,3 +708,24 @@ span.ast{color:#e53e3e!important;font-weight:700}
 .news-ok{margin:14px auto 0;color:var(--teal-deep);font-weight:700}
 .news-note{margin:16px auto 0;max-width:440px;font-size:.72rem;color:var(--ink-muted);line-height:1.5}
 @media(max-width:520px){.news-form .btn{width:100%}}
+
+/* ===== COMMENT ÇA MARCHE : stepper livraison (3 étapes), section sombre ===== */
+.hiw{padding:clamp(84px,10vw,124px) 0;background:var(--ink);color:#fff}
+.hiw-head{max-width:680px;margin:0 auto;text-align:center}
+.hiw-label{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-light);margin-bottom:20px}
+.hiw-head h2{font-size:clamp(2rem,4.4vw,3.1rem);font-weight:900;letter-spacing:-.02em;color:#fff;line-height:1.05}
+.hiw-head h2 .ac{color:var(--teal-light);font-size:1.05em}
+.hiw-sub{margin-top:22px;font-size:clamp(1.05rem,1.7vw,1.3rem);font-weight:700;color:#fff;line-height:1.4}
+.hiw-desc{margin-top:12px;font-size:.98rem;color:rgba(255,255,255,.66);line-height:1.6}
+.hiw-steps{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin:64px auto 0;max-width:960px}
+.hiw-track{position:absolute;top:37px;left:16.66%;right:16.66%;height:2px;background:rgba(255,255,255,.14);border-radius:2px;z-index:0;overflow:hidden}
+.hiw-track-fill{position:absolute;inset:0;background:linear-gradient(to right,var(--teal),var(--teal-light));border-radius:2px;transform-origin:left center;transform:scaleX(0);transition:transform 1.2s ease}
+.hiw-steps.is-active .hiw-track-fill{transform:scaleX(1)}
+.hiw-step{position:relative;z-index:1;text-align:center;padding:0 20px;opacity:.4;transition:opacity .55s ease}
+.hiw-step.is-active{opacity:1}
+.hiw-num{width:74px;height:74px;margin:0 auto 24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;font-weight:900;color:var(--teal-light);background:rgba(75,179,164,.12);border:1px solid rgba(109,196,184,.45);transition:background .45s cubic-bezier(.22,.61,.36,1),color .45s,border-color .45s,box-shadow .45s}
+.hiw-step.is-active .hiw-num{background:var(--teal);color:var(--ink);border-color:transparent;box-shadow:0 12px 34px rgba(75,179,164,.4)}
+.hiw-step h4{font-size:1.12rem;font-weight:800;letter-spacing:-.02em;color:#fff;margin-bottom:10px}
+.hiw-step p{font-size:.9rem;color:rgba(255,255,255,.6);line-height:1.6}
+@media(max-width:860px){.hiw-steps{grid-template-columns:1fr;gap:36px;max-width:400px}.hiw-track{display:none}}
+@media(prefers-reduced-motion:reduce){.hiw-step{opacity:1;transition:none}.hiw-track-fill{transform:scaleX(1);transition:none}.hiw-num{transition:none}}

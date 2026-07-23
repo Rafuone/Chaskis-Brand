@@ -391,6 +391,26 @@ const extraReveal = new IntersectionObserver(entries => {
 }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.vpc, .pipe-step').forEach(el => extraReveal.observe(el));
 
+// ===== HOW-IT-WORKS (stepper) : révélation progressive 1→2→3 + remplissage de la ligne =====
+// Reprend l'animation du stepper de la page Mobilité, sans dépendance (GSAP absent ici) : à
+// l'entrée en vue, la ligne se remplit et les étapes s'activent en cascade.
+(function() {
+  const wrap = document.querySelector('.hiw-steps');
+  if (!wrap) return;
+  const steps = Array.from(wrap.querySelectorAll('.hiw-step'));
+  if (!steps.length) return;
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const activateAll = () => { wrap.classList.add('is-active'); steps.forEach(s => s.classList.add('is-active')); };
+  if (reduce || !('IntersectionObserver' in window)) { activateAll(); return; }
+  const io = new IntersectionObserver(entries => {
+    if (!entries[0].isIntersecting) return;
+    wrap.classList.add('is-active');
+    steps.forEach((step, i) => setTimeout(() => step.classList.add('is-active'), i * 220));
+    io.disconnect();
+  }, { threshold: 0.3 });
+  io.observe(wrap);
+})();
+
 // PAGE TRANSITION : géré par assets/js/shared.js
 
 // ===== NAV DARK DETECTION (auto, no manual tagging needed) =====
@@ -494,6 +514,12 @@ const T = {
     'hero.overline': '6 créneaux de rendez-vous disponibles cette semaine',
     'hero.sub': 'Livraison professionnelle en Suisse romande. Coursier(e)s salarié(e)s, tarifs fixes, traçabilité complète : le partenaire logistique des entreprises suisses.',
     'hero.cta1': 'Réserver ma consultation offerte', 'hero.cta2': 'Commander une course',
+    'hiw.lbl': 'Comment ça marche', 'hiw.h2': 'Chaque jour, <span class="ac">on livre.</span>',
+    'hiw.sub': 'De la commande à la preuve de livraison, tout est en ligne et traçable.',
+    'hiw.desc': 'Nos coursiers salariés s’occupent du reste, vous suivez chaque étape en temps réel.',
+    'hiw.s1.h': 'Vous commandez', 'hiw.s1.p': 'Créez votre course en ligne en quelques clics, ou importez vos envois du jour par fichier. Adresses, créneau, options : tout est cadré.',
+    'hiw.s2.h': 'On récupère et on livre', 'hiw.s2.p': 'Un coursier salarié Chaskis prend en charge votre colis et le livre dans le créneau choisi, partout en Suisse romande.',
+    'hiw.s3.h': 'Preuve et suivi', 'hiw.s3.p': 'Suivi en temps réel, notification au destinataire et preuve de livraison photo. Facturation mensuelle consolidée.',
     'hero.stat1': 'Délai moyen', 'hero.stat2': 'vs plateformes', 'hero.stat3': 'Coursier(e)s salarié(e)s', 'hero.stat4': 'Courses / an',
     'partners.headline': 'entreprises nous font confiance',
     'zoom.h2': 'La livraison pro, <span class="accent">sans les galères</span>',
@@ -623,6 +649,12 @@ const T = {
     'hero.overline': '6 meeting slots available this week',
     'hero.sub': 'Professional delivery across French-speaking Switzerland. Employed couriers, fixed rates, full tracking: the logistics partner for Swiss businesses.',
     'hero.cta1': 'Book my free consultation', 'hero.cta2': 'Place an order',
+    'hiw.lbl': 'How it works', 'hiw.h2': 'Every day, <span class="ac">we deliver.</span>',
+    'hiw.sub': 'From order to proof of delivery, everything is online and traceable.',
+    'hiw.desc': 'Our salaried couriers handle the rest, you follow every step in real time.',
+    'hiw.s1.h': 'You order', 'hiw.s1.p': 'Create your delivery online in a few clicks, or import the day’s shipments from a file. Addresses, time slot, options: all set.',
+    'hiw.s2.h': 'We pick up and deliver', 'hiw.s2.p': 'A salaried Chaskis courier collects your parcel and delivers it within the chosen time slot, anywhere in French-speaking Switzerland.',
+    'hiw.s3.h': 'Proof and tracking', 'hiw.s3.p': 'Real-time tracking, recipient notification and photo proof of delivery. Consolidated monthly invoicing.',
     'hero.stat1': 'Avg. delivery', 'hero.stat2': 'vs platforms', 'hero.stat3': 'Employed couriers', 'hero.stat4': 'Deliveries / yr',
     'partners.headline': 'companies trust us',
     'zoom.h2': 'Professional delivery, <span class="accent">without the headaches</span>',

@@ -73,6 +73,33 @@
           }
         } catch (e) { /* fail-silent */ }
       }
+      // Visibilite des sections publiee (edits de STRUCTURE). JAMAIS dans l'iframe de l'editeur
+      // (qui gere son propre apercu via le brouillon). Masque les sections listees + le bandeau promo.
+      if (!inIframe && isObj(data.sections)) {
+        var SECTION_SEL = {
+          hero: 'header.hero', partners: '.partners', diff: '.diff-sec', services: '.feat-sec',
+          testi: '.testi', sim: '.sim-dark', offres: '.offres', booking: '.cta-booking', faq: '.faq', hiw: '.hiw'
+        };
+        var sc = data.sections[pageKey()];
+        if (isObj(sc)) {
+          // Etat publie = autorite : (dé)masque chaque section connue via la classe .ck-off (le
+          // masquage par defaut est defini cote source ; ici on reflete l'etat publie/edite).
+          var hidden = Array.isArray(sc.hidden) ? sc.hidden : [];
+          Object.keys(SECTION_SEL).forEach(function (id) {
+            var nodes = document.querySelectorAll(SECTION_SEL[id]);
+            var off = hidden.indexOf(id) >= 0;
+            for (var j = 0; j < nodes.length; j++) nodes[j].classList.toggle('ck-off', off);
+          });
+          // Bandeau promo : masque par defaut (pas de classe has-promo cote HTML). On l'affiche
+          // seulement s'il n'est pas masque ET pas ferme par le visiteur.
+          if (sc.promoHidden === true) {
+            try { document.body.classList.remove('has-promo'); } catch (e) {}
+          } else {
+            var dismissed = false; try { dismissed = localStorage.getItem('promoDismissed') === '1'; } catch (e) {}
+            if (!dismissed) { try { document.body.classList.add('has-promo'); } catch (e) {} }
+          }
+        }
+      }
     } catch (e) { /* fail-silent */ }
   }
 

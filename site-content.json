@@ -3,6 +3,12 @@
   "version": "0.34.0",
   "updatedAt": "2026-07-14T14:15:34.420Z",
   "updatedBy": "Alex Moreira",
+  "sections": {
+    "accueil": {
+      "hidden": ["diff", "sim", "offres"],
+      "promoHidden": true
+    }
+  },
   "pricing": {
     "days": 22,
     "tiers": [

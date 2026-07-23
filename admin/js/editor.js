@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.59.1" };
+const ADMIN_BUILD = { version: "0.60.0" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1397,7 +1397,13 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.59.1", cur:true, date:"2026-07-23", title:"Nettoyage, sécurité et liens vers les applications mobiles", items:[
+  { v:"v0.60.0", cur:true, date:"2026-07-23", title:"Accueil recentré sur la livraison + sections pilotables en ligne", items:[
+    {t:"add", x:"Nouvelle section « Comment ça marche » sur l’accueil : la livraison en trois étapes (vous commandez, on récupère et on livre, preuve et suivi), sur fond sombre, avec une animation au défilement (la ligne se remplit et les étapes s’activent une à une)."},
+    {t:"imp", x:"Boutons de l’accueil réordonnés : « Commander une course » devient l’action principale, « Réserver ma consultation » passe en second (y compris le bouton flottant)."},
+    {t:"imp", x:"Le masquage des sections et du bandeau depuis l’éditeur s’applique désormais réellement sur le site en ligne, et reste réactivable depuis l’éditeur."},
+    {t:"imp", x:"Pour cette version, le simulateur d’économies, la section « Nos offres », le bloc « Pourquoi Chaskis » et le bandeau promotionnel sont masqués sur l’accueil."}
+  ]},
+  { v:"v0.59.1", date:"2026-07-23", title:"Nettoyage, sécurité et liens vers les applications mobiles", items:[
     {t:"imp", x:"Les boutons « Télécharger l'app » (page Postuler et bas de page) renvoient désormais aux vraies applications iOS et Android, avec détection automatique de l'appareil."},
     {t:"imp", x:"Assistant de discussion (chatbot) masqué pour cette version ; il reviendra dans une prochaine mise à jour."},
     {t:"fix", x:"Témoignages de l'accueil anonymisés : les noms d'entreprises ont été retirés."},
@@ -3835,6 +3841,14 @@ function buildSiteContent(){
     }
     if(Object.keys(C).length) out.chatbot=C;
   } }catch(e){}
+  // Visibilité des sections (edits de STRUCTURE) : publiée pour que content.js l'applique en ligne.
+  // (accueil : seule page dont l'éditeur gère les sections/bandeau aujourd'hui — cf. SECTION_DEFS.)
+  try{
+    out.sections={ accueil:{
+      hidden:(draft&&Array.isArray(draft.hidden))?draft.hidden.slice(0,40).map(String):[],
+      promoHidden:!!(draft&&draft.promoHidden)
+    } };
+  }catch(e){}
   return out;
 }
 
@@ -6106,4 +6120,24 @@ function renderSettings(){ const b=document.getElementById("setBody"); if(!b) re
   if(getEnv()!=="dev" && isDevOnlyView(start)) start = "dashboard";
   showView(start);
   seedMediaStatic().then(()=>{ renderAllMedia(); updateDashboard(); });
+})();
+
+// Hydrate la visibilité des sections/bandeau depuis le contenu PUBLIÉ (site-content.json), qui
+// est la source de vérité du site en ligne. Sans ça, un brouillon vierge publierait « rien de
+// masqué » et réafficherait par erreur des sections volontairement cachées. Fail-silent, et
+// n'écrase JAMAIS un brouillon qui a déjà des edits de structure (hidden/promoHidden locaux).
+(function hydrateSectionsFromPublished(){
+  try{
+    if((draft.hidden && draft.hidden.length) || draft.promoHidden) return; // edits locaux : ne pas toucher
+    fetch("/site-content.json?ts="+Date.now(), { cache:"no-store" })
+      .then(function(r){ return (r && r.ok) ? r.json() : null; })
+      .then(function(d){
+        if(!d || !d.sections || !d.sections.accueil) return;
+        var s=d.sections.accueil, changed=false;
+        if(Array.isArray(s.hidden) && s.hidden.length && !(draft.hidden && draft.hidden.length)){ draft.hidden=s.hidden.slice(); changed=true; }
+        if(s.promoHidden===true && !draft.promoHidden){ draft.promoHidden=true; changed=true; }
+        if(changed){ try{ save(true); }catch(e){} try{ applyDraft(); renderSecList(); }catch(e){} }
+      })
+      .catch(function(){ /* fail-silent */ });
+  }catch(e){ /* fail-silent */ }
 })();

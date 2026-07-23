@@ -9,7 +9,7 @@ const STORE_KEY = "chaskis_editor_draft_" + PAGE;
 const VERS_KEY  = "chaskis_versions_" + PAGE;
 const UI_KEY    = "chaskis_admin_ui";
 /* Version du back-office (incrémentée au fil des itérations) + environnement (dev / prod). */
-const ADMIN_BUILD = { version: "0.59.0" };
+const ADMIN_BUILD = { version: "0.59.1" };
 
 const SECTION_DEFS = [
   { id:"hero", sel:"header.hero", name:"En-tête (accueil)" },
@@ -1397,7 +1397,14 @@ function restoreOnlineVersion(sha){
 const REL_TYPES={ add:{lbl:"Ajout",c:"add",ic:"plus"}, fix:{lbl:"Correctif",c:"fix",ic:"wrench"}, imp:{lbl:"Amélioration",c:"imp",ic:"sparkles"} };
 const REL_MONTHS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const RELEASE_LOG=[
-  { v:"v0.59.0", cur:true, date:"2026-07-22", title:"Section newsletter sur l’accueil et la commande, correctif de bas de page", items:[
+  { v:"v0.59.1", cur:true, date:"2026-07-23", title:"Nettoyage, sécurité et liens vers les applications mobiles", items:[
+    {t:"imp", x:"Les boutons « Télécharger l'app » (page Postuler et bas de page) renvoient désormais aux vraies applications iOS et Android, avec détection automatique de l'appareil."},
+    {t:"imp", x:"Assistant de discussion (chatbot) masqué pour cette version ; il reviendra dans une prochaine mise à jour."},
+    {t:"fix", x:"Témoignages de l'accueil anonymisés : les noms d'entreprises ont été retirés."},
+    {t:"imp", x:"Sécurité du site renforcée : en-têtes de protection ajoutés et clé technique retirée du code public."},
+    {t:"fix", x:"Ménage du projet : fichier inutilisé supprimé, script rangé, réglage local retiré du dépôt et documentation mise à jour."}
+  ]},
+  { v:"v0.59.0", date:"2026-07-22", title:"Section newsletter sur l’accueil et la commande, correctif de bas de page", items:[
     {t:"add", x:"Nouvelle section d’inscription à la newsletter, au style de la page « postuler » (fond carte, encart vitré), ajoutée sur l’accueil et sur « Commander une course ». Bilingue, formulaire relié à l’admin."},
     {t:"fix", x:"Page « Commander une course » : l’espace vide sous le bas de page disparaît en version ordinateur (il ne reste qu’en mobile, là où la barre de résumé flottante l’exige)."}
   ]},
@@ -2190,7 +2197,7 @@ function renderTech(){ const tabs=document.getElementById("techTabs"), body=docu
   refreshIcons();
 }
 function techEsc(s){ return escHtml(String(s==null?"":s)); }
-const TECH_UPDATED="22 juillet 2026";
+const TECH_UPDATED="23 juillet 2026";
 const TECH_EFF_LBL={S:"Rapide",M:"Moyen",L:"Long"};
 const TECH_ASSIGN={host:"Youcef",publish:"Paul",versioning:"Paul",analytics:"Arthur",calendly:"Paul",auth:"Youcef",perf:"Arthur",media:"Arthur",chatbot:"Youcef"};
 const TECH_ASSIGN_COL={Youcef:"#0F6E56",Paul:"#6B4CC4",Arthur:"#B4632A"};

@@ -11,8 +11,9 @@ echo   Demarrage du serveur local...
 echo   (laissez cette fenetre ouverte pendant que vous editez)
 echo.
 
-rem Lance le serveur local en arriere-plan
-start "Chaskis serveur" /min python tools\dev_server.py 3000
+rem Lance le serveur local en arriere-plan (Node = statique + Functions /api ;
+rem dev_server.py ne sert QUE le statique et renvoie 501 sur /api)
+start "Chaskis serveur" /min node tools\api-server.js 3000
 
 rem Laisse au serveur le temps de demarrer
 timeout /t 2 /nobreak >nul

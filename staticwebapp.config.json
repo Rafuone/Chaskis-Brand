@@ -19,7 +19,10 @@
   ],
   "globalHeaders": {
     "X-Content-Type-Options": "nosniff",
-    "Referrer-Policy": "strict-origin-when-cross-origin"
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+    "X-Frame-Options": "SAMEORIGIN",
+    "Permissions-Policy": "camera=(), microphone=(), payment=(), geolocation=(self)"
   },
   "navigationFallback": {
     "rewrite": "/index.html",

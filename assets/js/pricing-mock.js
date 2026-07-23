@@ -6,13 +6,14 @@
  * Routing via OpenRouteService (cle ci-dessous), fallback haversine.
  */
 
-// ⚠️ SÉCURITÉ (clé exposée côté client, inévitable pour un appel navigateur direct) :
-//  Ce module est un MOCK provisoire ; le calcul de prix passera côté serveur (vrai /api/pricing),
-//  qui portera la clé de routage en variable d'environnement (jamais servie au navigateur).
-//  D'ici là, RESTREINDRE cette clé OpenRouteService par domaine/referrer dans le compte ORS
-//  (comme une clé Google Maps JS), ou la révoquer : sinon un tiers peut épuiser le quota.
-//  Repli haversine (distance à vol d'oiseau) si l'appel échoue → le simulateur ne casse jamais.
-const ORS_API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjY1NDdjYjVlMzc0ODQ1ZTk4MDg1MzljMTczMzgyZmI2IiwiaCI6Im11cm11cjY0In0=';
+// SÉCURITÉ : la clé OpenRouteService a été RETIRÉE du code — un mock côté client ne peut pas
+//  garder un secret (il est servi tel quel au navigateur). L'estimation de distance passe donc
+//  par le repli embarqué ci-dessous (haversine + facteur route), qui ne dépend d'AUCUNE clé.
+//  → Calcul précis (optionnel) : le faire côté serveur via un vrai /api/pricing portant la clé
+//    en variable d'environnement (ORS_API_KEY), jamais dans le JS public.
+//  ⚠️ L'ancienne clé qui figurait ici doit être RÉVOQUÉE dans le compte OpenRouteService
+//     (elle reste présente dans l'historique git et sur les déploiements déjà en ligne).
+const ORS_API_KEY = ''; // vide = pas d'appel ORS → repli distance embarquée
 
 const VAT_RATE = 0.081; // TVA CH standard, 8.1% depuis le 01.01.2024
 
@@ -274,7 +275,11 @@ async function routeDistance(from, to, vehicleMode) {
 }
 
 function fallbackHaversine(from, to, reason) {
-  const km = Math.round(haversineKm(from, to) * 100) / 100;
+  // Facteur "route" : la distance à vol d'oiseau sous-estime le trajet réel par la route
+  // (~+30% en zone urbaine). On la corrige pour que l'estimation reste réaliste sans
+  // service de routage externe. À affiner si un vrai /api/pricing est mis en place.
+  const ROAD_FACTOR = 1.3;
+  const km = Math.round(haversineKm(from, to) * ROAD_FACTOR * 100) / 100;
   return {
     distanceMeters: Math.round(km * 1000),
     distanceKm: km,

@@ -539,9 +539,9 @@ const T = {
     'booking.label': 'Démarrer avec Chaskis', 'booking.h2': 'Votre consultation logistique <span class="sa">offerte</span>', 'booking.p': '20 minutes de conseil stratégique avec un expert. On audite vos flux, on identifie les leviers d\'optimisation, on vous livre un plan d\'action concret.',
     'bk.urgency.label': 'Prochain créneau :',
     'bk.slots.avail': 'Créneaux disponibles', 'bk.slots.full': 'Complet ce jour', 'bk.slots.last': 'Plus qu\'un créneau', 'bk.slots.few': 'Quelques créneaux restants',
-    'bk.testi0.text': '"En 20 min, on avait un plan clair. 2 semaines plus tard, tout était live."', 'bk.testi0.co': 'Pharmacie du Lac, Genève',
-    'bk.testi1.text': '"L\'audit a mis en lumière des coûts qu\'on ne voyait même pas. On a économisé 22% dès le premier mois."', 'bk.testi1.co': 'Swiss E-Shop, Neuchâtel',
-    'bk.testi2.text': '"Appel clair, sans bla-bla. Recommandation concrète, chiffrée, on savait quoi faire."', 'bk.testi2.co': 'Maison Bulgari, Genève',
+    'bk.testi0.text': '"En 20 min, on avait un plan clair. 2 semaines plus tard, tout était live."', 'bk.testi0.co': 'Pharmacie, Genève',
+    'bk.testi1.text': '"L\'audit a mis en lumière des coûts qu\'on ne voyait même pas. On a économisé 22% dès le premier mois."', 'bk.testi1.co': 'E-commerce, Neuchâtel',
+    'bk.testi2.text': '"Appel clair, sans bla-bla. Recommandation concrète, chiffrée, on savait quoi faire."', 'bk.testi2.co': 'Bijouterie, Genève',
     'bk.check1': 'Audit complet de vos coûts de livraison', 'bk.check2': 'Recommandation tarifaire personnalisée', 'bk.check3': 'Plan de déploiement clé en main',
     'perk1.h4': '20 min chrono', 'perk1.p': 'On respecte votre temps.',
     'perk2.h4': 'Sans engagement', 'perk2.p': 'On discute, vous décidez.',
@@ -668,9 +668,9 @@ const T = {
     'booking.label': 'Get started with Chaskis', 'booking.h2': 'Your complimentary <span class="sa">logistics consultation</span>', 'booking.p': '20 minutes of strategic advice with an expert. We audit your flows, identify levers for optimisation, and deliver a concrete action plan.',
     'bk.urgency.label': 'Next slot:',
     'bk.slots.avail': 'Available slots', 'bk.slots.full': 'Fully booked today', 'bk.slots.last': 'Last slot remaining', 'bk.slots.few': 'A few slots left',
-    'bk.testi0.text': '"In 20 min we had a clear plan. Two weeks later, everything was live."', 'bk.testi0.co': 'Pharmacie du Lac, Geneva',
-    'bk.testi1.text': '"The audit revealed costs we hadn\'t even noticed. We saved 22% from the very first month."', 'bk.testi1.co': 'Swiss E-Shop, Neuchâtel',
-    'bk.testi2.text': '"Clear call, no fluff. Concrete, costed recommendation. We knew exactly what to do."', 'bk.testi2.co': 'Maison Bulgari, Geneva',
+    'bk.testi0.text': '"In 20 min we had a clear plan. Two weeks later, everything was live."', 'bk.testi0.co': 'Pharmacie, Geneva',
+    'bk.testi1.text': '"The audit revealed costs we hadn\'t even noticed. We saved 22% from the very first month."', 'bk.testi1.co': 'E-commerce, Neuchâtel',
+    'bk.testi2.text': '"Clear call, no fluff. Concrete, costed recommendation. We knew exactly what to do."', 'bk.testi2.co': 'Bijouterie, Geneva',
     'bk.check1': 'Full audit of your delivery costs', 'bk.check2': 'Personalised pricing recommendation', 'bk.check3': 'Turnkey deployment plan',
     'perk1.h4': '20 min max', 'perk1.p': 'We respect your time.',
     'perk2.h4': 'No commitment', 'perk2.p': 'We talk, you decide.',
@@ -1312,20 +1312,20 @@ function setLang(lang) {
 // ===== TESTIMONIALS : adaptive infinite marquee =====
 (function() {
   const CARDS_FR = [
-    { text: "On est passé de 30% de commission à un tarif fixe. En 3 mois, la marge est récupérée sur chaque commande.", name: "Marie Laurent", role: "Pharmacie du Lac, Genève", photo: "https://randomuser.me/api/portraits/women/44.jpg" },
-    { text: "L'import CSV a tout changé. On envoie nos 40 commandes du matin en un clic, les livreurs reçoivent tout automatiquement.", name: "Pierre Dupont", role: "Swiss E-Shop, Neuchâtel", photo: "https://randomuser.me/api/portraits/men/32.jpg" },
-    { text: "Le livreur connaît notre protocole discrétion. Pour la bijouterie, c'est crucial. Et la preuve de remise en photo est irréprochable.", name: "Sophie Berthier", role: "Maison Bulgari, Genève", photo: "https://randomuser.me/api/portraits/women/68.jpg" },
-    { text: "Notaire, on a des délais légaux stricts. Chaskis livre nos actes à temps, avec preuve électronique. Zéro litige depuis 6 mois.", name: "François Riviera", role: "Étude Notariale Riviera, Lausanne", photo: "https://randomuser.me/api/portraits/men/75.jpg" },
-    { text: "Pour nos prélèvements du matin, la fenêtre est serrée. En 6 mois, pas un seul retard. Ça change la donne pour nos patients.", name: "Dr. Caroline Weber", role: "Laboratoire Genolier, Nyon", photo: "https://randomuser.me/api/portraits/women/52.jpg" },
-    { text: "L'interface de suivi en temps réel a remplacé nos trois outils maison. Nos clients adorent recevoir le SMS de livraison.", name: "Thomas Meier", role: "Atelier Horloger, La Chaux-de-Fonds", photo: "https://randomuser.me/api/portraits/men/45.jpg" },
+    { text: "On est passé de 30% de commission à un tarif fixe. En 3 mois, la marge est récupérée sur chaque commande.", name: "Marie Laurent", role: "Pharmacie, Genève", photo: "https://randomuser.me/api/portraits/women/44.jpg" },
+    { text: "L'import CSV a tout changé. On envoie nos 40 commandes du matin en un clic, les livreurs reçoivent tout automatiquement.", name: "Pierre Dupont", role: "E-commerce, Neuchâtel", photo: "https://randomuser.me/api/portraits/men/32.jpg" },
+    { text: "Le livreur connaît notre protocole discrétion. Pour la bijouterie, c'est crucial. Et la preuve de remise en photo est irréprochable.", name: "Sophie Berthier", role: "Bijouterie, Genève", photo: "https://randomuser.me/api/portraits/women/68.jpg" },
+    { text: "Notaire, on a des délais légaux stricts. Chaskis livre nos actes à temps, avec preuve électronique. Zéro litige depuis 6 mois.", name: "François Riviera", role: "Étude notariale, Lausanne", photo: "https://randomuser.me/api/portraits/men/75.jpg" },
+    { text: "Pour nos prélèvements du matin, la fenêtre est serrée. En 6 mois, pas un seul retard. Ça change la donne pour nos patients.", name: "Dr. Caroline Weber", role: "Laboratoire d'analyses, Nyon", photo: "https://randomuser.me/api/portraits/women/52.jpg" },
+    { text: "L'interface de suivi en temps réel a remplacé nos trois outils maison. Nos clients adorent recevoir le SMS de livraison.", name: "Thomas Meier", role: "Horlogerie, La Chaux-de-Fonds", photo: "https://randomuser.me/api/portraits/men/45.jpg" },
   ];
   const CARDS_EN = [
-    { text: "We switched from 30% commission to a fixed rate. Within 3 months, the margin was recovered on every single order.", name: "Marie Laurent", role: "Pharmacie du Lac, Geneva", photo: "https://randomuser.me/api/portraits/women/44.jpg" },
-    { text: "The CSV import changed everything. We send our 40 morning orders in one click, and couriers receive everything automatically.", name: "Pierre Dupont", role: "Swiss E-Shop, Neuchâtel", photo: "https://randomuser.me/api/portraits/men/32.jpg" },
-    { text: "The courier knows our discretion protocol. For a jeweller, that's critical. And the photo proof of delivery is impeccable.", name: "Sophie Berthier", role: "Maison Bulgari, Geneva", photo: "https://randomuser.me/api/portraits/women/68.jpg" },
-    { text: "As a notary, we have strict legal deadlines. Chaskis delivers our deeds on time, with electronic proof. Zero disputes in 6 months.", name: "François Riviera", role: "Étude Notariale Riviera, Lausanne", photo: "https://randomuser.me/api/portraits/men/75.jpg" },
-    { text: "For our morning samples, the window is tight. In 6 months, not a single delay. It's a game-changer for our patients.", name: "Dr. Caroline Weber", role: "Laboratoire Genolier, Nyon", photo: "https://randomuser.me/api/portraits/women/52.jpg" },
-    { text: "The real-time tracking interface replaced our three in-house tools. Our clients love getting the delivery SMS.", name: "Thomas Meier", role: "Atelier Horloger, La Chaux-de-Fonds", photo: "https://randomuser.me/api/portraits/men/45.jpg" },
+    { text: "We switched from 30% commission to a fixed rate. Within 3 months, the margin was recovered on every single order.", name: "Marie Laurent", role: "Pharmacie, Geneva", photo: "https://randomuser.me/api/portraits/women/44.jpg" },
+    { text: "The CSV import changed everything. We send our 40 morning orders in one click, and couriers receive everything automatically.", name: "Pierre Dupont", role: "E-commerce, Neuchâtel", photo: "https://randomuser.me/api/portraits/men/32.jpg" },
+    { text: "The courier knows our discretion protocol. For a jeweller, that's critical. And the photo proof of delivery is impeccable.", name: "Sophie Berthier", role: "Bijouterie, Geneva", photo: "https://randomuser.me/api/portraits/women/68.jpg" },
+    { text: "As a notary, we have strict legal deadlines. Chaskis delivers our deeds on time, with electronic proof. Zero disputes in 6 months.", name: "François Riviera", role: "Étude notariale, Lausanne", photo: "https://randomuser.me/api/portraits/men/75.jpg" },
+    { text: "For our morning samples, the window is tight. In 6 months, not a single delay. It's a game-changer for our patients.", name: "Dr. Caroline Weber", role: "Laboratoire d'analyses, Nyon", photo: "https://randomuser.me/api/portraits/women/52.jpg" },
+    { text: "The real-time tracking interface replaced our three in-house tools. Our clients love getting the delivery SMS.", name: "Thomas Meier", role: "Horlogerie, La Chaux-de-Fonds", photo: "https://randomuser.me/api/portraits/men/45.jpg" },
   ];
   let testiLang = 'fr';
   // Avis pilotables depuis le back-office (source unique). Repli sur les avis par défaut.

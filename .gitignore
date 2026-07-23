@@ -4,3 +4,6 @@ node_modules
 .env
 .env.local
 .env*.local
+
+# Réglages locaux de l'éditeur/agent (personnels à chaque machine, ne pas versionner)
+.claude/settings.local.json
